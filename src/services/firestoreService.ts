@@ -11,6 +11,7 @@ import {
   query, 
   where,
   orderBy,
+  limit,
   Unsubscribe 
 } from 'firebase/firestore';
 import { db, logFirestoreError, handleFirestoreError, OperationType, isPermissionError } from './firebase';
@@ -181,10 +182,10 @@ export const firestoreService = {
   ): Unsubscribe {
     const path = COLLECTIONS.COLABORADORES;
     try {
-      let q = query(collection(db, path), orderBy('nome', 'asc'));
+      let q = query(collection(db, path), orderBy('nome', 'asc'), limit(500));
       if (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') {
         // Query com filtro no Firestore quando aplicável
-        q = query(collection(db, path), where('sede', '==', canteiroId), orderBy('nome', 'asc'));
+        q = query(collection(db, path), where('sede', '==', canteiroId), orderBy('nome', 'asc'), limit(500));
       }
       return onSnapshot(
         q,
@@ -258,17 +259,21 @@ export const firestoreService = {
   ): Unsubscribe {
     const path = COLLECTIONS.LANCAMENTOS;
     try {
+      const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
+      const q = normalizedCanteiro
+        ? query(collection(db, path), where('employeeSede', '==', normalizedCanteiro), limit(500))
+        : query(collection(db, path), limit(500));
+
       return onSnapshot(
-        collection(db, path),
+        q,
         (snapshot) => {
           try {
             const list: TimeRecord[] = [];
-            const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
 
             snapshot.forEach((docSnap) => {
               const data = docSnap.data();
 
-              // Filtro de canteiro se restrito
+              // Filtro de canteiro defensivo se restrito
               if (normalizedCanteiro) {
                 const recSede = (data.employeeSede || data.sede || data.secaoCanteiro || '').toUpperCase();
                 const recCanteiro = (data.canteiroId || '').toUpperCase();
@@ -352,7 +357,7 @@ export const firestoreService = {
     const path = COLLECTIONS.ADMIN_USERS;
     try {
       return onSnapshot(
-        collection(db, path),
+        query(collection(db, path), limit(500)),
         (snapshot) => {
           try {
             const list: AdminUser[] = [];
@@ -396,7 +401,7 @@ export const firestoreService = {
   async getEmployees(): Promise<Employee[]> {
     const path = COLLECTIONS.COLABORADORES;
     try {
-      const q = query(collection(db, path), orderBy('nome', 'asc'));
+      const q = query(collection(db, path), orderBy('nome', 'asc'), limit(500));
       const snapshot = await getDocs(q);
       const list: Employee[] = [];
       snapshot.forEach((docSnap) => {
@@ -438,7 +443,7 @@ export const firestoreService = {
   async getTimeRecords(): Promise<TimeRecord[]> {
     const path = COLLECTIONS.LANCAMENTOS;
     try {
-      const q = query(collection(db, path), orderBy('dataRegistro', 'desc'));
+      const q = query(collection(db, path), orderBy('dataRegistro', 'desc'), limit(500));
       const snapshot = await getDocs(q);
       const list: TimeRecord[] = [];
       snapshot.forEach((docSnap) => {
@@ -728,13 +733,16 @@ export const firestoreService = {
   ): Unsubscribe {
     const path = COLLECTIONS.INSALUBRIDADE;
     try {
-      const q = query(collection(db, path), orderBy('dataEvento', 'desc'));
+      const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
+      const q = normalizedCanteiro
+        ? query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(500))
+        : query(collection(db, path), orderBy('dataEvento', 'desc'), limit(500));
+
       return onSnapshot(
         q,
         (snapshot) => {
           try {
             const list: InsalubrityRecord[] = [];
-            const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
 
             snapshot.forEach((docSnap) => {
               const data = docSnap.data();
@@ -1048,10 +1056,14 @@ export const firestoreService = {
   ): Unsubscribe {
     const path = COLLECTIONS.CONTRACHEQUES;
     try {
+      const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
+      const q = normalizedCanteiro
+        ? query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(500))
+        : query(collection(db, path), limit(500));
+
       return onSnapshot(
-        collection(db, path),
+        q,
         (snapshot) => {
-          const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
           const items: PaystubRecord[] = snapshot.docs
             .map((d) => {
               const data = d.data() as any;
@@ -1186,8 +1198,13 @@ export const firestoreService = {
   ): Unsubscribe {
     const path = COLLECTIONS.DISPENSAS_SPTF;
     try {
+      const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
+      const q = normalizedCanteiro
+        ? query(collection(db, path), where('secaoCanteiro', '==', `DECO-${normalizedCanteiro}`), limit(500))
+        : query(collection(db, path), limit(500));
+
       return onSnapshot(
-        collection(db, path),
+        q,
         (snapshot) => {
           try {
             const list: DispensaSptfRecord[] = [];
@@ -1262,7 +1279,7 @@ export const firestoreService = {
       employeeAvatarUrl: record.employeeAvatarUrl || '',
       dataRegistro: record.dataRegistro || '',
       data_ocorrencia: record.data_ocorrencia || record.dataRegistro || '',
-      tipoOcorrencia: 'COMPENSACAO_DISPENSA',
+      tipoOcorrencia: 'DISPENSA_SPTF',
       horasBrutas: Number(record.horasBrutas) || 0,
       multiplicador: 1.0,
       saldoCalculado: -(Number(record.horasBrutas) || 0),
@@ -1310,7 +1327,10 @@ export const firestoreService = {
     }
   },
 
-  async clearAllData(): Promise<void> {
+  async clearAllData(userRole?: AdminRole | string): Promise<void> {
+    if (userRole !== 'SUPER_ADMIN') {
+      throw new Error('Acesso não autorizado: Somente Super Administradores podem executar a limpeza total da base de dados.');
+    }
     const CHUNK_SIZE = 400;
     try {
       // 1. Deletar todos os colaboradores em lotes

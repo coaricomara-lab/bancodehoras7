@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Employee, TimeRecord, DashboardFilter, Attachment, AdminRole } from '../types';
+import { Employee, TimeRecord, DashboardFilter, Attachment, AdminRole, ConstructionSite } from '../types';
 import { 
   formatHoursDecimal, 
   formatHoursToDays, 
@@ -48,6 +48,7 @@ import {
 interface LookerDashboardProps {
   employees: Employee[];
   records: TimeRecord[];
+  constructionSites?: ConstructionSite[];
   onOpenNewEntryModal: (matricula?: string, dateIso?: string) => void;
   onOpenEditEntryModal?: (record: TimeRecord) => void;
   onViewEmployeeStatement: (matricula: string) => void;
@@ -69,6 +70,7 @@ type SortDirection = 'asc' | 'desc';
 export const LookerDashboard: React.FC<LookerDashboardProps> = ({
   employees,
   records,
+  constructionSites = [],
   onOpenNewEntryModal,
   onOpenEditEntryModal,
   onViewEmployeeStatement,
@@ -543,7 +545,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {/* 2. Sede */}
             <div>
               <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
-                Sede
+                Sede / Canteiro
               </label>
               <select
                 value={filters.sede}
@@ -554,10 +556,24 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     : 'bg-slate-50 border-slate-300 text-slate-900'
                 }`}
               >
-                <option value="TODAS">Todas as Sedes</option>
-                <option value="KO">KO (Coari)</option>
-                <option value="BE">BE (Belém)</option>
-                <option value="MN">MN (Manaus)</option>
+                <option value="TODAS">Todas as Sedes / Canteiros</option>
+                {Array.isArray(constructionSites) && constructionSites.length > 0 ? (
+                  constructionSites.map((site) => {
+                    const code = (site.code || site.codigo || site.branch || site.sede || '').toUpperCase();
+                    const name = site.name || site.nome || `Canteiro ${code}`;
+                    return (
+                      <option key={site.id || code} value={code}>
+                        {code} ({name})
+                      </option>
+                    );
+                  })
+                ) : (
+                  <>
+                    <option value="KO">KO (Coari)</option>
+                    <option value="BE">BE (Belém)</option>
+                    <option value="MN">MN (Manaus)</option>
+                  </>
+                )}
               </select>
             </div>
 

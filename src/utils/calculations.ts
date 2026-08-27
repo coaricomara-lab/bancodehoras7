@@ -7,6 +7,8 @@ export interface CalculationResult {
   multiplicador: number;
   saldoCalculado: number; // Impacto no Banco de Horas (+ crédito, - débito, 0 neutro)
   horasDescontoFolha: number; // Horas enviadas para Desconto em Folha / Contracheque
+  horasBrutasEfetivas?: number;
+  deducaoAlmoco?: number;
   destinoLancamento: DestinationTarget;
   diaSemana: number; // 0=Dom, 1=Seg, ..., 6=Sab
   diaSemanaNome: string;
@@ -26,6 +28,55 @@ const DIAS_SEMANA = [
   'Sexta-feira',
   'Sábado'
 ];
+
+/**
+ * REGRA CENTRALIZADA: CÁLCULO DAS HORAS COM TRAVA DO ALMOÇO (12:00 às 13:00)
+ * - O período entre 12:00 e 13:00 é HORA DE ALMOÇO obrigatória (não remunerado e não computável).
+ * - Se o horário cruzar a janela de 12:00 às 13:00, subtrai exatamente o tempo de almoço (até 60 min) do saldo total.
+ * - Exemplo: Das 07:00 às 16:00 (9 horas relógio) = 8.0h a abater no Banco de Horas.
+ */
+export function calculateLunchOverlap(start?: string, end?: string): {
+  rawHours: number;
+  lunchDeductionHours: number;
+  netHours: number;
+} {
+  if (!start || !end) {
+    return { rawHours: 0, lunchDeductionHours: 0, netHours: 0 };
+  }
+
+  const [h1, m1] = start.split(':').map(Number);
+  const [h2, m2] = end.split(':').map(Number);
+  if (isNaN(h1) || isNaN(m1) || isNaN(h2) || isNaN(m2)) {
+    return { rawHours: 0, lunchDeductionHours: 0, netHours: 0 };
+  }
+
+  const startMinutes = h1 * 60 + m1;
+  const endMinutes = h2 * 60 + m2;
+  const diffMinutes = endMinutes - startMinutes;
+  if (diffMinutes <= 0) {
+    return { rawHours: 0, lunchDeductionHours: 0, netHours: 0 };
+  }
+
+  const rawHours = Number((diffMinutes / 60).toFixed(2));
+
+  // Janela obrigatória de almoço: 12:00 (720 min) às 13:00 (780 min)
+  const lunchStart = 12 * 60; // 720
+  const lunchEnd = 13 * 60;   // 780
+
+  const overlapStart = Math.max(startMinutes, lunchStart);
+  const overlapEnd = Math.min(endMinutes, lunchEnd);
+  const lunchOverlapMinutes = Math.max(0, overlapEnd - overlapStart);
+  const lunchDeductionHours = Number((lunchOverlapMinutes / 60).toFixed(2));
+
+  const netMinutes = Math.max(0, diffMinutes - lunchOverlapMinutes);
+  const netHours = Number((netMinutes / 60).toFixed(2));
+
+  return {
+    rawHours,
+    lunchDeductionHours,
+    netHours,
+  };
+}
 
 /**
  * Verifica se uma data é feriado considerando feriados nacionais e municipais/estaduais por sede.
@@ -69,19 +120,37 @@ export function parseDateInfo(dataString: string) {
 }
 
 /**
- * Calcula o saldo diário de horas creditadas/debitadas aplicando regras SPTF / Acordo Coletivo.
+ * Calcula o saldo diário de horas creditadas/debitadas aplicando regras SPTF / Acordo Coletivo
+ * e suporte universal à trava de almoço (12:00 às 13:00).
  */
 export function calculateSPTFBalance(
   tipo: OccurrenceType,
   horasBrutas: number,
   dataString: string,
   forcarFeriado?: boolean,
-  sede?: Branch
+  sede?: Branch,
+  applyLunchLock?: boolean,
+  horarioInicio?: string,
+  horarioFim?: string
 ): CalculationResult {
   const { diaSemana, diaSemanaNome } = parseDateInfo(dataString);
   const holidayCheck = checkIsHoliday(dataString, sede);
   const eFeriado = forcarFeriado !== undefined ? forcarFeriado : holidayCheck.eFeriado;
   const nomeFeriado = holidayCheck.nome;
+
+  let effectiveHoras = horasBrutas;
+  let deducaoAlmoco = 0;
+
+  if (applyLunchLock) {
+    if (horarioInicio && horarioFim) {
+      const lunchCalc = calculateLunchOverlap(horarioInicio, horarioFim);
+      effectiveHoras = lunchCalc.netHours;
+      deducaoAlmoco = lunchCalc.lunchDeductionHours;
+    } else if (horasBrutas >= 5.0) {
+      deducaoAlmoco = 1.0;
+      effectiveHoras = Math.max(0, horasBrutas - 1.0);
+    }
+  }
 
   let multiplicador = 1.0;
   let saldoCalculado = 0.0;
@@ -97,19 +166,19 @@ export function calculateSPTFBalance(
       if (diaSemana === 0 || eFeriado) {
         // Domingo ou Feriado -> x2.0 (Horas em dobro 1:2)
         multiplicador = 2.0;
-        saldoCalculado = horasBrutas * 2.0;
+        saldoCalculado = effectiveHoras * 2.0;
         descricaoRegra = eFeriado 
           ? `Feriado (${nomeFeriado || 'Oficial'}): Multiplicador x 2.0 (Horas em Dobro 1:2 no Banco)`
           : `Domingo: Multiplicador x 2.0 (Horas em Dobro 1:2 no Banco)`;
       } else if (diaSemana === 6) {
         // Sábado -> x1.5 (Adicional de Sábado 1:1,5)
         multiplicador = 1.5;
-        saldoCalculado = horasBrutas * 1.5;
+        saldoCalculado = effectiveHoras * 1.5;
         descricaoRegra = `Sábado: Multiplicador x 1.5 (Adicional 1:1,5 no Banco)`;
       } else {
         // Segunda a Sexta -> x1.0 (Horas Normais 1:1)
         multiplicador = 1.0;
-        saldoCalculado = horasBrutas * 1.0;
+        saldoCalculado = effectiveHoras * 1.0;
         descricaoRegra = `Segunda a Sexta: Multiplicador x 1.0 (Horas Normais 1:1 no Banco)`;
       }
       break;
@@ -132,27 +201,27 @@ export function calculateSPTFBalance(
     case 'FALTA_INJUSTIFICADA': {
       multiplicador = 0.0;
       saldoCalculado = 0.0; // NÃO afeta o saldo do Banco de Horas
-      horasDescontoFolha = horasBrutas > 0 ? horasBrutas : 8.0;
+      horasDescontoFolha = effectiveHoras > 0 ? effectiveHoras : 8.0;
       destinoLancamento = 'FOLHA_PAGAMENTO';
       descricaoRegra = `Falta Injustificada ('F' / 'D'): Enviada para Desconto em Folha / Contracheque (${horasDescontoFolha.toFixed(1)}h a descontar na folha; 0h no Banco de Horas).`;
       requerObservacao = true;
       break;
     }
 
-    // REGRA 2: DISPENSA / SAÍDA ANTECIPADA / COMPENSAÇÃO DE BANCO DE HORAS
-    // Envia para o Banco de Horas -> Debita do saldo acumulado do colaborador (ex: -8h ou horas abatidas)
+    // REGRA 2: DISPENSA DE SPTF / SAÍDA ANTECIPADA / COMPENSAÇÃO DE BANCO DE HORAS
+    case 'DISPENSA_SPTF':
     case 'COMPENSACAO_DISPENSA':
     case 'COMPENSACAO':
     case 'DISPENSA_OPERACIONAL': {
       multiplicador = 1.0;
-      const horasDebito = Math.abs(horasBrutas) > 0 ? Math.abs(horasBrutas) : 8.0;
+      const horasDebito = Math.abs(effectiveHoras) > 0 ? Math.abs(effectiveHoras) : 8.0;
       saldoCalculado = -horasDebito;
       horasDescontoFolha = 0.0;
       destinoLancamento = 'BANCO_HORAS';
-      descricaoRegra = tipo === 'COMPENSACAO_DISPENSA'
-        ? `Dispensa de SPTF / Compensação: Débito de -${horasDebito.toFixed(1)}h no Banco de Horas com emissão de guia em 2 vias.`
-        : `Dispensa / Saída Antecipada / Débito em Banco ('COMP'): Debita -${horasDebito.toFixed(1)}h do Banco de Horas acumulado.`;
-      requerObservacao = tipo !== 'COMPENSACAO_DISPENSA';
+      descricaoRegra = (tipo === 'DISPENSA_SPTF' || tipo === 'COMPENSACAO_DISPENSA')
+        ? `Dispensa de SPTF: Débito de -${horasDebito.toFixed(1)}h no Banco de Horas com emissão de guia oficial em 2 vias.`
+        : `Dispensa / Compensação ('COMP'): Debita -${horasDebito.toFixed(1)}h do Banco de Horas acumulado.`;
+      requerObservacao = (tipo !== 'DISPENSA_SPTF' && tipo !== 'COMPENSACAO_DISPENSA');
       break;
     }
 
@@ -202,7 +271,7 @@ export function calculateSPTFBalance(
 
     default: {
       multiplicador = 1.0;
-      saldoCalculado = horasBrutas;
+      saldoCalculado = effectiveHoras;
       horasDescontoFolha = 0.0;
       destinoLancamento = 'BANCO_HORAS';
       descricaoRegra = 'Lançamento regular no Banco de Horas';
@@ -213,6 +282,8 @@ export function calculateSPTFBalance(
     multiplicador,
     saldoCalculado: Number(saldoCalculado.toFixed(2)),
     horasDescontoFolha: Number(horasDescontoFolha.toFixed(2)),
+    horasBrutasEfetivas: Number(effectiveHoras.toFixed(2)),
+    deducaoAlmoco: Number(deducaoAlmoco.toFixed(2)),
     destinoLancamento,
     diaSemana,
     diaSemanaNome,

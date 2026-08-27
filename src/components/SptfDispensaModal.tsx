@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useId } from 'react';
-import { Employee, TimeRecord, DispensaSptfRecord, ConstructionSite, SystemConfig } from '../types';
+import { Employee, TimeRecord, DispensaSptfRecord, ConstructionSite, SystemConfig, Branch } from '../types';
 import { getEmployeeTotalBalance } from '../services/timebankEngine';
 import { getSignaturesForCanteiro } from '../services/canteiroService';
+import { calculateSPTFBalance, calculateLunchOverlap } from '../utils/calculations';
 import { 
   X, 
   Printer, 
@@ -54,51 +55,14 @@ export function formatDateBR(isoDate?: string): string {
 
 /**
  * REGRA DE CÁLCULO DAS HORAS COM TRAVA DO ALMOÇO (12:00 às 13:00)
- * - O período entre 12:00 e 13:00 é HORA DE ALMOÇO obrigatória (não remunerado e não computável).
- * - Se o horário cruzar a janela de 12:00 às 13:00, subtrai exatamente o tempo de almoço (até 60 min) do saldo total.
- * - Exemplo: Das 07:00 às 16:00 (9 horas relógio) = 8.0h a abater no Banco de Horas.
+ * Reutiliza o motor central de cálculo calculateLunchOverlap
  */
 export function calculateDispensaHours(start: string, end: string): {
   rawHours: number;
   lunchDeductionHours: number;
   netHours: number;
 } {
-  if (!start || !end) {
-    return { rawHours: 0, lunchDeductionHours: 0, netHours: 0 };
-  }
-
-  const [h1, m1] = start.split(':').map(Number);
-  const [h2, m2] = end.split(':').map(Number);
-  if (isNaN(h1) || isNaN(m1) || isNaN(h2) || isNaN(m2)) {
-    return { rawHours: 0, lunchDeductionHours: 0, netHours: 0 };
-  }
-
-  const startMinutes = h1 * 60 + m1;
-  const endMinutes = h2 * 60 + m2;
-  const diffMinutes = endMinutes - startMinutes;
-  if (diffMinutes <= 0) {
-    return { rawHours: 0, lunchDeductionHours: 0, netHours: 0 };
-  }
-
-  const rawHours = Number((diffMinutes / 60).toFixed(2));
-
-  // Janela obrigatória de almoço: 12:00 (720 min) às 13:00 (780 min)
-  const lunchStart = 12 * 60; // 720
-  const lunchEnd = 13 * 60;   // 780
-
-  const overlapStart = Math.max(startMinutes, lunchStart);
-  const overlapEnd = Math.min(endMinutes, lunchEnd);
-  const lunchOverlapMinutes = Math.max(0, overlapEnd - overlapStart);
-  const lunchDeductionHours = Number((lunchOverlapMinutes / 60).toFixed(2));
-
-  const netMinutes = Math.max(0, diffMinutes - lunchOverlapMinutes);
-  const netHours = Number((netMinutes / 60).toFixed(2));
-
-  return {
-    rawHours,
-    lunchDeductionHours,
-    netHours
-  };
+  return calculateLunchOverlap(start, end);
 }
 
 export function formatHoursToHoursMinutes(hours: number): string {
@@ -661,6 +625,18 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
     setFeedbackMsg(null);
   }, [isOpen, preselectedMatricula, preselectedDate]);
 
+  // Listener para fechamento por tecla Escape (Acessibilidade U-002)
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   // Colaborador selecionado
   const selectedEmployee = useMemo(() => {
     return employees.find(e => e.matricula === selectedMatricula);
@@ -747,8 +723,7 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
     try {
       const now = new Date();
       const ano = now.getFullYear();
-      const seq = String(dispensas.length + 1).padStart(3, '0');
-      const numeroGuia = `SPTF-${ano}/${seq}`;
+      const numeroGuia = `DISP-${ano}-${Date.now().toString().slice(-6)}`;
       const dispensaId = `dispensa_${Date.now()}_${selectedEmployee.matricula}`;
       const lancamentoId = `lanc_dispensa_${Date.now()}_${selectedEmployee.matricula}`;
 
@@ -772,6 +747,17 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
         status: 'EMITIDA',
       };
 
+      const calcResult = calculateSPTFBalance(
+        'DISPENSA_SPTF',
+        calculatedHours,
+        dataDispensa,
+        undefined,
+        selectedEmployee.sede as Branch,
+        true,
+        horarioInicio,
+        horarioFim
+      );
+
       const timeRecord: TimeRecord = {
         id: lancamentoId,
         matricula: selectedEmployee.matricula,
@@ -781,16 +767,16 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
         employeeAvatarUrl: selectedEmployee.avatarUrl || selectedEmployee.url_foto_perfil,
         dataRegistro: dataDispensa,
         data_ocorrencia: dataDispensa,
-        tipoOcorrencia: 'COMPENSACAO_DISPENSA',
+        tipoOcorrencia: 'DISPENSA_SPTF',
         horasBrutas: calculatedHours,
-        multiplicador: 1.0,
-        saldoCalculado: -calculatedHours,
+        multiplicador: calcResult.multiplicador,
+        saldoCalculado: calcResult.saldoCalculado,
         saldo_remanescente: 0,
         status_compensacao: 'TOTALMENTE_COMPENSADO',
         liquidacoes: [],
-        eFeriado: false,
-        diaSemana: new Date(dataDispensa + 'T12:00:00').getDay(),
-        diaSemanaNome: ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'][new Date(dataDispensa + 'T12:00:00').getDay()] || '',
+        eFeriado: calcResult.eFeriado,
+        diaSemana: calcResult.diaSemana,
+        diaSemanaNome: calcResult.diaSemanaNome,
         observacao: `Dispensa SPTF Nº ${numeroGuia} (${horarioInicio} às ${horarioFim}) - Motivo: ${motivo}${hoursCalculation.lunchDeductionHours > 0 ? ' [Trava de Almoço 12h-13h: -' + hoursCalculation.lunchDeductionHours + 'h]' : ''}${observacoes ? ' - ' + observacoes : ''}`,
         criadoEm: now.toISOString(),
         criadoPorEmail: currentUserEmail,
@@ -1065,8 +1051,9 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
             <button
               id="btn-close-sptf-modal"
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+              className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
               title="Fechar (Esc)"
+              aria-label="Fechar Guia de Dispensa SPTF"
             >
               <X className="w-5 h-5" />
             </button>

@@ -165,6 +165,18 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
     setDataFimFerias(newEnd);
   };
 
+  // Listener para fechar no Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const sedeEfetiva: Branch = selectedEmployee?.sede_atual || selectedEmployee?.sede || initialRecord?.employeeSede || 'KO';
@@ -422,7 +434,10 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
             </div>
           </div>
           <button
+            id="btn-close-daily-entry-modal"
             onClick={onClose}
+            aria-label="Fechar modal de lançamento diário"
+            title="Fechar (Esc)"
             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
               isDark ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
             }`}

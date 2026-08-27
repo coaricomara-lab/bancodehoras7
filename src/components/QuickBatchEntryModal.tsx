@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useId } from 'react';
+import React, { useState, useMemo, useEffect, useId } from 'react';
 import { Employee, TimeRecord, OccurrenceType, Branch } from '../types';
 import { calculateSPTFBalance, formatHoursDecimal } from '../utils/calculations';
 import { firestoreService } from '../services/firestoreService';
@@ -124,6 +124,18 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
     setMatriculaQuery('');
     safeInvoke(onClose);
   };
+
+  // Listener para fechamento por tecla Escape (Acessibilidade U-002)
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   // Garante array seguro de colaboradores
   const safeEmployees = useMemo(() => {
@@ -544,11 +556,13 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
             </div>
           </div>
           <button
+            id="btn-close-batch-modal"
             onClick={handleClose}
+            aria-label="Fechar Modal de Lançamento em Lote"
             className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${
               isDark ? 'border-[#1F2229] hover:bg-[#1F2229] text-[#8E9299]' : 'border-slate-200 hover:bg-slate-100 text-slate-500'
             }`}
-            title="Fechar Modal"
+            title="Fechar Modal (Esc)"
           >
             <X className="w-4 h-4" />
           </button>

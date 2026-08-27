@@ -9,6 +9,7 @@ export type OccurrenceType =
   | 'ACABOU_BANHOU'             // Acabou Banhou: Conclusão de Missão (Neutro: 0h Banco, 0h Folha, sem desconto)
   | 'FALTA_INJUSTIFICADA'       // 'F' ou 'D' (Desconto em Folha / Contracheque - 0h no Banco)
   | 'FALTA_JUSTIFICADA'         // Atestado, Licença Gala/Luto, Ordem Judicial (Neutro: 0h Banco, 0h Folha)
+  | 'DISPENSA_SPTF'             // Guia Oficial de Dispensa de SPTF / Compensação em Banco (- Débito no Banco)
   | 'DISPENSA_OPERACIONAL'      // Dispensa / Saída Antecipada / Horas Negativas Operacionais (Débito no Banco)
   | 'COMPENSACAO'               // Folga Compensatória / Débito em Banco (Débito no Banco)
   | 'COMPENSACAO_DISPENSA'      // Dispensa de SPTF com Emissão de Guia 2 Vias (Débito no Banco)

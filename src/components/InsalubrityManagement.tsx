@@ -629,12 +629,26 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
                 }`}
               >
-                <option value="TODAS">Sede: Todas</option>
-                <option value="KO">KO (Coari)</option>
-                <option value="BE">BE (Belém)</option>
-                <option value="MN">MN (Manaus)</option>
-                <option value="SP">SP (São Paulo)</option>
-                <option value="RJ">RJ (Rio de Janeiro)</option>
+                <option value="TODAS">Sede / Canteiro: Todas</option>
+                {Array.isArray(constructionSites) && constructionSites.length > 0 ? (
+                  constructionSites.map((site) => {
+                    const code = (site.code || site.codigo || site.branch || site.sede || '').toUpperCase();
+                    const name = site.name || site.nome || `Canteiro ${code}`;
+                    return (
+                      <option key={site.id || code} value={code}>
+                        {code} ({name})
+                      </option>
+                    );
+                  })
+                ) : (
+                  <>
+                    <option value="KO">KO (Coari)</option>
+                    <option value="BE">BE (Belém)</option>
+                    <option value="MN">MN (Manaus)</option>
+                    <option value="SP">SP (São Paulo)</option>
+                    <option value="RJ">RJ (Rio de Janeiro)</option>
+                  </>
+                )}
               </select>
 
               {/* Grau */}

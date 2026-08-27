@@ -816,12 +816,24 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                 isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
               }`}
             >
-              <option value="TODAS">Todas as Sedes (KO, BE, MN, etc.)</option>
-              <option value="KO">KO (Coari - Base Principal)</option>
-              <option value="BE">BE (Belém - Sede)</option>
-              <option value="MN">MN (Manaus - Destacamento)</option>
-              <option value="SP">SP (São Paulo)</option>
-              <option value="RJ">RJ (Rio de Janeiro)</option>
+              <option value="TODAS">Todas as Sedes / Canteiros</option>
+              {Array.isArray(constructionSites) && constructionSites.length > 0 ? (
+                constructionSites.map((site) => {
+                  const code = (site.code || site.codigo || site.branch || site.sede || '').toUpperCase();
+                  const name = site.name || site.nome || `Canteiro ${code}`;
+                  return (
+                    <option key={site.id || code} value={code}>
+                      {code} ({name})
+                    </option>
+                  );
+                })
+              ) : (
+                <>
+                  <option value="KO">KO (Canteiro de Obras Coari)</option>
+                  <option value="BE">BE (Sede Belém / Destacamento)</option>
+                  <option value="MN">MN (Destacamento de Manaus)</option>
+                </>
+              )}
             </select>
           </div>
 

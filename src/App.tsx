@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Employee, TimeRecord, Attachment, AdminUser, AdminRole, AuthSession, InsalubrityRecord, SystemConfig, GrauInsalubridade, ConstructionSite, PaystubRecord, DispensaSptfRecord } from './types';
 import { storageService } from './services/storageService';
 import { firestoreService, BatchProgressInfo } from './services/firestoreService';
@@ -88,6 +88,11 @@ export default function App() {
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [selectedMatricula, setSelectedMatricula] = useState<string>('');
+  const selectedMatriculaRef = useRef<string>(selectedMatricula);
+
+  useEffect(() => {
+    selectedMatriculaRef.current = selectedMatricula;
+  }, [selectedMatricula]);
   const [theme, setTheme] = useState<'dark' | 'light'>(storageService.getTheme());
   const [userMode, setUserMode] = useState<UserMode>('ADMIN');
 
@@ -157,7 +162,7 @@ export default function App() {
         if (emps.length > 0) {
           storageService.saveEmployees(emps);
         }
-        if (emps.length > 0 && !selectedMatricula) {
+        if (emps.length > 0 && !selectedMatriculaRef.current) {
           setSelectedMatricula(emps[0].matricula);
         }
         setIsSyncing(false);
@@ -169,7 +174,7 @@ export default function App() {
         }
         const local = storageService.getEmployees();
         setEmployees(local);
-        if (local.length > 0 && !selectedMatricula) {
+        if (local.length > 0 && !selectedMatriculaRef.current) {
           setSelectedMatricula(local[0].matricula);
         }
         setIsSyncing(false);
@@ -326,7 +331,7 @@ export default function App() {
         console.warn('Erro ao cancelar listener de dispensas SPTF:', e);
       }
     };
-  }, [selectedMatricula, userRole, currentUser]);
+  }, [userRole, currentUser]);
 
   useEffect(() => {
     const cleanup = initFirestoreSubscriptions();
@@ -740,8 +745,8 @@ export default function App() {
   // Safety Intercept Handlers para Destructive Actions
   // -------------------------------------------------------------
   const handleTriggerClearDataSafety = () => {
-    if (userRole === 'AUDITOR') {
-      showToast('Ação bloqueada: Auditores possuem apenas permissão de leitura.', 'error');
+    if (userRole !== 'SUPER_ADMIN') {
+      showToast('Ação bloqueada: Apenas Super Administradores podem limpar a base central de dados.', 'error');
       return;
     }
     setSafetyActionType('CLEAR_DATABASE');
@@ -759,7 +764,7 @@ export default function App() {
 
   const handleExecuteClearDatabase = async () => {
     try {
-      await firestoreService.clearAllData();
+      await firestoreService.clearAllData(userRole || undefined);
       storageService.clearAllData();
       setEmployees([]);
       setRecords([]);
@@ -1214,7 +1219,7 @@ export default function App() {
 
   const isDark = theme === 'dark';
   const isAdmin = userMode === 'ADMIN' && userRole !== 'AUDITOR';
-  const currentUserEmail = currentUser?.email || 'coari.comara@gmail.com';
+  const currentUserEmail = currentUser?.email || 'sistema@anonimo';
 
   // -------------------------------------------------------------
   // RENDER: LOADING STATE
@@ -1486,6 +1491,7 @@ export default function App() {
             <LookerDashboard
               employees={employees}
               records={records}
+              constructionSites={constructionSites}
               onOpenNewEntryModal={(mat) => handleOpenNewEntry(mat)}
               onOpenEditEntryModal={(rec) => handleOpenEditEntry(rec)}
               onDeleteRecord={(id) => handleDeleteRecord(id)}
@@ -1506,6 +1512,7 @@ export default function App() {
             <EmployeeManagement
               employees={employees}
               records={records}
+              constructionSites={constructionSites}
               onUpdateEmployees={handleUpdateEmployees}
               onViewStatement={(mat) => handleViewStatement(mat)}
               onQuickNewEntry={(mat) => handleOpenNewEntry(mat)}

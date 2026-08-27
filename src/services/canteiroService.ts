@@ -8,6 +8,7 @@ import {
   onSnapshot, 
   query, 
   orderBy,
+  limit,
   Unsubscribe 
 } from 'firebase/firestore';
 import { db, logFirestoreError, OperationType } from './firebase';
@@ -334,7 +335,7 @@ export const canteiroService = {
   ): Unsubscribe {
     try {
       return onSnapshot(
-        collection(db, CANTEIROS_COLLECTION),
+        query(collection(db, CANTEIROS_COLLECTION), limit(500)),
         (snapshot) => {
           const list: ConstructionSite[] = [];
           snapshot.forEach((docSnap) => {

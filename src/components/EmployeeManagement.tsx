@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Employee, TimeRecord, Branch, EmployeeStatus } from '../types';
+import { Employee, TimeRecord, Branch, EmployeeStatus, ConstructionSite } from '../types';
 import { parseEmployeesCSV, generateEmployeesTemplateCSV, triggerFileDownload } from '../utils/csvHandler';
 import { getEmployeeTotalBalance, formatHoursDecimal, formatHoursToDays } from '../utils/calculations';
 import { firestoreService } from '../services/firestoreService';
@@ -47,6 +47,7 @@ import { InfoTooltip } from './InfoTooltip';
 interface EmployeeManagementProps {
   employees: Employee[];
   records: TimeRecord[];
+  constructionSites?: ConstructionSite[];
   onUpdateEmployees: (employees: Employee[]) => void;
   onViewStatement: (matricula: string) => void;
   onQuickNewEntry: (matricula: string) => void;
@@ -65,6 +66,7 @@ export interface SortConfig {
 export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   employees,
   records,
+  constructionSites = [],
   onUpdateEmployees,
   onViewStatement,
   onQuickNewEntry,
@@ -825,10 +827,24 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                   }`}
                 >
-                  <option value="TODAS">Todas as Sedes</option>
-                  <option value="KO">Sede KO (Coari)</option>
-                  <option value="BE">Sede BE (Belém)</option>
-                  <option value="MN">Sede MN (Manaus)</option>
+                  <option value="TODAS">Todas as Sedes / Canteiros</option>
+                  {Array.isArray(constructionSites) && constructionSites.length > 0 ? (
+                    constructionSites.map((site) => {
+                      const code = (site.code || site.codigo || site.branch || site.sede || '').toUpperCase();
+                      const name = site.name || site.nome || `Canteiro ${code}`;
+                      return (
+                        <option key={site.id || code} value={code}>
+                          Sede {code} ({name})
+                        </option>
+                      );
+                    })
+                  ) : (
+                    <>
+                      <option value="KO">Sede KO (Coari)</option>
+                      <option value="BE">Sede BE (Belém)</option>
+                      <option value="MN">Sede MN (Manaus)</option>
+                    </>
+                  )}
                 </select>
 
                 <select
@@ -1409,7 +1425,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
                 <div>
                   <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
-                    Sede <span className="text-red-500">*</span>
+                    Sede / Canteiro <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={sede}
@@ -1420,9 +1436,23 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   >
-                    <option value="KO">KO — Coari (AM)</option>
-                    <option value="BE">BE — Belém (PA)</option>
-                    <option value="MN">MN — Manaus (AM)</option>
+                    {Array.isArray(constructionSites) && constructionSites.length > 0 ? (
+                      constructionSites.map((site) => {
+                        const code = (site.code || site.codigo || site.branch || site.sede || '').toUpperCase();
+                        const name = site.name || site.nome || `Canteiro ${code}`;
+                        return (
+                          <option key={site.id || code} value={code}>
+                            {code} — {name}
+                          </option>
+                        );
+                      })
+                    ) : (
+                      <>
+                        <option value="KO">KO — Coari (AM)</option>
+                        <option value="BE">BE — Belém (PA)</option>
+                        <option value="MN">MN — Manaus (AM)</option>
+                      </>
+                    )}
                   </select>
                 </div>
               </div>
