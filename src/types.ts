@@ -31,17 +31,18 @@ export interface LiquidationLink {
 
 export type AdminRole = 
   | 'SUPER_ADMIN' 
-  | 'RH_ADMIN'
+  | 'RH_ADMIN' 
+  | 'GERENTE_CANTEIRO' 
+  | 'CHEFE_CANTEIRO' 
+  | 'CHEFE_DA' 
+  | 'AUX_DA'
+  // Retrocompatibilidade temporária com registros legados
   | 'GESTOR_RH' 
-  | 'GERENTE_CANTEIRO'
   | 'GERENTE' 
   | 'ROLE_GERENTE' 
   | 'GERENTE_CAMPO'
-  | 'CHEFE_CANTEIRO' 
   | 'ENCARREGADO_CANTEIRO' 
-  | 'CHEFE_DA' 
   | 'ENCARREGADO_DA' 
-  | 'AUX_DA' 
   | 'AUDITOR';
 
 export type CanteiroRole = 
@@ -134,6 +135,7 @@ export interface AdminUser {
   email: string;
   nome: string;
   cargo: string;
+  tituloImpressao?: string; // Título do cargo impresso para assinaturas e relatórios (ex: Capitão Encarregado de Obras)
   nivelAcesso: AdminRole;
   role?: AdminRole;
   sede?: string;
@@ -154,6 +156,7 @@ export interface AuthSession {
   matricula?: string;
   role: AdminRole;
   cargo?: string;
+  tituloImpressao?: string;
   loginTime: string;
   sede?: string;
   canteiroCodigo?: string;

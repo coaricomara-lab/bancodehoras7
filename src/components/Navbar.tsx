@@ -761,45 +761,105 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <span className={`text-[10px] uppercase font-bold tracking-wider block mb-2 px-1 ${
                       isDark ? 'text-[#8E9299]' : 'text-slate-500'
                     }`}>
-                      Perfil de Acesso
+                      Perfil de Acesso Ativo (6 Níveis)
                     </span>
 
-                    {/* Botões Rápidos de Simulação de Cargo */}
+                    {/* Grade de 6 Níveis Consolidados */}
                     <div className="grid grid-cols-2 gap-1.5 mb-2">
                       <button
                         onClick={() => {
                           onToggleUserMode('ADMIN');
-                          if (onSelectRole) onSelectRole('AUX_DA');
+                          if (onSelectRole) onSelectRole('SUPER_ADMIN');
                         }}
-                        className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all ${
-                          isAuxDA && isAdmin
-                            ? isDark 
-                              ? 'bg-cyan-950/60 text-cyan-300 border border-cyan-800/60 shadow-xs font-bold' 
-                              : 'bg-cyan-50 text-cyan-700 border border-cyan-300 shadow-xs font-bold'
+                        className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
+                          currentRole === 'SUPER_ADMIN' && isAdmin
+                            ? isDark ? 'bg-indigo-950/60 text-indigo-300 border border-indigo-700/60 shadow-xs font-bold' : 'bg-indigo-50 text-indigo-800 border border-indigo-300 shadow-xs font-bold'
                             : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
                         }`}
-                        title="Perfil Enxuto e Simplificado para Auxiliar de DA"
+                        title="TI: Acesso total global, auditoria e configurações"
                       >
-                        <HardHat className="w-3.5 h-3.5 text-cyan-400" />
-                        <span>Aux de DA</span>
+                        <ShieldCheck className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                        <span className="truncate">Super Admin</span>
                       </button>
 
                       <button
                         onClick={() => {
                           onToggleUserMode('ADMIN');
-                          if (onSelectRole) onSelectRole('GESTOR_RH');
+                          if (onSelectRole) onSelectRole('RH_ADMIN');
                         }}
-                        className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all ${
-                          !isAuxDA && isAdmin
-                            ? isDark 
-                              ? 'bg-purple-950/60 text-purple-300 border border-purple-800/60 shadow-xs font-bold' 
-                              : 'bg-white text-purple-700 border border-purple-200 shadow-xs font-bold'
+                        className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
+                          currentRole === 'RH_ADMIN' && isAdmin
+                            ? isDark ? 'bg-purple-950/60 text-purple-300 border border-purple-700/60 shadow-xs font-bold' : 'bg-purple-50 text-purple-800 border border-purple-300 shadow-xs font-bold'
                             : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
                         }`}
-                        title="Perfil Completo Gestor RH"
+                        title="RH Sede: Acesso global, folha e auditoria"
                       >
-                        <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
-                        <span>Gestor RH</span>
+                        <ShieldCheck className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                        <span className="truncate">RH Admin</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          onToggleUserMode('ADMIN');
+                          if (onSelectRole) onSelectRole('GERENTE_CANTEIRO');
+                        }}
+                        className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
+                          currentRole === 'GERENTE_CANTEIRO' && isAdmin
+                            ? isDark ? 'bg-amber-950/60 text-amber-300 border border-amber-700/60 shadow-xs font-bold' : 'bg-amber-50 text-amber-800 border border-amber-300 shadow-xs font-bold'
+                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                        }`}
+                        title="Gerente: Visualização e acompanhamento do canteiro ativo"
+                      >
+                        <Building2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span className="truncate">Gerente Cant.</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          onToggleUserMode('ADMIN');
+                          if (onSelectRole) onSelectRole('CHEFE_CANTEIRO');
+                        }}
+                        className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
+                          currentRole === 'CHEFE_CANTEIRO' && isAdmin
+                            ? isDark ? 'bg-blue-950/60 text-blue-300 border border-blue-700/60 shadow-xs font-bold' : 'bg-blue-50 text-blue-800 border border-blue-300 shadow-xs font-bold'
+                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                        }`}
+                        title="Chefe / Encarregado: Operacional de campo, lançamentos e dispensas"
+                      >
+                        <HardHat className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                        <span className="truncate">Chefe Canteiro</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          onToggleUserMode('ADMIN');
+                          if (onSelectRole) onSelectRole('CHEFE_DA');
+                        }}
+                        className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
+                          currentRole === 'CHEFE_DA' && isAdmin
+                            ? isDark ? 'bg-teal-950/60 text-teal-300 border border-teal-700/60 shadow-xs font-bold' : 'bg-teal-50 text-teal-800 border border-teal-300 shadow-xs font-bold'
+                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                        }`}
+                        title="Chefe DA: Gestão administrativa e auditoria local"
+                      >
+                        <HardHat className="w-3.5 h-3.5 text-teal-400 shrink-0" />
+                        <span className="truncate">Chefe DA</span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          onToggleUserMode('ADMIN');
+                          if (onSelectRole) onSelectRole('AUX_DA');
+                        }}
+                        className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
+                          currentRole === 'AUX_DA' && isAdmin
+                            ? isDark ? 'bg-cyan-950/60 text-cyan-300 border border-cyan-700/60 shadow-xs font-bold' : 'bg-cyan-50 text-cyan-800 border border-cyan-300 shadow-xs font-bold'
+                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                        }`}
+                        title="Auxiliar DA: Tela restrita de campo para lançamentos e dispensas"
+                      >
+                        <HardHat className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                        <span className="truncate">Auxiliar DA</span>
                       </button>
                     </div>
 

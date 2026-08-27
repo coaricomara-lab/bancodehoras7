@@ -50,7 +50,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
   const [email, setEmail] = useState('');
   const [nome, setNome] = useState('');
   const [cargo, setCargo] = useState('Analista de RH');
-  const [nivelAcesso, setNivelAcesso] = useState<AdminRole>('AUX_DA');
+  const [tituloImpressao, setTituloImpressao] = useState('');
+  const [nivelAcesso, setNivelAcesso] = useState<AdminRole>('RH_ADMIN');
   const [sede, setSede] = useState('KO');
   const [senhaInicial, setSenhaInicial] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
@@ -70,6 +71,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
           email: masterEmail,
           nome: 'Administrador Master COMARA',
           cargo: 'Super Administrador TI / RH',
+          tituloImpressao: 'Chefe da Seção de TI & Pessoal',
           nivelAcesso: 'SUPER_ADMIN',
           ativo: true,
           criadoEm: '2026-01-01 00:00:00',
@@ -96,7 +98,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
     setEmail('');
     setNome('');
     setCargo('Analista de RH');
-    setNivelAcesso('GESTOR_RH');
+    setTituloImpressao('');
+    setNivelAcesso('RH_ADMIN');
     setSede('KO');
     setSenhaInicial('');
     setConfirmarSenha('');
@@ -115,7 +118,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
     setEmail(adm.email);
     setNome(adm.nome);
     setCargo(adm.cargo || 'Gestor RH');
-    setNivelAcesso(adm.nivelAcesso || adm.role || 'GESTOR_RH');
+    setTituloImpressao(adm.tituloImpressao || adm.cargo || '');
+    setNivelAcesso(rbacService.normalizeRole(adm.nivelAcesso || adm.role));
     setSede(adm.sede || adm.canteiroCodigo || 'KO');
     setSenhaInicial('');
     setConfirmarSenha('');
@@ -164,6 +168,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
       email: cleanEmail,
       nome: nome.trim() || cleanEmail.split('@')[0],
       cargo: cargo.trim() || 'Gestor RH',
+      tituloImpressao: tituloImpressao.trim() || undefined,
       nivelAcesso,
       role: nivelAcesso,
       sede: rbacService.hasGlobalAccess(nivelAcesso) ? 'TODAS' : sede,
@@ -185,14 +190,15 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
       await firestoreService.logSystemEvent({
         tipo: 'ALTERACAO_PERMISSAO_RBAC',
         descricao: editingAdmin 
-          ? `Atualização de perfil/nível de acesso RBAC de ${adminData.nome} (${adminData.email}) para ${nivelAcesso}`
-          : `Cadastro de novo administrador ${adminData.nome} (${adminData.email}) com nível ${nivelAcesso}`,
+          ? `Atualização de perfil/nível de acesso RBAC de ${adminData.nome} (${adminData.email}) para ${nivelAcesso}${adminData.tituloImpressao ? ` [Impresso: ${adminData.tituloImpressao}]` : ''}`
+          : `Cadastro de novo administrador ${adminData.nome} (${adminData.email}) com nível ${nivelAcesso}${adminData.tituloImpressao ? ` [Impresso: ${adminData.tituloImpressao}]` : ''}`,
         usuario: currentUserEmail,
         detalhes: {
           email: adminData.email,
           nome: adminData.nome,
           nivelAcesso,
           cargo: adminData.cargo,
+          tituloImpressao: adminData.tituloImpressao,
         }
       });
 
@@ -202,16 +208,17 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
         usuarioNome: currentUserEmail.split('@')[0] || 'Super Admin',
         usuarioPerfil: 'SUPER_ADMIN',
         canteiroId: adminData.canteiroCodigo || 'SEDE-MN',
-        tipoAcao: editingAdmin ? 'ALTERACAO_FUNCAO' : 'ALTERACAO_FUNCAO',
+        tipoAcao: 'ALTERACAO_FUNCAO',
         detalhes: editingAdmin 
-          ? `Perfil RBAC atualizado: ${adminData.nome} (${adminData.email}) alterado para perfil ${nivelAcesso} (${adminData.cargo || 'Sem cargo'}).`
-          : `Novo usuário administrativo criado: ${adminData.nome} (${adminData.email}) com perfil ${nivelAcesso}.`,
+          ? `Perfil RBAC atualizado: ${adminData.nome} (${adminData.email}) alterado para perfil ${nivelAcesso} (${adminData.cargo || 'Sem cargo'})${adminData.tituloImpressao ? ` • Título Impresso: ${adminData.tituloImpressao}` : ''}.`
+          : `Novo usuário administrativo criado: ${adminData.nome} (${adminData.email}) com perfil ${nivelAcesso}${adminData.tituloImpressao ? ` • Título Impresso: ${adminData.tituloImpressao}` : ''}.`,
         recursoId: adminData.email,
         detalhesJson: {
           email: adminData.email,
           nome: adminData.nome,
           nivelAcesso,
           cargo: adminData.cargo,
+          tituloImpressao: adminData.tituloImpressao,
         }
       });
 
@@ -362,7 +369,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
               <tr>
                 <th className="py-3 px-5">Administrador</th>
                 <th className="py-3 px-5">E-mail Corporativo</th>
-                <th className="py-3 px-5">Cargo / Função</th>
+                <th className="py-3 px-5">Cargo / Título Impresso</th>
                 <th className="py-3 px-5 text-center">Canteiro / Sede</th>
                 <th className="py-3 px-5 text-center">Nível de Acesso</th>
                 <th className="py-3 px-5 text-center">Status</th>
@@ -375,7 +382,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
             }`}>
               {admins.map((adm) => {
                 const isSelf = adm.email.toLowerCase() === currentUserEmail.toLowerCase();
-                const roleKey = (adm.nivelAcesso || adm.role || 'AUX_DA') as AdminRole;
+                const roleKey = rbacService.normalizeRole(adm.nivelAcesso || adm.role);
                 const roleMeta = ROLE_INFO[roleKey] || ROLE_INFO.AUX_DA;
                 const canteiroDisplay = rbacService.hasGlobalAccess(roleKey) ? 'TODAS (Global)' : (adm.sede || adm.canteiroCodigo || 'KO');
 
@@ -407,9 +414,18 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                       </span>
                     </td>
 
-                    {/* Cargo */}
-                    <td className="py-3.5 px-5 font-sans whitespace-nowrap text-xs">
-                      <span className={isDark ? 'text-[#8E9299]' : 'text-slate-600'}>{adm.cargo}</span>
+                    {/* Cargo / Titulo Impresso */}
+                    <td className="py-3.5 px-5 font-sans text-xs">
+                      <div className="flex flex-col gap-0.5">
+                        <span className={`font-medium ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                          {adm.cargo || 'Gestor'}
+                        </span>
+                        {adm.tituloImpressao && (
+                          <span className={`text-[10px] font-mono ${isDark ? 'text-cyan-400/90' : 'text-cyan-700'}`}>
+                            🖨️ Impresso: {adm.tituloImpressao}
+                          </span>
+                        )}
+                      </div>
                     </td>
 
                     {/* Canteiro / Sede */}
@@ -588,16 +604,39 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
-                    Cargo / Função
+                    Cargo / Função Interna
                   </label>
                   <input
                     type="text"
                     value={cargo}
                     onChange={(e) => setCargo(e.target.value)}
-                    placeholder="Analista de RH"
+                    placeholder="Ex: Engenheiro Fiscal, Analista"
+                    className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
+                      isDark 
+                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                    }`}
+                  />
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <label className={`block font-semibold text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                      Título do Cargo Impresso
+                    </label>
+                    <InfoTooltip 
+                      theme={theme}
+                      content="Nome/Título oficial que sairá impresso nas Guias de Dispensa SPTF e Assinaturas (ex: 'Capitão Encarregado de Obras', 'Chefe da DA', 'Auxiliar de DA')."
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    value={tituloImpressao}
+                    onChange={(e) => setTituloImpressao(e.target.value)}
+                    placeholder="Ex: Capitão Encarregado de Obras"
                     className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                       isDark 
                         ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
@@ -613,7 +652,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     </label>
                     <InfoTooltip 
                       theme={theme}
-                      content="SUPER_ADMIN / RH_ADMIN (Acesso Total Global); GERENTE_CANTEIRO / CHEFE_CANTEIRO / ENCARREGADO / CHEFE_DA / AUX_DA (Restrito ao Canteiro Ativo)."
+                      content="6 Níveis Consolidados: SUPER_ADMIN (TI), RH_ADMIN (RH Sede), GERENTE_CANTEIRO (Visualização), CHEFE_CANTEIRO (Operacional), CHEFE_DA (Gestão DA & Auditoria Local), AUX_DA (Auxiliar de Campo)."
                     />
                   </div>
                   <select
@@ -625,16 +664,12 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   >
-                    <option value="SUPER_ADMIN">SUPER_ADMIN (TI - Acesso Total Global)</option>
-                    <option value="RH_ADMIN">RH_ADMIN (RH Sede - Gestão Global & Folha)</option>
-                    <option value="GESTOR_RH">GESTOR_RH (RH Sede - Banco de Horas)</option>
-                    <option value="GERENTE_CANTEIRO">GERENTE_CANTEIRO (Gerente do Canteiro Ativo)</option>
-                    <option value="CHEFE_CANTEIRO">CHEFE_CANTEIRO (Operacional - Lançamentos & Dispensas)</option>
-                    <option value="ENCARREGADO_CANTEIRO">ENCARREGADO_CANTEIRO (Operacional de Campo)</option>
-                    <option value="CHEFE_DA">CHEFE_DA (Gestão Administrativa do Canteiro)</option>
-                    <option value="ENCARREGADO_DA">ENCARREGADO_DA (Gestão Administrativa de Campo)</option>
-                    <option value="AUX_DA">AUX_DA (Auxiliar de Campo - Lançamentos & Dispensas)</option>
-                    <option value="AUDITOR">AUDITOR (Auditoria e Relatórios - Somente Leitura)</option>
+                    <option value="SUPER_ADMIN">1. SUPER_ADMIN (TI - Acesso Global, Config & Auditoria)</option>
+                    <option value="RH_ADMIN">2. RH_ADMIN (RH Sede - Gestão Global, Folha & Auditoria)</option>
+                    <option value="GERENTE_CANTEIRO">3. GERENTE_CANTEIRO (Visualização e Acompanhamento do Canteiro)</option>
+                    <option value="CHEFE_CANTEIRO">4. CHEFE_CANTEIRO (Operacional - Lançamentos, Insalubridade & Dispensas)</option>
+                    <option value="CHEFE_DA">5. CHEFE_DA (Gestão DA - Lançamentos, Dispensas & Auditoria Local)</option>
+                    <option value="AUX_DA">6. AUX_DA (Auxiliar de Campo - Lançamentos & Dispensas)</option>
                   </select>
                 </div>
               </div>

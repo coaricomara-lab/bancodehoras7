@@ -5,24 +5,34 @@ export interface RBACUser {
   nome: string;
   role: AdminRole;
   cargo?: string;
+  tituloImpressao?: string;
   sede?: string;
   canteiroCodigo?: string;
   canteiroId?: string;
 }
 
 /**
- * MATRIZ DEFINITIVA DE PERFIS E PERMISSÕES COMARA SPTF
+ * MATRIZ CONSOLIDADA DE 6 NÍVEIS DE ACESSO COMARA SPTF
+ * Separando estritamente a "Regra de Acesso / Permissão" do "Título do Cargo Impresso".
  * 
- * 1. SUPER_ADMIN (TI): Acesso TOTAL a todos os canteiros, relatórios globais, auditoria, configurações e gestão de usuários.
- * 2. RH_ADMIN / GESTOR_RH (RH Sede): Acesso TOTAL a todos os canteiros, relatórios globais, auditoria e importação da folha.
- * 3. GERENTE_CANTEIRO (Gerente / Gerente de Campo): Leitura e aprovação RESTREITO ao seu canteiro ativo.
- * 4. CHEFE_CANTEIRO / ENCARREGADO_CANTEIRO: Operacional do canteiro ativo: Lançamento de horas, validação de insalubridade e dispensas SPTF.
- * 5. CHEFE_DA / ENCARREGADO_DA: Gestão administrativa do canteiro ativo: Lançamentos, insalubridade e emissão de dispensas SPTF.
- * 6. AUX_DA (Auxiliar da DA): Acesso simplificado de campo RESTREITO ao seu canteiro: Lançamentos rápidos e Emissão de Dispensa SPTF.
- * 7. AUDITOR: Auditoria e relatórios - somente leitura.
+ * 1. SUPER_ADMIN: TI (Acesso global, configurações e auditoria).
+ * 2. RH_ADMIN: RH Sede (Acesso global a todos os canteiros, gestão de folha, contracheques e auditoria).
+ * 3. GERENTE_CANTEIRO: Visualização e acompanhamento (Somente leitura das horas e relatórios do seu canteiro ativo).
+ * 4. CHEFE_CANTEIRO: Operacional de Campo (Lançamentos, insalubridade e dispensas do seu canteiro ativo). *Nota: Serve para Chefe e Encarregado.*
+ * 5. CHEFE_DA: Gestão Administrativa do Canteiro (Auditoria local, relatórios e gestão do canteiro ativo). *Nota: Serve para Chefe DA e Encarregado DA.*
+ * 6. AUX_DA: Auxiliar de Campo (Tela restrita para lançamentos de horas e emissão de dispensas no canteiro ativo).
  */
 
-export const ROLE_INFO: Record<AdminRole, {
+export const CONSOLIDATED_ROLES: AdminRole[] = [
+  'SUPER_ADMIN',
+  'RH_ADMIN',
+  'GERENTE_CANTEIRO',
+  'CHEFE_CANTEIRO',
+  'CHEFE_DA',
+  'AUX_DA',
+];
+
+export const ROLE_INFO: Record<string, {
   label: string;
   shortLabel: string;
   scope: 'GLOBAL' | 'CANTEIRO_RESTRICTED';
@@ -31,105 +41,140 @@ export const ROLE_INFO: Record<AdminRole, {
 }> = {
   SUPER_ADMIN: {
     label: 'Super Admin (TI)',
-    shortLabel: 'SA (TI)',
+    shortLabel: 'Super Admin',
     scope: 'GLOBAL',
     badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
-    description: 'Acesso total a todos os canteiros, relatórios globais, auditoria e gestão de usuários.',
+    description: 'TI: Acesso global irrestrito, configurações de sistema, trilha de auditoria e gestão de acessos.',
   },
   RH_ADMIN: {
     label: 'RH Admin (RH Sede)',
-    shortLabel: 'RH Admin',
+    shortLabel: 'RH Sede',
     scope: 'GLOBAL',
     badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-    description: 'Gestão global de banco de horas, relatórios executivos e importação da folha de pagamento.',
-  },
-  GESTOR_RH: {
-    label: 'Gestor de RH (Sede)',
-    shortLabel: 'Gestor RH',
-    scope: 'GLOBAL',
-    badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-    description: 'Gestão global de banco de horas, relatórios executivos e homologações.',
+    description: 'RH Sede: Acesso global a todos os canteiros, gestão de folha, contracheques e auditoria.',
   },
   GERENTE_CANTEIRO: {
     label: 'Gerente de Canteiro',
     shortLabel: 'Gerente',
     scope: 'CANTEIRO_RESTRICTED',
     badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    description: 'Leitura, aprovação e acompanhamento operacional restrito ao seu canteiro ativo.',
+    description: 'Visualização e acompanhamento: Somente leitura das horas e relatórios do seu canteiro ativo.',
   },
-  GERENTE_CAMPO: {
-    label: 'Gerente de Campo',
-    shortLabel: 'Gerente',
+  CHEFE_CANTEIRO: {
+    label: 'Chefe / Encarregado de Canteiro',
+    shortLabel: 'Chefe Cant.',
     scope: 'CANTEIRO_RESTRICTED',
-    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    description: 'Leitura e fiscalização restrita ao canteiro de obras.',
+    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    description: 'Operacional de Campo: Lançamentos de horas, laudos de insalubridade e emissão de dispensas no canteiro ativo.',
+  },
+  CHEFE_DA: {
+    label: 'Chefe / Encarregado da DA',
+    shortLabel: 'Chefe DA',
+    scope: 'CANTEIRO_RESTRICTED',
+    badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
+    description: 'Gestão Administrativa do Canteiro: Auditoria local, relatórios executivos e gestão do canteiro ativo.',
+  },
+  AUX_DA: {
+    label: 'Auxiliar de Campo / DA',
+    shortLabel: 'Aux. DA',
+    scope: 'CANTEIRO_RESTRICTED',
+    badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+    description: 'Auxiliar de Campo: Tela restrita e ágil para lançamentos de horas e emissão de dispensas SPTF no canteiro ativo.',
+  },
+
+  // Aliases e Retrocompatibilidade de exibição
+  GESTOR_RH: {
+    label: 'RH Admin (RH Sede)',
+    shortLabel: 'RH Sede',
+    scope: 'GLOBAL',
+    badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+    description: 'RH Sede: Gestão global e folha de pagamento.',
+  },
+  ENCARREGADO_CANTEIRO: {
+    label: 'Chefe / Encarregado de Canteiro',
+    shortLabel: 'Encarregado',
+    scope: 'CANTEIRO_RESTRICTED',
+    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+    description: 'Operacional de Campo do canteiro ativo.',
+  },
+  ENCARREGADO_DA: {
+    label: 'Chefe / Encarregado da DA',
+    shortLabel: 'Enc. DA',
+    scope: 'CANTEIRO_RESTRICTED',
+    badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
+    description: 'Gestão Administrativa do Canteiro.',
   },
   GERENTE: {
-    label: 'Engenheiro Fiscal / Gerente',
+    label: 'Gerente de Canteiro',
     shortLabel: 'Gerente',
     scope: 'CANTEIRO_RESTRICTED',
     badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    description: 'Fiscalização e acompanhamento de horas e insalubridade do canteiro.',
+    description: 'Acompanhamento do canteiro ativo.',
+  },
+  GERENTE_CAMPO: {
+    label: 'Gerente de Canteiro',
+    shortLabel: 'Gerente',
+    scope: 'CANTEIRO_RESTRICTED',
+    badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+    description: 'Acompanhamento do canteiro ativo.',
   },
   ROLE_GERENTE: {
     label: 'Gerente de Canteiro',
     shortLabel: 'Gerente',
     scope: 'CANTEIRO_RESTRICTED',
     badgeColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-    description: 'Acompanhamento e aprovação no canteiro ativo.',
-  },
-  CHEFE_CANTEIRO: {
-    label: 'Chefe de Canteiro',
-    shortLabel: 'Chefe Cant.',
-    scope: 'CANTEIRO_RESTRICTED',
-    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-    description: 'Operacional do canteiro: Lançamento de horas, validação de insalubridade e dispensas SPTF.',
-  },
-  ENCARREGADO_CANTEIRO: {
-    label: 'Encarregado de Canteiro',
-    shortLabel: 'Encarregado',
-    scope: 'CANTEIRO_RESTRICTED',
-    badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-    description: 'Operacional do canteiro: Lançamento de horas, validação de insalubridade e dispensas SPTF.',
-  },
-  CHEFE_DA: {
-    label: 'Chefe da Divisão Administrativa',
-    shortLabel: 'Chefe DA',
-    scope: 'CANTEIRO_RESTRICTED',
-    badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
-    description: 'Gestão administrativa do canteiro: Lançamentos, insalubridade e emissão de dispensas SPTF.',
-  },
-  ENCARREGADO_DA: {
-    label: 'Encarregado da DA',
-    shortLabel: 'Enc. DA',
-    scope: 'CANTEIRO_RESTRICTED',
-    badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
-    description: 'Gestão administrativa do canteiro: Lançamentos, insalubridade e emissão de dispensas SPTF.',
-  },
-  AUX_DA: {
-    label: 'Auxiliar da Divisão Administrativa',
-    shortLabel: 'Aux. DA',
-    scope: 'CANTEIRO_RESTRICTED',
-    badgeColor: 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-    description: 'Acesso simplificado de campo: Lançamentos rápidos e Botão Gerar Dispensa de SPTF.',
+    description: 'Acompanhamento do canteiro ativo.',
   },
   AUDITOR: {
-    label: 'Auditor Externo / Leitura',
-    shortLabel: 'Auditor',
+    label: 'Gerente / Visualização',
+    shortLabel: 'Leitura',
     scope: 'GLOBAL',
     badgeColor: 'bg-slate-500/20 text-slate-300 border-slate-500/30',
-    description: 'Visualização de relatórios e extratos em modo somente leitura.',
+    description: 'Acompanhamento e relatórios em modo somente leitura.',
   },
 };
 
 export const rbacService = {
   /**
+   * Normaliza qualquer role string para uma das 6 roles canônicas
+   */
+  normalizeRole(role?: AdminRole | string): AdminRole {
+    if (!role) return 'AUX_DA';
+    const r = role.toString().toUpperCase().trim();
+    switch (r) {
+      case 'SUPER_ADMIN':
+        return 'SUPER_ADMIN';
+      case 'RH_ADMIN':
+      case 'GESTOR_RH':
+        return 'RH_ADMIN';
+      case 'GERENTE_CANTEIRO':
+      case 'GERENTE':
+      case 'GERENTE_CAMPO':
+      case 'ROLE_GERENTE':
+      case 'AUDITOR':
+        return 'GERENTE_CANTEIRO';
+      case 'CHEFE_CANTEIRO':
+      case 'ENCARREGADO_CANTEIRO':
+        return 'CHEFE_CANTEIRO';
+      case 'CHEFE_DA':
+      case 'ENCARREGADO_DA':
+        return 'CHEFE_DA';
+      case 'AUX_DA':
+      case 'AUXILIAR_DA':
+        return 'AUX_DA';
+      default:
+        return 'AUX_DA';
+    }
+  },
+
+  /**
    * Identifica se o usuário possui acesso global a todos os canteiros e sedes
+   * (Apenas SUPER_ADMIN e RH_ADMIN)
    */
   hasGlobalAccess(role?: AdminRole | string): boolean {
     if (!role) return false;
-    const r = role.toString().toUpperCase();
-    return r === 'SUPER_ADMIN' || r === 'RH_ADMIN' || r === 'GESTOR_RH';
+    const r = this.normalizeRole(role);
+    return r === 'SUPER_ADMIN' || r === 'RH_ADMIN';
   },
 
   isGlobalRole(role?: AdminRole | string): boolean {
@@ -137,33 +182,38 @@ export const rbacService = {
   },
 
   /**
+   * Identifica se o usuário opera na interface simplificada de campo
+   * (CHEFE_CANTEIRO, CHEFE_DA, AUX_DA)
+   */
+  isFieldUser(role?: AdminRole | string): boolean {
+    if (!role) return false;
+    const r = this.normalizeRole(role);
+    return r === 'CHEFE_CANTEIRO' || r === 'CHEFE_DA' || r === 'AUX_DA';
+  },
+
+  /**
    * Permissão para aprovar e homologar horas
+   * (SUPER_ADMIN, RH_ADMIN, CHEFE_CANTEIRO, CHEFE_DA)
    */
   canApproveHours(role?: AdminRole | string): boolean {
     if (!role) return false;
-    const r = role.toString().toUpperCase();
+    const r = this.normalizeRole(role);
     return (
       r === 'SUPER_ADMIN' ||
       r === 'RH_ADMIN' ||
-      r === 'GESTOR_RH' ||
-      r === 'GERENTE_CANTEIRO' ||
-      r === 'GERENTE' ||
-      r === 'GERENTE_CAMPO' ||
-      r === 'ROLE_GERENTE' ||
       r === 'CHEFE_CANTEIRO' ||
-      r === 'ENCARREGADO_CANTEIRO' ||
-      r === 'CHEFE_DA' ||
-      r === 'ENCARREGADO_DA'
+      r === 'CHEFE_DA'
     );
   },
 
   /**
    * Permissão para visualizar logs de auditoria e segurança
+   * (Restrito a SUPER_ADMIN, RH_ADMIN e CHEFE_DA - auditoria local do canteiro)
    */
   canViewAuditLogs(role?: AdminRole | string): boolean {
     if (!role) return false;
-    const r = role.toString().toUpperCase();
-    return r === 'SUPER_ADMIN' || r === 'RH_ADMIN' || r === 'GESTOR_RH' || r === 'AUDITOR';
+    const r = this.normalizeRole(role);
+    return r === 'SUPER_ADMIN' || r === 'RH_ADMIN' || r === 'CHEFE_DA';
   },
 
   /**
@@ -171,30 +221,124 @@ export const rbacService = {
    */
   canDeleteRecords(role?: AdminRole | string): boolean {
     if (!role) return false;
-    const r = role.toString().toUpperCase();
+    const r = this.normalizeRole(role);
     return r === 'SUPER_ADMIN' || r === 'RH_ADMIN';
+  },
+
+  /**
+   * Permissão para lançar horas (individual ou em lote)
+   * (SUPER_ADMIN, RH_ADMIN, CHEFE_CANTEIRO, CHEFE_DA, AUX_DA)
+   */
+  canLaunchHours(role?: AdminRole | string): boolean {
+    if (!role) return false;
+    const r = this.normalizeRole(role);
+    return (
+      r === 'SUPER_ADMIN' ||
+      r === 'RH_ADMIN' ||
+      r === 'CHEFE_CANTEIRO' ||
+      r === 'CHEFE_DA' ||
+      r === 'AUX_DA'
+    );
+  },
+
+  /**
+   * Permissão para lançar / validar insalubridade no canteiro
+   * (SUPER_ADMIN, RH_ADMIN, CHEFE_CANTEIRO, CHEFE_DA)
+   */
+  canValidateInsalubrity(role?: AdminRole | string): boolean {
+    if (!role) return false;
+    const r = this.normalizeRole(role);
+    return (
+      r === 'SUPER_ADMIN' ||
+      r === 'RH_ADMIN' ||
+      r === 'CHEFE_CANTEIRO' ||
+      r === 'CHEFE_DA'
+    );
+  },
+
+  canLaunchInsalubrity(role?: AdminRole | string): boolean {
+    return this.canValidateInsalubrity(role);
+  },
+
+  /**
+   * Checa se o usuário pode emitir Guia de Dispensa de SPTF em 2 vias
+   * (SUPER_ADMIN, RH_ADMIN, CHEFE_CANTEIRO, CHEFE_DA, AUX_DA)
+   */
+  canEmitDispensa(role?: AdminRole | string): boolean {
+    if (!role) return false;
+    const r = this.normalizeRole(role);
+    return (
+      r === 'SUPER_ADMIN' ||
+      r === 'RH_ADMIN' ||
+      r === 'CHEFE_CANTEIRO' ||
+      r === 'CHEFE_DA' ||
+      r === 'AUX_DA'
+    );
+  },
+
+  canIssueDispensa(role?: AdminRole | string): boolean {
+    return this.canEmitDispensa(role);
+  },
+
+  /**
+   * Checa se o usuário pode gerenciar contracheques e importação da folha
+   */
+  canManagePaystubs(role?: AdminRole | string): boolean {
+    return this.hasGlobalAccess(role);
+  },
+
+  canImportFolha(role?: AdminRole | string): boolean {
+    return this.hasGlobalAccess(role);
+  },
+
+  /**
+   * Permissão para cadastrar, editar e gerenciar Canteiros de Obras
+   */
+  canManageCanteiros(role?: AdminRole | string): boolean {
+    return this.hasGlobalAccess(role);
+  },
+
+  canManageSystemConfig(role?: AdminRole | string): boolean {
+    return this.hasGlobalAccess(role);
+  },
+
+  /**
+   * Checa se o usuário pode gerenciar permissões administrativas (Exclusivo Super Admin TI)
+   */
+  canManageAdminPermissions(role?: AdminRole | string, email?: string): boolean {
+    if (!role) return false;
+    if (email && (email.toLowerCase() === 'coari.comara@gmail.com' || email.toLowerCase() === 'comarafab@gmail.com')) {
+      return true;
+    }
+    const r = this.normalizeRole(role);
+    return r === 'SUPER_ADMIN';
+  },
+
+  canManageAdmins(role?: AdminRole | string, email?: string): boolean {
+    return this.canManageAdminPermissions(role, email);
   },
 
   /**
    * Controle de acesso às abas principais da navegação
    */
-  canAccessTab(tab: string, role?: AdminRole | string): boolean {
+  canAccessTab(tab: string, role?: AdminRole | string, email?: string): boolean {
     if (!role) return false;
-    const r = role.toString().toUpperCase();
+    const r = this.normalizeRole(role);
     switch (tab) {
       case 'canteiros':
         return this.canManageCanteiros(r);
       case 'auditoria':
         return this.canViewAuditLogs(r);
       case 'permissoes_admin':
-        return this.canManageAdminPermissions(r);
+        return this.canManageAdminPermissions(r, email);
       case 'contracheques':
         return this.canManagePaystubs(r);
       case 'insalubridade':
-        return this.canValidateInsalubrity(r) || r === 'AUDITOR';
+        return this.canValidateInsalubrity(r) || r === 'GERENTE_CANTEIRO';
+      case 'relatorios':
+        return r !== 'AUX_DA';
       case 'dashboard':
       case 'colaboradores':
-      case 'relatorios':
       case 'extrato':
       case 'portal_colaborador':
       case 'arquitetura':
@@ -216,111 +360,6 @@ export const rbacService = {
   getUserCanteiroId(user?: RBACUser | null): string {
     if (!user) return 'KO';
     return (user.canteiroId || user.canteiroCodigo || user.sede || 'KO').toUpperCase();
-  },
-
-  /**
-   * Checa se o usuário pode emitir Guia de Dispensa de SPTF (alias canIssueDispensa)
-   */
-  canEmitDispensa(role?: AdminRole | string): boolean {
-    if (!role) return false;
-    const r = role.toString().toUpperCase();
-    return (
-      r === 'SUPER_ADMIN' ||
-      r === 'RH_ADMIN' ||
-      r === 'GESTOR_RH' ||
-      r === 'CHEFE_CANTEIRO' ||
-      r === 'ENCARREGADO_CANTEIRO' ||
-      r === 'CHEFE_DA' ||
-      r === 'ENCARREGADO_DA' ||
-      r === 'AUX_DA' ||
-      r === 'AUXILIAR_DA' ||
-      r === 'GERENTE_CANTEIRO' ||
-      r === 'GERENTE' ||
-      r === 'GERENTE_CAMPO' ||
-      r === 'ROLE_GERENTE'
-    );
-  },
-
-  canIssueDispensa(role?: AdminRole | string): boolean {
-    return this.canEmitDispensa(role);
-  },
-
-  /**
-   * Checa se o usuário pode lançar horas (individual ou em lote)
-   */
-  canLaunchHours(role?: AdminRole | string): boolean {
-    if (!role) return false;
-    const r = role.toString().toUpperCase();
-    return (
-      r === 'SUPER_ADMIN' ||
-      r === 'RH_ADMIN' ||
-      r === 'GESTOR_RH' ||
-      r === 'CHEFE_CANTEIRO' ||
-      r === 'ENCARREGADO_CANTEIRO' ||
-      r === 'CHEFE_DA' ||
-      r === 'ENCARREGADO_DA' ||
-      r === 'AUX_DA' ||
-      r === 'AUXILIAR_DA'
-    );
-  },
-
-  /**
-   * Checa se o usuário pode validar/lançar insalubridade
-   */
-  canValidateInsalubrity(role?: AdminRole | string): boolean {
-    if (!role) return false;
-    const r = role.toString().toUpperCase();
-    return (
-      r === 'SUPER_ADMIN' ||
-      r === 'RH_ADMIN' ||
-      r === 'GESTOR_RH' ||
-      r === 'GERENTE_CANTEIRO' ||
-      r === 'GERENTE' ||
-      r === 'GERENTE_CAMPO' ||
-      r === 'ROLE_GERENTE' ||
-      r === 'CHEFE_CANTEIRO' ||
-      r === 'ENCARREGADO_CANTEIRO' ||
-      r === 'CHEFE_DA' ||
-      r === 'ENCARREGADO_DA'
-    );
-  },
-
-  canLaunchInsalubrity(role?: AdminRole | string): boolean {
-    return this.canValidateInsalubrity(role);
-  },
-
-  /**
-   * Checa se o usuário pode gerenciar contracheques e importação da folha
-   */
-  canManagePaystubs(role?: AdminRole | string): boolean {
-    return this.hasGlobalAccess(role);
-  },
-
-  canImportFolha(role?: AdminRole | string): boolean {
-    return this.hasGlobalAccess(role);
-  },
-
-  canManageCanteiros(role?: AdminRole | string): boolean {
-    return this.hasGlobalAccess(role);
-  },
-
-  canManageSystemConfig(role?: AdminRole | string): boolean {
-    return this.hasGlobalAccess(role);
-  },
-
-  canManageAdmins(role?: AdminRole | string, email?: string): boolean {
-    return this.canManageAdminPermissions(role, email);
-  },
-
-  /**
-   * Checa se o usuário pode gerenciar permissões administrativas
-   */
-  canManageAdminPermissions(role?: AdminRole | string, email?: string): boolean {
-    if (!role) return false;
-    if (email && (email.toLowerCase() === 'coari.comara@gmail.com' || email.toLowerCase() === 'comarafab@gmail.com')) {
-      return true;
-    }
-    return role.toString().toUpperCase() === 'SUPER_ADMIN';
   },
 
   /**
