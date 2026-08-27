@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Employee, TimeRecord, Attachment } from '../types';
 import { ComaraLogo } from './ComaraLogo';
+import { useInstitution } from '../contexts/InstitutionContext';
 import { 
   ShieldCheck, 
   Lock, 
@@ -36,6 +37,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
   records,
   onViewAttachment,
 }) => {
+  const { settings: institutionSettings } = useInstitution();
   // Login states
   const [matriculaInput, setMatriculaInput] = useState('');
   const [pinInput, setPinInput] = useState('');
@@ -137,16 +139,16 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
-          {/* Header Card with Official COMARA Shield */}
+          {/* Header Card with Official Shield */}
           <div className="text-center mb-6 space-y-2">
             <div className="flex justify-center mb-1">
-              <ComaraLogo size="xl" />
+              <ComaraLogo logoUrl={institutionSettings?.logoUrl} size="xl" />
             </div>
             <h1 className="text-xl font-bold text-white tracking-tight">
-              Portal do Colaborador • COMARA
+              Portal do Colaborador • {institutionSettings?.siglaInstituicao || 'COMARA'}
             </h1>
             <p className="text-xs text-[#8E9299] font-mono">
-              Comissão de Aeroportos da Região Amazônica • SPTF
+              {institutionSettings?.nomeInstituicao || 'Comissão de Aeroportos da Região Amazônica'} • SPTF
             </p>
           </div>
 
@@ -293,13 +295,13 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
         </div>
       </div>
 
-      {/* Cabeçalho Institucional Oficial COMARA (Visível na Impressão e Tela) */}
+      {/* Cabeçalho Institucional Oficial (Visível na Impressão e Tela) */}
       <div className="bg-[#15171C] border border-[#1F2229] p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-4 print:border-b-2 print:border-slate-300 print:shadow-none print:rounded-none print:p-2 print:bg-white print:text-black">
         <div className="flex items-center gap-3.5">
-          <ComaraLogo size="lg" />
+          <ComaraLogo logoUrl={institutionSettings?.logoUrl} size="lg" />
           <div>
             <div className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-widest text-blue-400 print:text-blue-900">
-              COMANDO DA AERONÁUTICA • COMISSÃO DE AEROPORTOS DA REGIÃO AMAZÔNICA
+              {institutionSettings?.nomeInstituicao || 'COMANDO DA AERONÁUTICA • COMISSÃO DE AEROPORTOS DA REGIÃO AMAZÔNICA'}
             </div>
             <h1 className="text-sm sm:text-base font-black tracking-tight text-white print:text-black">
               PORTAL DO COLABORADOR • EXTRATO OFICIAL DE HORAS
@@ -310,7 +312,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
           </div>
         </div>
         <div className="hidden sm:block text-right text-[10px] font-mono text-[#8E9299] print:text-slate-700">
-          <div className="font-bold text-white print:text-black">COMARA • SPTF</div>
+          <div className="font-bold text-white print:text-black">{institutionSettings?.siglaInstituicao || 'COMARA'} • SPTF</div>
           <div>Consulta de Efetivo</div>
         </div>
       </div>

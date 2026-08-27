@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useInstitution } from '../contexts/InstitutionContext';
 
 export interface LogoComaraProps {
   logoUrl?: string;
@@ -34,22 +35,40 @@ export const COMARA_LOGO_SVG_STRING = `
 `;
 
 /**
- * Componente Institucional de Logo da COMARA
+ * Componente Institucional de Logo
  * Otimizado para suportar PNGs com fundo transparente sem distorção em tela e impressão (@media print).
  * Inclui crossOrigin="anonymous" e referrerPolicy="no-referrer" para compatibilidade com PDF e canvas.
  */
 export const LogoComara: React.FC<LogoComaraProps> = ({
-  logoUrl = DEFAULT_COMARA_LOGO_URL,
+  logoUrl,
   size = 'md',
   showText = false,
-  subtitle = 'Comissão de Aeroportos da Região Amazônica',
+  subtitle,
   theme = 'dark',
   className = '',
   onClick,
-  altText = 'Brasão Oficial COMARA'
+  altText
 }) => {
   const isDark = theme === 'dark';
   const [imageError, setImageError] = useState(false);
+
+  let institutionSettings: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const inst = useInstitution();
+    institutionSettings = inst?.settings;
+  } catch {
+    // Graceful fallback if rendered outside InstitutionProvider
+  }
+
+  const effectiveSigla = institutionSettings?.siglaInstituicao || 'COMARA';
+  const effectiveNome = institutionSettings?.nomeInstituicao || 'Comissão de Aeroportos da Região Amazônica';
+  const effectiveAltText = altText || `Brasão Oficial ${effectiveSigla}`;
+  const effectiveSubtitle = subtitle !== undefined ? subtitle : effectiveNome;
+
+  const rawLogoUrl = logoUrl || institutionSettings?.logoUrl || DEFAULT_COMARA_LOGO_URL;
+  const effectiveLogoUrl = (rawLogoUrl && rawLogoUrl.trim().length > 0) ? rawLogoUrl : DEFAULT_COMARA_LOGO_URL;
+  const hasCustomImage = Boolean(effectiveLogoUrl && !imageError);
 
   // Mapeamento rigoroso e proporcional de tamanhos (Tela e Impressão A4)
   const sizeClasses: Record<string, string> = {
@@ -72,12 +91,7 @@ export const LogoComara: React.FC<LogoComaraProps> = ({
     '2xl': { title: 'text-2xl sm:text-3xl', sub: 'text-sm' },
   };
 
-  const effectiveLogoUrl = (logoUrl && logoUrl.trim().length > 0) ? logoUrl : DEFAULT_COMARA_LOGO_URL;
-  const hasCustomImage = Boolean(effectiveLogoUrl && !imageError);
-
   // Ajustes ópticos e de contraste dinâmico para PNG transparente:
-  // - Em tema escuro: adiciona leve brilho/drop-shadow para destacar detalhes sobre fundos pretos/grafite.
-  // - Em tema claro / Impressão: contraste nítido preservando a pureza das cores institucionais da FAB.
   const imageContrastClasses = isDark 
     ? 'brightness-105 contrast-110 drop-shadow-[0_2px_8px_rgba(255,255,255,0.12)] print:brightness-100 print:contrast-100 print:drop-none' 
     : 'brightness-100 contrast-105 drop-shadow-[0_1px_3px_rgba(0,0,0,0.12)] print:drop-none';
@@ -86,13 +100,13 @@ export const LogoComara: React.FC<LogoComaraProps> = ({
     <div 
       className={`inline-flex items-center gap-3 select-none ${onClick ? 'cursor-pointer' : ''} ${className}`}
       onClick={onClick}
-      title={onClick ? 'Clique para gerenciar a logomarca da COMARA' : 'COMARA - Comissão de Aeroportos da Região Amazônica (FAB)'}
+      title={onClick ? `Clique para gerenciar a logomarca da ${effectiveSigla}` : `${effectiveSigla} - ${effectiveNome}`}
     >
       {hasCustomImage ? (
         <div className="relative shrink-0 flex items-center justify-center">
           <img
             src={effectiveLogoUrl}
-            alt={altText}
+            alt={effectiveAltText}
             crossOrigin="anonymous"
             referrerPolicy="no-referrer"
             className={`${sizeClasses[size] || sizeClasses.md} object-contain transition-all duration-200 hover:scale-105 ${imageContrastClasses}`}
@@ -100,7 +114,7 @@ export const LogoComara: React.FC<LogoComaraProps> = ({
           />
         </div>
       ) : (
-        /* Brasão e Insígnia Vetorial da Aeronáutica / COMARA com Asas Douradas */
+        /* Brasão e Insígnia Vetorial com Asas Douradas */
         <div className={`relative shrink-0 flex items-center justify-center rounded-xl shadow-md transition-transform group-hover:scale-105 ${
           sizeClasses[size] || sizeClasses.md
         } bg-gradient-to-br from-[#0B2545] via-[#134074] to-[#00509D] text-white border ${
@@ -152,7 +166,7 @@ export const LogoComara: React.FC<LogoComaraProps> = ({
               strokeWidth="1.2"
             />
 
-            {/* Estrela Aeronáutica */}
+            {/* Estrela */}
             <polygon
               points="20,11 21.5,15 25.5,15 22.2,17.5 23.5,21.5 20,19 16.5,21.5 17.8,17.5 14.5,15 18.5,15"
               fill="url(#goldGradLogo)"
@@ -170,21 +184,21 @@ export const LogoComara: React.FC<LogoComaraProps> = ({
             <span className={`font-black tracking-tight ${(textSizes[size] || textSizes.md).title} ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
-              COMARA
+              {effectiveSigla}
             </span>
             <span className={`font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded text-[9px] ${
               isDark 
                 ? 'bg-blue-950/60 text-blue-400 border border-blue-800/50' 
                 : 'bg-blue-50 text-blue-700 border border-blue-200'
             }`}>
-              FAB • SPTF
+              SPTF
             </span>
           </div>
-          {subtitle && (
+          {effectiveSubtitle && (
             <p className={`font-medium truncate ${(textSizes[size] || textSizes.md).sub} ${
               isDark ? 'text-[#8E9299]' : 'text-slate-500'
             }`}>
-              {subtitle}
+              {effectiveSubtitle}
             </p>
           )}
         </div>

@@ -2,6 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { Employee, TimeRecord, Attachment, CompensationStatus, InsalubrityRecord, ConstructionSite } from '../types';
 import { ComaraLogo } from './ComaraLogo';
 import { getSignaturesForCanteiro } from '../services/canteiroService';
+import { useInstitution } from '../contexts/InstitutionContext';
+import { IconButton } from './IconButton';
 import { 
   getEmployeeTotalBalance, 
   formatHoursDecimal, 
@@ -75,15 +77,16 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
   theme = 'dark',
 }) => {
   const isDark = theme === 'dark';
+  const { settings: institutionSettings, sedes: instSedes, cargos: instCargos } = useInstitution();
   const currentEmployee = employees.find(e => e.matricula === selectedMatricula) || employees[0];
   const [fifoFilter, setFifoFilter] = useState<FifoFilterType>('TODOS');
   const [expandedRecordId, setExpandedRecordId] = useState<string | null>(null);
 
   // Assinaturas dinâmicas do Canteiro do Colaborador
   const dynamicSignatures = useMemo(() => {
-    const branchCode = currentEmployee?.sede_atual || currentEmployee?.sede || 'KO';
+    const branchCode = currentEmployee?.sede_atual || currentEmployee?.sede || (instSedes && instSedes[0]?.codigo) || 'KO';
     return getSignaturesForCanteiro(branchCode, constructionSites);
-  }, [currentEmployee, constructionSites]);
+  }, [currentEmployee, constructionSites, instSedes]);
 
   // Insalubridade records for this employee
   const employeeInsalubrities = useMemo(() => {
@@ -223,49 +226,44 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <button
+        <div className="flex items-center gap-2">
+          <IconButton
+            icon={Download}
+            variant="secondary"
+            size="md"
+            tooltip="Exportar Extrato em Arquivo CSV"
+            aria-label="Exportar CSV"
             onClick={handleExportCSV}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors font-mono border ${
-              isDark 
-                ? 'text-[#E0E2E5] bg-[#1F2229] hover:bg-[#2A2E38] border-[#1F2229]' 
-                : 'text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-300'
-            }`}
-          >
-            <Download className="w-3.5 h-3.5 text-blue-500" />
-            <span>Exportar CSV</span>
-          </button>
+          />
 
-          <button
+          <IconButton
+            icon={Printer}
+            variant="secondary"
+            size="md"
+            tooltip="Imprimir Extrato Oficial do Colaborador"
+            aria-label="Imprimir Extrato"
             onClick={handlePrint}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors font-mono border ${
-              isDark 
-                ? 'text-[#E0E2E5] bg-[#1F2229] hover:bg-[#2A2E38] border-[#1F2229]' 
-                : 'text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-300'
-            }`}
-          >
-            <Printer className="w-3.5 h-3.5 text-amber-500" />
-            <span>Imprimir Extrato</span>
-          </button>
+          />
 
-          <button
+          <IconButton
+            icon={PlusCircle}
+            variant="primary"
+            size="md"
+            tooltip={`Novo Lançamento para ${currentEmployee.nome}`}
+            aria-label="Lançar Ocorrência"
             onClick={() => onOpenNewEntry(currentEmployee.matricula)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 rounded-lg transition-all shadow-md shadow-blue-500/20 active:scale-98 cursor-pointer"
-          >
-            <PlusCircle className="w-3.5 h-3.5" />
-            <span>Lançar Ocorrência</span>
-          </button>
+          />
 
           {onOpenSptfDispensa && (
-            <button
+            <IconButton
               id="btn-statement-dispensa-sptf"
+              icon={FileText}
+              variant="success"
+              size="md"
+              tooltip={`Emitir Guia de Dispensa SPTF (2 Vias A4) para ${currentEmployee.nome}`}
+              aria-label="Emitir Dispensa SPTF"
               onClick={() => onOpenSptfDispensa(currentEmployee.matricula)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg transition-all shadow-md shadow-emerald-500/20 active:scale-98 cursor-pointer"
-              title="Emitir Guia de Dispensa de SPTF (2 Vias A4) para este colaborador"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Emitir Dispensa SPTF</span>
-            </button>
+            />
           )}
         </div>
       </div>
@@ -881,14 +879,14 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
         </div>
 
         {/* ------------------------------------------------------------- */}
-        {/* BLOCO DE ASSINATURAS INSTITUCIONAIS OFICIAIS COMARA            */}
+        {/* BLOCO DE ASSINATURAS INSTITUCIONAIS OFICIAIS                   */}
         {/* (Servidor SPTF, Chefe do Canteiro/Seção, Chefe da DA)         */}
         {/* ------------------------------------------------------------- */}
         <div className={`p-6 border-t ${
           isDark ? 'border-[#1F2229] bg-[#0D0F14]/60' : 'border-slate-200 bg-slate-50/70'
         } print:bg-white print:border-black print:p-4 print-avoid-break`}>
           <div className="text-[10px] font-mono uppercase font-bold text-center mb-6 text-slate-500 print:text-black">
-            AUTENTICAÇÃO & CONFORMIDADE REGULAMENTAR — COMARA / SPTF
+            AUTENTICAÇÃO & CONFORMIDADE REGULAMENTAR — {institutionSettings?.siglaInstituicao || 'COMARA'} / SPTF
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center text-xs">
@@ -936,7 +934,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
           </div>
 
           <div className="mt-6 text-center text-[9px] font-mono text-slate-500 print:text-slate-700">
-            Documento emitido pelo Sistema Oficial de Gestão de Banco de Horas SPTF • COMARA / DECEA.
+            Documento emitido pelo Sistema Oficial de Gestão de Banco de Horas SPTF • {institutionSettings?.nomeInstituicao || 'COMARA'}.
           </div>
         </div>
       </div>

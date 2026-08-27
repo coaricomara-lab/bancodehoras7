@@ -72,14 +72,30 @@ export function isPermissionError(error: unknown): boolean {
   );
 }
 
+export function isQuotaError(error: unknown): boolean {
+  if (!error) return false;
+  const msg = error instanceof Error ? error.message : String(error);
+  return (
+    msg.includes('resource-exhausted') ||
+    msg.includes('RESOURCE_EXHAUSTED') ||
+    msg.includes('quota-exceeded') ||
+    msg.includes('Quota exceeded') ||
+    msg.includes('QUOTA_EXCEEDED') ||
+    msg.includes('exceeded its quota')
+  );
+}
+
 export function getFirestoreFriendlyMessage(error: unknown): string {
+  if (isQuotaError(error)) {
+    return 'Cota diária do Cloud Firestore excedida. Operando em modo de cache local sincronizado.';
+  }
   if (isPermissionError(error)) {
     return 'Erro de permissão no banco de dados. Verifique a autenticação.';
   }
-  if (error instanceof Error && error.message.includes('offline')) {
+  if (error instanceof Error && (error.message.includes('offline') || error.message.includes('client is offline'))) {
     return 'Conexão offline. Operando em modo de cache local sincronizado.';
   }
-  return 'Instabilidade temporária no Cloud Firestore. Dados preservados com segurança.';
+  return 'Instabilidade temporária no Cloud Firestore. Dados preservados com segurança no cache local.';
 }
 
 export function logFirestoreError(error: unknown, operationType: OperationType, path: string | null): FirestoreErrorInfo {

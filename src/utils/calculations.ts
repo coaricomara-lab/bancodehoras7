@@ -1,5 +1,6 @@
 import { OccurrenceType, Branch, TimeRecord, Employee, MonthlyEmployeeSummary } from '../types';
 import { BRAZILIAN_HOLIDAYS_2025_2026 } from '../constants/defaultData';
+import { HorariosInstituicao, RegrasCalculoInstituicao } from '../types/institutionConfig';
 
 export type DestinationTarget = 'FOLHA_PAGAMENTO' | 'BANCO_HORAS' | 'NEUTRO_AUDITORIA';
 
@@ -30,12 +31,17 @@ const DIAS_SEMANA = [
 ];
 
 /**
- * REGRA CENTRALIZADA: CÁLCULO DAS HORAS COM TRAVA DO ALMOÇO (12:00 às 13:00)
- * - O período entre 12:00 e 13:00 é HORA DE ALMOÇO obrigatória (não remunerado e não computável).
- * - Se o horário cruzar a janela de 12:00 às 13:00, subtrai exatamente o tempo de almoço (até 60 min) do saldo total.
- * - Exemplo: Das 07:00 às 16:00 (9 horas relógio) = 8.0h a abater no Banco de Horas.
+ * REGRA CENTRALIZADA: CÁLCULO DAS HORAS COM TRAVA DO ALMOÇO
+ * - O período configurado (padrão: 12:00 às 13:00) é HORA DE ALMOÇO obrigatória (não remunerado e não computável).
+ * - Se o horário cruzar a janela de almoço, subtrai exatamente o tempo de almoço (até a duração configurada) do saldo total.
+ * - Exemplo: Das 07:00 às 16:00 (9 horas relógio com 1h de almoço) = 8.0h a abater no Banco de Horas.
  */
-export function calculateLunchOverlap(start?: string, end?: string): {
+export function calculateLunchOverlap(
+  start?: string, 
+  end?: string, 
+  lunchStartStr = '12:00', 
+  lunchEndStr = '13:00'
+): {
   rawHours: number;
   lunchDeductionHours: number;
   netHours: number;
@@ -59,9 +65,11 @@ export function calculateLunchOverlap(start?: string, end?: string): {
 
   const rawHours = Number((diffMinutes / 60).toFixed(2));
 
-  // Janela obrigatória de almoço: 12:00 (720 min) às 13:00 (780 min)
-  const lunchStart = 12 * 60; // 720
-  const lunchEnd = 13 * 60;   // 780
+  // Janela obrigatória de almoço parametrizada dinamicamente
+  const [lsH, lsM] = (lunchStartStr || '12:00').split(':').map(Number);
+  const [leH, leM] = (lunchEndStr || '13:00').split(':').map(Number);
+  const lunchStart = (isNaN(lsH) ? 12 : lsH) * 60 + (isNaN(lsM) ? 0 : lsM);
+  const lunchEnd = (isNaN(leH) ? 13 : leH) * 60 + (isNaN(leM) ? 0 : leM);
 
   const overlapStart = Math.max(startMinutes, lunchStart);
   const overlapEnd = Math.min(endMinutes, lunchEnd);
@@ -119,9 +127,14 @@ export function parseDateInfo(dataString: string) {
   };
 }
 
+export interface CalculationOptions {
+  horarios?: Partial<HorariosInstituicao>;
+  regrasCalculo?: Partial<RegrasCalculoInstituicao>;
+}
+
 /**
  * Calcula o saldo diário de horas creditadas/debitadas aplicando regras SPTF / Acordo Coletivo
- * e suporte universal à trava de almoço (12:00 às 13:00).
+ * e suporte universal à trava de almoço configurável dinamicamente.
  */
 export function calculateSPTFBalance(
   tipo: OccurrenceType,
@@ -131,19 +144,23 @@ export function calculateSPTFBalance(
   sede?: Branch,
   applyLunchLock?: boolean,
   horarioInicio?: string,
-  horarioFim?: string
+  horarioFim?: string,
+  options?: CalculationOptions
 ): CalculationResult {
   const { diaSemana, diaSemanaNome } = parseDateInfo(dataString);
   const holidayCheck = checkIsHoliday(dataString, sede);
   const eFeriado = forcarFeriado !== undefined ? forcarFeriado : holidayCheck.eFeriado;
   const nomeFeriado = holidayCheck.nome;
 
+  const lunchStartStr = options?.horarios?.inicioAlmoco || '12:00';
+  const lunchEndStr = options?.horarios?.fimAlmoco || '13:00';
+
   let effectiveHoras = horasBrutas;
   let deducaoAlmoco = 0;
 
   if (applyLunchLock) {
     if (horarioInicio && horarioFim) {
-      const lunchCalc = calculateLunchOverlap(horarioInicio, horarioFim);
+      const lunchCalc = calculateLunchOverlap(horarioInicio, horarioFim, lunchStartStr, lunchEndStr);
       effectiveHoras = lunchCalc.netHours;
       deducaoAlmoco = lunchCalc.lunchDeductionHours;
     } else if (horasBrutas >= 5.0) {
@@ -151,6 +168,11 @@ export function calculateSPTFBalance(
       effectiveHoras = Math.max(0, horasBrutas - 1.0);
     }
   }
+
+  // Multiplicadores dinâmicos (com fallback seguro para padrão SPTF)
+  const multSegSex = options?.regrasCalculo?.multiplicadores?.segundaSexta ?? options?.regrasCalculo?.multiplicadorSegundaSexta ?? 1.0;
+  const multSab = options?.regrasCalculo?.multiplicadores?.sabado ?? options?.regrasCalculo?.multiplicadorSabado ?? 1.5;
+  const multDomFer = options?.regrasCalculo?.multiplicadores?.domingoFeriado ?? options?.regrasCalculo?.multiplicadorDomingoFeriado ?? 2.0;
 
   let multiplicador = 1.0;
   let saldoCalculado = 0.0;
@@ -165,21 +187,21 @@ export function calculateSPTFBalance(
       destinoLancamento = 'BANCO_HORAS';
       if (diaSemana === 0 || eFeriado) {
         // Domingo ou Feriado -> x2.0 (Horas em dobro 1:2)
-        multiplicador = 2.0;
-        saldoCalculado = effectiveHoras * 2.0;
+        multiplicador = multDomFer;
+        saldoCalculado = effectiveHoras * multDomFer;
         descricaoRegra = eFeriado 
-          ? `Feriado (${nomeFeriado || 'Oficial'}): Multiplicador x 2.0 (Horas em Dobro 1:2 no Banco)`
-          : `Domingo: Multiplicador x 2.0 (Horas em Dobro 1:2 no Banco)`;
+          ? `Feriado (${nomeFeriado || 'Oficial'}): Multiplicador x ${multDomFer} (Horas em Dobro no Banco)`
+          : `Domingo: Multiplicador x ${multDomFer} (Horas em Dobro no Banco)`;
       } else if (diaSemana === 6) {
         // Sábado -> x1.5 (Adicional de Sábado 1:1,5)
-        multiplicador = 1.5;
-        saldoCalculado = effectiveHoras * 1.5;
-        descricaoRegra = `Sábado: Multiplicador x 1.5 (Adicional 1:1,5 no Banco)`;
+        multiplicador = multSab;
+        saldoCalculado = effectiveHoras * multSab;
+        descricaoRegra = `Sábado: Multiplicador x ${multSab} (Adicional no Banco)`;
       } else {
         // Segunda a Sexta -> x1.0 (Horas Normais 1:1)
-        multiplicador = 1.0;
-        saldoCalculado = effectiveHoras * 1.0;
-        descricaoRegra = `Segunda a Sexta: Multiplicador x 1.0 (Horas Normais 1:1 no Banco)`;
+        multiplicador = multSegSex;
+        saldoCalculado = effectiveHoras * multSegSex;
+        descricaoRegra = `Segunda a Sexta: Multiplicador x ${multSegSex} (Horas Normais no Banco)`;
       }
       break;
     }

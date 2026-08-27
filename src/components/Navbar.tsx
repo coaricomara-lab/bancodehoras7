@@ -28,6 +28,7 @@ import {
   Cloud,
   HardHat,
   Building2,
+  Building,
   Image as ImageIcon,
   Clock,
   CalendarCheck2,
@@ -35,7 +36,7 @@ import {
   FileText
 } from 'lucide-react';
 
-export type ActiveTab = 'dashboard' | 'colaboradores' | 'canteiros' | 'insalubridade' | 'contracheques' | 'relatorios' | 'extrato' | 'portal_colaborador' | 'permissoes_admin' | 'auditoria' | 'arquitetura';
+export type ActiveTab = 'dashboard' | 'colaboradores' | 'canteiros' | 'insalubridade' | 'contracheques' | 'relatorios' | 'extrato' | 'portal_colaborador' | 'permissoes_admin' | 'auditoria' | 'arquitetura' | 'configuracoes_instituicao';
 export type UserMode = 'ADMIN' | 'COLABORADOR';
 
 interface NavbarProps {
@@ -503,7 +504,37 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </div>
                   </button>
 
-                  {/* 3. Configurações do Sistema (Logo & Modo Insalubridade) */}
+                  {/* 3. Configurações da Instituição (OM, Cargos, Sedes, Horários, Textos Padrão) - SUPER_ADMIN */}
+                  {canManageSystem && (
+                    <button
+                      onClick={() => {
+                        onSelectTab('configuracoes_instituicao');
+                        setIsSettingsOpen(false);
+                      }}
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                        activeTab === 'configuracoes_instituicao'
+                          ? isDark ? 'bg-blue-950/40 text-blue-300' : 'bg-blue-50 text-blue-800 font-bold'
+                          : isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                      }`}
+                    >
+                      <div className="w-6 h-6 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
+                        <Building className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold flex items-center justify-between">
+                          <span>Configurações da OM</span>
+                          <span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-blue-500/20 text-blue-300">
+                            SUPER ADMIN
+                          </span>
+                        </div>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                          OM, cargos, sedes, almoço e modelos
+                        </span>
+                      </div>
+                    </button>
+                  )}
+
+                  {/* 4. Configurações do Sistema (Logo & Modo Insalubridade) */}
                   {canManageSystem && onOpenLogoModal && (
                     <button
                       onClick={() => {

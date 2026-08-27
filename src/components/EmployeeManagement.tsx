@@ -9,6 +9,7 @@ import {
   UploadCloud, 
   Download, 
   UserPlus, 
+  PlusCircle,
   Search, 
   CheckCircle2, 
   AlertCircle, 
@@ -43,6 +44,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { InfoTooltip } from './InfoTooltip';
+import { IconButton } from './IconButton';
 
 interface EmployeeManagementProps {
   employees: Employee[];
@@ -709,46 +711,51 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               </p>
             </div>
 
-            <div className="flex items-center gap-2.5">
-              <button
-                type="button"
+            <div className="flex items-center gap-2">
+              <IconButton
+                icon={FileSpreadsheet}
+                variant="secondary"
+                size="md"
+                tooltip="Baixar Planilha Modelo CSV com Instruções"
+                aria-label="Baixar Template CSV"
                 onClick={handleDownloadTemplate}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-lg transition-colors font-mono border cursor-pointer ${
-                  isDark 
-                    ? 'text-[#E0E2E5] bg-[#1F2229] hover:bg-[#2A2E38] border-[#1F2229]' 
-                    : 'text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-300'
-                }`}
-                title="Baixar planilha modelo CSV"
-              >
-                <Download className="w-3.5 h-3.5 text-blue-500" />
-                Template CSV
-              </button>
+              />
               
-              <label className={`inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-lg cursor-pointer transition-colors font-mono border ${
-                isDark 
-                  ? 'text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/50 border-emerald-800/50' 
-                  : 'text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border-emerald-300'
-              }`}>
-                <UploadCloud className="w-4 h-4 text-emerald-500" />
-                <span>Importar CSV</span>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".csv,text/csv"
-                  onChange={handleFileUpload}
-                  className="hidden"
-                  disabled={isImporting}
-                />
-              </label>
+              <div className="relative inline-flex group">
+                <label 
+                  aria-label="Importar Base de Colaboradores CSV"
+                  className={`w-9 h-9 p-2 rounded-xl inline-flex items-center justify-center transition-all duration-150 cursor-pointer active:scale-95 border ${
+                    isDark 
+                      ? 'text-emerald-400 bg-emerald-950/40 hover:bg-emerald-900/60 border-emerald-800/40' 
+                      : 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border-emerald-200'
+                  }`}
+                >
+                  <UploadCloud className="w-4 h-4" />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".csv,text/csv"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    disabled={isImporting}
+                  />
+                </label>
+                <div
+                  role="tooltip"
+                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none whitespace-nowrap px-2.5 py-1.5 text-xs font-medium rounded-lg shadow-xl border bg-[#111317] dark:bg-[#1C1F26] text-white border-[#2A2E38] dark:border-[#383D4A]"
+                >
+                  Importar Arquivo CSV de Colaboradores
+                </div>
+              </div>
 
-              <button
-                type="button"
+              <IconButton
+                icon={UserPlus}
+                variant="primary"
+                size="md"
+                tooltip="Cadastrar Novo Colaborador"
+                aria-label="Novo Colaborador"
                 onClick={handleOpenAddModal}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 rounded-lg transition-all shadow-md shadow-blue-500/20 active:scale-98 cursor-pointer"
-              >
-                <UserPlus className="w-4 h-4" />
-                Novo Colaborador
-              </button>
+              />
             </div>
           </div>
 
@@ -1245,41 +1252,33 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                               {bal.status}
                             </span>
                           </td>
-                          <td className="py-3.5 px-4 text-right whitespace-nowrap space-x-1.5 font-sans">
-                            <button
-                              type="button"
-                              onClick={() => onQuickNewEntry(emp.matricula)}
-                              className={`px-2 py-1 font-bold rounded text-[11px] transition-colors border cursor-pointer ${
-                                isDark 
-                                  ? 'bg-[#1F2229] hover:bg-[#2A2E38] text-blue-400 border-[#1F2229]' 
-                                  : 'bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200'
-                              }`}
-                              title="Lançar horas para este colaborador"
-                            >
-                              + Lançar
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => onViewStatement(emp.matricula)}
-                              className={`px-2 py-1 font-semibold rounded text-[11px] transition-colors border cursor-pointer ${
-                                isDark 
-                                  ? 'bg-[#1F2229] hover:bg-[#2A2E38] text-[#E0E2E5] border-[#1F2229]' 
-                                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-                              }`}
-                              title="Ver extrato completo"
-                            >
-                              Extrato
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleOpenEditModal(emp)}
-                              className={`p-1 rounded transition-colors inline-block align-middle cursor-pointer ${
-                                isDark ? 'text-[#8E9299] hover:text-[#E0E2E5]' : 'text-slate-400 hover:text-slate-700'
-                              }`}
-                              title="Editar colaborador"
-                            >
-                              <Edit className="w-3.5 h-3.5" />
-                            </button>
+                          <td className="py-3.5 px-4 text-right whitespace-nowrap font-sans">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <IconButton
+                                icon={PlusCircle}
+                                variant="subtle"
+                                size="xs"
+                                tooltip={`Novo Lançamento para ${emp.nome}`}
+                                aria-label={`Lançar horas para ${emp.nome}`}
+                                onClick={() => onQuickNewEntry(emp.matricula)}
+                              />
+                              <IconButton
+                                icon={Eye}
+                                variant="secondary"
+                                size="xs"
+                                tooltip={`Extrato Completo de ${emp.nome}`}
+                                aria-label={`Ver extrato de ${emp.nome}`}
+                                onClick={() => onViewStatement(emp.matricula)}
+                              />
+                              <IconButton
+                                icon={Edit}
+                                variant="ghost"
+                                size="xs"
+                                tooltip={`Editar Cadastro de ${emp.nome}`}
+                                aria-label={`Editar ${emp.nome}`}
+                                onClick={() => handleOpenEditModal(emp)}
+                              />
+                            </div>
                           </td>
                         </tr>
                       );

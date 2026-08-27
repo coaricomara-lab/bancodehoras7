@@ -168,9 +168,36 @@
         "timestamp": { "type": "string", "maxLength": 50 }
       },
       "required": ["id", "usuarioId", "nomeUsuario", "acao", "detalhes", "canteiroId", "timestamp"]
+    },
+    "InstitutionSettings": {
+      "title": "InstitutionSettings",
+      "description": "Configurações institucionais dinâmicas da Organização Militar (cargos, sedes, horários, regras e documentos modelo)",
+      "type": "object",
+      "properties": {
+        "nomeInstituicao": { "type": "string", "maxLength": 200 },
+        "siglaInstituicao": { "type": "string", "maxLength": 50 },
+        "cnpj": { "type": "string", "maxLength": 30 },
+        "endereco": { "type": "string", "maxLength": 300 },
+        "telefone": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "maxLength": 150 },
+        "logoUrl": { "type": "string", "maxLength": 1000 },
+        "cargos": { "type": "array" },
+        "sedes": { "type": "array" },
+        "horarios": { "type": "object" },
+        "regrasCalculo": { "type": "object" },
+        "documentosModelo": { "type": "object" },
+        "versao": { "type": "number" },
+        "atualizadoEm": { "type": "string", "maxLength": 50 },
+        "atualizadoPor": { "type": "string", "maxLength": 150 }
+      },
+      "required": ["nomeInstituicao", "siglaInstituicao", "endereco", "email"]
     }
   },
   "firestore": {
+    "/institution_settings/{docId}": {
+      "schema": "InstitutionSettings",
+      "description": "Documento único (current) com as configurações institucionais vigentes"
+    },
     "/colaboradores/{colaboradorId}": {
       "schema": "Colaborador",
       "description": "Coleção de colaboradores da base centralizada"

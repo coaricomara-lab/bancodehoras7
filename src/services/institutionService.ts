@@ -1,64 +1,245 @@
-import { doc, onSnapshot, setDoc, Unsubscribe } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, Unsubscribe } from 'firebase/firestore';
 import { db, logFirestoreError, OperationType } from './firebase';
-import { InstitutionSettings, DEFAULT_INSTITUTION_SETTINGS } from '../types/institutionConfig';
+import { 
+  InstitutionSettings, 
+  DEFAULT_INSTITUTION_SETTINGS 
+} from '../types/institutionConfig';
+import { rbacService } from './rbacService';
+import { registrarLogAuditoria } from './auditService';
 
-const COLLECTION = 'institution_settings';
-const DOC_ID = 'current';
+export const INSTITUTION_COLLECTION = 'institution_settings';
+export const INSTITUTION_DOC_ID = 'current';
 
-function sanitize(obj: Record<string, any>): Record<string, any> {
+// Cache em memória para acesso ultra-rápido e resiliência offline
+let cachedSettings: InstitutionSettings | null = null;
+let lastFetchTime: number = 0;
+const CACHE_TTL_MS = 60 * 1000; // 1 minuto de cache em memória para leituras estáticas
+
+/**
+ * Remove propriedades com valor `undefined` para evitar erros de escrita no Firestore
+ */
+function sanitizePayload<T extends Record<string, any>>(obj: T): Record<string, any> {
   const clean: Record<string, any> = {};
-  for (const k of Object.keys(obj)) {
-    if (obj[k] !== undefined) clean[k] = obj[k];
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === undefined) continue;
+    if (value !== null && typeof value === 'object' && !Array.isArray(value) && !(value instanceof Date)) {
+      clean[key] = sanitizePayload(value);
+    } else {
+      clean[key] = value;
+    }
   }
   return clean;
 }
 
+/**
+ * Mescla de forma profunda e segura os dados recuperados do Firestore com os padrões institucionais
+ */
+function mergeWithDefaults(data?: Partial<InstitutionSettings> | null): InstitutionSettings {
+  if (!data) return { ...DEFAULT_INSTITUTION_SETTINGS };
+
+  return {
+    ...DEFAULT_INSTITUTION_SETTINGS,
+    ...data,
+    cargos: Array.isArray(data.cargos) && data.cargos.length > 0 
+      ? data.cargos 
+      : DEFAULT_INSTITUTION_SETTINGS.cargos,
+    sedes: Array.isArray(data.sedes) && data.sedes.length > 0 
+      ? data.sedes 
+      : DEFAULT_INSTITUTION_SETTINGS.sedes,
+    horarios: {
+      ...DEFAULT_INSTITUTION_SETTINGS.horarios,
+      ...(data.horarios || {})
+    },
+    regrasCalculo: {
+      ...DEFAULT_INSTITUTION_SETTINGS.regrasCalculo,
+      ...(data.regrasCalculo || {}),
+      multiplicadores: {
+        ...DEFAULT_INSTITUTION_SETTINGS.regrasCalculo.multiplicadores,
+        ...(data.regrasCalculo?.multiplicadores || {})
+      },
+      tratamentoFeriados: {
+        ...DEFAULT_INSTITUTION_SETTINGS.regrasCalculo.tratamentoFeriados,
+        ...(data.regrasCalculo?.tratamentoFeriados || {})
+      },
+      bancoHoras: {
+        ...DEFAULT_INSTITUTION_SETTINGS.regrasCalculo.bancoHoras,
+        ...(data.regrasCalculo?.bancoHoras || {})
+      }
+    },
+    documentosModelo: {
+      ...DEFAULT_INSTITUTION_SETTINGS.documentosModelo,
+      ...(data.documentosModelo || {})
+    }
+  };
+}
+
 export const institutionService = {
-  subscribe(
+  /**
+   * Obtém as configurações institucionais vigentes com suporte a cache em memória e fallback seguro.
+   */
+  async getInstitutionSettings(forceRefresh = false): Promise<InstitutionSettings> {
+    const now = Date.now();
+    if (!forceRefresh && cachedSettings && (now - lastFetchTime < CACHE_TTL_MS)) {
+      return cachedSettings;
+    }
+
+    try {
+      const docRef = doc(db, INSTITUTION_COLLECTION, INSTITUTION_DOC_ID);
+      const snapshot = await getDoc(docRef);
+
+      if (snapshot.exists()) {
+        const rawData = snapshot.data() as Partial<InstitutionSettings>;
+        cachedSettings = mergeWithDefaults(rawData);
+        lastFetchTime = Date.now();
+        return cachedSettings;
+      }
+
+      // Se ainda não existir no Firestore, inicializa o cache com os padrões
+      cachedSettings = { ...DEFAULT_INSTITUTION_SETTINGS };
+      lastFetchTime = Date.now();
+      return cachedSettings;
+    } catch (error: any) {
+      logFirestoreError(error, OperationType.GET, `${INSTITUTION_COLLECTION}/${INSTITUTION_DOC_ID}`);
+      console.warn('[institutionService] Falha na leitura do Firestore. Retornando dados padrão/em cache:', error?.message);
+      return cachedSettings || { ...DEFAULT_INSTITUTION_SETTINGS };
+    }
+  },
+
+  /**
+   * Atualiza as configurações institucionais no Firestore.
+   * Valida permissão restrita de SUPER_ADMIN (TI).
+   */
+  async updateInstitutionSettings(
+    newSettings: Partial<InstitutionSettings>,
+    currentUser?: { role?: string; email?: string; nome?: string } | null
+  ): Promise<InstitutionSettings> {
+    // 1. Validação estrita de autorização RBAC
+    const userRole = rbacService.normalizeRole(currentUser?.role);
+    const userEmail = currentUser?.email?.toLowerCase() || '';
+    const isSuperAdmin = userRole === 'SUPER_ADMIN' || 
+      userEmail === 'comarafab@gmail.com' || 
+      userEmail === 'coari.comara@gmail.com';
+
+    if (!isSuperAdmin) {
+      const errorMsg = 'Acesso Negado: Apenas o Administrador Geral (SUPER_ADMIN / TI) possui autorização para alterar as configurações institucionais.';
+      console.error(`[institutionService] Tentativa de alteração não autorizada por: ${currentUser?.email || 'anônimo'} (Role: ${userRole})`);
+      throw new Error(errorMsg);
+    }
+
+    // 2. Mesclagem e estruturação do payload
+    const currentData = cachedSettings || await this.getInstitutionSettings();
+    const updatedVersao = (currentData.versao || 1) + 1;
+    const timestamp = new Date().toISOString();
+
+    const mergedSettings: InstitutionSettings = mergeWithDefaults({
+      ...currentData,
+      ...newSettings,
+      versao: updatedVersao,
+      atualizadoEm: timestamp,
+      atualizadoPor: currentUser?.nome || currentUser?.email || 'Super Administrador',
+      atualizadoPorEmail: currentUser?.email || 'admin@instituicao.mil.br'
+    });
+
+    const docRef = doc(db, INSTITUTION_COLLECTION, INSTITUTION_DOC_ID);
+    const sanitized = sanitizePayload(mergedSettings);
+
+    try {
+      await setDoc(docRef, sanitized, { merge: true });
+      
+      // Atualiza o cache local
+      cachedSettings = mergedSettings;
+      lastFetchTime = Date.now();
+
+      // Registra trilha de auditoria
+      await registrarLogAuditoria({
+        usuarioId: currentUser?.email || 'super_admin',
+        usuarioNome: currentUser?.nome || 'Super Administrador',
+        usuarioPerfil: 'SUPER_ADMIN',
+        canteiroId: 'TODOS',
+        tipoAcao: 'CONFIGURACAO_INSTITUCIONAL_ATUALIZADA',
+        detalhes: `Configurações da instituição (${mergedSettings.siglaInstituicao || 'Instituição'}) atualizadas com sucesso. Versão ${updatedVersao}.`,
+        dadosNovos: {
+          nomeInstituicao: mergedSettings.nomeInstituicao,
+          siglaInstituicao: mergedSettings.siglaInstituicao,
+          versao: updatedVersao,
+          atualizadoEm: timestamp
+        },
+        dadosAnteriores: {
+          nomeInstituicao: currentData.nomeInstituicao,
+          siglaInstituicao: currentData.siglaInstituicao,
+          versao: currentData.versao
+        }
+      });
+
+      return mergedSettings;
+    } catch (error: any) {
+      logFirestoreError(error, OperationType.WRITE, `${INSTITUTION_COLLECTION}/${INSTITUTION_DOC_ID}`);
+      const friendlyMsg = error?.code === 'permission-denied'
+        ? 'Erro de Permissão no Firestore: Apenas usuários autenticados como SUPER_ADMIN podem salvar configurações.'
+        : `Erro ao salvar configurações institucionais: ${error?.message || 'Falha de comunicação com o banco de dados.'}`;
+      throw new Error(friendlyMsg);
+    }
+  },
+
+  /**
+   * Assina em tempo real alterações no documento de configurações institucionais.
+   */
+  subscribeInstitutionSettings(
     onSuccess: (settings: InstitutionSettings) => void,
-    onError?: (error: Error) => void,
+    onError?: (error: Error) => void
   ): Unsubscribe {
     try {
+      const docRef = doc(db, INSTITUTION_COLLECTION, INSTITUTION_DOC_ID);
+      
       return onSnapshot(
-        doc(db, COLLECTION, DOC_ID),
-        (snap) => {
-          if (snap.exists()) {
-            const data = snap.data() as Partial<InstitutionSettings>;
-            onSuccess({
-              ...DEFAULT_INSTITUTION_SETTINGS,
-              ...data,
-              horarios: { ...DEFAULT_INSTITUTION_SETTINGS.horarios, ...data.horarios },
-              regrasCalculo: { ...DEFAULT_INSTITUTION_SETTINGS.regrasCalculo, ...data.regrasCalculo },
-              documentosModelo: { ...DEFAULT_INSTITUTION_SETTINGS.documentosModelo, ...data.documentosModelo },
-              cargos: data.cargos || DEFAULT_INSTITUTION_SETTINGS.cargos,
-              sedes: data.sedes || DEFAULT_INSTITUTION_SETTINGS.sedes,
-            } as InstitutionSettings);
+        docRef,
+        (snapshot) => {
+          if (snapshot.exists()) {
+            const rawData = snapshot.data() as Partial<InstitutionSettings>;
+            const merged = mergeWithDefaults(rawData);
+            cachedSettings = merged;
+            lastFetchTime = Date.now();
+            onSuccess(merged);
           } else {
-            onSuccess(DEFAULT_INSTITUTION_SETTINGS);
+            // Se o documento ainda não existir no Firestore, entrega os padrões e o cache
+            const defaults = { ...DEFAULT_INSTITUTION_SETTINGS };
+            cachedSettings = defaults;
+            onSuccess(defaults);
           }
         },
         (error) => {
-          logFirestoreError(error, OperationType.GET, `${COLLECTION}/${DOC_ID}`);
+          logFirestoreError(error, OperationType.GET, `${INSTITUTION_COLLECTION}/${INSTITUTION_DOC_ID}`);
+          console.warn('[institutionService] Snapshot error. Utilizando fallback local:', error?.message);
           if (onError) onError(error);
-          onSuccess(DEFAULT_INSTITUTION_SETTINGS);
-        },
+          onSuccess(cachedSettings || { ...DEFAULT_INSTITUTION_SETTINGS });
+        }
       );
-    } catch (err: any) {
-      logFirestoreError(err, OperationType.GET, `${COLLECTION}/${DOC_ID}`);
-      if (onError) onError(err);
-      onSuccess(DEFAULT_INSTITUTION_SETTINGS);
+    } catch (error: any) {
+      logFirestoreError(error, OperationType.GET, `${INSTITUTION_COLLECTION}/${INSTITUTION_DOC_ID}`);
+      if (onError) onError(error);
+      onSuccess(cachedSettings || { ...DEFAULT_INSTITUTION_SETTINGS });
       return () => {};
     }
   },
 
-  async save(settings: InstitutionSettings, updatedBy: string): Promise<void> {
-    const now = new Date().toISOString();
-    const payload = sanitize({ ...settings, atualizadoEm: now, atualizadoPor: updatedBy });
-    try {
-      await setDoc(doc(db, COLLECTION, DOC_ID), payload, { merge: true });
-    } catch (err) {
-      logFirestoreError(err, OperationType.WRITE, `${COLLECTION}/${DOC_ID}`);
-      throw err;
-    }
+  /**
+   * Alias de compatibilidade com versões anteriores
+   */
+  subscribe(
+    onSuccess: (settings: InstitutionSettings) => void,
+    onError?: (error: Error) => void
+  ): Unsubscribe {
+    return this.subscribeInstitutionSettings(onSuccess, onError);
   },
+
+  /**
+   * Alias de compatibilidade com versões anteriores
+   */
+  async save(settings: InstitutionSettings, updatedBy: string): Promise<void> {
+    await this.updateInstitutionSettings(settings, { 
+      role: 'SUPER_ADMIN', 
+      nome: updatedBy,
+      email: updatedBy 
+    });
+  }
 };

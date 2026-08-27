@@ -3,6 +3,8 @@ import { Employee, TimeRecord, DispensaSptfRecord, ConstructionSite, SystemConfi
 import { getEmployeeTotalBalance } from '../services/timebankEngine';
 import { getSignaturesForCanteiro } from '../services/canteiroService';
 import { calculateSPTFBalance, calculateLunchOverlap } from '../utils/calculations';
+import { useInstitution } from '../contexts/InstitutionContext';
+import { IconButton } from './IconButton';
 import { 
   X, 
   Printer, 
@@ -54,15 +56,20 @@ export function formatDateBR(isoDate?: string): string {
 }
 
 /**
- * REGRA DE CÁLCULO DAS HORAS COM TRAVA DO ALMOÇO (12:00 às 13:00)
- * Reutiliza o motor central de cálculo calculateLunchOverlap
+ * REGRA DE CÁLCULO DAS HORAS COM TRAVA DO ALMOÇO
+ * Reutiliza o motor central de cálculo calculateLunchOverlap com suporte a horário dinâmico
  */
-export function calculateDispensaHours(start: string, end: string): {
+export function calculateDispensaHours(
+  start: string, 
+  end: string, 
+  lunchStart = '12:00', 
+  lunchEnd = '13:00'
+): {
   rawHours: number;
   lunchDeductionHours: number;
   netHours: number;
 } {
-  return calculateLunchOverlap(start, end);
+  return calculateLunchOverlap(start, end, lunchStart, lunchEnd);
 }
 
 export function formatHoursToHoursMinutes(hours: number): string {
@@ -72,17 +79,31 @@ export function formatHoursToHoursMinutes(hours: number): string {
 }
 
 // ============================================================================
-// COMPONENTE DE LOGO DA COMARA COM FALLBACK VETORIAL PARA IMPRESSÃO E TELA
+// COMPONENTE DE LOGO COM FALLBACK VETORIAL PARA IMPRESSÃO E TELA
 // ============================================================================
-const DispensaLogo: React.FC<{ logoUrl?: string }> = ({ logoUrl }) => {
+const DispensaLogo: React.FC<{ logoUrl?: string; institutionSigla?: string }> = ({ logoUrl, institutionSigla }) => {
   const [imgError, setImgError] = useState(false);
-  const effectiveSrc = logoUrl && logoUrl.trim().length > 0 ? logoUrl : '/comara-logo.png';
+  let instSettings: any = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const inst = useInstitution();
+    instSettings = inst?.settings;
+  } catch {
+    // Graceful fallback
+  }
+
+  const sigla = institutionSigla || instSettings?.siglaInstituicao || 'COMARA';
+  const effectiveSrc = (logoUrl && logoUrl.trim().length > 0) 
+    ? logoUrl 
+    : (instSettings?.logoUrl && instSettings.logoUrl.trim().length > 0)
+      ? instSettings.logoUrl
+      : '/comara-logo.png';
 
   if (!imgError) {
     return (
       <img 
         src={effectiveSrc} 
-        alt="Logo COMARA" 
+        alt={`Logo ${sigla}`} 
         crossOrigin="anonymous"
         referrerPolicy="no-referrer"
         className="h-[52px] sm:h-[58px] w-auto max-h-[58px] max-w-[80px] object-contain shrink-0"
@@ -91,20 +112,20 @@ const DispensaLogo: React.FC<{ logoUrl?: string }> = ({ logoUrl }) => {
     );
   }
 
-  // Brasão e Gládio Alado Vetorial Oficial COMARA de Alta Resolução
+  // Brasão e Gládio Alado Vetorial Oficial de Alta Resolução
   return (
     <div className="h-[52px] sm:h-[58px] w-auto flex items-center justify-center shrink-0">
       <svg viewBox="0 0 100 120" className="h-full w-auto max-h-[58px]" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M 6 6 L 94 6 L 94 65 C 94 95 74 114 50 114 C 26 114 6 95 6 65 Z" fill="#0B2545" stroke="#134074" strokeWidth="3" />
         <path d="M 9 9 L 91 9 L 91 65 C 91 92 72 111 50 111 C 28 111 9 92 9 65 Z" fill="#134074" />
-        {/* Banner Superior COMARA */}
+        {/* Banner Superior */}
         <rect x="12" y="14" width="76" height="18" rx="3" fill="#1E40AF" stroke="#60A5FA" strokeWidth="1" />
-        <text x="50" y="27" fill="#FFFFFF" fontSize="10" fontWeight="900" textAnchor="middle" fontFamily="Arial, sans-serif">COMARA</text>
+        <text x="50" y="27" fill="#FFFFFF" fontSize="10" fontWeight="900" textAnchor="middle" fontFamily="Arial, sans-serif">{sigla}</text>
         {/* Espada / Gládio */}
         <path d="M 49 38 L 51 38 L 51 96 L 49 96 Z" fill="#F59E0B" />
         <path d="M 43 49 L 57 49 L 57 53 L 43 53 Z" fill="#F59E0B" />
         <path d="M 50 34 L 54 38 L 46 38 Z" fill="#FDE047" />
-        {/* Asas FAB */}
+        {/* Asas */}
         <path d="M 46 54 C 34 46 18 48 12 56 C 22 59 34 62 46 66 Z" fill="#93C5FD" />
         <path d="M 54 54 C 66 46 82 48 88 56 C 78 59 66 62 54 66 Z" fill="#93C5FD" />
       </svg>
@@ -127,19 +148,38 @@ export const DispensaVia: React.FC<DispensaViaProps> = ({
   constructionSites,
   logoUrl 
 }) => {
+  let instSettings: any = null;
+  let instCargos: any[] = [];
+  let instDocumentosModelo: any = null;
+
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const inst = useInstitution();
+    instSettings = inst?.settings;
+    instCargos = inst?.cargos || [];
+    instDocumentosModelo = inst?.documentosModelo;
+  } catch {
+    // Graceful fallback
+  }
+
   const dataFmt = formatDateBR(dispensa.data);
   const periodoStr = `${dataFmt} (${dispensa.horarioInicio}) A ${dataFmt} (${dispensa.horarioFim})`;
   const matriculaStr = dispensa.matricula || dispensa.saram || '';
   const secaoStr = dispensa.secaoCanteiro || 'DECO-KO';
-  const motivoStr = dispensa.motivo || 'COMPENSAÇÃO BANCO DE HORAS';
+  const motivoStr = dispensa.motivo || instDocumentosModelo?.textoPadraoMotivoDispensa || 'COMPENSAÇÃO BANCO DE HORAS';
+  const tituloDispensa = instDocumentosModelo?.tituloDispensa || 'DISPENSA DE SPTF';
 
   // Obter dinamicamente os signatários oficiais do Canteiro
   const sigs = useMemo(() => {
     return getSignaturesForCanteiro(dispensa.secaoCanteiro, constructionSites);
   }, [dispensa.secaoCanteiro, constructionSites]);
 
-  const chefeCanteiroNome = sigs.assinatura1.nome || 'Chefe do Canteiro';
-  const chefeDaNome = sigs.assinatura2.nome || 'Chefe / Encarregado da DA';
+  const cargo1 = instCargos.find(c => c.ordem === 1)?.nome || 'CHEFE DO CANTEIRO';
+  const cargo2 = instCargos.find(c => c.ordem === 2)?.nome || 'CH/ENC DA DA';
+  const cargoServidor = instCargos.find(c => c.ordem === 3)?.nome || 'SERVIDOR (SPPF/SPTF)';
+
+  const chefeCanteiroNome = sigs.assinatura1.nome || cargo1;
+  const chefeDaNome = sigs.assinatura2.nome || cargo2;
 
   return (
     <div className="dispensa-via w-full border-2 border-black bg-white text-black font-sans leading-tight">
@@ -147,15 +187,15 @@ export const DispensaVia: React.FC<DispensaViaProps> = ({
       {/* CABEÇALHO: Célula Esquerda (Logo) | Célula Direita (Título)    */}
       {/* ------------------------------------------------------------- */}
       <div className="grid grid-cols-12 border-b-2 border-black">
-        {/* Célula Esquerda: Logo da COMARA */}
+        {/* Célula Esquerda: Logo da OM */}
         <div className="col-span-3 sm:col-span-3 flex items-center justify-center p-2.5 border-r-2 border-black bg-white">
-          <DispensaLogo logoUrl={logoUrl} />
+          <DispensaLogo logoUrl={logoUrl || instSettings?.logoUrl} institutionSigla={instSettings?.siglaInstituicao} />
         </div>
 
         {/* Célula Direita: Título centralizado em negrito e caixa alta */}
         <div className="col-span-9 sm:col-span-9 flex items-center justify-center p-3 bg-white text-center">
           <h1 className="text-xl sm:text-2xl font-black uppercase tracking-wider text-black">
-            DISPENSA DE SPTF
+            {tituloDispensa}
           </h1>
         </div>
       </div>
@@ -218,10 +258,6 @@ export const DispensaVia: React.FC<DispensaViaProps> = ({
 
       {/* ------------------------------------------------------------- */}
       {/* RODAPÉ: RECEBIMENTO E ASSINATURAS (4 BLOCOS OFICIAIS)          */}
-      {/* 1: RECEBIDO POR: (DATA/HORA)                                  */}
-      {/* 2: CHEFE DO CANTEIRO (Nome trazido do sistema)                */}
-      {/* 3: SERVIDOR (SPPF/SPTF) (Nome do colaborador)                 */}
-      {/* 4: CH/ENC DA DA (Chefe / Encarregado da DA)                   */}
       {/* ------------------------------------------------------------- */}
       <div className="grid grid-cols-4 divide-x-2 divide-black min-h-[96px] bg-white">
         {/* Bloco 1: RECEBIDO POR: */}
@@ -248,7 +284,7 @@ export const DispensaVia: React.FC<DispensaViaProps> = ({
           </div>
           <div className="pt-1">
             <span className="font-black uppercase text-[11px] sm:text-xs block text-black leading-tight">
-              CHEFE DO CANTEIRO
+              {cargo1}
             </span>
             <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-800 block truncate mt-0.5" title={chefeCanteiroNome}>
               {chefeCanteiroNome}
@@ -256,14 +292,14 @@ export const DispensaVia: React.FC<DispensaViaProps> = ({
           </div>
         </div>
 
-        {/* Bloco 3: Assinatura SERVIDOR (SPPF/SPTF) */}
+        {/* Bloco 3: Assinatura SERVIDOR */}
         <div className="p-2 sm:p-2.5 flex flex-col justify-between text-center">
           <div className="h-10 sm:h-12 flex items-end justify-center">
             <div className="w-4/5 border-b border-black"></div>
           </div>
           <div className="pt-1">
             <span className="font-black uppercase text-[11px] sm:text-xs block text-black leading-tight">
-              SERVIDOR (SPPF/SPTF)
+              {cargoServidor}
             </span>
             <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-800 block truncate mt-0.5" title={dispensa.nome}>
               {dispensa.nome}
@@ -278,7 +314,7 @@ export const DispensaVia: React.FC<DispensaViaProps> = ({
           </div>
           <div className="pt-1">
             <span className="font-black uppercase text-[11px] sm:text-xs block text-black leading-tight">
-              CH/ENC DA DA
+              {cargo2}
             </span>
             <span className="text-[9px] sm:text-[10px] uppercase font-bold text-slate-800 block truncate mt-0.5" title={chefeDaNome}>
               {chefeDaNome}
@@ -296,25 +332,36 @@ export const DispensaVia: React.FC<DispensaViaProps> = ({
 export function generateSptfPrintHtml(
   dispensa: DispensaSptfRecord,
   constructionSites?: ConstructionSite[],
-  logoUrl?: string
+  logoUrl?: string,
+  institutionSettings?: any
 ): string {
   const dataFmt = formatDateBR(dispensa.data);
   const periodoStr = `${dataFmt} (${dispensa.horarioInicio}) A ${dataFmt} (${dispensa.horarioFim})`;
   const matriculaStr = dispensa.matricula || dispensa.saram || '';
   const secaoStr = dispensa.secaoCanteiro || 'DECO-KO';
-  const motivoStr = dispensa.motivo || 'COMPENSAÇÃO BANCO DE HORAS';
+  const docModelo = institutionSettings?.documentosModelo;
+  const motivoStr = dispensa.motivo || docModelo?.textoPadraoMotivoDispensa || 'COMPENSAÇÃO BANCO DE HORAS';
+  const tituloDispensa = docModelo?.tituloDispensa || 'DISPENSA DE SPTF';
+  const siglaInst = institutionSettings?.siglaInstituicao || 'COMARA';
 
   const sigs = getSignaturesForCanteiro(dispensa.secaoCanteiro, constructionSites);
-  const chefeCanteiroNome = sigs.assinatura1.nome || 'Chefe do Canteiro';
-  const chefeDaNome = sigs.assinatura2.nome || 'Chefe / Encarregado da DA';
+  const cargosList = institutionSettings?.cargos || [];
+  const cargo1 = cargosList.find((c: any) => c.ordem === 1)?.nome || 'CHEFE DO CANTEIRO';
+  const cargo2 = cargosList.find((c: any) => c.ordem === 2)?.nome || 'CH/ENC DA DA';
+  const cargoServidor = cargosList.find((c: any) => c.ordem === 3)?.nome || 'SERVIDOR (SPPF/SPTF)';
 
-  // Brasão e Gládio Alado Vetorial Oficial COMARA
+  const chefeCanteiroNome = sigs.assinatura1.nome || cargo1;
+  const chefeDaNome = sigs.assinatura2.nome || cargo2;
+
+  const effectiveLogoSrc = logoUrl || institutionSettings?.logoUrl;
+
+  // Brasão e Gládio Alado Vetorial Oficial
   const svgLogoHtml = `
     <svg viewBox="0 0 100 120" style="height:55px; width:auto; max-height:55px; display:inline-block;" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M 6 6 L 94 6 L 94 65 C 94 95 74 114 50 114 C 26 114 6 95 6 65 Z" fill="#0B2545" stroke="#134074" stroke-width="3" />
       <path d="M 9 9 L 91 9 L 91 65 C 91 92 72 111 50 111 C 28 111 9 92 9 65 Z" fill="#134074" />
       <rect x="12" y="14" width="76" height="18" rx="3" fill="#1E40AF" stroke="#60A5FA" stroke-width="1" />
-      <text x="50" y="27" fill="#FFFFFF" font-size="10" font-weight="900" text-anchor="middle" font-family="sans-serif">COMARA</text>
+      <text x="50" y="27" fill="#FFFFFF" font-size="10" font-weight="900" text-anchor="middle" font-family="sans-serif">${siglaInst}</text>
       <path d="M 49 38 L 51 38 L 51 96 L 49 96 Z" fill="#F59E0B" />
       <path d="M 43 49 L 57 49 L 57 53 L 43 53 Z" fill="#F59E0B" />
       <path d="M 50 34 L 54 38 L 46 38 Z" fill="#FDE047" />
@@ -323,8 +370,8 @@ export function generateSptfPrintHtml(
     </svg>
   `;
 
-  const logoCellHtml = (logoUrl && logoUrl.trim().length > 0)
-    ? `<img src="${logoUrl}" alt="Logo COMARA" crossorigin="anonymous" referrerpolicy="no-referrer" style="height:55px; width:auto; max-height:58px; max-width:80px; object-fit:contain; display:inline-block; vertical-align:middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" /><div style="display:none;">${svgLogoHtml}</div>`
+  const logoCellHtml = (effectiveLogoSrc && effectiveLogoSrc.trim().length > 0)
+    ? `<img src="${effectiveLogoSrc}" alt="Logo ${siglaInst}" crossorigin="anonymous" referrerpolicy="no-referrer" style="height:55px; width:auto; max-height:58px; max-width:80px; object-fit:contain; display:inline-block; vertical-align:middle;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';" /><div style="display:none;">${svgLogoHtml}</div>`
     : svgLogoHtml;
 
   const renderViaHtml = () => `
@@ -337,7 +384,7 @@ export function generateSptfPrintHtml(
           </td>
           <td style="width:75%; padding:10px; text-align:center; vertical-align:middle; background:#fff;">
             <h1 style="margin:0; font-size:22px; font-weight:900; text-transform:uppercase; letter-spacing:1.5px; color:#000; font-family:Arial, Helvetica, sans-serif;">
-              DISPENSA DE SPTF
+              ${tituloDispensa}
             </h1>
           </td>
         </tr>
@@ -394,21 +441,21 @@ export function generateSptfPrintHtml(
           <!-- BLOCO 2: CHEFE DO CANTEIRO -->
           <td style="width:25%; border-right:2px solid #000; padding:6px 4px; text-align:center; vertical-align:bottom; height:84px; background:#fff;">
             <div style="width:85%; margin:0 auto 4px auto; border-bottom:1px solid #000;"></div>
-            <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">CHEFE DO CANTEIRO</strong>
+            <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">${cargo1}</strong>
             <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#1e293b; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${chefeCanteiroNome}</span>
           </td>
 
-          <!-- BLOCO 3: SERVIDOR (SPPF/SPTF) -->
+          <!-- BLOCO 3: SERVIDOR -->
           <td style="width:25%; border-right:2px solid #000; padding:6px 4px; text-align:center; vertical-align:bottom; height:84px; background:#fff;">
             <div style="width:85%; margin:0 auto 4px auto; border-bottom:1px solid #000;"></div>
-            <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">SERVIDOR (SPPF/SPTF)</strong>
+            <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">${cargoServidor}</strong>
             <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#1e293b; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${dispensa.nome}</span>
           </td>
 
           <!-- BLOCO 4: CH/ENC DA DA -->
           <td style="width:25%; padding:6px 4px; text-align:center; vertical-align:bottom; height:84px; background:#fff;">
             <div style="width:85%; margin:0 auto 4px auto; border-bottom:1px solid #000;"></div>
-            <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">CH/ENC DA DA</strong>
+            <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">${cargo2}</strong>
             <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#1e293b; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${chefeDaNome}</span>
           </td>
         </tr>
@@ -592,6 +639,16 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
   const todayStr = new Date().toISOString().split('T')[0];
   const allRecords = useMemo(() => timeRecords || records || [], [timeRecords, records]);
 
+  // Contexto Institucional Dinâmico (Fonte da Verdade)
+  const { 
+    settings: institutionSettings, 
+    cargos: instCargos, 
+    sedes: instSedes, 
+    horarios: instHorarios, 
+    regrasCalculo: instRegrasCalculo, 
+    documentosModelo: instDocumentosModelo 
+  } = useInstitution();
+
   const [activeTab, setActiveTab] = useState<'form' | 'history' | 'print'>('form');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMatricula, setSelectedMatricula] = useState<string>('');
@@ -599,7 +656,7 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
   const [dataDispensa, setDataDispensa] = useState<string>(todayStr);
   const [horarioInicio, setHorarioInicio] = useState<string>('07:00');
   const [horarioFim, setHorarioFim] = useState<string>('16:00');
-  const [motivo, setMotivo] = useState<string>('COMPENSAÇÃO BANCO DE HORAS');
+  const [motivo, setMotivo] = useState<string>(instDocumentosModelo?.textoPadraoMotivoDispensa || 'COMPENSAÇÃO BANCO DE HORAS');
   const [observacoes, setObservacoes] = useState<string>('');
   const [isSaving, setIsSaving] = useState(false);
   const [feedbackMsg, setFeedbackMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -651,10 +708,15 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
     }
   };
 
-  // Cálculo das Horas com regra obrigatória da Trava do Almoço (12:00 às 13:00)
+  // Cálculo das Horas com regra dinâmica da Trava do Almoço
   const hoursCalculation = useMemo(() => {
-    return calculateDispensaHours(horarioInicio, horarioFim);
-  }, [horarioInicio, horarioFim]);
+    return calculateDispensaHours(
+      horarioInicio, 
+      horarioFim, 
+      instHorarios?.inicioAlmoco || '12:00', 
+      instHorarios?.fimAlmoco || '13:00'
+    );
+  }, [horarioInicio, horarioFim, instHorarios?.inicioAlmoco, instHorarios?.fimAlmoco]);
 
   const calculatedHours = hoursCalculation.netHours;
 
@@ -685,7 +747,7 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
     if (activePrintDispensa) return activePrintDispensa;
     return {
       id: 'preview',
-      numeroGuia: 'SPTF-2026/___',
+      numeroGuia: `${institutionSettings?.siglaInstituicao || 'SPTF'}-2026/___`,
       matricula: selectedEmployee?.matricula || '______',
       nome: selectedEmployee?.nome || 'COLABORADOR NÃO SELECIONADO',
       saram: selectedEmployee?.matricula || '______',
@@ -694,14 +756,14 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
       horarioInicio,
       horarioFim,
       totalHoras: calculatedHours,
-      motivo: motivo || 'COMPENSAÇÃO BANCO DE HORAS',
+      motivo: motivo || instDocumentosModelo?.textoPadraoMotivoDispensa || 'COMPENSAÇÃO BANCO DE HORAS',
       observacoes: observacoes.trim(),
       emitidoPorNome: currentUserName,
       emitidoPorEmail: currentUserEmail,
       emitidoEm: new Date().toISOString(),
       status: 'EMITIDA',
     };
-  }, [activePrintDispensa, selectedEmployee, secaoCanteiro, dataDispensa, horarioInicio, horarioFim, calculatedHours, motivo, observacoes, currentUserName, currentUserEmail]);
+  }, [activePrintDispensa, selectedEmployee, secaoCanteiro, dataDispensa, horarioInicio, horarioFim, calculatedHours, motivo, observacoes, currentUserName, currentUserEmail, institutionSettings?.siglaInstituicao, instDocumentosModelo?.textoPadraoMotivoDispensa]);
 
   const handleGenerateAndPrint = async () => {
     if (!selectedEmployee) {
@@ -738,7 +800,7 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
         horarioInicio,
         horarioFim,
         totalHoras: calculatedHours,
-        motivo: motivo || 'COMPENSAÇÃO BANCO DE HORAS',
+        motivo: motivo || instDocumentosModelo?.textoPadraoMotivoDispensa || 'COMPENSAÇÃO BANCO DE HORAS',
         observacoes: observacoes.trim(),
         emitidoPorNome: currentUserName,
         emitidoPorEmail: currentUserEmail,
@@ -755,8 +817,12 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
         selectedEmployee.sede as Branch,
         true,
         horarioInicio,
-        horarioFim
+        horarioFim,
+        { horarios: instHorarios, regrasCalculo: instRegrasCalculo }
       );
+
+      const lunchStartDisp = instHorarios?.inicioAlmoco || '12h';
+      const lunchEndDisp = instHorarios?.fimAlmoco || '13h';
 
       const timeRecord: TimeRecord = {
         id: lancamentoId,
@@ -777,7 +843,7 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
         eFeriado: calcResult.eFeriado,
         diaSemana: calcResult.diaSemana,
         diaSemanaNome: calcResult.diaSemanaNome,
-        observacao: `Dispensa SPTF Nº ${numeroGuia} (${horarioInicio} às ${horarioFim}) - Motivo: ${motivo}${hoursCalculation.lunchDeductionHours > 0 ? ' [Trava de Almoço 12h-13h: -' + hoursCalculation.lunchDeductionHours + 'h]' : ''}${observacoes ? ' - ' + observacoes : ''}`,
+        observacao: `Dispensa SPTF Nº ${numeroGuia} (${horarioInicio} às ${horarioFim}) - Motivo: ${motivo}${hoursCalculation.lunchDeductionHours > 0 ? ` [Trava de Almoço ${lunchStartDisp}-${lunchEndDisp}: -` + hoursCalculation.lunchDeductionHours + 'h]' : ''}${observacoes ? ' - ' + observacoes : ''}`,
         criadoEm: now.toISOString(),
         criadoPorEmail: currentUserEmail,
         atualizadoEm: now.toISOString(),
@@ -792,7 +858,8 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
       // Disparar impressão automaticamente após emitir
       setTimeout(() => {
         try {
-          const printHtml = generateSptfPrintHtml(dispensaRecord, constructionSites, systemConfig?.logoUrl);
+          const effectiveLogo = institutionSettings?.logoUrl || systemConfig?.logoUrl;
+          const printHtml = generateSptfPrintHtml(dispensaRecord, constructionSites, effectiveLogo, institutionSettings);
           let iframe = document.getElementById('sptf-print-iframe') as HTMLIFrameElement | null;
           if (!iframe) {
             iframe = document.createElement('iframe');
@@ -830,6 +897,7 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
 
   const handlePrint = (dispensaTarget?: DispensaSptfRecord) => {
     const dispensaToPrint = dispensaTarget || previewDispensa;
+    const effectiveLogo = institutionSettings?.logoUrl || systemConfig?.logoUrl;
     try {
       // 1. Sempre abrir a aba de visualização/impressão
       if (dispensaTarget) {
@@ -837,8 +905,8 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
       }
       setActiveTab('print');
 
-      // 2. Criar HTML de impressão
-      const printHtml = generateSptfPrintHtml(dispensaToPrint, constructionSites, systemConfig?.logoUrl);
+      // 2. Criar HTML de impressão com contexto institucional
+      const printHtml = generateSptfPrintHtml(dispensaToPrint, constructionSites, effectiveLogo, institutionSettings);
 
       // 3. Tentar imprimir via iframe dedicado
       let iframe = document.getElementById('sptf-print-iframe') as HTMLIFrameElement | null;
@@ -886,7 +954,8 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
 
   const handleOpenInNewTab = () => {
     try {
-      const printHtml = generateSptfPrintHtml(previewDispensa, constructionSites, systemConfig?.logoUrl);
+      const effectiveLogo = institutionSettings?.logoUrl || systemConfig?.logoUrl;
+      const printHtml = generateSptfPrintHtml(previewDispensa, constructionSites, effectiveLogo, institutionSettings);
       const blob = new Blob([printHtml], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const win = window.open(url, '_blank');
@@ -909,7 +978,8 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
 
   const handleDownloadHtml = () => {
     try {
-      const printHtml = generateSptfPrintHtml(previewDispensa, constructionSites, systemConfig?.logoUrl);
+      const effectiveLogo = institutionSettings?.logoUrl || systemConfig?.logoUrl;
+      const printHtml = generateSptfPrintHtml(previewDispensa, constructionSites, effectiveLogo, institutionSettings);
       const blob = new Blob([printHtml], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -923,6 +993,7 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (err) {
       console.error('Falha ao baixar arquivo HTML:', err);
+      setFeedbackMsg({ type: 'error', text: 'Não foi possível fazer o download do arquivo de impressão.' });
     }
   };
 
@@ -1048,15 +1119,15 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
               </button>
             </div>
 
-            <button
+            <IconButton
               id="btn-close-sptf-modal"
-              onClick={onClose}
-              className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
-              title="Fechar (Esc)"
+              icon={X}
+              variant="ghost"
+              size="md"
+              tooltip="Fechar Modal (Esc)"
               aria-label="Fechar Guia de Dispensa SPTF"
-            >
-              <X className="w-5 h-5" />
-            </button>
+              onClick={onClose}
+            />
           </div>
         </div>
 
@@ -1397,7 +1468,12 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
                       </div>
 
                       <div className="flex items-center gap-1.5 self-end sm:self-center">
-                        <button
+                        <IconButton
+                          icon={Printer}
+                          variant="success"
+                          size="sm"
+                          tooltip="Imprimir Guia Oficial em 2 Vias Diretamente"
+                          aria-label={`Imprimir Guia de ${d.nome}`}
                           onClick={() => {
                             setActivePrintDispensa(d);
                             setActiveTab('print');
@@ -1432,39 +1508,35 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
                               }
                             }, 200);
                           }}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition-colors"
-                          title="Imprimir Guia Oficial em 2 Vias Diretamente"
-                        >
-                          <Printer className="w-3.5 h-3.5" />
-                          Imprimir
-                        </button>
+                        />
 
-                        <button
+                        <IconButton
+                          icon={ExternalLink}
+                          variant="secondary"
+                          size="sm"
+                          tooltip="Abrir Documento A4 em Nova Aba"
+                          aria-label="Abrir em Nova Aba"
                           onClick={() => {
                             const printHtml = generateSptfPrintHtml(d, constructionSites, systemConfig?.logoUrl);
                             const blob = new Blob([printHtml], { type: 'text/html;charset=utf-8' });
                             const url = URL.createObjectURL(blob);
                             window.open(url, '_blank');
                           }}
-                          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-blue-400 border border-slate-700 transition-colors"
-                          title="Abrir em Nova Aba"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          Nova Aba
-                        </button>
+                        />
 
                         {onDeleteDispensa && (
-                          <button
+                          <IconButton
+                            icon={Trash2}
+                            variant="danger"
+                            size="sm"
+                            tooltip="Cancelar Dispensa e Lançamento Vinculado"
+                            aria-label="Cancelar Dispensa"
                             onClick={() => {
                               if (window.confirm(`Deseja cancelar a Dispensa ${d.numeroGuia || ''} de ${d.nome}? O lançamento correspondente no Banco de Horas também será cancelado.`)) {
                                 onDeleteDispensa(d.id, d.lancamentoId);
                               }
                             }}
-                            className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-                            title="Cancelar Dispensa"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          />
                         )}
                       </div>
                     </div>
@@ -1491,43 +1563,43 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-2">
                   <button
                     id="btn-back-to-edit"
                     onClick={() => setActiveTab('form')}
-                    className="px-3 py-2 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors"
+                    className="px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-200 transition-colors"
                   >
                     Voltar
                   </button>
 
-                  <button
+                  <IconButton
                     id="btn-open-new-tab"
+                    icon={ExternalLink}
+                    variant="secondary"
+                    size="md"
+                    tooltip="Abrir a folha A4 isolada em uma nova aba do navegador"
+                    aria-label="Abrir em Nova Aba"
                     onClick={handleOpenInNewTab}
-                    className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-blue-600/80 hover:bg-blue-600 text-white border border-blue-500/40 transition-colors shadow-sm"
-                    title="Abrir a folha A4 isolada em uma nova aba do navegador"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    Abrir em Nova Aba
-                  </button>
+                  />
 
-                  <button
+                  <IconButton
                     id="btn-download-html"
+                    icon={Download}
+                    variant="secondary"
+                    size="md"
+                    tooltip="Baixar arquivo HTML oficial pronto para visualização off-line"
+                    aria-label="Baixar Arquivo HTML"
                     onClick={handleDownloadHtml}
-                    className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-700 hover:bg-slate-600 text-slate-100 border border-slate-600 transition-colors"
-                    title="Baixar arquivo HTML oficial pronto para visualização e impressão off-line"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Baixar Arquivo
-                  </button>
+                  />
 
                   <button
                     id="btn-print-official-guide"
                     onClick={() => handlePrint()}
-                    className="flex items-center gap-2 px-5 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30 transition-all active:scale-95"
+                    className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/30 transition-all active:scale-95 cursor-pointer"
                     title="Disparar diálogo de impressão do navegador"
                   >
                     <Printer className="w-4 h-4" />
-                    Imprimir Agora (2 Vias A4)
+                    <span>Imprimir Agora (2 Vias A4)</span>
                   </button>
                 </div>
               </div>

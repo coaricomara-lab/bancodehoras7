@@ -3,6 +3,8 @@ import { Employee, TimeRecord, InsalubrityRecord, Branch, SystemConfig, AdminRol
 import { ComaraLogo } from './ComaraLogo';
 import { InsalubrityConversionModal } from './InsalubrityConversionModal';
 import { getSignaturesForCanteiro } from '../services/canteiroService';
+import { useInstitution } from '../contexts/InstitutionContext';
+import { IconButton } from './IconButton';
 import { 
   FileSpreadsheet, 
   Printer, 
@@ -64,6 +66,9 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
   const isDark = theme === 'dark';
   const printRef = useRef<HTMLDivElement>(null);
 
+  // Contexto Institucional Dinâmico
+  const { settings: institutionSettings, sedes: instSedes, cargos: instCargos } = useInstitution();
+
   // Período Padrão: Mês atual
   const today = new Date();
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
@@ -80,9 +85,10 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
   
   // Assinaturas dinâmicas baseadas no canteiro selecionado
   const dynamicSignatures = useMemo(() => {
-    const branchCode = selectedBranch === 'TODAS' ? 'MN' : selectedBranch;
+    const defaultSedeCode = instSedes && instSedes.length > 0 ? instSedes[0].codigo : 'MN';
+    const branchCode = selectedBranch === 'TODAS' ? defaultSedeCode : selectedBranch;
     return getSignaturesForCanteiro(branchCode, constructionSites);
-  }, [selectedBranch, constructionSites]);
+  }, [selectedBranch, constructionSites, instSedes]);
   
   // Modal de Conversão Simples -> Avançado
   const [isConversionModalOpen, setIsConversionModalOpen] = useState(false);
@@ -642,7 +648,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                 Gerador de Relatórios Executivos
               </h1>
               <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                COMARA • SPTF
+                {institutionSettings?.siglaInstituicao || 'COMARA'} • SPTF
               </span>
             </div>
             <p className={`text-xs mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
@@ -651,47 +657,49 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Botão de Emissão de Dispensa de SPTF */}
           {onOpenSptfDispensa && (
-            <button
+            <IconButton
               id="btn-report-nova-dispensa"
+              icon={FileText}
+              variant="success"
+              size="md"
+              tooltip="Emitir Nova Guia de Dispensa de SPTF (2 Vias A4)"
+              aria-label="Nova Dispensa de SPTF"
               onClick={() => onOpenSptfDispensa && onOpenSptfDispensa()}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/20 active:scale-98 cursor-pointer"
-              title="Emitir nova Guia de Dispensa de SPTF com 2 vias e débito em banco de horas"
-            >
-              <FileText className="w-4 h-4" />
-              <span>Nova Dispensa de SPTF</span>
-            </button>
+            />
           )}
 
           {/* Botão de Conversão Simples -> Avançado (para perfis gestor/admin) */}
           {reportType === 'INSALUBRIDADE' && isAdvancedUser && onSaveInsalubrityBatch && (
-            <button
+            <IconButton
+              icon={ArrowRightLeft}
+              variant="warning"
+              size="md"
+              tooltip="Converter Lançamentos para Modo Avançado NR-15"
+              aria-label="Converter para Modo Avançado"
               onClick={() => setIsConversionModalOpen(true)}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-blue-600 hover:from-amber-500 hover:to-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-md shadow-blue-600/20 active:scale-98 cursor-pointer"
-              title="Converter lançamentos do modo simples para enquadramento NR-15"
-            >
-              <ArrowRightLeft className="w-4 h-4" />
-              <span>Converter p/ Modo Avançado</span>
-            </button>
+            />
           )}
 
-          <button
+          <IconButton
+            icon={Download}
+            variant="secondary"
+            size="md"
+            tooltip="Exportar Relatório Consolidado em Excel (CSV)"
+            aria-label="Exportar Excel (CSV)"
             onClick={handleExportCSV}
-            className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-emerald-600/20 active:scale-98 cursor-pointer"
-          >
-            <Download className="w-4 h-4" />
-            <span>Exportar Excel (CSV)</span>
-          </button>
+          />
 
-          <button
+          <IconButton
+            icon={Printer}
+            variant="primary"
+            size="md"
+            tooltip="Imprimir Relatório Oficial / Gerar PDF"
+            aria-label="Imprimir ou Salvar em PDF"
             onClick={handlePrint}
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-blue-600/20 active:scale-98 cursor-pointer"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Imprimir / PDF Oficial</span>
-          </button>
+          />
         </div>
       </div>
 
@@ -827,6 +835,12 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                     </option>
                   );
                 })
+              ) : Array.isArray(instSedes) && instSedes.length > 0 ? (
+                instSedes.map((sede) => (
+                  <option key={sede.id || sede.codigo} value={sede.codigo}>
+                    {sede.codigo} ({sede.nome})
+                  </option>
+                ))
               ) : (
                 <>
                   <option value="KO">KO (Canteiro de Obras Coari)</option>
@@ -935,14 +949,14 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
           isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
-        {/* Cabeçalho Oficial do Relatório COMARA */}
+        {/* Cabeçalho Oficial do Relatório Dinâmico */}
         <div className="border-b pb-6 mb-6">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <ComaraLogo logoUrl={systemConfig?.logoUrl} size="lg" />
+              <ComaraLogo logoUrl={institutionSettings?.logoUrl || systemConfig?.logoUrl} size="lg" />
               <div>
                 <h2 className="text-base sm:text-lg font-black tracking-tight uppercase text-blue-400 print:text-black">
-                  COMISSÃO DE AEROPORTOS DA REGIÃO AMAZÔNICA - COMARA
+                  {institutionSettings?.nomeInstituicao || 'COMISSÃO DE AEROPORTOS DA REGIÃO AMAZÔNICA'} - {institutionSettings?.siglaInstituicao || 'COMARA'}
                 </h2>
                 <h3 className="text-sm font-bold tracking-tight text-slate-200 print:text-black">
                   {reportType === 'BANCO_HORAS' 
@@ -952,7 +966,9 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                       : 'RELATÓRIO ANALÍTICO DE INSALUBRIDADE (NR-15)'}
                 </h3>
                 <p className="text-xs text-slate-400 print:text-slate-600 mt-0.5">
-                  Sedes: KO (Coari) • BE (Belém) • MN (Manaus) • Canteiros Destacados
+                  {instSedes && instSedes.length > 0 
+                    ? `Sedes: ${instSedes.map(s => `${s.codigo} (${s.nome})`).join(' • ')}`
+                    : 'Sedes: KO (Coari) • BE (Belém) • MN (Manaus) • Canteiros Destacados'}
                 </p>
               </div>
             </div>

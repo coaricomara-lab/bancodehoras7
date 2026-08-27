@@ -9,6 +9,7 @@ import {
 import { exportTimeRecordsToLookerCSV, exportFilteredBalancesCSV, triggerFileDownload } from '../utils/csvHandler';
 import { DashboardCalendarView } from './DashboardCalendarView';
 import { InfoTooltip } from './InfoTooltip';
+import { IconButton } from './IconButton';
 import { ErrorBoundary } from './ErrorBoundary';
 import { 
   Users, 
@@ -387,89 +388,70 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           </h1>
         </div>
 
-        {/* Exportações Rápidas para Relatórios / Looker & Botão Filtros */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Ações Rápidas & Exportações Looker com Tooltips Despoluídos */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {onOpenQuickBatchModal && (
-            <button
+            <IconButton
               id="btn-dash-lancamento-rapido"
+              icon={Plus}
+              variant="primary"
+              size="md"
+              tooltip="Novo Lançamento Diário ou em Lote"
+              aria-label="Novo Lançamento"
               onClick={onOpenQuickBatchModal}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-500 shadow-sm transition-all cursor-pointer"
-              title="Lançamento Rápido Diário ou em Lote"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>Lançamento</span>
-            </button>
+            />
           )}
 
           {onOpenSptfDispensa && (
-            <button
+            <IconButton
               id="btn-dash-nova-dispensa-sptf"
+              icon={FileText}
+              variant="success"
+              size="md"
+              tooltip="Emitir Guia Oficial de Dispensa de SPTF (2 Vias A4)"
+              aria-label="Emitir Dispensa SPTF"
               onClick={() => onOpenSptfDispensa && onOpenSptfDispensa()}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl text-white bg-emerald-600 hover:bg-emerald-500 shadow-sm transition-all cursor-pointer"
-              title="Emitir Guia de Dispensa de SPTF (2 Vias A4)"
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>Dispensa SPTF</span>
-            </button>
+            />
           )}
 
-          {/* Botão de Expansão / Ocultação de Filtros */}
-          <button
+          {/* Botão de Expansão / Ocultação de Filtros com Badge de Filtro Ativo */}
+          <IconButton
+            icon={Filter}
+            variant={isFiltersExpanded || (filters.sede !== 'TODAS' || filters.funcao !== 'TODAS' || filters.statusBanco !== 'TODOS' || filters.matriculaOrNome || filters.tipoOcorrencia !== 'TODOS' || filters.dataInicio || filters.dataFim) ? 'subtle' : 'secondary'}
+            size="md"
+            tooltip={isFiltersExpanded ? 'Ocultar Filtros Globais' : 'Expandir Filtros Globais (Sede, Função, Período)'}
+            aria-label="Filtrar Painel"
+            badge={(filters.sede !== 'TODAS' || filters.funcao !== 'TODAS' || filters.statusBanco !== 'TODOS' || !!filters.matriculaOrNome || filters.tipoOcorrencia !== 'TODOS' || !!filters.dataInicio || !!filters.dataFim)}
+            badgeColor="blue"
             onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
-              isFiltersExpanded || (filters.sede !== 'TODAS' || filters.funcao !== 'TODAS' || filters.statusBanco !== 'TODOS' || filters.matriculaOrNome || filters.tipoOcorrencia !== 'TODOS' || filters.dataInicio || filters.dataFim)
-                ? isDark
-                  ? 'bg-blue-950/40 text-blue-300 border-blue-500/50 shadow-xs'
-                  : 'bg-blue-50 text-blue-700 border-blue-300 shadow-xs'
-                : isDark
-                  ? 'text-[#E0E2E5] bg-[#1F2229] hover:bg-[#2A2E38] border-[#1F2229]'
-                  : 'text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200'
-            }`}
-            title="Expandir ou ocultar painel de filtros globais"
-          >
-            <Filter className="w-3.5 h-3.5 text-[#3B82F6]" />
-            <span>Filtros</span>
-            {(filters.sede !== 'TODAS' || filters.funcao !== 'TODAS' || filters.statusBanco !== 'TODOS' || filters.matriculaOrNome || filters.tipoOcorrencia !== 'TODOS' || filters.dataInicio || filters.dataFim) && (
-              <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-            )}
-          </button>
+          />
 
-          <button
+          <IconButton
+            icon={Download}
+            variant="secondary"
+            size="md"
+            tooltip="Exportar Extrato Geral dos Lançamentos Filtrados (CSV)"
+            aria-label="Exportar CSV Extrato"
             onClick={handleExportLookerCSV}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
-              isDark 
-                ? 'text-[#E0E2E5] bg-[#1F2229] hover:bg-[#2A2E38] border-[#1F2229]' 
-                : 'text-slate-700 bg-slate-100 hover:bg-slate-200 border-slate-200'
-            }`}
-            title="Exportar base detalhada dos lançamentos filtrados"
-          >
-            <Download className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Extrato (CSV)</span>
-          </button>
-          <button
+          />
+
+          <IconButton
+            icon={AlertOctagon}
+            variant="danger"
+            size="md"
+            tooltip="Exportar Relação de Colaboradores Devedores (CSV)"
+            aria-label="Exportar Devedores CSV"
             onClick={handleExportDevedores}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
-              isDark 
-                ? 'text-rose-300 bg-rose-950/30 hover:bg-rose-950/60 border-rose-900/40' 
-                : 'text-rose-700 bg-rose-50 hover:bg-rose-100 border-rose-200'
-            }`}
-            title="Exportar apenas colaboradores devedores"
-          >
-            <Download className="w-3.5 h-3.5 text-rose-500" />
-            <span>Devedores</span>
-          </button>
-          <button
+          />
+
+          <IconButton
+            icon={Sparkles}
+            variant="warning"
+            size="md"
+            tooltip="Exportar Colaboradores com Saldo Crítico (≥ 40h de Crédito)"
+            aria-label="Exportar Credores Críticos CSV"
             onClick={handleExportCredoresCriticos}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
-              isDark 
-                ? 'text-amber-300 bg-amber-950/30 hover:bg-amber-950/60 border-amber-900/40' 
-                : 'text-amber-700 bg-amber-50 hover:bg-amber-100 border-amber-200'
-            }`}
-            title="Exportar colaboradores com crédito excessivo (>= 40h)"
-          >
-            <Download className="w-3.5 h-3.5 text-amber-500" />
-            <span>Credores &gt;40h</span>
-          </button>
+          />
         </div>
       </div>
 
@@ -1139,21 +1121,16 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                             </div>
                           </td>
 
-                          {/* 5. AÇÃO (EXTRATO): Botão fixo "Extrato >" */}
+                          {/* 5. AÇÃO (EXTRATO): Ação compacta com Tooltip */}
                           <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                            <button
+                            <IconButton
+                              icon={Eye}
+                              variant="subtle"
+                              size="sm"
+                              tooltip={`Abrir Extrato Completo de ${emp.nome}`}
+                              aria-label={`Extrato de ${emp.nome}`}
                               onClick={() => onViewEmployeeStatement(emp.matricula)}
-                              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl transition-all shadow-xs active:scale-95 cursor-pointer ${
-                                isDark 
-                                  ? 'bg-[#1F2229] hover:bg-[#2A2E38] text-blue-400 border border-[#2A2E38]' 
-                                  : 'bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200'
-                              }`}
-                              title={`Abrir extrato detalhado de ${emp.nome}`}
-                            >
-                              <Eye className="w-3.5 h-3.5" />
-                              <span>Extrato</span>
-                              <ChevronRight className="w-3.5 h-3.5" />
-                            </button>
+                            />
                           </td>
                         </tr>
                       );
@@ -1516,18 +1493,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                           {/* Comprovante Drive */}
                           <td className="py-3.5 px-5 text-center whitespace-nowrap">
                             {r.comprovante ? (
-                              <button
+                              <IconButton
+                                icon={FileText}
+                                variant="success"
+                                size="xs"
+                                tooltip="Visualizar Comprovante / Anexo no Google Drive"
+                                aria-label="Visualizar Anexo Drive"
                                 onClick={() => onViewAttachment(r.comprovante!, empName, r.dataRegistro)}
-                                className={`inline-flex items-center gap-1 px-2 py-1 border rounded transition-colors text-[10px] font-semibold cursor-pointer ${
-                                  isDark 
-                                    ? 'bg-[#1F2229] hover:bg-[#2A2E38] text-emerald-400 border-[#1F2229]' 
-                                    : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200'
-                                }`}
-                                title="Visualizar anexo arquivado no Google Drive"
-                              >
-                                <FileText className="w-3 h-3" />
-                                Ver Doc
-                              </button>
+                              />
                             ) : (
                               <span className={isDark ? 'text-[#5C616A] text-[11px]' : 'text-gray-300 text-[11px]'}>—</span>
                             )}
@@ -1540,13 +1513,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
 
                           {/* Ação */}
                           <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                            <button
+                            <IconButton
+                              icon={Eye}
+                              variant="subtle"
+                              size="xs"
+                              tooltip={`Abrir Extrato de ${empName}`}
+                              aria-label={`Extrato de ${empName}`}
                               onClick={() => onViewEmployeeStatement(r.matricula)}
-                              className="text-xs text-[#3B82F6] hover:underline font-semibold inline-flex items-center gap-0.5 cursor-pointer"
-                            >
-                              Extrato
-                              <ChevronRight className="w-3.5 h-3.5" />
-                            </button>
+                            />
                           </td>
                         </tr>
                       );

@@ -17,6 +17,7 @@ import { EmployeeManagement } from './components/EmployeeManagement';
 import { EmployeeStatement } from './components/EmployeeStatement';
 import { EmployeeSelfServicePortal } from './components/EmployeeSelfServicePortal';
 import { AdminPermissionsManagement } from './components/AdminPermissionsManagement';
+import { SettingsPage } from './components/SettingsPage';
 import { GoogleArchitectureSpec } from './components/GoogleArchitectureSpec';
 import { AdminLockScreen } from './components/AdminLockScreen';
 import { CollaboratorLandingView } from './components/CollaboratorLandingView';
@@ -1664,6 +1665,24 @@ export default function App() {
                 currentUserEmail={currentUserEmail}
                 userRole={userRole}
                 theme={theme}
+              />
+            </ProtectedRoute>
+          )}
+
+          {activeTab === 'configuracoes_instituicao' && (
+            <ProtectedRoute
+              allowedRoles={['SUPER_ADMIN']}
+              currentUserRole={userRole}
+              currentUser={currentUser}
+              onRedirectToDashboard={() => setActiveTab('dashboard')}
+              fallbackTitle="Configurações Institucionais Restritas"
+              fallbackMessage="A parametrização de identidade da Organização Militar, cargos de comando, horários e normas de cálculo é restrita exclusivamente ao Administrador Geral (SUPER_ADMIN / TI)."
+            >
+              <SettingsPage
+                theme={theme}
+                currentUserEmail={currentUserEmail}
+                userRole={userRole}
+                onShowToast={(msg, type) => showToast(msg, type)}
               />
             </ProtectedRoute>
           )}
