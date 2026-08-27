@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Employee, TimeRecord, Attachment, AdminUser, AdminRole, AuthSession, InsalubrityRecord, SystemConfig, GrauInsalubridade, ConstructionSite, PaystubRecord, DispensaSptfRecord } from './types';
 import { storageService } from './services/storageService';
 import { firestoreService, BatchProgressInfo } from './services/firestoreService';
-import { auth, googleProvider, testFirestoreConnection, isPermissionError } from './services/firebase';
+import { auth, googleProvider, testFirestoreConnection, isPermissionError, isQuotaError } from './services/firebase';
 import { authService } from './services/authService';
 import { 
   onAuthStateChanged, 
@@ -62,21 +62,30 @@ export default function App() {
   // Auth State
   const [currentUser, setCurrentUser] = useState<AppUser | null>(() => {
     const saved = authService.getCurrentSession();
-    if (!saved) return null;
+    // S-002: Never fall back to SUPER_ADMIN — if no valid role, clear session and force re-auth
+    if (!saved || !saved.role) {
+      if (saved && !saved.role) authService.clearSession();
+      return null;
+    }
     return {
       email: saved.email,
       nome: saved.nome,
-      role: (saved.role as AdminRole) || 'SUPER_ADMIN',
+      role: saved.role as AdminRole,
       cargo: saved.cargo,
       loginTime: saved.loginTime,
     };
   });
   const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const [userRole, setUserRole] = useState<AdminRole>(() => {
+  const [userRole, setUserRole] = useState<AdminRole | null>(() => {
     const session = authService.getCurrentSession();
-    return session?.role || 'SUPER_ADMIN';
+    if (!session || !session.role) {
+      if (session) authService.clearSession();
+      return null;
+    }
+    return session.role as AdminRole;
   });
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
+  const [isVerifyingPermissions, setIsVerifyingPermissions] = useState(false);
 
   // Firestore Data State
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -90,6 +99,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [selectedMatricula, setSelectedMatricula] = useState<string>('');
   const selectedMatriculaRef = useRef<string>(selectedMatricula);
+  const isSubscribedRef = useRef(false);
 
   useEffect(() => {
     selectedMatriculaRef.current = selectedMatricula;
@@ -170,7 +180,10 @@ export default function App() {
       },
       (err) => {
         console.warn('Fallback local para colaboradores:', err);
-        if (isPermissionError(err)) {
+        // 1.5: Handle quota exceeded — show clear message, use cached data, don't retry
+        if (isQuotaError(err)) {
+          setFirestoreErrorNotice('Cota do Cloud Firestore excedida. Operando com dados em cache local.');
+        } else if (isPermissionError(err)) {
           setFirestoreErrorNotice('Erro de permissão no banco de dados. Verifique a autenticação.');
         }
         const local = storageService.getEmployees();
@@ -194,7 +207,10 @@ export default function App() {
       },
       (err) => {
         console.warn('Fallback local para lançamentos:', err);
-        if (isPermissionError(err)) {
+        // 1.5: Handle quota exceeded — show clear message, use cached data, don't retry
+        if (isQuotaError(err)) {
+          setFirestoreErrorNotice('Cota do Cloud Firestore excedida. Operando com dados em cache local.');
+        } else if (isPermissionError(err)) {
           setFirestoreErrorNotice('Erro de permissão no banco de dados. Verifique a autenticação.');
         }
         const local = storageService.getTimeRecords();
@@ -203,24 +219,23 @@ export default function App() {
       activeCanteiro
     );
 
-    // Subscribe to Authorized Admin Users in Firestore
-    const unsubAdmins = firestoreService.subscribeAdmins(
-      (adms) => {
-        setAdminUsers(adms);
-        setFirestoreErrorNotice(null);
-        if (adms.length > 0) {
-          storageService.saveAdmins(adms);
-        }
-      },
-      (err) => {
-        console.warn('Fallback local para administradores:', err);
-        if (isPermissionError(err)) {
-          setFirestoreErrorNotice('Erro de permissão no banco de dados. Verifique a autenticação.');
-        }
-        const local = storageService.getAdmins();
-        setAdminUsers(local);
+    // 1.2/1.3: admin_users — one-time fetch with local cache instead of onSnapshot listener
+    firestoreService.getAdmins().then((adms) => {
+      setAdminUsers(adms);
+      setFirestoreErrorNotice(null);
+      if (adms.length > 0) {
+        storageService.saveAdmins(adms);
       }
-    );
+    }).catch((err) => {
+      console.warn('Fallback local para administradores:', err);
+      if (isQuotaError(err)) {
+        setFirestoreErrorNotice('Cota do Cloud Firestore excedida. Operando com dados em cache local.');
+      } else if (isPermissionError(err)) {
+        setFirestoreErrorNotice('Erro de permissão no banco de dados. Verifique a autenticação.');
+      }
+      const local = storageService.getAdmins();
+      setAdminUsers(local);
+    });
 
     // Subscribe to Insalubrity Records in Firestore
     const unsubInsalubrity = firestoreService.subscribeInsalubrityRecords(
@@ -238,30 +253,24 @@ export default function App() {
       activeCanteiro
     );
 
-    // Subscribe to Construction Sites in Firestore
-    const unsubSites = firestoreService.subscribeConstructionSites(
-      (sites) => {
-        setConstructionSites(sites);
-      },
-      (err) => {
-        console.warn('Fallback para canteiros:', err);
-      }
-    );
+    // 1.2/1.3: canteiros_obras — one-time fetch with local cache instead of onSnapshot listener
+    firestoreService.getConstructionSites().then((sites) => {
+      setConstructionSites(sites);
+    }).catch((err) => {
+      console.warn('Fallback para canteiros:', err);
+    });
 
-    // Subscribe to System Config (Logo COMARA, etc.)
-    const unsubSystemConfig = firestoreService.subscribeSystemConfig(
-      (cfg) => {
-        if (cfg) {
-          setSystemConfig(cfg);
-          storageService.saveSystemConfig(cfg);
-        }
-      },
-      (err) => {
-        console.warn('Fallback local para system config:', err);
-        const local = storageService.getSystemConfig();
-        setSystemConfig(local);
+    // 1.2/1.3: system_config — one-time fetch with local cache instead of onSnapshot listener
+    firestoreService.getSystemConfigOnce().then((cfg) => {
+      if (cfg) {
+        setSystemConfig(cfg);
+        storageService.saveSystemConfig(cfg);
       }
-    );
+    }).catch((err) => {
+      console.warn('Fallback local para system config:', err);
+      const local = storageService.getSystemConfig();
+      setSystemConfig(local);
+    });
 
     // Subscribe to Paystubs (Contracheques Digitais) in Firestore
     const unsubPaystubs = firestoreService.subscribePaystubs(
@@ -302,24 +311,9 @@ export default function App() {
         console.warn('Erro ao cancelar listener de lançamentos:', e);
       }
       try {
-        if (typeof unsubAdmins === 'function') unsubAdmins();
-      } catch (e) {
-        console.warn('Erro ao cancelar listener de administradores:', e);
-      }
-      try {
         if (typeof unsubInsalubrity === 'function') unsubInsalubrity();
       } catch (e) {
         console.warn('Erro ao cancelar listener de insalubridade:', e);
-      }
-      try {
-        if (typeof unsubSites === 'function') unsubSites();
-      } catch (e) {
-        console.warn('Erro ao cancelar listener de canteiros:', e);
-      }
-      try {
-        if (typeof unsubSystemConfig === 'function') unsubSystemConfig();
-      } catch (e) {
-        console.warn('Erro ao cancelar listener de system config:', e);
       }
       try {
         if (typeof unsubPaystubs === 'function') unsubPaystubs();
@@ -335,11 +329,16 @@ export default function App() {
   }, [userRole, currentUser]);
 
   useEffect(() => {
+    // 1.4: Guard against duplicate listeners — only subscribe when user is verified
+    if (isSubscribedRef.current) return;
+    if (!currentUser || !userRole) return;
+    isSubscribedRef.current = true;
     const cleanup = initFirestoreSubscriptions();
     return () => {
+      isSubscribedRef.current = false;
       if (typeof cleanup === 'function') cleanup();
     };
-  }, [initFirestoreSubscriptions]);
+  }, [initFirestoreSubscriptions, currentUser, userRole]);
 
   // -------------------------------------------------------------
   // 2. Monitor and Enforce Strict RBAC on Authentication State
@@ -377,6 +376,7 @@ export default function App() {
             role: 'SUPER_ADMIN',
             loginTime: new Date().toISOString(),
           });
+          setIsVerifyingPermissions(false);
         } else if (matchAdmin && matchAdmin.ativo) {
           const appUser: AppUser = {
             uid: user.uid,
@@ -398,36 +398,32 @@ export default function App() {
             cargo: matchAdmin.cargo,
             loginTime: new Date().toISOString(),
           });
+          setIsVerifyingPermissions(false);
         } else if (adminUsers.length > 0) {
           // Strict block: Not in authorized list or inactive
           console.warn('Bloqueio de acesso RBAC:', email);
           await firebaseSignOut(auth);
           authService.clearSession();
           setCurrentUser(null);
+          setUserRole(null);
+          setIsVerifyingPermissions(false);
           showToast('Acesso Negado: Usuário não cadastrado pela equipe de RH.', 'error');
         } else {
-          // If admin list still syncing, set provisionally
-          const appUser: AppUser = {
-            uid: user.uid,
-            email,
-            nome: user.displayName || 'Gestor RH',
-            displayName: user.displayName,
-            role: 'GESTOR_RH',
-            loginTime: new Date().toISOString(),
-            photoURL: user.photoURL,
-          };
-          setCurrentUser(appUser);
-          setUserRole('GESTOR_RH');
-          setUserMode('ADMIN');
+          // S-001: adminUsers still syncing — do NOT assign any role provisionally.
+          // Keep currentUser null and show "Verificando permissões..." until adminUsers loads.
+          setCurrentUser(null);
+          setUserRole(null);
+          setIsVerifyingPermissions(true);
         }
       } else {
         // Sem Firebase Auth Google - verificar se há sessão salva de login Firestore
+        setIsVerifyingPermissions(false);
         const savedSession = authService.getCurrentSession();
-        if (savedSession) {
+        if (savedSession && savedSession.role) {
           const appUser: AppUser = {
             email: savedSession.email,
             nome: savedSession.nome,
-            role: (savedSession.role as AdminRole) || 'SUPER_ADMIN',
+            role: savedSession.role as AdminRole,
             cargo: savedSession.cargo,
             loginTime: savedSession.loginTime,
           };
@@ -435,7 +431,9 @@ export default function App() {
           setUserRole(savedSession.role as AdminRole);
           setUserMode(savedSession.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
         } else {
+          if (savedSession && !savedSession.role) authService.clearSession();
           setCurrentUser(null);
+          setUserRole(null);
         }
       }
     });
@@ -492,7 +490,7 @@ export default function App() {
     const appUser: AppUser = {
       email: result.session.email,
       nome: result.session.nome,
-      role: (result.session.role as AdminRole) || 'SUPER_ADMIN',
+      role: result.session.role as AdminRole,
       cargo: result.session.cargo,
       loginTime: result.session.loginTime,
     };
@@ -527,7 +525,7 @@ export default function App() {
       // 1. Limpeza completa dos estados globais e da sessão local
       authService.clearSession();
       setCurrentUser(null);
-      setUserRole('GESTOR_RH');
+      setUserRole(null);
       setUserMode('ADMIN');
       setActiveTab('extrato');
       setIsAdminLoginModalOpen(false);
@@ -551,7 +549,7 @@ export default function App() {
     } finally {
       authService.clearSession();
       setCurrentUser(null);
-      setUserRole('GESTOR_RH');
+      setUserRole(null);
       setUserMode('ADMIN');
       setActiveTab('extrato');
       setIsAdminLoginModalOpen(false);
@@ -594,7 +592,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: newRecord.employeeSede || currentUser?.canteiroCodigo || 'TODOS',
         tipoAcao: isEdit ? 'EDICAO_LANCAMENTO' : 'LANCAMENTO_HORAS',
         detalhes: `${isEdit ? 'Edição' : 'Lançamento manual'} para Matrícula ${newRecord.matricula} (${newRecord.employeeName || ''}): ${newRecord.tipoOcorrencia} de ${newRecord.horasBrutas}h (Saldo: ${newRecord.saldoCalculado >= 0 ? '+' : ''}${newRecord.saldoCalculado}h) em ${newRecord.dataRegistro}.`,
@@ -655,7 +653,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: currentUser?.canteiroCodigo || 'TODOS',
         tipoAcao: 'LANCAMENTO_HORAS',
         detalhes: `Importação em lote de ${importedRecords.length.toLocaleString('pt-BR')} lançamentos de banco de horas sincronizados no Firestore.`,
@@ -716,7 +714,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: currentUser?.canteiroCodigo || 'TODOS',
         tipoAcao: 'ALTERACAO_FUNCAO',
         detalhes: `Importação/Atualização cadastral em lote de ${newEmployees.length.toLocaleString('pt-BR')} colaboradores no sistema.`,
@@ -889,7 +887,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: targetRec?.employeeSede || currentUser?.canteiroCodigo || 'TODOS',
         tipoAcao: 'EXCLUSAO_REGISTRO',
         detalhes: `Exclusão de lançamento de ${targetRec?.horasBrutas || 0}h (${targetRec?.tipoOcorrencia || 'Registro'}) da Matrícula ${targetRec?.matricula || id}.`,
@@ -925,7 +923,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: dispensa.secaoCanteiro || currentUser?.canteiroCodigo || 'TODOS',
         tipoAcao: 'EMISSAO_DISPENSA',
         detalhes: `Dispensa emitida para o servidor Matrícula ${dispensa.matricula} (${dispensa.nome}) - ${dispensa.totalHoras.toFixed(1)}h abatidas (Guia #${dispensa.numeroGuia || 'S/N'}).`,
@@ -975,7 +973,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: targetDispensa?.secaoCanteiro || currentUser?.canteiroCodigo || 'TODOS',
         tipoAcao: 'CANCELAMENTO_DISPENSA',
         detalhes: `Cancelamento de Guia de Dispensa de SPTF #${targetDispensa?.numeroGuia || dispensaId} (Servidor: ${targetDispensa?.nome || targetDispensa?.matricula || 'N/A'}).`,
@@ -1098,7 +1096,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: rawCode,
         tipoAcao: 'PASSAGEM_BASTAO',
         detalhes: `Atualização de chefia/dados do canteiro ${rawCode} (${rawName}): Chefe: "${rawChief || 'N/A'}", Chefe DA: "${rawChefeDa || 'N/A'}", Aux DA: "${rawAuxDa || 'N/A'}".`,
@@ -1148,7 +1146,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: targetSite?.code || targetSite?.branch || 'TODOS',
         tipoAcao: 'EXCLUSAO_REGISTRO',
         detalhes: `Exclusão do canteiro de obras "${targetSite?.name || id}" (Código: ${targetSite?.code || 'N/A'}).`,
@@ -1192,7 +1190,7 @@ export default function App() {
       registrarLogAuditoria({
         usuarioId: currentUser?.email || currentUserEmail || 'sistema@comara.aer.mil.br',
         usuarioNome: (currentUser as any)?.nome || (currentUser as any)?.displayName || currentUserEmail || 'Operador',
-        usuarioPerfil: userRole,
+        usuarioPerfil: userRole || 'DESCONHECIDO',
         canteiroId: currentUser?.canteiroCodigo || 'TODOS',
         tipoAcao: 'IMPORTACAO_FOLHA',
         detalhes: `Importação de folha concluída: ${newPaystubs.length.toLocaleString('pt-BR')} contracheques gravados no Firestore.`,
@@ -1236,6 +1234,25 @@ export default function App() {
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin"></div>
           <span className="text-gray-400">Verificando credenciais Cloud Firestore...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------
+  // RENDER: VERIFYING PERMISSIONS (S-001 — no provisional role)
+  // -------------------------------------------------------------
+  if (isVerifyingPermissions) {
+    return (
+      <div 
+        translate="no"
+        className={`notranslate min-h-screen flex items-center justify-center font-mono text-xs ${
+          isDark ? 'bg-[#0D0F14] text-white' : 'bg-slate-50 text-slate-900'
+        }`}
+      >
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin"></div>
+          <span className="text-gray-400">Verificando permissões...</span>
         </div>
       </div>
     );

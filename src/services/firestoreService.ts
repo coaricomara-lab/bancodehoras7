@@ -19,6 +19,7 @@ import { Employee, TimeRecord, AdminUser, AdminRole, InsalubrityRecord, SystemCo
 import { hashPassword } from './authService';
 import { canteiroService } from './canteiroService';
 import { auditService, RegisterAuditParams, registrarLogAuditoria } from './auditService';
+import { localCache, CACHE_KEYS, CACHE_TTLS } from './localCache';
 export { registrarLogAuditoria };
 
 export const COLLECTIONS = {
@@ -182,10 +183,10 @@ export const firestoreService = {
   ): Unsubscribe {
     const path = COLLECTIONS.COLABORADORES;
     try {
-      let q = query(collection(db, path), orderBy('nome', 'asc'), limit(500));
+      let q = query(collection(db, path), orderBy('nome', 'asc'), limit(200));
       if (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') {
         // Query com filtro no Firestore quando aplicável
-        q = query(collection(db, path), where('sede', '==', canteiroId), orderBy('nome', 'asc'), limit(500));
+        q = query(collection(db, path), where('sede', '==', canteiroId), orderBy('nome', 'asc'), limit(200));
       }
       return onSnapshot(
         q,
@@ -260,9 +261,17 @@ export const firestoreService = {
     const path = COLLECTIONS.LANCAMENTOS;
     try {
       const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
-      const q = normalizedCanteiro
-        ? query(collection(db, path), where('employeeSede', '==', normalizedCanteiro), limit(500))
-        : query(collection(db, path), limit(500));
+      let q;
+      if (normalizedCanteiro) {
+        q = query(collection(db, path), where('employeeSede', '==', normalizedCanteiro), limit(200));
+      } else {
+        // 1.2: Global users — filter by current month/year to reduce Firestore reads
+        const now = new Date();
+        const monthStart = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        const monthEnd = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+        q = query(collection(db, path), where('dataRegistro', '>=', monthStart), where('dataRegistro', '<=', monthEnd), limit(200));
+      }
 
       return onSnapshot(
         q,
@@ -357,7 +366,7 @@ export const firestoreService = {
     const path = COLLECTIONS.ADMIN_USERS;
     try {
       return onSnapshot(
-        query(collection(db, path), limit(500)),
+        query(collection(db, path), limit(200)),
         (snapshot) => {
           try {
             const list: AdminUser[] = [];
@@ -391,6 +400,37 @@ export const firestoreService = {
       logFirestoreError(error, OperationType.LIST, path);
       if (onError) onError(error);
       return () => {};
+    }
+  },
+
+  // 1.2/1.3: One-time fetch with local cache for small collections (no onSnapshot listener)
+  async getAdmins(): Promise<AdminUser[]> {
+    const path = COLLECTIONS.ADMIN_USERS;
+    const cached = localCache.getCache<AdminUser[]>(CACHE_KEYS.ADMIN_USERS);
+    if (cached) return cached;
+    try {
+      const snapshot = await getDocs(query(collection(db, path), limit(200)));
+      const list: AdminUser[] = [];
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const role = (data.role as AdminRole) || (data.nivelAcesso as AdminRole) || 'GESTOR_RH';
+        list.push({
+          id: docSnap.id,
+          email: data.email || docSnap.id,
+          nome: data.nome || data.email?.split('@')[0] || 'Administrador',
+          cargo: data.cargo || 'Gestor RH',
+          nivelAcesso: role,
+          role,
+          sede: data.sede || 'TODAS',
+          ativo: data.ativo !== false,
+          criadoEm: data.criadoEm || new Date().toISOString(),
+        });
+      });
+      localCache.setCache(CACHE_KEYS.ADMIN_USERS, list, CACHE_TTLS.STATIC_PERSISTENT);
+      return list;
+    } catch (error) {
+      logFirestoreError(error, OperationType.GET, path);
+      return [];
     }
   },
 
@@ -735,8 +775,8 @@ export const firestoreService = {
     try {
       const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
       const q = normalizedCanteiro
-        ? query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(500))
-        : query(collection(db, path), orderBy('dataEvento', 'desc'), limit(500));
+        ? query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(200))
+        : query(collection(db, path), orderBy('dataEvento', 'desc'), limit(200));
 
       return onSnapshot(
         q,
@@ -911,6 +951,33 @@ export const firestoreService = {
     }
   },
 
+  // 1.2/1.3: One-time fetch with local cache for system_config (no onSnapshot listener)
+  async getSystemConfigOnce(): Promise<SystemConfig | null> {
+    const path = `${COLLECTIONS.SYSTEM_CONFIG}/global`;
+    const cached = localCache.getCache<SystemConfig>(CACHE_KEYS.SYSTEM_CONFIG);
+    if (cached) return cached;
+    try {
+      const snapshot = await getDoc(doc(db, COLLECTIONS.SYSTEM_CONFIG, 'global'));
+      if (snapshot.exists()) {
+        const data = snapshot.data();
+        const config: SystemConfig = {
+          logoUrl: data.logoUrl || '',
+          companyName: data.companyName || 'COMARA',
+          subtitle: data.subtitle || 'Comissão de Aeroportos da Região Amazônica',
+          insalubrityMode: data.insalubrityMode || 'SIMPLES',
+          atualizadoEm: data.atualizadoEm,
+          atualizadoPor: data.atualizadoPor,
+        };
+        localCache.setCache(CACHE_KEYS.SYSTEM_CONFIG, config, CACHE_TTLS.STATIC_PERSISTENT);
+        return config;
+      }
+      return null;
+    } catch (error) {
+      logFirestoreError(error, OperationType.GET, path);
+      return null;
+    }
+  },
+
   async saveSystemConfig(config: SystemConfig): Promise<void> {
     const path = `${COLLECTIONS.SYSTEM_CONFIG}/global`;
     try {
@@ -1037,6 +1104,42 @@ export const firestoreService = {
     return canteiroService.subscribeCanteiros(onSuccess, onError);
   },
 
+  // 1.2/1.3: One-time fetch with local cache for canteiros_obras (no onSnapshot listener)
+  async getConstructionSites(): Promise<ConstructionSite[]> {
+    const cached = localCache.getCache<ConstructionSite[]>(CACHE_KEYS.CANTEIROS_OBRAS);
+    if (cached) return cached;
+    try {
+      const snapshot = await getDocs(query(collection(db, COLLECTIONS.CANTEIROS), limit(200)));
+      const list: ConstructionSite[] = [];
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data() as any;
+        list.push({
+          id: docSnap.id,
+          codigo: data.codigo || data.code || '',
+          nome: data.nome || data.name || '',
+          sede: data.sede || data.branch,
+          chefeCanteiro: data.chefeCanteiro || data.chief,
+          chefeDa: data.chefeDa,
+          gerente: data.gerente || data.manager,
+          auxDa: data.auxDa,
+          status: data.status || 'ACTIVE',
+          grauInsalubridade: data.grauInsalubridade || data.insalubrityLevel,
+          dataInicio: data.dataInicio || data.startDate,
+          dataPrevisaoFim: data.dataPrevisaoFim || data.expectedEndDate,
+          observacoes: data.observacoes || data.notes,
+          criadoEm: data.criadoEm || data.createdAt,
+          atualizadoEm: data.atualizadoEm || data.updatedAt,
+          ...data,
+        } as ConstructionSite);
+      });
+      localCache.setCache(CACHE_KEYS.CANTEIROS_OBRAS, list, CACHE_TTLS.STATIC_PERSISTENT);
+      return list;
+    } catch (error) {
+      logFirestoreError(error, OperationType.GET, COLLECTIONS.CANTEIROS);
+      return [];
+    }
+  },
+
   async saveConstructionSite(site: Partial<ConstructionSite> & { chiefContact?: string; chefeContato?: string }): Promise<void> {
     return canteiroService.saveCanteiro(site);
   },
@@ -1057,9 +1160,15 @@ export const firestoreService = {
     const path = COLLECTIONS.CONTRACHEQUES;
     try {
       const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
-      const q = normalizedCanteiro
-        ? query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(500))
-        : query(collection(db, path), limit(500));
+      let q;
+      if (normalizedCanteiro) {
+        q = query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(200));
+      } else {
+        // 1.2: Global users — filter by current month/year to reduce Firestore reads
+        const now = new Date();
+        const currentMesAno = `${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
+        q = query(collection(db, path), where('mesAno', '==', currentMesAno), limit(200));
+      }
 
       return onSnapshot(
         q,
@@ -1200,8 +1309,8 @@ export const firestoreService = {
     try {
       const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
       const q = normalizedCanteiro
-        ? query(collection(db, path), where('secaoCanteiro', '==', `DECO-${normalizedCanteiro}`), limit(500))
-        : query(collection(db, path), limit(500));
+        ? query(collection(db, path), where('secaoCanteiro', '==', `DECO-${normalizedCanteiro}`), limit(200))
+        : query(collection(db, path), limit(200));
 
       return onSnapshot(
         q,
@@ -1328,8 +1437,9 @@ export const firestoreService = {
   },
 
   async clearAllData(userRole?: AdminRole | string): Promise<void> {
-    if (userRole !== 'SUPER_ADMIN') {
-      throw new Error('Acesso não autorizado: Somente Super Administradores podem executar a limpeza total da base de dados.');
+    // S-006: Strict validation — only SUPER_ADMIN can execute clearAllData
+    if (!userRole || userRole !== 'SUPER_ADMIN') {
+      throw new Error('Acesso negado: Limpeza da base central restrita estritamente a Super Administradores (SUPER_ADMIN).');
     }
     const CHUNK_SIZE = 400;
     try {
