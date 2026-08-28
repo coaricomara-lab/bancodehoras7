@@ -82,7 +82,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={this.handleReset}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white transition-all flex items-center gap-2 cursor-pointer shadow-sm"
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer shadow-sm"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Restaurar Visualização</span>
@@ -95,7 +95,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   // Fallback se reload direto sofrer restrição
                 }
               }}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white transition-all cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white transition-all active:scale-[0.98] cursor-pointer"
             >
               Recarregar Página
             </button>

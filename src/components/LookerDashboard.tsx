@@ -493,7 +493,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     statusBanco: 'TODOS',
                     tipoOcorrencia: 'TODOS',
                   })}
-                  className="text-xs text-blue-500 hover:text-blue-600 font-semibold transition-colors cursor-pointer"
+                  className="text-xs text-blue-500 hover:text-blue-600 font-semibold transition-colors active:scale-[0.98] cursor-pointer"
                 >
                   Limpar Filtros
                 </button>
@@ -635,7 +635,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   type="date"
                   value={filters.dataInicio}
                   onChange={(e) => setFilters({ ...filters, dataInicio: e.target.value })}
-                  className={`w-full px-1.5 py-1.5 rounded-xl border text-[11px] font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] ${
+                  className={`w-full px-1.5 py-1.5 rounded-xl border text-[11px] font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20 ${
                     isDark 
                       ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' 
                       : 'bg-slate-50 border-slate-300 text-slate-900'
@@ -650,7 +650,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   type="date"
                   value={filters.dataFim}
                   onChange={(e) => setFilters({ ...filters, dataFim: e.target.value })}
-                  className={`w-full px-1.5 py-1.5 rounded-xl border text-[11px] font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] ${
+                  className={`w-full px-1.5 py-1.5 rounded-xl border text-[11px] font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20 ${
                     isDark 
                       ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' 
                       : 'bg-slate-50 border-slate-300 text-slate-900'
@@ -698,7 +698,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {onResetData && (
               <button
                 onClick={onResetData}
-                className={`inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
+                className={`inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-xl border transition-all active:scale-[0.98] cursor-pointer ${
                   isDark 
                     ? 'bg-[#243756] text-[#94A3B8] hover:text-white border-[#335075]' 
                     : 'bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-300'
@@ -849,7 +849,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {/* Aba 1: Resumo por Colaborador */}
             <button
               onClick={() => setActiveTab('colaboradores')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 activeTab === 'colaboradores'
                   ? isDark ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
                   : isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-gray-600 hover:text-gray-900'
@@ -862,7 +862,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {/* Aba 2: Visão Calendário Mensal */}
             <button
               onClick={() => setActiveTab('calendario')}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+              className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 activeTab === 'calendario'
                   ? isDark ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
                   : isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-gray-600 hover:text-gray-900'
@@ -876,7 +876,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {!isAuxDA && (
               <button
                 onClick={() => setActiveTab('por_sede')}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'por_sede'
                     ? isDark ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
                     : isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-gray-600 hover:text-gray-900'
@@ -891,7 +891,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {!isAuxDA && (
               <button
                 onClick={() => setActiveTab('extrato')}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'extrato'
                     ? isDark ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
                     : isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-gray-600 hover:text-gray-900'
@@ -941,7 +941,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                       <th className="py-3.5 px-5 text-left">
                         <button
                           onClick={() => handleSort('matricula')}
-                          className="inline-flex items-center gap-1 hover:text-blue-500 transition-colors uppercase font-bold cursor-pointer"
+                          className="inline-flex items-center gap-1 hover:text-blue-500 transition-colors active:scale-[0.98] uppercase font-bold cursor-pointer"
                           title="Clique para ordenar por Matrícula"
                         >
                           <span>MATRÍCULA</span>
@@ -957,7 +957,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                       <th className="py-3.5 px-5 text-left">
                         <button
                           onClick={() => handleSort('nome')}
-                          className="inline-flex items-center gap-1 hover:text-blue-500 transition-colors uppercase font-bold cursor-pointer"
+                          className="inline-flex items-center gap-1 hover:text-blue-500 transition-colors active:scale-[0.98] uppercase font-bold cursor-pointer"
                           title="Clique para ordenar por Nome"
                         >
                           <span>NOME</span>
@@ -973,7 +973,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                       <th className="py-3.5 px-5 text-center">
                         <button
                           onClick={() => handleSort('sede')}
-                          className="inline-flex items-center gap-1 hover:text-blue-500 transition-colors uppercase font-bold cursor-pointer"
+                          className="inline-flex items-center gap-1 hover:text-blue-500 transition-colors active:scale-[0.98] uppercase font-bold cursor-pointer"
                           title="Clique para ordenar por Sede"
                         >
                           <span>SEDE</span>
@@ -989,7 +989,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                       <th className="py-3.5 px-5 text-center">
                         <button
                           onClick={() => handleSort('saldo')}
-                          className="inline-flex items-center gap-1 hover:text-blue-500 transition-colors uppercase font-bold cursor-pointer"
+                          className="inline-flex items-center gap-1 hover:text-blue-500 transition-colors active:scale-[0.98] uppercase font-bold cursor-pointer"
                           title="Clique para ordenar por Saldo em Horas"
                         >
                           <span>SALDO</span>
@@ -1055,7 +1055,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                               <div>
                                 <button
                                   onClick={() => onViewEmployeeStatement(emp.matricula)}
-                                  className={`font-semibold text-xs sm:text-sm hover:text-[#3B82F6] hover:underline text-left block transition-colors cursor-pointer ${
+                                  className={`font-semibold text-xs sm:text-sm hover:text-[#3B82F6] hover:underline text-left block transition-colors active:scale-[0.98] cursor-pointer ${
                                     isDark ? 'text-[#E2E8F0]' : 'text-gray-900'
                                   }`}
                                   title="Clique para abrir o extrato deste colaborador"
@@ -1171,7 +1171,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   <button
                     onClick={() => setEmpCurrentPage(1)}
                     disabled={safeEmpCurrentPage === 1}
-                    className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`p-1.5 rounded border transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Primeira Página"
@@ -1181,7 +1181,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   <button
                     onClick={() => setEmpCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={safeEmpCurrentPage === 1}
-                    className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`p-1.5 rounded border transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Página Anterior"
@@ -1196,7 +1196,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   <button
                     onClick={() => setEmpCurrentPage(prev => Math.min(prev + 1, totalEmpPages))}
                     disabled={safeEmpCurrentPage >= totalEmpPages}
-                    className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`p-1.5 rounded border transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Próxima Página"
@@ -1206,7 +1206,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   <button
                     onClick={() => setEmpCurrentPage(totalEmpPages)}
                     disabled={safeEmpCurrentPage >= totalEmpPages}
-                    className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`p-1.5 rounded border transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Última Página"
@@ -1560,7 +1560,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   <button
                     onClick={() => setRecordsCurrentPage(1)}
                     disabled={safeRecordsCurrentPage === 1}
-                    className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`p-1.5 rounded border transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Primeira Página"
@@ -1570,7 +1570,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   <button
                     onClick={() => setRecordsCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={safeRecordsCurrentPage === 1}
-                    className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`p-1.5 rounded border transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Página Anterior"
@@ -1585,7 +1585,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   <button
                     onClick={() => setRecordsCurrentPage(prev => Math.min(prev + 1, totalRecordsPages))}
                     disabled={safeRecordsCurrentPage >= totalRecordsPages}
-                    className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`p-1.5 rounded border transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Próxima Página"
@@ -1595,7 +1595,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   <button
                     onClick={() => setRecordsCurrentPage(totalRecordsPages)}
                     disabled={safeRecordsCurrentPage >= totalRecordsPages}
-                    className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
+                    className={`p-1.5 rounded border transition-colors active:scale-[0.98] cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
                       isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Última Página"

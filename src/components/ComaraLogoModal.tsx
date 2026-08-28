@@ -117,7 +117,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
           <button 
             type="button"
             onClick={onClose}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
               isDark ? 'hover:bg-[#243756] text-gray-400' : 'hover:bg-slate-200 text-slate-500'
             }`}
           >
@@ -170,7 +170,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
               <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                 1. CARREGAR ARQUIVO DE IMAGEM DA LOGO (PNG / JPG / SVG)
               </label>
-              <label className={`w-full py-3 px-4 border border-dashed rounded-xl flex items-center justify-center gap-2.5 cursor-pointer transition-all ${
+              <label className={`w-full py-3 px-4 border border-dashed rounded-xl flex items-center justify-center gap-2.5 cursor-pointer transition-all active:scale-[0.98] ${
                 isDark 
                   ? 'border-[#335075] hover:border-blue-500 bg-[#0F1B33]/50 hover:bg-blue-500/5 text-blue-400' 
                   : 'border-slate-300 hover:border-blue-500 bg-white hover:bg-blue-50/50 text-blue-600'
@@ -198,8 +198,8 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                   onChange={(e) => setLogoUrl(e.target.value)}
                   className={`w-full px-4 py-2.5 rounded-xl border text-xs font-mono outline-hidden transition-colors ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' 
-                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                      ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                      : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   }`}
                 />
                 <LinkIcon className={`w-4 h-4 absolute right-3 top-3 ${isDark ? 'text-gray-500' : 'text-slate-400'}`} />
@@ -295,7 +295,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
             <button
               type="button"
               onClick={handleResetToDefault}
-              className={`text-[11px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer ${
+              className={`text-[11px] font-bold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -307,7 +307,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className={`flex-1 sm:flex-none px-4 py-2 rounded-xl border font-bold text-xs transition-colors cursor-pointer ${
+                className={`flex-1 sm:flex-none px-4 py-2 rounded-xl border font-bold text-xs transition-colors active:scale-[0.98] cursor-pointer ${
                   isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                 }`}
               >

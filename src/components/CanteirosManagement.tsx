@@ -325,7 +325,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleExportCSV}
-            className={`px-3 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer flex items-center gap-1.5 ${
+            className={`px-3 py-2 rounded-xl text-xs font-bold border transition-colors active:scale-[0.98] cursor-pointer flex items-center gap-1.5 ${
               isDark ? 'bg-[#16243D] border-[#335075] hover:bg-[#243756] text-gray-300' : 'bg-white border-gray-300 hover:bg-gray-100 text-gray-700'
             }`}
             title="Exportar dados em formato CSV"
@@ -336,7 +336,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
 
           <button
             onClick={handleOpenCreateModal}
-            className="px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white cursor-pointer shadow-md flex items-center gap-1.5 transition-all"
+            className="px-4 py-2 rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-500 text-white cursor-pointer shadow-md flex items-center gap-1.5 transition-all active:scale-[0.98]"
           >
             <Plus className="w-4 h-4" />
             <span>Novo Canteiro</span>
@@ -358,7 +358,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nome, código, encarregado ou endereço..."
             className={`w-full pl-9 pr-3 py-2 rounded-xl text-xs border outline-none transition-colors ${
-              isDark ? 'bg-[#0F1B33] border-[#2E4566] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
+              isDark ? 'bg-[#0F1B33] border-[#2E4566] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
             }`}
           />
         </div>
@@ -525,7 +525,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                       <div className="flex items-center justify-center gap-1.5">
                         <button
                           onClick={() => handleOpenEditModal(site)}
-                          className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                          className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1 ${
                             isDark 
                               ? 'bg-[#1E3252] border-[#335075] hover:bg-[#2E4566] text-blue-400' 
                               : 'bg-blue-50 border-blue-200 hover:bg-blue-100 text-blue-700'
@@ -538,7 +538,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
 
                         <button
                           onClick={() => handleDelete(site.id, siteName)}
-                          className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                          className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1 ${
                             isDark 
                               ? 'bg-[#2B1C1F] border-[#402A30] hover:bg-[#3A252B] text-red-400' 
                               : 'bg-red-50 border-red-200 hover:bg-red-100 text-red-700'
@@ -610,7 +610,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     placeholder="Ex: KO-01, BE-02"
                     required
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono font-bold border outline-none ${
-                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                     }`}
                   />
                 </div>
@@ -642,7 +642,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                   placeholder="Ex: Obra Aeródromo Coari - Pista e Pátio"
                   required
                   className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                    isDark ? 'bg-[#0B1426] border-[#2E4566] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
+                    isDark ? 'bg-[#0B1426] border-[#2E4566] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                   }`}
                 />
               </div>
@@ -785,7 +785,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-amber-600 hover:bg-amber-500 cursor-pointer shadow-md disabled:opacity-50 transition-all flex items-center gap-1.5"
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-amber-600 hover:bg-amber-500 cursor-pointer shadow-md disabled:opacity-50 transition-all active:scale-[0.98] flex items-center gap-1.5"
                 >
                   {isSubmitting ? 'Salvando no Firestore...' : 'Salvar Canteiro'}
                 </button>

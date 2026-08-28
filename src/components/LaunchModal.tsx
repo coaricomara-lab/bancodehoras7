@@ -215,7 +215,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               onChange={(e) => setMatricula(e.target.value)}
               className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                 isDark 
-                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               }`}
               required
@@ -239,8 +239,8 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
                 onChange={(e) => setDataRegistro(e.target.value)}
                 className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                   isDark 
-                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                    : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                    : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                 }`}
                 required
               />
@@ -260,8 +260,8 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
                 onChange={(e) => setHorasBrutas(parseFloat(e.target.value) || 0)}
                 className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                   isDark 
-                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 disabled:opacity-50' 
-                    : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 disabled:opacity-50'
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50' 
+                    : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50'
                 }`}
                 required
               />
@@ -278,8 +278,8 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               onChange={(e) => setTipoOcorrencia(e.target.value as OccurrenceType)}
               className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                 isDark 
-                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                  : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                  : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               }`}
             >
               <option value="TRABALHO">
@@ -359,7 +359,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               Comprovante / Atestado (Google Drive) {(tipoOcorrencia === 'ATESTADO_MEDICO' || tipoOcorrencia === 'LICENCA') && <span className="text-red-500">*</span>}
             </label>
             <div className="flex items-center gap-2">
-              <label className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-colors ${
+              <label className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-colors active:scale-[0.98] ${
                 isDark 
                   ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                   : 'bg-white border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -398,7 +398,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               placeholder="Ex: Saída antecipada autorizada pela gerência ou motivo da falta"
               className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden font-sans ${
                 isDark 
-                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               }`}
             />

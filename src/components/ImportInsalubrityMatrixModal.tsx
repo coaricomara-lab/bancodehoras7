@@ -203,7 +203,7 @@ export const ImportInsalubrityMatrixModal: React.FC<ImportInsalubrityMatrixModal
 
           <button
             onClick={onClose}
-            className={`p-2 rounded-xl border transition-colors cursor-pointer shrink-0 ${
+            className={`p-2 rounded-xl border transition-colors active:scale-[0.98] cursor-pointer shrink-0 ${
               isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-400 hover:text-white' : 'border-slate-200 hover:bg-slate-100 text-slate-500'
             }`}
             title="Fechar Modal"
@@ -225,7 +225,7 @@ export const ImportInsalubrityMatrixModal: React.FC<ImportInsalubrityMatrixModal
               <button
                 type="button"
                 onClick={() => setInputTab('FILE')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 cursor-pointer ${
                   inputTab === 'FILE'
                     ? 'bg-amber-600 text-white shadow-xs'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -238,7 +238,7 @@ export const ImportInsalubrityMatrixModal: React.FC<ImportInsalubrityMatrixModal
               <button
                 type="button"
                 onClick={() => setInputTab('PASTE')}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 cursor-pointer ${
                   inputTab === 'PASTE'
                     ? 'bg-amber-600 text-white shadow-xs'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -251,7 +251,7 @@ export const ImportInsalubrityMatrixModal: React.FC<ImportInsalubrityMatrixModal
               <button
                 type="button"
                 onClick={handleLoadSample}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 cursor-pointer ${
                   inputTab === 'SAMPLE'
                     ? 'bg-amber-600 text-white shadow-xs'
                     : isDark ? 'text-amber-400 hover:text-amber-300' : 'text-amber-700 hover:text-amber-800'
@@ -265,7 +265,7 @@ export const ImportInsalubrityMatrixModal: React.FC<ImportInsalubrityMatrixModal
             <button
               type="button"
               onClick={handleDownloadTemplate}
-              className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
               }`}
               title="Baixar Modelo de Planilha de Campo"
@@ -306,7 +306,7 @@ export const ImportInsalubrityMatrixModal: React.FC<ImportInsalubrityMatrixModal
             </div>
 
             <div className="flex flex-col justify-end">
-              <label className="flex items-center gap-2.5 text-xs font-medium cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+              <label className="flex items-center gap-2.5 text-xs font-medium cursor-pointer p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors active:scale-[0.98]">
                 <input
                   type="checkbox"
                   checked={autoRegisterNewEmployees}
@@ -327,7 +327,7 @@ export const ImportInsalubrityMatrixModal: React.FC<ImportInsalubrityMatrixModal
           {inputTab === 'FILE' && (
             <div 
               onClick={() => fileInputRef.current?.click()}
-              className={`p-6 sm:p-8 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
+              className={`p-6 sm:p-8 rounded-2xl border-2 border-dashed flex flex-col items-center justify-center text-center cursor-pointer transition-all active:scale-[0.98] ${
                 isDark 
                   ? 'border-[#335075] hover:border-amber-500/50 bg-[#0F1B33] hover:bg-[#16243D]' 
                   : 'border-slate-300 hover:border-amber-500 bg-slate-50 hover:bg-amber-50/20'
@@ -632,7 +632,7 @@ export const ImportInsalubrityMatrixModal: React.FC<ImportInsalubrityMatrixModal
               type="button"
               onClick={onClose}
               disabled={isImporting}
-              className={`flex-1 sm:flex-none px-4 py-2 rounded-xl border text-xs font-bold transition-colors cursor-pointer ${
+              className={`flex-1 sm:flex-none px-4 py-2 rounded-xl border text-xs font-bold transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
               }`}
             >

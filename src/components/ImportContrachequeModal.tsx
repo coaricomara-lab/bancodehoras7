@@ -300,7 +300,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
 
           <button
             onClick={onClose}
-            className={`p-2 rounded-lg transition-colors cursor-pointer ${
+            className={`p-2 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
               isDark ? 'hover:bg-slate-800 text-gray-400 hover:text-white' : 'hover:bg-slate-200 text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -333,7 +333,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
-                className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all flex flex-col items-center justify-center gap-3 ${
+                className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all active:scale-[0.98] flex flex-col items-center justify-center gap-3 ${
                   isDragging
                     ? 'border-blue-500 bg-blue-500/10 scale-[1.01]'
                     : isDark 
@@ -420,7 +420,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
                 <button
                   type="button"
                   onClick={handleLoadDemo}
-                  className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-sm shrink-0 cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all active:scale-[0.98] shadow-sm shrink-0 cursor-pointer"
                 >
                   Carregar Demonstração
                 </button>
@@ -536,7 +536,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
                           <div 
                             key={u.matricula}
                             onClick={() => toggleSelectUnregistered(u.matricula)}
-                            className={`p-2.5 rounded-lg border text-xs flex items-center justify-between cursor-pointer transition-all ${
+                            className={`p-2.5 rounded-lg border text-xs flex items-center justify-between cursor-pointer transition-all active:scale-[0.98] ${
                               isSelected 
                                 ? isDark ? 'bg-amber-900/30 border-amber-500/50 text-white' : 'bg-amber-100/80 border-amber-400 text-amber-950'
                                 : isDark ? 'bg-slate-900/40 border-slate-800 text-gray-400 opacity-60' : 'bg-white border-slate-200 text-slate-400 opacity-60'
@@ -601,7 +601,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
 
                 <button
                   onClick={handleClear}
-                  className={`px-3 py-2 rounded-xl text-xs font-semibold border flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  className={`px-3 py-2 rounded-xl text-xs font-semibold border flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
                     isDark ? 'border-slate-700 text-gray-300 hover:bg-slate-800' : 'border-slate-300 text-slate-700 hover:bg-slate-100'
                   }`}
                 >
@@ -676,7 +676,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
             <button
               type="button"
               onClick={onClose}
-              className={`px-4 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold border transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'bg-slate-800 hover:bg-slate-700 text-gray-300 border-slate-700' : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'
               }`}
             >

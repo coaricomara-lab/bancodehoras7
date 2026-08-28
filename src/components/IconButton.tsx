@@ -146,7 +146,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>((
         onKeyDown={(e) => {
           if (e.key === 'Escape') setIsOpen(false);
         }}
-        className={`inline-flex items-center justify-center transition-all duration-150 cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed disabled:pointer-events-none select-none focus:outline-none ${currentSize.btn} ${variantClasses[variant]} ${className}`}
+        className={`inline-flex items-center justify-center transition-all active:scale-[0.98] duration-150 cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed disabled:pointer-events-none select-none focus:outline-none ${currentSize.btn} ${variantClasses[variant]} ${className}`}
         {...rest}
       >
         {isLoading ? (

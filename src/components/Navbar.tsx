@@ -295,7 +295,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setIsLaunchDropdownOpen(false);
                         onOpenQuickBatchModal();
                       }}
-                      className={`w-full px-3 py-2.5 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors cursor-pointer ${
+                      className={`w-full px-3 py-2.5 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors active:scale-[0.98] cursor-pointer ${
                         isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-blue-50/70 text-slate-800'
                       }`}
                     >
@@ -323,7 +323,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setIsLaunchDropdownOpen(false);
                         onOpenNewEntry();
                       }}
-                      className={`w-full px-3 py-2 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors cursor-pointer ${
+                      className={`w-full px-3 py-2 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors active:scale-[0.98] cursor-pointer ${
                         isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-blue-50/70 text-slate-800'
                       }`}
                     >
@@ -352,7 +352,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           setIsLaunchDropdownOpen(false);
                           onOpenSptfDispensa();
                         }}
-                        className={`w-full px-3 py-2 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors cursor-pointer ${
+                        className={`w-full px-3 py-2 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors active:scale-[0.98] cursor-pointer ${
                           isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-blue-50/70 text-slate-800'
                         }`}
                       >
@@ -385,7 +385,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setIsLaunchDropdownOpen(false);
                         onSelectTab('insalubridade');
                       }}
-                      className={`w-full px-3 py-2.5 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors cursor-pointer ${
+                      className={`w-full px-3 py-2.5 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors active:scale-[0.98] cursor-pointer ${
                         isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-amber-50/70 text-slate-800'
                       }`}
                     >
@@ -414,7 +414,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* ALTERNADOR DE TEMA (SOL / LUA) */}
             <button
               onClick={onToggleTheme}
-              className={`p-2 rounded-xl transition-colors border cursor-pointer ${
+              className={`p-2 rounded-xl transition-colors active:scale-[0.98] border cursor-pointer ${
                 isDark 
                   ? 'bg-[#16243D] hover:bg-[#243756] text-amber-400 hover:text-amber-300 border-[#243756]' 
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
@@ -432,7 +432,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setIsSettingsOpen(!isSettingsOpen);
                   setIsProfileOpen(false);
                 }}
-                className={`p-2 rounded-xl transition-colors border cursor-pointer ${
+                className={`p-2 rounded-xl transition-colors active:scale-[0.98] border cursor-pointer ${
                   isSettingsOpen
                     ? isDark 
                       ? 'bg-[#243756] text-white border-blue-500/50' 
@@ -465,7 +465,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSelectTab('canteiros');
                         setIsSettingsOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                         activeTab === 'canteiros'
                           ? isDark ? 'bg-amber-950/30 text-amber-300' : 'bg-amber-50 text-amber-800'
                           : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
@@ -489,7 +489,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onSelectTab('relatorios');
                       setIsSettingsOpen(false);
                     }}
-                    className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                    className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                       activeTab === 'relatorios'
                         ? isDark ? 'bg-indigo-950/30 text-indigo-300' : 'bg-indigo-50 text-indigo-800'
                         : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
@@ -513,7 +513,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSelectTab('configuracoes_instituicao');
                         setIsSettingsOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                         activeTab === 'configuracoes_instituicao'
                           ? isDark ? 'bg-blue-950/40 text-blue-300' : 'bg-blue-50 text-blue-800 font-bold'
                           : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
@@ -542,7 +542,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSelectTab('backup_restauracao');
                         setIsSettingsOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                         activeTab === 'backup_restauracao'
                           ? isDark ? 'bg-cyan-950/30 text-cyan-300' : 'bg-cyan-50 text-cyan-800'
                           : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
@@ -565,7 +565,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onOpenLogoModal();
                         setIsSettingsOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                         isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
@@ -588,7 +588,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSelectTab('permissoes_admin');
                         setIsSettingsOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                         activeTab === 'permissoes_admin'
                           ? isDark ? 'bg-purple-950/30 text-purple-300' : 'bg-purple-50 text-purple-800'
                           : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
@@ -616,7 +616,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSelectTab('auditoria');
                         setIsSettingsOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                         activeTab === 'auditoria'
                           ? isDark ? 'bg-indigo-950/30 text-indigo-300' : 'bg-indigo-50 text-indigo-800'
                           : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
@@ -648,7 +648,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onOpenImportRecordsModal();
                         setIsSettingsOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                         isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
@@ -671,7 +671,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSelectTab('colaboradores');
                         setIsSettingsOpen(false);
                       }}
-                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                         isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
@@ -697,7 +697,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           onClearData();
                           setIsSettingsOpen(false);
                         }}
-                        className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                        className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                           isDark ? 'hover:bg-[#243756] text-rose-300' : 'hover:bg-rose-50 text-rose-700'
                         }`}
                       >
@@ -718,7 +718,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           onResetData();
                           setIsSettingsOpen(false);
                         }}
-                        className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                        className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
                           isDark ? 'hover:bg-[#243756] text-[#94A3B8]' : 'hover:bg-slate-50 text-slate-600'
                         }`}
                       >
@@ -745,7 +745,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setIsProfileOpen(!isProfileOpen);
                   setIsSettingsOpen(false);
                 }}
-                className={`p-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`p-1.5 rounded-xl border transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1.5 ${
                   isProfileOpen
                     ? isDark 
                       ? 'bg-[#243756] border-blue-500/50' 

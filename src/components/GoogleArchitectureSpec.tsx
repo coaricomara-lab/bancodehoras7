@@ -416,7 +416,7 @@ function sanitizeDate(dateStr) {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setActiveTab('manual_perfis')}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'manual_perfis'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : isDark ? 'bg-[#243756] text-slate-300 hover:text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -427,7 +427,7 @@ function sanitizeDate(dateStr) {
             </button>
             <button
               onClick={() => setActiveTab('insalubridade_sptf')}
-              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'insalubridade_sptf'
                   ? 'bg-amber-600 text-white shadow-sm'
                   : isDark ? 'bg-[#243756] text-slate-300 hover:text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -451,7 +451,7 @@ function sanitizeDate(dateStr) {
         }`}>
           <button
             onClick={() => setActiveTab('manual_perfis')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'manual_perfis'
                 ? isDark 
                   ? 'border-blue-500 text-blue-400 bg-[#16243D] rounded-t-lg' 
@@ -465,7 +465,7 @@ function sanitizeDate(dateStr) {
 
           <button
             onClick={() => setActiveTab('insalubridade_sptf')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'insalubridade_sptf'
                 ? isDark 
                   ? 'border-amber-500 text-amber-400 bg-[#16243D] rounded-t-lg' 
@@ -479,7 +479,7 @@ function sanitizeDate(dateStr) {
 
           <button
             onClick={() => setActiveTab('seguranca_backups')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'seguranca_backups'
                 ? isDark 
                   ? 'border-rose-500 text-rose-400 bg-[#16243D] rounded-t-lg' 
@@ -493,7 +493,7 @@ function sanitizeDate(dateStr) {
 
           <button
             onClick={() => setActiveTab('etapa5_golive')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'etapa5_golive'
                 ? isDark 
                   ? 'border-emerald-500 text-emerald-400 bg-[#16243D] rounded-t-lg' 
@@ -507,7 +507,7 @@ function sanitizeDate(dateStr) {
 
           <button
             onClick={() => setActiveTab('etapa4_auditoria')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'etapa4_auditoria'
                 ? isDark 
                   ? 'border-purple-500 text-purple-400 bg-[#16243D] rounded-t-lg' 
@@ -521,7 +521,7 @@ function sanitizeDate(dateStr) {
 
           <button
             onClick={() => setActiveTab('etapa2_csv_drive')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'etapa2_csv_drive'
                 ? isDark 
                   ? 'border-cyan-500 text-cyan-400 bg-[#16243D] rounded-t-lg' 
@@ -535,7 +535,7 @@ function sanitizeDate(dateStr) {
 
           <button
             onClick={() => setActiveTab('code_gs')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'code_gs'
                 ? isDark 
                   ? 'border-amber-500 text-amber-400 bg-[#16243D] rounded-t-lg' 
@@ -549,7 +549,7 @@ function sanitizeDate(dateStr) {
 
           <button
             onClick={() => setActiveTab('html_modal')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'html_modal'
                 ? isDark 
                   ? 'border-indigo-500 text-indigo-400 bg-[#16243D] rounded-t-lg' 
@@ -563,7 +563,7 @@ function sanitizeDate(dateStr) {
 
           <button
             onClick={() => setActiveTab('looker_sql')}
-            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all active:scale-[0.98] flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'looker_sql'
                 ? isDark 
                   ? 'border-teal-500 text-teal-400 bg-[#16243D] rounded-t-lg' 
@@ -1234,7 +1234,7 @@ MAT-1093,Roberto Santos,Operador de Produção,MN,2023-01-10,Ativo,0.0,roberto.s
               </div>
               <button
                 onClick={() => copyToClipboard(completeAppsScriptCode, 'codegs')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-colors active:scale-[0.98] cursor-pointer"
               >
                 {copiedKey === 'codegs' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 {copiedKey === 'codegs' ? 'Copiado!' : 'Copiar Code.gs'}
@@ -1265,7 +1265,7 @@ MAT-1093,Roberto Santos,Operador de Produção,MN,2023-01-10,Ativo,0.0,roberto.s
               </div>
               <button
                 onClick={() => copyToClipboard(htmlModalCode, 'modalhtml')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold transition-colors active:scale-[0.98] cursor-pointer"
               >
                 {copiedKey === 'modalhtml' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 {copiedKey === 'modalhtml' ? 'Copiado!' : 'Copiar HTML'}
@@ -1307,7 +1307,7 @@ END
 
 /* CAMPO 2: Saldo_Em_Dias_SPTF */
 Horas_Ponderadas_SPTF / 8.0`, 'looker')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-600 hover:bg-teal-500 text-white rounded-lg text-xs font-bold transition-colors active:scale-[0.98] cursor-pointer"
               >
                 {copiedKey === 'looker' ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 {copiedKey === 'looker' ? 'Copiado!' : 'Copiar Fórmulas'}

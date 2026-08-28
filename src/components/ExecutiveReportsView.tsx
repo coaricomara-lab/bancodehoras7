@@ -718,7 +718,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             
             <button
               onClick={() => setReportType('BANCO_HORAS')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
                 reportType === 'BANCO_HORAS'
                   ? isDark 
                     ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30 shadow-xs' 
@@ -734,7 +734,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
 
             <button
               onClick={() => setReportType('INSALUBRIDADE')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
                 reportType === 'INSALUBRIDADE'
                   ? isDark 
                     ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-xs' 
@@ -754,7 +754,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/10 dark:bg-black/40 border border-black/5 dark:border-white/5">
               <button
                 onClick={() => setInsalubritySubMode('SIMPLES')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 cursor-pointer ${
                   insalubritySubMode === 'SIMPLES'
                     ? 'bg-amber-500 text-black shadow-xs font-black'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -767,7 +767,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
 
               <button
                 onClick={() => setInsalubritySubMode('AVANCADO')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 cursor-pointer ${
                   insalubritySubMode === 'AVANCADO'
                     ? 'bg-blue-600 text-white shadow-xs font-black'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -793,7 +793,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               className={`w-full px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               }`}
             />
           </div>
@@ -807,7 +807,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               className={`w-full px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               }`}
             />
           </div>
@@ -821,7 +821,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
               className={`w-full px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               }`}
             >
               <option value="TODAS">Todas as Sedes / Canteiros</option>
@@ -864,7 +864,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`w-full pl-8.5 pr-3 py-2 rounded-xl border text-xs outline-hidden ${
-                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                 }`}
               />
             </div>
@@ -879,7 +879,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             </span>
             <button
               onClick={() => applyDatePreset('THIS_MONTH')}
-              className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
               }`}
             >
@@ -887,7 +887,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             </button>
             <button
               onClick={() => applyDatePreset('LAST_MONTH')}
-              className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
               }`}
             >
@@ -895,7 +895,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             </button>
             <button
               onClick={() => applyDatePreset('YEAR_TO_DATE')}
-              className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
               }`}
             >
@@ -903,7 +903,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             </button>
             <button
               onClick={() => applyDatePreset('ALL_TIME')}
-              className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
               }`}
             >
@@ -917,7 +917,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
               <span className={`text-[11px] font-bold ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>Formato:</span>
               <button
                 onClick={() => setSimpleViewFormat('RESUMO_COLABORADOR')}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   simpleViewFormat === 'RESUMO_COLABORADOR'
                     ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 font-bold'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -927,7 +927,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
               </button>
               <button
                 onClick={() => setSimpleViewFormat('LISTAGEM_DIARIA')}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   simpleViewFormat === 'LISTAGEM_DIARIA'
                     ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 font-bold'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'

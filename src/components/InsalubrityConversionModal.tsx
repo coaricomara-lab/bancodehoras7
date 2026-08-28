@@ -394,7 +394,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
 
           <button
             onClick={onClose}
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
               isDark ? 'hover:bg-[#243756] text-gray-400 hover:text-white' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-800'
             }`}
           >
@@ -434,7 +434,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
               <button
                 type="button"
                 onClick={onClose}
-                className={`px-5 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                className={`px-5 py-2.5 rounded-xl border text-xs font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                 }`}
               >
@@ -482,7 +482,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                     value={filterMonth}
                     onChange={(e) => setFilterMonth(e.target.value)}
                     className={`px-3 py-1.5 rounded-lg border text-xs font-mono font-bold outline-none cursor-pointer ${
-                      isDark ? 'bg-[#16243D] border-[#335075] text-white focus:border-amber-500' : 'bg-white border-slate-300 text-slate-900 focus:border-amber-600'
+                      isDark ? 'bg-[#16243D] border-[#335075] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-amber-600'
                     }`}
                   />
                 </div>
@@ -495,7 +495,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                     value={filterSede}
                     onChange={(e) => setFilterSede(e.target.value)}
                     className={`px-3 py-1.5 rounded-lg border text-xs font-bold outline-none cursor-pointer ${
-                      isDark ? 'bg-[#16243D] border-[#335075] text-white focus:border-amber-500' : 'bg-white border-slate-300 text-slate-900 focus:border-amber-600'
+                      isDark ? 'bg-[#16243D] border-[#335075] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-amber-600'
                     }`}
                   >
                     <option value="TODAS">Todos os Canteiros</option>
@@ -630,7 +630,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                                   type="button"
                                   disabled={!isSelected}
                                   onClick={() => handleChangeGrau(item.activity, g)}
-                                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all cursor-pointer ${
+                                  className={`px-2.5 py-1 rounded-md text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                                     currentRule.grau === g
                                       ? g === '40%'
                                         ? 'bg-red-600 text-white font-black shadow-xs'
@@ -685,7 +685,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                 type="button"
                 onClick={onClose}
                 disabled={isProcessing}
-                className={`px-4 py-2 rounded-xl border text-xs font-bold cursor-pointer transition-colors ${
+                className={`px-4 py-2 rounded-xl border text-xs font-bold cursor-pointer transition-colors active:scale-[0.98] ${
                   isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                 }`}
               >

@@ -177,7 +177,7 @@ export const ImportTimeRecordsModal: React.FC<ImportTimeRecordsModalProps> = ({
           {!selectedFile ? (
             <div 
               onClick={() => fileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
+              className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all active:scale-[0.98] ${
                 isDark 
                   ? 'border-[#335075] hover:border-blue-500 bg-[#0F1B33]/50 hover:bg-[#0F1B33]' 
                   : 'border-slate-300 hover:border-blue-500 bg-slate-50/50 hover:bg-blue-50/20'

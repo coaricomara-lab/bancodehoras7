@@ -112,7 +112,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         <button
           type="button"
           onClick={onClose}
-          className={`absolute top-5 right-5 p-1.5 rounded-xl border transition-colors cursor-pointer ${
+          className={`absolute top-5 right-5 p-1.5 rounded-xl border transition-colors active:scale-[0.98] cursor-pointer ${
             isDark ? 'bg-[#243756] border-[#335075] text-gray-400 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -172,7 +172,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
             type="button"
             onClick={handleGoogleSubmit}
             disabled={isLoading}
-            className={`w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center justify-center gap-3 cursor-pointer shadow-xs ${
+            className={`w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold border transition-all active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer shadow-xs ${
               isDark 
                 ? 'bg-[#243756] hover:bg-[#335075] border-[#335075] text-white' 
                 : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700'
@@ -213,7 +213,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 placeholder="gestor.rh@comara.aer.mil.br"
                 required
                 className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none ${
-                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
+                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
                 }`}
               />
             </div>
@@ -231,8 +231,8 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 onChange={(e) => setPasswordInput(e.target.value)}
                 placeholder="••••••••"
                 required
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none ${
-                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
+                className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none transition-all ${
+                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
                 }`}
               />
             </div>
@@ -241,7 +241,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 transition-all cursor-pointer shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 active:scale-[0.99] transition-all shadow-lg shadow-blue-600/20 cursor-pointer shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {isLoading ? 'Autenticando...' : 'Entrar no Painel RH'}
           </button>

@@ -319,7 +319,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
                       <div className="flex items-center justify-center gap-1.5">
                         <button
                           onClick={() => setSelectedPaystubForView(p)}
-                          className="p-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 transition-colors active:scale-[0.98] cursor-pointer"
                           title="Visualizar Espelho Digital"
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -329,14 +329,14 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
                             setSelectedPaystubForView(p);
                             setTimeout(() => window.print(), 300);
                           }}
-                          className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 transition-colors active:scale-[0.98] cursor-pointer"
                           title="Imprimir / Baixar PDF"
                         >
                           <Printer className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => onDeletePaystub(p.id)}
-                          className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 transition-colors active:scale-[0.98] cursor-pointer"
                           title="Excluir Contracheque"
                         >
                           <Trash2 className="w-3.5 h-3.5" />

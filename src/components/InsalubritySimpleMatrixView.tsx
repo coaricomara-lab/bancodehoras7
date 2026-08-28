@@ -604,7 +604,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
             {onNavigateToReports && (
               <button
                 onClick={onNavigateToReports}
-                className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
                   isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
                 }`}
                 title="Abrir Relatório do Modo Simples e Gerencial"
@@ -617,7 +617,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
             {onSwitchToCompleteMode && (
               <button
                 onClick={onSwitchToCompleteMode}
-                className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
                   isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
                 }`}
                 title="Alternar para o Modo Detalhado NR-15"
@@ -651,7 +651,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
 
             <button
               onClick={() => setIsPrintModalOpen(true)}
-              className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+              className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
               }`}
               title="Visualizar e Imprimir Folha Quinzenal de Campo"
@@ -662,7 +662,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
 
             <button
               onClick={handleExportOfficialSpreadsheetCSV}
-              className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+              className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
               }`}
               title="Exportar Matriz Quinzenal em CSV"
@@ -685,7 +685,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
             <div className="flex items-center gap-1">
               <button
                 onClick={handlePrevMonth}
-                className={`p-2 rounded-xl border transition-colors cursor-pointer ${
+                className={`p-2 rounded-xl border transition-colors active:scale-[0.98] cursor-pointer ${
                   isDark ? 'border-[#243756] hover:bg-[#0F1B33] text-gray-300' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
                 }`}
                 title="Mês Anterior"
@@ -702,7 +702,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
 
               <button
                 onClick={handleNextMonth}
-                className={`p-2 rounded-xl border transition-colors cursor-pointer ${
+                className={`p-2 rounded-xl border transition-colors active:scale-[0.98] cursor-pointer ${
                   isDark ? 'border-[#243756] hover:bg-[#0F1B33] text-gray-300' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
                 }`}
                 title="Próximo Mês"
@@ -718,7 +718,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={() => handleSelectQuinzena('Q1')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   periodViewMode === 'Q1'
                     ? 'bg-amber-600 text-white shadow-xs font-black'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -729,7 +729,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={() => handleSelectQuinzena('Q2')}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   periodViewMode === 'Q2'
                     ? 'bg-amber-600 text-white shadow-xs font-black'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -740,7 +740,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={handleSelectFullMonth}
-                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   periodViewMode === 'FULL'
                     ? 'bg-amber-600 text-white shadow-xs font-black'
                     : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -757,7 +757,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={() => handleShiftDays(-5)}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   isDark ? 'hover:bg-[#1B2D4A] text-gray-300' : 'hover:bg-slate-200 text-slate-700'
                 }`}
                 title="Voltar 5 dias"
@@ -767,7 +767,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={() => handleShiftDays(-1)}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   isDark ? 'hover:bg-[#1B2D4A] text-gray-300' : 'hover:bg-slate-200 text-slate-700'
                 }`}
                 title="Voltar 1 dia"
@@ -782,7 +782,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={() => handleShiftDays(1)}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   isDark ? 'hover:bg-[#1B2D4A] text-gray-300' : 'hover:bg-slate-200 text-slate-700'
                 }`}
                 title="Avançar 1 dia"
@@ -792,7 +792,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={() => handleShiftDays(5)}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   isDark ? 'hover:bg-[#1B2D4A] text-gray-300' : 'hover:bg-slate-200 text-slate-700'
                 }`}
                 title="Avançar 5 dias"
@@ -813,7 +813,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`w-full pl-8 pr-3 py-1.5 rounded-xl border text-xs outline-hidden ${
-                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-amber-500'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                 }`}
               />
             </div>
@@ -889,7 +889,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                 key={act}
                 type="button"
                 onClick={() => setActiveActivity(act)}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                   activeActivity === act
                     ? 'bg-amber-500 text-black shadow-xs font-black ring-2 ring-amber-400/50'
                     : isDark
@@ -904,7 +904,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
             <button
               type="button"
               onClick={() => setActiveActivity('OUTRA')}
-              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
                 activeActivity === 'OUTRA'
                   ? 'bg-amber-500 text-black shadow-xs font-black ring-2 ring-amber-400/50'
                   : isDark
@@ -1020,7 +1020,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={() => handleShiftDays(-1)}
-                className={`px-2 py-1 rounded-lg font-bold flex items-center gap-1 border transition-colors cursor-pointer text-xs ${
+                className={`px-2 py-1 rounded-lg font-bold flex items-center gap-1 border transition-colors active:scale-[0.98] cursor-pointer text-xs ${
                   isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-200' : 'border-slate-300 hover:bg-slate-100 text-slate-700 bg-white'
                 }`}
                 title="Voltar 1 dia (Deslizar grade para esquerda)"
@@ -1032,7 +1032,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               <button
                 type="button"
                 onClick={() => handleShiftDays(1)}
-                className={`px-2 py-1 rounded-lg font-bold flex items-center gap-1 border transition-colors cursor-pointer text-xs ${
+                className={`px-2 py-1 rounded-lg font-bold flex items-center gap-1 border transition-colors active:scale-[0.98] cursor-pointer text-xs ${
                   isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-200' : 'border-slate-300 hover:bg-slate-100 text-slate-700 bg-white'
                 }`}
                 title="Avançar 1 dia (Deslizar grade para direita)"
@@ -1167,7 +1167,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                           <td
                             key={d.dayNumber}
                             onClick={() => handleCellClick(emp, d)}
-                            className={`py-1 px-0.5 text-center cursor-pointer select-none transition-colors border-r border-black/5 dark:border-white/5 ${
+                            className={`py-1 px-0.5 text-center cursor-pointer select-none transition-colors active:scale-[0.98] border-r border-black/5 dark:border-white/5 ${
                               d.isWeekend 
                                 ? (isDark ? 'bg-black/20 hover:bg-amber-500/20' : 'bg-slate-100/60 hover:bg-amber-100/60') 
                                 : isDark ? 'hover:bg-amber-500/20' : 'hover:bg-amber-100/60'
@@ -1220,7 +1220,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                         <div className="flex items-center justify-center gap-1 font-sans">
                           <button
                             onClick={() => handleFillWeekdaysForEmployee(emp)}
-                            className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-colors cursor-pointer ${
+                            className={`px-2 py-1 rounded-lg text-[10px] font-bold border transition-colors active:scale-[0.98] cursor-pointer ${
                               isDark 
                                 ? 'bg-blue-950/40 text-blue-300 border-blue-800/50 hover:bg-blue-900/60' 
                                 : 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
@@ -1233,7 +1233,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                           {employeeMonthDaysCount > 0 && (
                             <button
                               onClick={() => handleClearQuinzenaForEmployee(emp)}
-                              className={`p-1 rounded-lg text-[10px] border transition-colors cursor-pointer ${
+                              className={`p-1 rounded-lg text-[10px] border transition-colors active:scale-[0.98] cursor-pointer ${
                                 isDark 
                                 ? 'text-red-400 border-red-900/40 hover:bg-red-950/40' 
                                 : 'text-red-600 border-red-200 hover:bg-red-50'
@@ -1302,7 +1302,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                         }
                         setCellEditTarget(null);
                       }}
-                      className={`p-2 rounded-xl text-left font-bold text-xs border transition-colors cursor-pointer ${
+                      className={`p-2 rounded-xl text-left font-bold text-xs border transition-colors active:scale-[0.98] cursor-pointer ${
                         cellEditTarget.record?.atividadeDesempenhada === act
                           ? 'bg-amber-500 text-black border-amber-400'
                           : isDark ? 'border-[#243756] hover:bg-[#243756] text-gray-300' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
@@ -1379,7 +1379,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                     value={batchLaunchDate}
                     onChange={(e) => setBatchLaunchDate(e.target.value)}
                     className={`px-3 py-2 rounded-xl border text-xs font-mono font-bold outline-none cursor-pointer ${
-                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-600'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-600'
                     }`}
                   />
                   <span className={`text-[11px] font-medium ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
@@ -1399,7 +1399,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                       key={act}
                       type="button"
                       onClick={() => setBatchActivity(act)}
-                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all active:scale-[0.98] cursor-pointer ${
                         batchActivity === act
                           ? 'bg-amber-500 text-black shadow-xs font-black'
                           : isDark ? 'bg-[#0F1B33] border border-[#243756] text-gray-300' : 'bg-slate-100 border border-slate-200 text-slate-700'
@@ -1466,7 +1466,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                     placeholder="🔍 Buscar por nome ou matrícula..."
                     className={`w-full px-3 py-1.5 rounded-lg border text-xs outline-none ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-white placeholder-gray-500 focus:border-amber-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-white placeholder-gray-500 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' 
                         : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-amber-600'
                     }`}
                   />

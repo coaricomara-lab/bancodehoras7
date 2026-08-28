@@ -193,7 +193,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
               <button
                 onClick={() => onOpenQuickBatchModal()}
                 title="Lançamento Rápido de Horas em Lote"
-                className="px-2.5 py-1.5 rounded-xl border border-blue-500/40 bg-blue-500/15 text-blue-300 hover:bg-blue-500/25 transition-all text-xs font-bold flex items-center gap-1 cursor-pointer shadow-xs"
+                className="px-2.5 py-1.5 rounded-xl border border-blue-500/40 bg-blue-500/15 text-blue-300 hover:bg-blue-500/25 transition-all active:scale-[0.98] text-xs font-bold flex items-center gap-1 cursor-pointer shadow-xs"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Lançar Horas</span>
@@ -205,7 +205,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
               <button
                 onClick={() => onOpenSptfDispensa()}
                 title="Emitir Dispensa de SPTF"
-                className="px-2.5 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 transition-all text-xs font-bold flex items-center gap-1 cursor-pointer shadow-xs"
+                className="px-2.5 py-1.5 rounded-xl border border-amber-500/40 bg-amber-500/15 text-amber-300 hover:bg-amber-500/25 transition-all active:scale-[0.98] text-xs font-bold flex items-center gap-1 cursor-pointer shadow-xs"
               >
                 <FileText className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Nova Dispensa</span>
@@ -231,7 +231,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
               <button
                 onClick={onLogout}
                 title="Sair do sistema"
-                className="p-2 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors cursor-pointer"
+                className="p-2 rounded-xl border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors active:scale-[0.98] cursor-pointer"
               >
                 <LogOut className="w-4 h-4" />
               </button>
@@ -324,8 +324,8 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
             placeholder="Buscar por Nome, Matrícula ou Cargo..."
             className={`w-full pl-10 pr-10 py-2.5 rounded-xl text-xs font-semibold border focus:outline-hidden transition-all ${
               isDark 
-                ? 'bg-[#16243D] border-[#243756] text-white placeholder-[#94A3B8] focus:border-amber-400' 
-                : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-amber-500 shadow-xs'
+                ? 'bg-[#16243D] border-[#243756] text-white placeholder-[#94A3B8] focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20' 
+                : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 shadow-xs'
             }`}
           />
           {searchTerm && (
@@ -344,7 +344,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
             <button
               onClick={() => setSortBy('DEVEDORES')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
                 sortBy === 'DEVEDORES'
                   ? 'bg-red-500/20 text-red-400 border-red-500/40 shadow-xs'
                   : isDark
@@ -358,7 +358,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
 
             <button
               onClick={() => setSortBy('CREDORES')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
                 sortBy === 'CREDORES'
                   ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-xs'
                   : isDark
@@ -372,7 +372,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
 
             <button
               onClick={() => setSortBy('ALFABETICA')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap border flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
                 sortBy === 'ALFABETICA'
                   ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 shadow-xs'
                   : isDark
@@ -394,7 +394,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
               <button
                 key={sede}
                 onClick={() => setSelectedSede(sede)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold border shrink-0 transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold border shrink-0 transition-all active:scale-[0.98] cursor-pointer ${
                   selectedSede === sede
                     ? 'bg-blue-600 text-white border-blue-500 shadow-xs'
                     : isDark
@@ -626,7 +626,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                               e.stopPropagation();
                               onOpenNewEntry(emp.matricula);
                             }}
-                            className={`py-2 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-2 border transition-all cursor-pointer ${
+                            className={`py-2 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-2 border transition-all active:scale-[0.98] cursor-pointer ${
                               isDark
                                 ? 'bg-blue-500/15 border-blue-500/30 text-blue-300 hover:bg-blue-500/25'
                                 : 'bg-blue-50 border-blue-300 text-blue-800 hover:bg-blue-100 shadow-xs'
@@ -643,7 +643,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                               e.stopPropagation();
                               onOpenSptfDispensa(emp.matricula);
                             }}
-                            className={`py-2 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-2 border transition-all cursor-pointer ${
+                            className={`py-2 px-3 rounded-lg font-bold text-xs flex items-center justify-center gap-2 border transition-all active:scale-[0.98] cursor-pointer ${
                               isDark
                                 ? 'bg-amber-500/15 border-amber-500/30 text-amber-300 hover:bg-amber-500/25'
                                 : 'bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100 shadow-xs'

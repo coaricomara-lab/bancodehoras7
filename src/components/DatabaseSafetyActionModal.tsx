@@ -223,7 +223,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
 
           <button
             onClick={onClose}
-            className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-xl border transition-colors active:scale-[0.98] cursor-pointer ${
               isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-200 hover:bg-slate-100 text-slate-500'
             }`}
             title="Cancelar e Fechar"
@@ -309,7 +309,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
               <button
                 type="button"
                 onClick={handleCreateRestorePointAndDownload}
-                className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shrink-0 cursor-pointer shadow-xs ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.98] shrink-0 cursor-pointer shadow-xs ${
                   hasCreatedBackup 
                     ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
                     : 'bg-blue-600 hover:bg-blue-500 text-white'
@@ -346,7 +346,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
               <button
                 type="button"
                 onClick={handleRestoreFromSnapshot}
-                className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
                   isDark 
                     ? 'border-indigo-800 bg-indigo-950/40 text-indigo-300 hover:bg-indigo-900/60' 
                     : 'border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100'
@@ -408,7 +408,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
             type="button"
             onClick={onClose}
             disabled={isProcessing}
-            className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+            className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors active:scale-[0.98] cursor-pointer ${
               isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
             }`}
           >
@@ -419,7 +419,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
             type="button"
             onClick={handleExecute}
             disabled={!isConfirmed || isProcessing}
-            className={`px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all shadow-lg cursor-pointer ${
+            className={`px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-[0.98] shadow-lg cursor-pointer ${
               isConfirmed && !isProcessing
                 ? actionType === 'CLEAR_DATABASE'
                   ? 'bg-red-600 hover:bg-red-500 text-white shadow-red-600/30 active:scale-98'

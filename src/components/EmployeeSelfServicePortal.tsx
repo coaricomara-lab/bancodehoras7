@@ -213,8 +213,8 @@ export const EmployeeSelfServicePortal: React.FC<EmployeeSelfServicePortalProps>
                     onChange={(e) => setMatriculaInput(e.target.value)}
                     className={`w-full rounded-xl px-4 py-3 text-sm font-mono outline-none border transition-colors ${
                       isDark
-                        ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 text-white placeholder:text-gray-600'
-                        : 'bg-gray-50 border-gray-300 focus:border-blue-500 text-gray-900 placeholder:text-gray-400'
+                        ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-gray-600'
+                        : 'bg-gray-50 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-gray-900 placeholder:text-gray-400'
                     }`}
                   />
                   <Search className={`absolute right-3.5 top-3.5 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-gray-400'}`} />
@@ -388,7 +388,7 @@ export const EmployeeSelfServicePortal: React.FC<EmployeeSelfServicePortalProps>
       <div className="flex items-center gap-2 border-b border-slate-700/60 pb-3 print:hidden">
         <button
           onClick={() => setActiveTab('BANCO_HORAS')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-[0.98] cursor-pointer ${
             activeTab === 'BANCO_HORAS'
               ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
               : isDark ? 'bg-slate-900 hover:bg-slate-800 text-gray-300' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
@@ -400,7 +400,7 @@ export const EmployeeSelfServicePortal: React.FC<EmployeeSelfServicePortalProps>
 
         <button
           onClick={() => setActiveTab('CONTRACHEQUE')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-[0.98] cursor-pointer ${
             activeTab === 'CONTRACHEQUE'
               ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20'
               : isDark ? 'bg-slate-900 hover:bg-slate-800 text-gray-300' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'

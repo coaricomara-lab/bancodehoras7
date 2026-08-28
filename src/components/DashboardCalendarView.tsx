@@ -282,7 +282,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             type="button"
             onClick={handleClickPill}
             title={`Clique para editar: Trabalho / HE ${horasBrutas}h brutas (${mult}x = ${saldo > 0 ? '+' : ''}${saldo.toFixed(1)}h)${rec.observacao ? ` • ${rec.observacao}` : ''}`}
-            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight shadow-2xs whitespace-nowrap cursor-pointer transition-all hover:scale-105 ${
+            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight shadow-2xs whitespace-nowrap cursor-pointer transition-all active:scale-[0.98] hover:scale-105 ${
               isPositive
                 ? isDark
                   ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-700/60 hover:bg-emerald-800 hover:text-white'
@@ -303,7 +303,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             type="button"
             onClick={handleClickPill}
             title={`Clique para editar: Atestado Médico (Neutro 0h)${rec.observacao ? ` • ${rec.observacao}` : ''}`}
-            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight cursor-pointer transition-all hover:scale-105 ${
+            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight cursor-pointer transition-all active:scale-[0.98] hover:scale-105 ${
               isDark ? 'bg-amber-950/80 text-amber-300 border border-amber-700/60 hover:bg-amber-800 hover:text-white' : 'bg-amber-100 text-amber-800 border border-amber-300 hover:bg-amber-200'
             }`}
           >
@@ -317,7 +317,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             type="button"
             onClick={handleClickPill}
             title={`Clique para editar: Falta Injustificada (-8.0h / Desconto)${rec.observacao ? ` • ${rec.observacao}` : ''}`}
-            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight cursor-pointer transition-all hover:scale-105 ${
+            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight cursor-pointer transition-all active:scale-[0.98] hover:scale-105 ${
               isDark ? 'bg-rose-950/80 text-rose-300 border border-rose-700/60 hover:bg-rose-800 hover:text-white' : 'bg-rose-100 text-rose-800 border border-rose-300 hover:bg-rose-200'
             }`}
           >
@@ -331,7 +331,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             type="button"
             onClick={handleClickPill}
             title="Clique para editar: Férias Regulamentares"
-            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight cursor-pointer transition-all hover:scale-105 ${
+            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight cursor-pointer transition-all active:scale-[0.98] hover:scale-105 ${
               isDark ? 'bg-cyan-950/80 text-cyan-300 border border-cyan-700/60 hover:bg-cyan-800 hover:text-white' : 'bg-cyan-100 text-cyan-800 border border-cyan-300 hover:bg-cyan-200'
             }`}
           >
@@ -346,7 +346,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             type="button"
             onClick={handleClickPill}
             title={`Clique para editar: Folga / Compensação (${saldo.toFixed(1)}h)${rec.observacao ? ` • ${rec.observacao}` : ''}`}
-            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight cursor-pointer transition-all hover:scale-105 ${
+            className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold leading-tight cursor-pointer transition-all active:scale-[0.98] hover:scale-105 ${
               isDark ? 'bg-purple-950/80 text-purple-300 border border-purple-700/60 hover:bg-purple-800 hover:text-white' : 'bg-purple-100 text-purple-800 border border-purple-300 hover:bg-purple-200'
             }`}
           >
@@ -398,7 +398,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
           }`}>
             <button
               onClick={() => setViewMode('7_DAYS')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1.5 ${
                 viewMode === '7_DAYS'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
@@ -409,7 +409,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             </button>
             <button
               onClick={() => setViewMode('14_DAYS')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1.5 ${
                 viewMode === '14_DAYS'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : isDark ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-gray-900'
@@ -424,7 +424,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
           <div className="flex items-center rounded-xl border overflow-hidden p-0.5 bg-black/20">
             <button
               onClick={handlePrevPeriod}
-              className={`p-2 rounded-lg transition-colors cursor-pointer ${
+              className={`p-2 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'hover:bg-[#243756] text-gray-300' : 'hover:bg-white text-gray-700'
               }`}
               title={`Voltar ${daysCount} dias`}
@@ -440,7 +440,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
 
             <button
               onClick={handleNextPeriod}
-              className={`p-2 rounded-lg transition-colors cursor-pointer ${
+              className={`p-2 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                 isDark ? 'hover:bg-[#243756] text-gray-300' : 'hover:bg-white text-gray-700'
               }`}
               title={`Avançar ${daysCount} dias`}
@@ -452,7 +452,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
           {/* Botão Semana/Período Atual */}
           <button
             onClick={handleSetCurrentPeriod}
-            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors active:scale-[0.98] cursor-pointer ${
               isDark ? 'border-[#335075] hover:bg-[#243756] text-blue-400' : 'border-gray-300 hover:bg-gray-100 text-blue-700'
             }`}
           >
@@ -462,7 +462,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
           {onOpenQuickBatchModal && (
             <button
               onClick={onOpenQuickBatchModal}
-              className="px-3 py-1.5 rounded-xl border text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 border-blue-500/30 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-1.5 rounded-xl border text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 border-blue-500/30 transition-all active:scale-[0.98] shadow-sm flex items-center gap-1.5 cursor-pointer"
               title="Apontar horas para múltiplos colaboradores"
             >
               <Zap className="w-3.5 h-3.5" />
@@ -480,7 +480,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={`w-full sm:w-56 rounded-xl pl-8 pr-3 py-1.5 text-xs outline-none border transition-colors ${
-                isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               }`}
             />
             <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
@@ -583,7 +583,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
                   {/* Botão de Retroceder Período na extremidade esquerda da grade */}
                   <button
                     onClick={handlePrevPeriod}
-                    className={`p-1 rounded-lg border transition-colors cursor-pointer flex items-center gap-0.5 text-[10px] font-bold shrink-0 ${
+                    className={`p-1 rounded-lg border transition-colors active:scale-[0.98] cursor-pointer flex items-center gap-0.5 text-[10px] font-bold shrink-0 ${
                       isDark ? 'bg-[#1E3252] border-[#335075] hover:bg-[#2E4566] text-blue-400' : 'bg-white border-gray-300 hover:bg-gray-100 text-blue-600'
                     }`}
                     title={`Retroceder ${daysCount} dias`}
@@ -629,7 +629,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
                   <span className="text-[10px] sm:text-[11px] font-bold font-sans truncate">SALDO</span>
                   <button
                     onClick={handleNextPeriod}
-                    className={`p-1 rounded-lg border transition-colors cursor-pointer flex items-center gap-0.5 text-[10px] font-bold shrink-0 ${
+                    className={`p-1 rounded-lg border transition-colors active:scale-[0.98] cursor-pointer flex items-center gap-0.5 text-[10px] font-bold shrink-0 ${
                       isDark ? 'bg-[#1E3252] border-[#335075] hover:bg-[#2E4566] text-blue-400' : 'bg-white border-gray-300 hover:bg-gray-100 text-blue-600'
                     }`}
                     title={`Avançar ${daysCount} dias`}
@@ -698,7 +698,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
                           <div className="min-w-0 flex-1">
                             <button
                               onClick={() => onViewEmployeeStatement(emp.matricula)}
-                              className={`font-bold hover:text-blue-500 truncate block text-left transition-colors cursor-pointer text-xs leading-tight ${
+                              className={`font-bold hover:text-blue-500 truncate block text-left transition-colors active:scale-[0.98] cursor-pointer text-xs leading-tight ${
                                 isDark ? 'text-white' : 'text-gray-900'
                               }`}
                               title={emp.nome}
@@ -736,7 +736,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
                               onOpenNewEntryModal(emp.matricula, day.dateIso);
                             }
                           }}
-                          className={`p-1.5 text-center border-l transition-all cursor-pointer group align-middle ${
+                          className={`p-1.5 text-center border-l transition-all active:scale-[0.98] cursor-pointer group align-middle ${
                             day.isToday
                               ? 'bg-blue-500/5'
                               : day.isSunday

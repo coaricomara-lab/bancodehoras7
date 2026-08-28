@@ -480,7 +480,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                           <button
                             type="button"
                             onClick={() => handleOpenEditModal(adm)}
-                            className={`p-1.5 rounded transition-colors cursor-pointer ${
+                            className={`p-1.5 rounded transition-colors active:scale-[0.98] cursor-pointer ${
                               isDark ? 'text-amber-400 hover:bg-amber-950/40' : 'text-amber-600 hover:bg-amber-50'
                             }`}
                             title="Editar cadastro e nível de acesso"
@@ -492,7 +492,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                           <button
                             type="button"
                             onClick={() => handleSendResetEmail(adm.email, adm.nome)}
-                            className={`p-1.5 rounded transition-colors cursor-pointer ${
+                            className={`p-1.5 rounded transition-colors active:scale-[0.98] cursor-pointer ${
                               isDark ? 'text-blue-400 hover:bg-blue-950/40' : 'text-blue-600 hover:bg-blue-50'
                             }`}
                             title="Enviar link de redefinição de senha"
@@ -503,7 +503,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                         {!isSelf ? (
                           <button
                             onClick={() => handleDeleteAdmin(adm.id)}
-                            className={`p-1.5 rounded transition-colors cursor-pointer ${
+                            className={`p-1.5 rounded transition-colors active:scale-[0.98] cursor-pointer ${
                               isDark ? 'text-red-400 hover:bg-red-950/40' : 'text-red-600 hover:bg-red-50'
                             }`}
                             title="Revogar acesso administrativo"
@@ -580,8 +580,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     editingAdmin ? 'opacity-60 cursor-not-allowed' : ''
                   } ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   }`}
                 />
               </div>
@@ -598,8 +598,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                   required
                   className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   }`}
                 />
               </div>
@@ -616,8 +616,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     placeholder="Ex: Engenheiro Fiscal, Analista"
                     className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   />
                 </div>
@@ -639,8 +639,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     placeholder="Ex: Capitão Encarregado de Obras"
                     className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   />
                 </div>
@@ -660,8 +660,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     onChange={(e) => setNivelAcesso(e.target.value as any)}
                     className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-semibold ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   >
                     <option value="SUPER_ADMIN">1. SUPER_ADMIN (TI - Acesso Global, Config & Auditoria)</option>
@@ -687,8 +687,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     rbacService.hasGlobalAccess(nivelAcesso) ? 'opacity-60 cursor-not-allowed' : ''
                   } ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   }`}
                 >
                   {rbacService.hasGlobalAccess(nivelAcesso) ? (
@@ -745,8 +745,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                       required={!editingAdmin}
                       className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-mono ${
                         isDark 
-                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                          : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                          : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                       }`}
                     />
                   </div>
@@ -763,8 +763,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                       required={!editingAdmin && Boolean(senhaInicial)}
                       className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-mono ${
                         isDark 
-                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                          : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                          : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                       }`}
                     />
                   </div>

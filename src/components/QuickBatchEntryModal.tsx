@@ -559,7 +559,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
             id="btn-close-batch-modal"
             onClick={handleClose}
             aria-label="Fechar Modal de Lançamento em Lote"
-            className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-xl border transition-colors active:scale-[0.98] cursor-pointer ${
               isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-200 hover:bg-slate-100 text-slate-500'
             }`}
             title="Fechar Modal (Esc)"
@@ -580,7 +580,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
               setActiveMode('MULTI_SELECAO');
               setFeedback(null);
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
               activeMode === 'MULTI_SELECAO'
                 ? 'bg-blue-600 text-white shadow-xs'
                 : isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
@@ -603,7 +603,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                 setActiveMode('GRADE_DIARIA');
                 setFeedback(null);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
                 activeMode === 'GRADE_DIARIA'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
@@ -622,7 +622,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                 setActiveMode('FLUXO_RAPIDO');
                 setFeedback(null);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
                 activeMode === 'FLUXO_RAPIDO'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
@@ -699,7 +699,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={dataRegistro}
                     onChange={(e) => setDataRegistro(e.target.value)}
                     className={`w-full rounded-lg px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   />
                 </div>
@@ -721,7 +721,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       }
                     }}
                     className={`w-full rounded-lg px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   >
                     <option value="ACABOU_BANHOU">✨ ACABOU BANHOU: Missão Cumprida (Sem Débito / Não Desconta)</option>
@@ -749,7 +749,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={tipoOcorrencia === 'FALTA_INJUSTIFICADA' ? 8.0 : (tipoOcorrencia === 'ACABOU_BANHOU' ? 0.0 : horasBrutas)}
                     onChange={(e) => setHorasBrutas(parseFloat(e.target.value) || 0)}
                     className={`w-full rounded-lg px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 disabled:opacity-50' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 disabled:opacity-50'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50'
                     }`}
                   />
                 </div>
@@ -764,7 +764,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={observacao}
                     onChange={(e) => setObservacao(e.target.value)}
                     className={`w-full rounded-lg px-3 py-2 border text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   />
                 </div>
@@ -818,7 +818,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     <button
                       type="button"
                       onClick={handleSelectAllFiltered}
-                      className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors cursor-pointer ${
+                      className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors active:scale-[0.98] cursor-pointer ${
                         isDark ? 'border-[#335075] hover:bg-[#243756] text-blue-400' : 'border-blue-200 hover:bg-blue-50 text-blue-700'
                       }`}
                     >
@@ -830,7 +830,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       <button
                         type="button"
                         onClick={() => setSelectedMatriculas([])}
-                        className={`text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                        className={`text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                           isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-500 hover:text-slate-800'
                         }`}
                       >
@@ -849,7 +849,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       value={searchEmployeeQuery}
                       onChange={(e) => setSearchEmployeeQuery(e.target.value)}
                       className={`w-full rounded-lg pl-8 pr-3 py-1.5 border text-xs focus:outline-hidden ${
-                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                       }`}
                     />
                     <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
@@ -860,7 +860,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       value={filterSede}
                       onChange={(e) => setFilterSede(e.target.value)}
                       className={`w-full rounded-lg px-2.5 py-1.5 border text-xs focus:outline-hidden ${
-                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                       }`}
                     >
                       <option value="TODAS">Todas as Sedes / Canteiros</option>
@@ -875,7 +875,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       value={filterFuncao}
                       onChange={(e) => setFilterFuncao(e.target.value)}
                       className={`w-full rounded-lg px-2.5 py-1.5 border text-xs focus:outline-hidden ${
-                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                       }`}
                     >
                       <option value="TODAS">Todas as Funções</option>
@@ -903,7 +903,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       return (
                         <label
                           key={emp.id || mat}
-                          className={`px-3.5 py-2.5 flex items-center justify-between cursor-pointer transition-colors ${
+                          className={`px-3.5 py-2.5 flex items-center justify-between cursor-pointer transition-colors active:scale-[0.98] ${
                             isSelected
                               ? isDark ? 'bg-blue-950/40 border-l-2 border-blue-500' : 'bg-blue-50/80 border-l-2 border-blue-500'
                               : isDark ? 'hover:bg-[#16243D]' : 'hover:bg-slate-50'
@@ -969,7 +969,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                   <button
                     type="button"
                     onClick={handleClose}
-                    className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+                    className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors active:scale-[0.98] cursor-pointer ${
                       isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-200 hover:bg-slate-100 text-slate-600'
                     }`}
                   >
@@ -978,7 +978,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                   <button
                     type="submit"
                     disabled={isSubmitting || selectedMatriculas.length === 0}
-                    className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 transition-all shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 transition-all active:scale-[0.98] shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSubmitting ? (
                       <>
@@ -1016,7 +1016,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={dataRegistro}
                     onChange={(e) => setDataRegistro(e.target.value)}
                     className={`w-full rounded-lg px-3 py-1.5 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   />
                 </div>
@@ -1029,7 +1029,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={filterSede}
                     onChange={(e) => setFilterSede(e.target.value)}
                     className={`w-full rounded-lg px-2.5 py-1.5 border text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   >
                     <option value="TODAS">Todas as Sedes / Canteiros</option>
@@ -1050,7 +1050,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       value={searchEmployeeQuery}
                       onChange={(e) => setSearchEmployeeQuery(e.target.value)}
                       className={`w-full rounded-lg pl-8 pr-3 py-1.5 border text-xs focus:outline-hidden ${
-                        isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                        isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                       }`}
                     />
                     <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
@@ -1144,7 +1144,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                                   }));
                                 }}
                                 className={`w-full rounded-md px-2 py-1 border text-[11px] font-mono focus:outline-hidden ${
-                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                                 }`}
                               >
                                 <option value="ACABOU_BANHOU">✨ ACABOU BANHOU (0h)</option>
@@ -1178,7 +1178,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                                   }));
                                 }}
                                 className={`w-16 text-center rounded-md px-1 py-1 border font-mono text-[11px] focus:outline-hidden ${
-                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                                 }`}
                               />
                             </td>
@@ -1201,7 +1201,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                                   }));
                                 }}
                                 className={`w-full rounded-md px-2 py-1 border text-[11px] focus:outline-hidden ${
-                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                                 }`}
                               />
                             </td>
@@ -1225,7 +1225,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                   <button
                     type="button"
                     onClick={handleClose}
-                    className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+                    className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors active:scale-[0.98] cursor-pointer ${
                       isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-200 hover:bg-slate-100 text-slate-600'
                     }`}
                   >
@@ -1234,7 +1234,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                   <button
                     type="submit"
                     disabled={isSubmitting || currentGridList.filter(r => r.incluir).length === 0}
-                    className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 transition-all shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                    className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-[#3B82F6] hover:bg-blue-600 transition-all active:scale-[0.98] shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isSubmitting ? (
                       <>
@@ -1280,8 +1280,8 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     }}
                     className={`w-full rounded-xl pl-4 pr-10 py-2.5 border text-xs focus:outline-hidden font-mono ${
                       isDark
-                        ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 text-white'
-                        : 'bg-slate-50 border-slate-300 focus:border-blue-500 text-slate-900'
+                        ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white'
+                        : 'bg-slate-50 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-900'
                     }`}
                   />
                   <Search className={`absolute right-3.5 top-3 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
@@ -1301,7 +1301,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                           key={emp.id || mat}
                           type="button"
                           onClick={() => handleSelectQuickEmployee(emp)}
-                          className={`w-full px-3 py-2 text-left flex items-center justify-between transition-colors cursor-pointer ${
+                          className={`w-full px-3 py-2 text-left flex items-center justify-between transition-colors active:scale-[0.98] cursor-pointer ${
                             isDark ? 'hover:bg-[#243756]' : 'hover:bg-blue-50'
                           }`}
                         >
@@ -1393,7 +1393,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={dataRegistro}
                     onChange={(e) => setDataRegistro(e.target.value)}
                     className={`w-full rounded-xl px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   />
                 </div>
@@ -1415,7 +1415,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       }
                     }}
                     className={`w-full rounded-xl px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   >
                     <option value="ACABOU_BANHOU">✨ ACABOU BANHOU (Sem Débito)</option>
@@ -1442,7 +1442,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={tipoOcorrencia === 'FALTA_INJUSTIFICADA' ? 8.0 : (tipoOcorrencia === 'ACABOU_BANHOU' ? 0.0 : horasBrutas)}
                     onChange={(e) => setHorasBrutas(parseFloat(e.target.value) || 0)}
                     className={`w-full rounded-xl px-3 py-2 border font-mono font-bold text-center text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   />
                 </div>
@@ -1456,7 +1456,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition-all shadow-md shadow-emerald-600/20 flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-500 transition-all active:scale-[0.98] shadow-md shadow-emerald-600/20 flex items-center gap-2 cursor-pointer"
                 >
                   <span>Salvar & Próximo</span>
                   <ArrowRight className="w-4 h-4" />

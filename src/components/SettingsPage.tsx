@@ -215,7 +215,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           <button
             type="button"
             onClick={() => setIsResetModalOpen(true)}
-            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-colors cursor-pointer ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-colors active:scale-[0.98] cursor-pointer ${
               isDark
                 ? 'bg-[#16243D] hover:bg-[#243756] text-[#94A3B8] hover:text-white border-[#335075]'
                 : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
@@ -230,7 +230,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             type="button"
             onClick={handleSave}
             disabled={isUpdating || isLoading}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all active:scale-[0.98] cursor-pointer"
           >
             {isUpdating ? (
               <>
@@ -282,7 +282,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <button
           type="button"
           onClick={() => setActiveSubTab('identificacao')}
-          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer ${
             activeSubTab === 'identificacao'
               ? isDark
                 ? 'bg-blue-600 text-white shadow-md'
@@ -299,7 +299,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <button
           type="button"
           onClick={() => setActiveSubTab('cargos')}
-          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer ${
             activeSubTab === 'cargos'
               ? isDark
                 ? 'bg-blue-600 text-white shadow-md'
@@ -323,7 +323,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <button
           type="button"
           onClick={() => setActiveSubTab('sedes')}
-          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer ${
             activeSubTab === 'sedes'
               ? isDark
                 ? 'bg-blue-600 text-white shadow-md'
@@ -347,7 +347,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <button
           type="button"
           onClick={() => setActiveSubTab('horarios_regras')}
-          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer ${
             activeSubTab === 'horarios_regras'
               ? isDark
                 ? 'bg-blue-600 text-white shadow-md'
@@ -364,7 +364,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <button
           type="button"
           onClick={() => setActiveSubTab('documentos')}
-          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer ${
+          className={`flex-1 min-w-[170px] px-4 py-2.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer ${
             activeSubTab === 'documentos'
               ? isDark
                 ? 'bg-blue-600 text-white shadow-md'
@@ -459,7 +459,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           type="button"
           onClick={handleSave}
           disabled={isUpdating || isLoading}
-          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all cursor-pointer shrink-0"
+          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all active:scale-[0.98] cursor-pointer shrink-0"
         >
           {isUpdating ? (
             <>

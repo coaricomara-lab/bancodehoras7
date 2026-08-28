@@ -549,8 +549,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 onChange={(e) => setSearchTerm(e.target.value)} 
                 className={`p-3 pr-9 border rounded-lg w-full text-base focus:outline-hidden ${
                   isDark 
-                    ? 'bg-[#16243D] border-[#243756] text-white placeholder-[#94A3B8] focus:border-blue-500' 
-                    : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500'
+                    ? 'bg-[#16243D] border-[#243756] text-white placeholder-[#94A3B8] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                    : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                 }`}
               />
               {searchTerm && (
@@ -571,8 +571,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               onChange={(e) => handleSortOptionChange(e.target.value as MobileSortOption)}
               className={`p-3 border rounded-lg w-full bg-white font-medium text-base focus:outline-hidden cursor-pointer ${
                 isDark 
-                  ? '!bg-[#16243D] border-[#243756] text-white focus:border-blue-500' 
-                  : 'bg-white border-slate-300 text-slate-800 focus:border-blue-500'
+                  ? '!bg-[#16243D] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                  : 'bg-white border-slate-300 text-slate-800 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               }`}
             >
               <option value="nome_asc">Nome (A - Z)</option>
@@ -586,7 +586,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               <button
                 type="button"
                 onClick={() => setBalanceFilter('TODOS')}
-                className={`flex-1 py-2 px-1 rounded-lg text-xs font-bold text-center border transition-all cursor-pointer select-none ${
+                className={`flex-1 py-2 px-1 rounded-lg text-xs font-bold text-center border transition-all active:scale-[0.98] cursor-pointer select-none ${
                   balanceFilter === 'TODOS'
                     ? isDark 
                       ? 'bg-blue-600/30 text-blue-400 border-blue-500/50 shadow-xs' 
@@ -602,7 +602,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               <button
                 type="button"
                 onClick={() => setBalanceFilter('CREDOR')}
-                className={`flex-1 py-2 px-1 rounded-lg text-xs font-bold text-center border transition-all cursor-pointer select-none ${
+                className={`flex-1 py-2 px-1 rounded-lg text-xs font-bold text-center border transition-all active:scale-[0.98] cursor-pointer select-none ${
                   balanceFilter === 'CREDOR'
                     ? isDark 
                       ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/50 shadow-xs' 
@@ -618,7 +618,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               <button
                 type="button"
                 onClick={() => setBalanceFilter('DEVEDOR')}
-                className={`flex-1 py-2 px-1 rounded-lg text-xs font-bold text-center border transition-all cursor-pointer select-none ${
+                className={`flex-1 py-2 px-1 rounded-lg text-xs font-bold text-center border transition-all active:scale-[0.98] cursor-pointer select-none ${
                   balanceFilter === 'DEVEDOR'
                     ? isDark 
                       ? 'bg-red-950/80 text-red-400 border-red-500/50 shadow-xs' 
@@ -808,7 +808,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={`w-full pl-9 pr-8 py-1.5 rounded-lg text-xs font-mono focus:outline-hidden border ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] placeholder-[#64748B] focus:border-[#3B82F6]' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] placeholder-[#64748B] focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20' 
                       : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                   }`}
                 />
@@ -830,8 +830,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   onChange={(e) => setFilterSede(e.target.value)}
                   className={`px-2.5 py-1.5 rounded-lg font-medium border focus:outline-hidden cursor-pointer ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6]' 
-                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20' 
+                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   }`}
                 >
                   <option value="TODAS">Todas as Sedes / Canteiros</option>
@@ -859,8 +859,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className={`px-2.5 py-1.5 rounded-lg font-medium border focus:outline-hidden cursor-pointer ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6]' 
-                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20' 
+                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   }`}
                 >
                   <option value="TODOS">Todos os Status</option>
@@ -887,7 +887,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <button
                   type="button"
                   onClick={() => setBalanceFilter('TODOS')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer select-none ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 border cursor-pointer select-none ${
                     balanceFilter === 'TODOS'
                       ? isDark 
                         ? 'bg-blue-600/20 text-blue-400 border-blue-500/50 shadow-xs' 
@@ -911,7 +911,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <button
                   type="button"
                   onClick={() => setBalanceFilter('CREDOR')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer select-none ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 border cursor-pointer select-none ${
                     balanceFilter === 'CREDOR'
                       ? isDark 
                         ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/50 shadow-xs' 
@@ -936,7 +936,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <button
                   type="button"
                   onClick={() => setBalanceFilter('DEVEDOR')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer select-none ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 border cursor-pointer select-none ${
                     balanceFilter === 'DEVEDOR'
                       ? isDark 
                         ? 'bg-red-950/80 text-red-400 border-red-500/50 shadow-xs' 
@@ -961,7 +961,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <button
                   type="button"
                   onClick={() => setBalanceFilter('ZERADO')}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border cursor-pointer select-none ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-1.5 border cursor-pointer select-none ${
                     balanceFilter === 'ZERADO'
                       ? isDark 
                         ? 'bg-slate-800 text-slate-200 border-slate-600 shadow-xs' 
@@ -1019,7 +1019,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     {/* 1. Matrícula */}
                     <th 
                       onClick={() => handleSort('matricula')}
-                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors"
+                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Matrícula"
                     >
                       <div className="flex items-center gap-1">
@@ -1031,7 +1031,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     {/* 2. Nome */}
                     <th 
                       onClick={() => handleSort('nome')}
-                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors"
+                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Nome do Colaborador"
                     >
                       <div className="flex items-center gap-1">
@@ -1043,7 +1043,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     {/* 3. Função / Cargo */}
                     <th 
                       onClick={() => handleSort('funcao')}
-                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors"
+                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Função / Cargo"
                     >
                       <div className="flex items-center gap-1">
@@ -1055,7 +1055,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     {/* 4. Sede */}
                     <th 
                       onClick={() => handleSort('sede')}
-                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors"
+                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Sede"
                     >
                       <div className="flex items-center gap-1">
@@ -1067,7 +1067,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     {/* 5. Data Admissão */}
                     <th 
                       onClick={() => handleSort('dataAdmissao')}
-                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors"
+                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Data de Admissão"
                     >
                       <div className="flex items-center gap-1">
@@ -1079,7 +1079,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     {/* 6. Status Contratual */}
                     <th 
                       onClick={() => handleSort('status')}
-                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors"
+                      className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Status"
                     >
                       <div className="flex items-center gap-1">
@@ -1091,7 +1091,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     {/* 7. Saldo Atual SPTF (Numérico Real) */}
                     <th 
                       onClick={() => handleSort('saldo')}
-                      className="py-3 px-4 text-right cursor-pointer group hover:text-blue-400 transition-colors"
+                      className="py-3 px-4 text-right cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Saldo de Horas SPTF"
                     >
                       <div className="flex items-center justify-end gap-1">
@@ -1103,7 +1103,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     {/* 8. Status Banco */}
                     <th 
                       onClick={() => handleSort('statusBanco')}
-                      className="py-3 px-4 text-center cursor-pointer group hover:text-blue-400 transition-colors"
+                      className="py-3 px-4 text-center cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Status do Banco"
                     >
                       <div className="flex items-center justify-center gap-1">
@@ -1134,7 +1134,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                 setFilterStatus('TODOS');
                                 setBalanceFilter('TODOS');
                               }}
-                              className="mt-2 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                              className="mt-2 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg text-xs font-bold transition-colors active:scale-[0.98] cursor-pointer"
                             >
                               Limpar Todos os Filtros
                             </button>
@@ -1385,7 +1385,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     <button
                       type="button"
                       onClick={() => photoInputRef.current?.click()}
-                      className={`px-2.5 py-1 border rounded-md font-medium text-[10px] inline-flex items-center gap-1.5 transition-colors font-sans cursor-pointer ${
+                      className={`px-2.5 py-1 border rounded-md font-medium text-[10px] inline-flex items-center gap-1.5 transition-colors active:scale-[0.98] font-sans cursor-pointer ${
                         isDark 
                           ? 'bg-[#243756] hover:bg-[#335075] text-[#E2E8F0] border-[#335075]' 
                           : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'
@@ -1415,7 +1415,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="Ex: MAT-1090"
                     className={`w-full px-3 py-2 rounded-lg font-mono font-bold border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                     required
@@ -1431,8 +1431,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onChange={(e) => setSede(e.target.value as Branch)}
                     className={`w-full px-3 py-2 rounded-lg font-semibold border focus:outline-hidden cursor-pointer ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   >
                     {Array.isArray(constructionSites) && constructionSites.length > 0 ? (
@@ -1467,7 +1467,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   placeholder="Nome do colaborador"
                   className={`w-full px-3 py-2 rounded-lg border font-sans text-xs focus:outline-hidden ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                   }`}
                   required
@@ -1486,7 +1486,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="Ex: Técnico de Campo"
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                     required
@@ -1503,7 +1503,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onChange={(e) => setDataAdmissao(e.target.value)}
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                   />
@@ -1520,8 +1520,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onChange={(e) => setStatus(e.target.value as EmployeeStatus)}
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden cursor-pointer ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   >
                     <option value="Ativo">Ativo</option>
@@ -1546,8 +1546,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onChange={(e) => setGrauInsalubridadeFixa(e.target.value)}
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden cursor-pointer font-bold ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-amber-400 focus:border-amber-500' 
-                        : 'bg-white border-slate-300 text-amber-700 focus:border-amber-500'
+                        ? 'bg-[#0F1B33] border-[#243756] text-amber-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' 
+                        : 'bg-white border-slate-300 text-amber-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                     }`}
                   >
                     <option value="ISENTO">ISENTO (Padrão)</option>
@@ -1575,7 +1575,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="0.0"
                     className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                   />
@@ -1606,8 +1606,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         onChange={(e) => setDataInicioStatus(e.target.value)}
                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                           isDark 
-                            ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400' 
-                            : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500'
+                            ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20' 
+                            : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                         }`}
                       />
                     </div>
@@ -1622,8 +1622,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         onChange={(e) => setDataFimStatus(e.target.value)}
                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                           isDark 
-                            ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400' 
-                            : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500'
+                            ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20' 
+                            : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                         }`}
                       />
                     </div>
@@ -1640,8 +1640,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       onChange={(e) => setMotivoStatus(e.target.value)}
                       className={`w-full px-2.5 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                         isDark 
-                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400' 
-                            : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500'
+                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20' 
+                            : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                       }`}
                     />
                   </div>
@@ -1684,8 +1684,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           onChange={(e) => setSedeAtual(e.target.value as Branch)}
                           className={`w-full px-2 py-1.5 rounded-lg text-xs font-bold border focus:outline-hidden cursor-pointer ${
                             isDark 
-                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400' 
-                              : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20' 
+                              : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                           }`}
                         >
                           <option value="KO">KO — Coari</option>
@@ -1703,8 +1703,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           onChange={(e) => setDataInicioAlocacao(e.target.value)}
                           className={`w-full px-2 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                             isDark 
-                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400' 
-                              : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20' 
+                              : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                           }`}
                         />
                       </div>
@@ -1718,8 +1718,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           onChange={(e) => setDataFimAlocacao(e.target.value)}
                           className={`w-full px-2 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                             isDark 
-                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400' 
-                              : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20' 
+                              : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                           }`}
                         />
                       </div>
@@ -1738,7 +1738,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="email@empresa.com.br"
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                   />
@@ -1752,7 +1752,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="(92) 99999-9999"
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                   />
@@ -1809,8 +1809,8 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder={editingEmployee ? "Deixe em branco para manter a senha atual ou use o gerador acima" : "Digite ou clique em 'Gerar 6 Dígitos' (mín. 4 caracteres)"}
                     className={`w-full px-3 py-2 pr-10 rounded-lg text-xs font-mono border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                        ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   />
                   <button

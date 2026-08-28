@@ -438,7 +438,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
             onClick={onClose}
             aria-label="Fechar modal de lançamento diário"
             title="Fechar (Esc)"
-            className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+            className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
               isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
@@ -465,7 +465,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               onChange={(e) => setMatricula(e.target.value)}
               className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                 isDark 
-                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               }`}
               required
@@ -502,11 +502,11 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                 tipoOcorrencia === 'FERIAS'
                   ? isDark
-                    ? 'bg-emerald-950/30 border-emerald-500/50 text-emerald-300 focus:border-emerald-400'
-                    : 'bg-emerald-50 border-emerald-300 text-emerald-900 focus:border-emerald-500'
+                    ? 'bg-emerald-950/30 border-emerald-500/50 text-emerald-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20'
+                    : 'bg-emerald-50 border-emerald-300 text-emerald-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20'
                   : isDark 
-                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                  : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                  : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               }`}
             >
               <option value="FERIAS">🏖️ FÉRIAS: Período Completo (Inserir em todo o período)</option>
@@ -560,8 +560,8 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                     }}
                     className={`w-full px-3 py-2 rounded-lg border font-mono text-xs focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-emerald-700/50 text-white focus:border-emerald-400' 
-                        : 'bg-white border-emerald-300 text-slate-900 focus:border-emerald-500'
+                        ? 'bg-[#0F1B33] border-emerald-700/50 text-white focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20' 
+                        : 'bg-white border-emerald-300 text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20'
                     }`}
                     required
                   />
@@ -578,8 +578,8 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                     onChange={(e) => setDataFimFerias(e.target.value)}
                     className={`w-full px-3 py-2 rounded-lg border font-mono text-xs focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0F1B33] border-emerald-700/50 text-white focus:border-emerald-400' 
-                        : 'bg-white border-emerald-300 text-slate-900 focus:border-emerald-500'
+                        ? 'bg-[#0F1B33] border-emerald-700/50 text-white focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20' 
+                        : 'bg-white border-emerald-300 text-slate-900 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20'
                     }`}
                     required
                   />
@@ -596,7 +596,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                     key={days}
                     type="button"
                     onClick={() => handleSetVacationDuration(days)}
-                    className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border transition-colors cursor-pointer ${
+                    className={`px-2.5 py-1 text-[10px] font-bold rounded-lg border transition-colors active:scale-[0.98] cursor-pointer ${
                       vacationDaysCount === days
                         ? 'bg-emerald-600 text-white border-emerald-500'
                         : isDark
@@ -637,8 +637,8 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                   onChange={(e) => setDataRegistro(e.target.value)}
                   className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
-                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   }`}
                   required
                 />
@@ -658,8 +658,8 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                   onChange={(e) => setHorasBrutas(parseFloat(e.target.value) || 0)}
                   className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                     isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 disabled:opacity-50' 
-                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 disabled:opacity-50'
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50' 
+                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50'
                   }`}
                   required
                 />
@@ -718,7 +718,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               Comprovante / Portaria / Atestado (Google Drive) {tipoOcorrencia === 'ATESTADO_MEDICO' && <span className="text-red-500">*</span>}
             </label>
             <div className="flex items-center gap-2">
-              <label className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-colors ${
+              <label className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-colors active:scale-[0.98] ${
                 isDark 
                   ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                   : 'bg-white border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -757,7 +757,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               placeholder={tipoOcorrencia === 'FERIAS' ? 'Ex: Portaria nº 123/COMARA - Férias Regulamentares' : 'Ex: Parada emergencial no gerador de Coari'}
               className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden font-sans ${
                 isDark 
-                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               }`}
             />
@@ -771,7 +771,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                 type="button"
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="px-3 py-2 rounded-lg font-bold text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/30 flex items-center gap-1.5 cursor-pointer transition-colors"
+                className="px-3 py-2 rounded-lg font-bold text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/30 flex items-center gap-1.5 cursor-pointer transition-colors active:scale-[0.98]"
                 title="Excluir este lançamento permanentemente"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -785,7 +785,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className={`px-4 py-2 font-semibold text-xs rounded-lg transition-colors cursor-pointer ${
+                className={`px-4 py-2 font-semibold text-xs rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                   isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
@@ -794,7 +794,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               <button
                 type="submit"
                 disabled={isSaving}
-                className={`px-5 py-2 font-bold text-xs text-white rounded-lg shadow-md transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-5 py-2 font-bold text-xs text-white rounded-lg shadow-md transition-all active:scale-[0.98] cursor-pointer flex items-center gap-1.5 ${
                   tipoOcorrencia === 'FERIAS'
                     ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20'
                     : isEditing 

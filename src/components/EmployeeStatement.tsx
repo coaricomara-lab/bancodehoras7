@@ -213,8 +213,8 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
               onChange={(e) => onSelectMatricula(e.target.value)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold font-mono border focus:outline-hidden ${
                 isDark 
-                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6]' 
-                  : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20' 
+                  : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               }`}
             >
               {employees.map((emp) => (
@@ -750,7 +750,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                             {onOpenEditEntry && (
                               <button
                                 onClick={() => onOpenEditEntry(rec)}
-                                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                                className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                                   isDark ? 'text-amber-400 hover:bg-amber-500/10' : 'text-amber-600 hover:bg-amber-50'
                                 }`}
                                 title="Editar / Corrigir este lançamento"
@@ -766,7 +766,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                                     onDeleteRecord(rec.id);
                                   }
                                 }}
-                                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                                className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                                   isDark ? 'text-red-400 hover:bg-red-500/10' : 'text-red-600 hover:bg-red-50'
                                 }`}
                                 title="Excluir lançamento"
@@ -777,7 +777,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
 
                             <button
                               onClick={() => toggleExpandRecord(rec.id)}
-                              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                              className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                                 isDark ? 'hover:bg-[#335075] text-[#94A3B8]' : 'hover:bg-slate-200 text-slate-500'
                               }`}
                               title="Ver detalhes de rastreabilidade"
@@ -813,7 +813,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                                   <div className="pt-2 mt-2 border-t border-[#243756] flex items-center gap-2">
                                     <button
                                       onClick={() => onOpenEditEntry(rec)}
-                                      className="px-2.5 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                                      className="px-2.5 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer"
                                     >
                                       <Pencil className="w-3 h-3" />
                                       <span>Editar Lançamento</span>

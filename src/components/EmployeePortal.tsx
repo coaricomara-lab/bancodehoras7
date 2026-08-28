@@ -479,7 +479,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="bg-[#0F1B33] border border-[#243756] text-white text-xs font-mono rounded-lg px-3 py-1.5 outline-none focus:border-blue-500"
+              className="bg-[#0F1B33] border border-[#243756] text-white text-xs font-mono rounded-lg px-3 py-1.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             >
               <option value="TODOS">Todos os Meses</option>
               {availableMonths.map((m) => (

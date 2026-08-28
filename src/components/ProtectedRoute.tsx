@@ -133,7 +133,7 @@ const AccessDeniedCard: React.FC<AccessDeniedCardProps> = ({
           <button
             type="button"
             onClick={onRedirectToDashboard}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all shadow-md cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all active:scale-[0.98] shadow-md cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Voltar ao Dashboard Permitido</span>

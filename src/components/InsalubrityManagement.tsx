@@ -338,7 +338,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
           <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/10 dark:bg-black/40 border border-black/5 dark:border-white/5">
             <button
               onClick={() => handleToggleMode('SIMPLES')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
                 currentMode === 'SIMPLES'
                   ? 'bg-amber-600 text-white shadow-sm'
                   : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -350,7 +350,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
             <button
               onClick={() => handleToggleMode('COMPLETA')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
                 currentMode === 'COMPLETA'
                   ? 'bg-blue-600 text-white shadow-sm'
                   : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
@@ -435,7 +435,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
               {onNavigateToReports && (
                 <button
                   onClick={onNavigateToReports}
-                  className={`px-3.5 py-2 rounded-xl border text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                  className={`px-3.5 py-2 rounded-xl border text-xs font-bold flex items-center gap-2 transition-all active:scale-[0.98] cursor-pointer ${
                     isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                   }`}
                 >
@@ -551,7 +551,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
       <div className="flex items-center gap-2 border-b pb-3">
         <button
           onClick={() => setActiveSubTab('ATIVIDADES')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
             activeSubTab === 'ATIVIDADES'
               ? isDark 
                 ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30' 
@@ -567,7 +567,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
         <button
           onClick={() => setActiveSubTab('FIXA')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
             activeSubTab === 'FIXA'
               ? isDark 
                 ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30' 
@@ -583,7 +583,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
         <button
           onClick={() => setActiveSubTab('GUIA_NR15')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 cursor-pointer ${
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
             activeSubTab === 'GUIA_NR15'
               ? isDark 
                 ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30' 
@@ -615,7 +615,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`w-full pl-9 pr-3 py-2 rounded-xl border text-xs outline-hidden transition-colors ${
-                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-amber-500'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                 }`}
               />
             </div>
@@ -696,7 +696,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                     setStartDate('');
                     setEndDate('');
                   }}
-                  className={`px-3 py-2 rounded-xl border text-xs font-bold transition-colors cursor-pointer ${
+                  className={`px-3 py-2 rounded-xl border text-xs font-bold transition-colors active:scale-[0.98] cursor-pointer ${
                     isDark ? 'border-red-500/30 text-red-400 hover:bg-red-500/10' : 'border-red-200 text-red-600 hover:bg-red-50'
                   }`}
                 >
@@ -796,7 +796,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                             <button
                               onClick={() => handleOpenEditModal(rec)}
                               title="Editar / Corrigir lançamento de insalubridade"
-                              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                              className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                                 isDark ? 'text-amber-400 hover:bg-amber-500/10' : 'text-amber-600 hover:bg-amber-50'
                               }`}
                             >
@@ -805,7 +805,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                             <button
                               onClick={() => handleDelete(rec.id, rec.nomeColaborador)}
                               title="Excluir lançamento"
-                              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                              className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                                 isDark ? 'text-red-400 hover:bg-red-500/10' : 'text-red-600 hover:bg-red-50'
                               }`}
                             >
@@ -993,7 +993,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                className={`p-1.5 rounded-lg transition-colors active:scale-[0.98] cursor-pointer ${
                   isDark ? 'hover:bg-[#243756] text-gray-400' : 'hover:bg-slate-200 text-slate-500'
                 }`}
               >
@@ -1029,7 +1029,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   onChange={(e) => setFormMatricula(e.target.value)}
                   required
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-hidden ${
-                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-500'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                   }`}
                 >
                   <option value="">-- Selecione o Colaborador por Matrícula / Nome --</option>
@@ -1085,7 +1085,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   onChange={(e) => setFormAtividade(e.target.value)}
                   required
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-hidden ${
-                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-500'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
                   }`}
                 />
 
@@ -1096,7 +1096,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                       key={idx}
                       type="button"
                       onClick={() => handleSelectPreset(p)}
-                      className={`text-[10px] px-2 py-1 rounded-lg border transition-colors cursor-pointer ${
+                      className={`text-[10px] px-2 py-1 rounded-lg border transition-colors active:scale-[0.98] cursor-pointer ${
                         formAtividade === p.nome
                           ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                           : isDark 
@@ -1201,7 +1201,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className={`px-4 py-2.5 rounded-xl border font-bold transition-colors cursor-pointer ${
+                  className={`px-4 py-2.5 rounded-xl border font-bold transition-colors active:scale-[0.98] cursor-pointer ${
                     isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                   }`}
                 >

@@ -291,7 +291,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
           <button
             type="button"
             onClick={onToggleTheme}
-            className={`p-2 rounded-xl border transition-colors cursor-pointer ${
+            className={`p-2 rounded-xl border transition-colors active:scale-[0.98] cursor-pointer ${
               isDark 
                 ? 'bg-[#1B2D4A] border-[#335075] text-amber-400 hover:text-amber-300' 
                 : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
@@ -304,7 +304,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
           <button
             type="button"
             onClick={onOpenAdminLogin}
-            className={`flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
+            className={`flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] cursor-pointer shadow-xs ${
               isDark 
                 ? 'bg-[#243756] hover:bg-[#335075] text-blue-400 hover:text-blue-300 border border-[#335075]' 
                 : 'bg-white hover:bg-slate-50 text-blue-700 hover:text-blue-800 border border-blue-200'
@@ -408,7 +408,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                     <button
                       type="button"
                       onClick={handleOpenFirstAccess}
-                      className="text-[11px] font-semibold text-blue-500 hover:text-blue-400 transition-colors cursor-pointer"
+                      className="text-[11px] font-semibold text-blue-500 hover:text-blue-400 transition-colors active:scale-[0.98] cursor-pointer"
                     >
                       Esqueceu ou 1º Acesso?
                     </button>
@@ -462,7 +462,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                     onClick={handleOpenFirstAccess}
                     className={`inline-flex items-center gap-1.5 text-xs font-bold ${
                       isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700'
-                    } cursor-pointer transition-all`}
+                    } cursor-pointer transition-all active:scale-[0.98]`}
                   >
                     <Sparkles className="w-3.5 h-3.5" />
                     <span>Primeiro Acesso? Crie sua senha de segurança aqui</span>
@@ -501,7 +501,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   <button
                     type="button"
                     onClick={() => handleEmployeeLogout()}
-                    className={`flex items-center gap-2 py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                    className={`flex items-center gap-2 py-2 px-3 rounded-xl text-xs font-bold border transition-all active:scale-[0.98] cursor-pointer ${
                       isDark ? 'bg-[#16243D] border-[#2A4063] text-gray-300 hover:text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -517,7 +517,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   <button
                     type="button"
                     onClick={() => window.print()}
-                    className={`flex items-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                    className={`flex items-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold border transition-all active:scale-[0.98] cursor-pointer ${
                       isDark ? 'bg-[#243756] border-[#335075] text-blue-400 hover:text-blue-300' : 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
                     }`}
                   >
@@ -527,7 +527,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   <button
                     type="button"
                     onClick={() => handleEmployeeLogout()}
-                    className="flex items-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold bg-red-600/90 hover:bg-red-600 text-white transition-all cursor-pointer shadow-sm"
+                    className="flex items-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold bg-red-600/90 hover:bg-red-600 text-white transition-all active:scale-[0.98] cursor-pointer shadow-sm"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Sair</span>
@@ -540,7 +540,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                 <button
                   type="button"
                   onClick={() => setCollaboratorTab('EXTRATO')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                  className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-[0.98] cursor-pointer ${
                     collaboratorTab === 'EXTRATO'
                       ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
                       : isDark ? 'bg-[#16243D] hover:bg-[#233654] text-gray-300' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
@@ -553,7 +553,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                 <button
                   type="button"
                   onClick={() => setCollaboratorTab('CONTRACHEQUE')}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                  className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all active:scale-[0.98] cursor-pointer ${
                     collaboratorTab === 'CONTRACHEQUE'
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20'
                       : isDark ? 'bg-[#16243D] hover:bg-[#233654] text-gray-300' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
@@ -876,7 +876,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                 <button
                   type="button"
                   onClick={() => setIsMobileRecordsOpen(!isMobileRecordsOpen)}
-                  className={`w-full p-4 rounded-2xl border flex items-center justify-between gap-3 font-bold text-xs transition-all cursor-pointer shadow-xs ${
+                  className={`w-full p-4 rounded-2xl border flex items-center justify-between gap-3 font-bold text-xs transition-all active:scale-[0.98] cursor-pointer shadow-xs ${
                     isDark 
                       ? 'bg-[#16243D] border-[#2A4063] text-white hover:border-blue-500/50' 
                       : 'bg-white border-slate-200 text-slate-900 hover:border-blue-400'
@@ -982,7 +982,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                         key={period}
                         type="button"
                         onClick={() => setPeriodFilter(period)}
-                        className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                        className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] cursor-pointer ${
                           periodFilter === period
                             ? 'bg-blue-600 text-white shadow-xs'
                             : isDark ? 'bg-[#243756] text-[#94A3B8] hover:text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'

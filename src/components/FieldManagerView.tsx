@@ -207,8 +207,8 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
             placeholder="Pesquisa rápida por nome, matrícula ou função..."
             className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm font-sans transition-all outline-none border ${
               isDark 
-                ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' 
-                : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
             }`}
           />
           {searchTerm && (
@@ -230,7 +230,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
             <button
               type="button"
               onClick={() => setBalanceFilter('TODOS')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] cursor-pointer border ${
                 balanceFilter === 'TODOS'
                   ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                   : isDark
@@ -244,7 +244,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
             <button
               type="button"
               onClick={() => setBalanceFilter('POSITIVOS')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] cursor-pointer border ${
                 balanceFilter === 'POSITIVOS'
                   ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
                   : isDark
@@ -258,7 +258,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
             <button
               type="button"
               onClick={() => setBalanceFilter('NEGATIVOS')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] cursor-pointer border ${
                 balanceFilter === 'NEGATIVOS'
                   ? 'bg-red-600 text-white border-red-600 shadow-sm'
                   : isDark

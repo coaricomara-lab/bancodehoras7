@@ -256,8 +256,8 @@ export const LoginView: React.FC<LoginViewProps> = ({
                       onChange={(e) => setNome(e.target.value)}
                       className={`w-full rounded-xl px-4 py-3 text-xs font-sans outline-hidden border transition-colors ${
                         isDark
-                          ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 text-white placeholder:text-gray-600'
-                          : 'bg-slate-50 border-slate-300 focus:border-blue-500 text-slate-900 placeholder:text-slate-400'
+                          ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-gray-600'
+                          : 'bg-slate-50 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-900 placeholder:text-slate-400'
                       }`}
                     />
                     <UserCheck className={`absolute right-3.5 top-3.5 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
@@ -278,8 +278,8 @@ export const LoginView: React.FC<LoginViewProps> = ({
                     onChange={(e) => setEmail(e.target.value)}
                     className={`w-full rounded-xl px-4 py-3 text-xs font-mono outline-hidden border transition-colors ${
                       isDark
-                        ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 text-white placeholder:text-gray-600'
-                        : 'bg-slate-50 border-slate-300 focus:border-blue-500 text-slate-900 placeholder:text-slate-400'
+                        ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-gray-600'
+                        : 'bg-slate-50 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-900 placeholder:text-slate-400'
                     }`}
                   />
                   <Mail className={`absolute right-3.5 top-3.5 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
@@ -315,8 +315,8 @@ export const LoginView: React.FC<LoginViewProps> = ({
                       onChange={(e) => setPassword(e.target.value)}
                       className={`w-full rounded-xl px-4 py-3 text-xs font-mono outline-hidden border transition-colors ${
                         isDark
-                          ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 text-white placeholder:text-gray-600'
-                          : 'bg-slate-50 border-slate-300 focus:border-blue-500 text-slate-900 placeholder:text-slate-400'
+                          ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-gray-600'
+                          : 'bg-slate-50 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-900 placeholder:text-slate-400'
                       }`}
                     />
                     <KeyRound className={`absolute right-3.5 top-3.5 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
