@@ -818,7 +818,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
           </div>
 
           {/* Busca + Filtros da Matriz */}
-          <div className="flex items-center gap-2.5 flex-wrap w-full xl:w-auto">
+          <div className="flex items-center gap-2.5 ml-auto">
             {/* Busca Colaborador */}
             <div className="relative flex-1 md:w-48">
               <Search className={`w-3.5 h-3.5 absolute left-3 top-2.5 ${isDark ? 'text-gray-500' : 'text-slate-400'}`} />
