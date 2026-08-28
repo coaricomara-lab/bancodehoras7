@@ -20,7 +20,10 @@ import {
   Edit3,
   ArrowRightLeft,
   FileText,
-  UploadCloud
+  UploadCloud,
+  ChevronDown,
+  SlidersHorizontal,
+  MoreVertical
 } from 'lucide-react';
 import { ImportInsalubrityMatrixModal } from './ImportInsalubrityMatrixModal';
 
@@ -100,6 +103,8 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
   // 3. Atividade Ativa para Lançamento Rápido
   const [activeActivity, setActiveActivity] = useState<string>('CONCRETO');
   const [customActivityInput, setCustomActivityInput] = useState<string>('');
+  const [showActionsDropdown, setShowActionsDropdown] = useState(false);
+  const [showFiltersDropdown, setShowFiltersDropdown] = useState(false);
 
   // 4. Modais
   const [isBatchModalOpen, setIsBatchModalOpen] = useState(false);
@@ -562,114 +567,104 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
       <div className={`p-5 sm:p-6 rounded-2xl border shadow-xs transition-colors ${
         isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="flex items-start sm:items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 via-amber-600 to-red-600 text-white flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
-              <FileSpreadsheet className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] font-mono uppercase font-bold tracking-wider text-amber-500">
-                  COMARA • CONTROLE DE EFETIVO EM CAMPO
-                </span>
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold ${
-                  isDark ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30' : 'bg-amber-50 text-amber-700 border border-amber-200'
+        <div className="flex items-center justify-between gap-4">
+          <h1 className={`text-lg sm:text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            Insalubridade
+          </h1>
+
+          {/* Dropdown de Ações */}
+          <div className="relative">
+            <button
+              onClick={() => setShowActionsDropdown(!showActionsDropdown)}
+              className={`px-3.5 py-2 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
+                isDark
+                  ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]'
+                  : 'border-slate-200 hover:bg-slate-100 text-slate-700'
+              }`}
+            >
+              <MoreVertical className="w-3.5 h-3.5" />
+              <span>Ações</span>
+              <ChevronDown className={`w-3 h-3 transition-transform ${showActionsDropdown ? 'rotate-180' : ''}`} />
+            </button>
+
+            {showActionsDropdown && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowActionsDropdown(false)} />
+                <div className={`absolute right-0 top-full mt-1.5 z-50 w-56 p-1.5 rounded-xl border shadow-xl ${
+                  isDark ? 'bg-[#16243D] border-[#335075]' : 'bg-white border-slate-200'
                 }`}>
-                  Modo Simples (Grade Quinzenal 15 Dias)
-                </span>
-              </div>
-              <h1 className={`text-lg sm:text-xl font-bold tracking-tight mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Matriz Quinzenal de Serviços & Efetivo
-              </h1>
-              <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-                Apontamento direto por atividade executada (sem porcentagens) em blocos de 15 dias
-              </p>
-            </div>
-          </div>
-
-          {/* Botões de Ação Superior */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Botão de Conversão para Perfis Avançados */}
-            {onOpenConversionModal && (userRole === 'SUPER_ADMIN' || userRole === 'GESTOR_RH' || userRole === 'GERENTE_CAMPO' || userRole === 'ROLE_GERENTE') && (
-              <button
-                onClick={onOpenConversionModal}
-                className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-600 to-blue-600 hover:from-amber-500 hover:to-blue-500 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm shadow-blue-600/20 active:scale-98 cursor-pointer"
-                title="Converter e classificar lançamentos do modo simples para enquadramento oficial NR-15 (10%, 20%, 40%)"
-              >
-                <ArrowRightLeft className="w-3.5 h-3.5" />
-                <span>Converter p/ NR-15</span>
-              </button>
+                  {onOpenConversionModal && (userRole === 'SUPER_ADMIN' || userRole === 'GESTOR_RH' || userRole === 'GERENTE_CAMPO' || userRole === 'ROLE_GERENTE') && (
+                    <button
+                      onClick={() => { onOpenConversionModal(); setShowActionsDropdown(false); }}
+                      className={`w-full px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-100 text-slate-700'
+                      }`}
+                    >
+                      <ArrowRightLeft className="w-3.5 h-3.5 text-amber-500" />
+                      Converter p/ NR-15
+                    </button>
+                  )}
+                  {onNavigateToReports && (
+                    <button
+                      onClick={() => { onNavigateToReports(); setShowActionsDropdown(false); }}
+                      className={`w-full px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-100 text-slate-700'
+                      }`}
+                    >
+                      <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                      Relatório Simples
+                    </button>
+                  )}
+                  {onSwitchToCompleteMode && (
+                    <button
+                      onClick={() => { onSwitchToCompleteMode(); setShowActionsDropdown(false); }}
+                      className={`w-full px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-100 text-slate-700'
+                      }`}
+                    >
+                      <Settings2 className="w-3.5 h-3.5 text-blue-400" />
+                      Modo Completo (NR-15)
+                    </button>
+                  )}
+                  <button
+                    onClick={() => { setIsImportModalOpen(true); setShowActionsDropdown(false); }}
+                    className={`w-full px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
+                      isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-100 text-slate-700'
+                    }`}
+                  >
+                    <UploadCloud className="w-3.5 h-3.5 text-amber-500" />
+                    Importar Folha (CSV)
+                  </button>
+                  <button
+                    onClick={() => { setBatchSelectedEmpIds(filteredEmployees.map(e => e.matricula)); setIsBatchModalOpen(true); setShowActionsDropdown(false); }}
+                    className={`w-full px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
+                      isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-100 text-slate-700'
+                    }`}
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    Lançamento em Lote
+                  </button>
+                  <button
+                    onClick={() => { setIsPrintModalOpen(true); setShowActionsDropdown(false); }}
+                    className={`w-full px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
+                      isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-100 text-slate-700'
+                    }`}
+                  >
+                    <Printer className="w-3.5 h-3.5 text-blue-400" />
+                    Imprimir Folha
+                  </button>
+                  <button
+                    onClick={() => { handleExportOfficialSpreadsheetCSV(); setShowActionsDropdown(false); }}
+                    className={`w-full px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer ${
+                      isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-100 text-slate-700'
+                    }`}
+                  >
+                    <Download className="w-3.5 h-3.5 text-emerald-400" />
+                    Exportar (CSV)
+                  </button>
+                </div>
+              </>
             )}
-
-            {onNavigateToReports && (
-              <button
-                onClick={onNavigateToReports}
-                className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
-                  isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
-                }`}
-                title="Abrir Relatório do Modo Simples e Gerencial"
-              >
-                <FileText className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Relatório Simples</span>
-              </button>
-            )}
-
-            {onSwitchToCompleteMode && (
-              <button
-                onClick={onSwitchToCompleteMode}
-                className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
-                  isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
-                }`}
-                title="Alternar para o Modo Detalhado NR-15"
-              >
-                <Settings2 className="w-3.5 h-3.5 text-blue-400" />
-                <span>Modo Completo (NR-15)</span>
-              </button>
-            )}
-
-            {/* Botão de Importação de Planilha CSV de Campo */}
-            <button
-              onClick={() => setIsImportModalOpen(true)}
-              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 hover:from-amber-500 hover:to-amber-400 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm shadow-amber-600/20 active:scale-98 cursor-pointer"
-              title="Importar Folha de Campo / Matriz de Apontamentos em CSV"
-            >
-              <UploadCloud className="w-3.5 h-3.5" />
-              <span>Importar Folha (CSV)</span>
-            </button>
-
-            <button
-              onClick={() => {
-                setBatchSelectedEmpIds(filteredEmployees.map(e => e.matricula));
-                setIsBatchModalOpen(true);
-              }}
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-1.5 transition-all border border-slate-700 active:scale-98 cursor-pointer"
-              title="Lançar atividade em lote para colaboradores"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Lançamento em Lote</span>
-            </button>
-
-            <button
-              onClick={() => setIsPrintModalOpen(true)}
-              className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
-                isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
-              }`}
-              title="Visualizar e Imprimir Folha Quinzenal de Campo"
-            >
-              <Printer className="w-3.5 h-3.5 text-blue-400" />
-              <span>Imprimir Folha</span>
-            </button>
-
-            <button
-              onClick={handleExportOfficialSpreadsheetCSV}
-              className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-[0.98] cursor-pointer ${
-                isDark ? 'border-[#335075] hover:bg-[#243756] text-[#E2E8F0]' : 'border-slate-200 hover:bg-slate-100 text-slate-700'
-              }`}
-              title="Exportar Matriz Quinzenal em CSV"
-            >
-              <Download className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Exportar (CSV)</span>
-            </button>
           </div>
         </div>
 
@@ -750,66 +745,16 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               </button>
             </div>
 
-            {/* CONTROLES DE MOVIMENTAÇÃO DE DIAS (DESLIZAR / AVANÇAR / VOLTAR) */}
-            <div className={`flex items-center gap-1 p-1 rounded-xl border ${
-              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-100 border-slate-200'
-            }`}>
-              <button
-                type="button"
-                onClick={() => handleShiftDays(-5)}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
-                  isDark ? 'hover:bg-[#1B2D4A] text-gray-300' : 'hover:bg-slate-200 text-slate-700'
-                }`}
-                title="Voltar 5 dias"
-              >
-                ◀◀ -5d
-              </button>
-              <button
-                type="button"
-                onClick={() => handleShiftDays(-1)}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
-                  isDark ? 'hover:bg-[#1B2D4A] text-gray-300' : 'hover:bg-slate-200 text-slate-700'
-                }`}
-                title="Voltar 1 dia"
-              >
-                ◀ -1d
-              </button>
-
-              <div className="px-2 text-[10px] font-mono font-bold text-amber-500 whitespace-nowrap">
-                {visibleDays.length > 0 ? `Dias ${visibleDays[0].dayNumber} - ${visibleDays[visibleDays.length - 1].dayNumber}` : ''}
-              </div>
-
-              <button
-                type="button"
-                onClick={() => handleShiftDays(1)}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
-                  isDark ? 'hover:bg-[#1B2D4A] text-gray-300' : 'hover:bg-slate-200 text-slate-700'
-                }`}
-                title="Avançar 1 dia"
-              >
-                +1d ▶
-              </button>
-              <button
-                type="button"
-                onClick={() => handleShiftDays(5)}
-                className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
-                  isDark ? 'hover:bg-[#1B2D4A] text-gray-300' : 'hover:bg-slate-200 text-slate-700'
-                }`}
-                title="Avançar 5 dias"
-              >
-                +5d ▶▶
-              </button>
-            </div>
           </div>
 
-          {/* Filtros da Matriz */}
+          {/* Busca + Filtros da Matriz */}
           <div className="flex items-center gap-2.5 flex-wrap w-full xl:w-auto">
             {/* Busca Colaborador */}
             <div className="relative flex-1 md:w-48">
               <Search className={`w-3.5 h-3.5 absolute left-3 top-2.5 ${isDark ? 'text-gray-500' : 'text-slate-400'}`} />
               <input
                 type="text"
-                placeholder="Buscar colaborador..."
+                placeholder="Buscar col."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`w-full pl-8 pr-3 py-1.5 rounded-xl border text-xs outline-hidden ${
@@ -818,115 +763,142 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
               />
             </div>
 
-            {/* Sede / Canteiro Unificado */}
-            <select
-              value={selectedBranch}
-              onChange={(e) => setSelectedBranch(e.target.value)}
-              className={`px-3 py-1.5 rounded-xl border text-xs outline-hidden font-medium ${
-                isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
-              }`}
-            >
-              <option value="TODAS">Todas as Sedes / Canteiros</option>
-              <option value="KO">KO - Coari</option>
-              <option value="BE">BE - Belém</option>
-              <option value="MN">MN - Manaus</option>
-              <option value="SP">SP - São Paulo</option>
-              <option value="RJ">RJ - Rio de Janeiro</option>
-              {constructionSites.map(cs => {
-                const code = cs.code || cs.codigo || cs.branch || cs.sede;
-                if (['KO', 'BE', 'MN', 'SP', 'RJ'].includes(code)) return null;
-                return (
-                  <option key={cs.id} value={code}>
-                    {cs.name || cs.nome} ({code})
-                  </option>
-                );
-              })}
-            </select>
-
-            {/* Cargo */}
-            <select
-              value={selectedCargo}
-              onChange={(e) => setSelectedCargo(e.target.value)}
-              className={`px-3 py-1.5 rounded-xl border text-xs outline-hidden font-medium ${
-                isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
-              }`}
-            >
-              <option value="TODOS">Todas as Funções</option>
-              {availableCargos.map(c => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-
-            {/* Checkbox Apenas com Registros */}
-            <label className={`flex items-center gap-1.5 text-xs cursor-pointer font-medium select-none ${
-              isDark ? 'text-gray-300' : 'text-slate-700'
-            }`}>
-              <input
-                type="checkbox"
-                checked={onlyWithRecords}
-                onChange={(e) => setOnlyWithRecords(e.target.checked)}
-                className="rounded text-amber-500 focus:ring-0"
-              />
-              <span>Com lançamentos</span>
-            </label>
-          </div>
-        </div>
-
-        {/* ------------------------------------------------------------- */}
-        {/* BARRA DE ATIVIDADE ATIVA (CLIQUE RÁPIDO)                      */}
-        {/* ------------------------------------------------------------- */}
-        <div className={`mt-4 pt-3 border-t flex flex-wrap items-center gap-2 ${
-          isDark ? 'border-[#243756]' : 'border-slate-100'
-        }`}>
-          <div className="flex items-center gap-1.5 text-xs font-bold text-amber-500 mr-1">
-            <Briefcase className="w-3.5 h-3.5" />
-            <span>Serviço / Atividade para Apontar:</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 flex-wrap">
-            {DEFAULT_ACTIVITIES.slice(0, 6).map(act => (
+            {/* Filtros Dropdown */}
+            <div className="relative">
               <button
-                key={act}
-                type="button"
-                onClick={() => setActiveActivity(act)}
-                className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
-                  activeActivity === act
-                    ? 'bg-amber-500 text-black shadow-xs font-black ring-2 ring-amber-400/50'
-                    : isDark
-                      ? 'bg-[#0F1B33] text-gray-300 border border-[#243756] hover:bg-[#1B2D4A]'
-                      : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
+                onClick={() => setShowFiltersDropdown(!showFiltersDropdown)}
+                className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
+                  isDark
+                    ? 'border-[#243756] hover:bg-[#243756] text-[#E2E8F0]'
+                    : 'border-slate-200 hover:bg-slate-100 text-slate-700'
                 }`}
               >
-                {act}
+                <SlidersHorizontal className="w-3.5 h-3.5 text-amber-500" />
+                <span>Filtros</span>
+                <ChevronDown className={`w-3 h-3 transition-transform ${showFiltersDropdown ? 'rotate-180' : ''}`} />
               </button>
-            ))}
 
-            <button
-              type="button"
-              onClick={() => setActiveActivity('OUTRA')}
-              className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
-                activeActivity === 'OUTRA'
-                  ? 'bg-amber-500 text-black shadow-xs font-black ring-2 ring-amber-400/50'
-                  : isDark
-                    ? 'bg-[#0F1B33] text-gray-300 border border-[#243756] hover:bg-[#1B2D4A]'
-                    : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
-              }`}
-            >
-              + Outra
-            </button>
+              {showFiltersDropdown && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowFiltersDropdown(false)} />
+                  <div className={`absolute right-0 top-full mt-1.5 z-50 w-72 p-3.5 rounded-xl border shadow-xl space-y-3 ${
+                    isDark ? 'bg-[#16243D] border-[#335075]' : 'bg-white border-slate-200'
+                  }`}>
+                    {/* Sede / Canteiro */}
+                    <div>
+                      <label className={`block text-[10px] font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Sede / Canteiro</label>
+                      <select
+                        value={selectedBranch}
+                        onChange={(e) => setSelectedBranch(e.target.value)}
+                        className={`w-full px-3 py-1.5 rounded-lg border text-xs outline-hidden font-medium ${
+                          isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                        }`}
+                      >
+                        <option value="TODAS">Todas as Sedes / Canteiros</option>
+                        <option value="KO">KO - Coari</option>
+                        <option value="BE">BE - Belém</option>
+                        <option value="MN">MN - Manaus</option>
+                        <option value="SP">SP - São Paulo</option>
+                        <option value="RJ">RJ - Rio de Janeiro</option>
+                        {constructionSites.map(cs => {
+                          const code = cs.code || cs.codigo || cs.branch || cs.sede;
+                          if (['KO', 'BE', 'MN', 'SP', 'RJ'].includes(code)) return null;
+                          return (
+                            <option key={cs.id} value={code}>
+                              {cs.name || cs.nome} ({code})
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
 
-            {activeActivity === 'OUTRA' && (
-              <input
-                type="text"
-                placeholder="Digitar nome da atividade..."
-                value={customActivityInput}
-                onChange={(e) => setCustomActivityInput(e.target.value.toUpperCase())}
-                className={`px-2.5 py-1 rounded-lg text-xs uppercase font-bold border outline-hidden ${
-                  isDark ? 'bg-[#0F1B33] border-amber-500 text-white' : 'bg-white border-amber-500 text-slate-900'
-                }`}
-                autoFocus
-              />
-            )}
+                    {/* Função */}
+                    <div>
+                      <label className={`block text-[10px] font-bold uppercase tracking-wider mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Função</label>
+                      <select
+                        value={selectedCargo}
+                        onChange={(e) => setSelectedCargo(e.target.value)}
+                        className={`w-full px-3 py-1.5 rounded-lg border text-xs outline-hidden font-medium ${
+                          isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                        }`}
+                      >
+                        <option value="TODOS">Todas as Funções</option>
+                        {availableCargos.map(c => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Checkbox */}
+                    <label className={`flex items-center gap-1.5 text-xs cursor-pointer font-medium select-none ${
+                      isDark ? 'text-gray-300' : 'text-slate-700'
+                    }`}>
+                      <input
+                        type="checkbox"
+                        checked={onlyWithRecords}
+                        onChange={(e) => setOnlyWithRecords(e.target.checked)}
+                        className="rounded text-amber-500 focus:ring-0"
+                      />
+                      <span>Com lançamentos</span>
+                    </label>
+
+                    {/* Divisor */}
+                    <div className={`border-t pt-2.5 ${isDark ? 'border-[#243756]' : 'border-slate-100'}`} />
+
+                    {/* Atividade para Apontar */}
+                    <div>
+                      <label className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5 ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>
+                        <Briefcase className="w-3 h-3" />
+                        Serviço / Atividade para Apontar
+                      </label>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {DEFAULT_ACTIVITIES.slice(0, 6).map(act => (
+                          <button
+                            key={act}
+                            type="button"
+                            onClick={() => setActiveActivity(act)}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
+                              activeActivity === act
+                                ? 'bg-amber-500 text-black shadow-xs font-black ring-2 ring-amber-400/50'
+                                : isDark
+                                  ? 'bg-[#0F1B33] text-gray-300 border border-[#243756] hover:bg-[#1B2D4A]'
+                                  : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
+                            }`}
+                          >
+                            {act}
+                          </button>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setActiveActivity('OUTRA')}
+                          className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all active:scale-[0.98] cursor-pointer ${
+                            activeActivity === 'OUTRA'
+                              ? 'bg-amber-500 text-black shadow-xs font-black ring-2 ring-amber-400/50'
+                              : isDark
+                                ? 'bg-[#0F1B33] text-gray-300 border border-[#243756] hover:bg-[#1B2D4A]'
+                                : 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200'
+                          }`}
+                        >
+                          + Outra
+                        </button>
+                      </div>
+                      {activeActivity === 'OUTRA' && (
+                        <input
+                          type="text"
+                          placeholder="Digitar nome da atividade..."
+                          value={customActivityInput}
+                          onChange={(e) => setCustomActivityInput(e.target.value.toUpperCase())}
+                          className={`mt-2 w-full px-2.5 py-1 rounded-lg text-xs uppercase font-bold border outline-hidden ${
+                            isDark ? 'bg-[#0F1B33] border-amber-500 text-white' : 'bg-white border-amber-500 text-slate-900'
+                          }`}
+                          autoFocus
+                        />
+                      )}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -1061,9 +1033,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                 <th className="py-2.5 px-3 font-bold min-w-[210px] max-w-[260px] border-r border-b border-black/10 dark:border-white/10 sticky left-10 z-40 bg-[#243756] dark:bg-[#243756] light:bg-slate-100">
                   COLABORADOR / MATRÍCULA
                 </th>
-                <th className="py-2.5 px-3 font-bold min-w-[140px] border-r border-b border-black/10 dark:border-white/10">
-                  FUNÇÃO / CARGO
-                </th>
+
 
                 {/* Colunas dos Dias Selecionados (Centro - que deslizam livremente) */}
                 {visibleDays.map(d => (
@@ -1145,12 +1115,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                         </div>
                       </td>
 
-                      {/* 3. Função */}
-                      <td className="py-2 px-3 border-r border-black/5 dark:border-white/5 truncate max-w-[140px] font-sans text-xs" title={emp.funcao || emp.cargo}>
-                        {emp.funcao || emp.cargo || 'Operacional'}
-                      </td>
-
-                      {/* 4. Células dos Dias Selecionados */}
+                      {/* Células dos Dias Selecionados */}
                       {visibleDays.map(d => {
                         const key = `${emp.matricula.trim().toUpperCase()}_${d.formattedDate}`;
                         const record = recordsMap.get(key);

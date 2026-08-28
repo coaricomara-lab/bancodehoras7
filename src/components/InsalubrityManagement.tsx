@@ -329,58 +329,6 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* ------------------------------------------------------------- */}
-      {/* SELETOR PRINCIPAL DE MODO: SIMPLES (PLANILHA) vs COMPLETO     */}
-      {/* ------------------------------------------------------------- */}
-      {!isAuxDA && (
-        <div className={`p-2.5 rounded-2xl border flex items-center justify-between gap-3 flex-wrap ${
-          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
-        }`}>
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/10 dark:bg-black/40 border border-black/5 dark:border-white/5">
-            <button
-              onClick={() => handleToggleMode('SIMPLES')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
-                currentMode === 'SIMPLES'
-                  ? 'bg-amber-600 text-white shadow-sm'
-                  : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Table className="w-3.5 h-3.5" />
-              <span>Modo Simples (Matriz Planilha Mensal)</span>
-            </button>
-
-            <button
-              onClick={() => handleToggleMode('COMPLETA')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all active:scale-[0.98] flex items-center gap-2 cursor-pointer ${
-                currentMode === 'COMPLETA'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : isDark ? 'text-gray-400 hover:text-white' : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              <span>Modo Completo (Apontamentos & Ficha Fixa)</span>
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs">
-            {onSaveBatchRecords && (userRole === 'SUPER_ADMIN' || userRole === 'GESTOR_RH' || userRole === 'GERENTE_CAMPO' || userRole === 'ADMIN') && (
-              <button
-                onClick={() => setIsConversionModalOpen(true)}
-                className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-blue-600 hover:from-amber-500 hover:to-blue-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer transition-all active:scale-98"
-                title="Converter lançamentos de campo do modo simples para enquadramento oficial NR-15"
-              >
-                <ArrowRightLeft className="w-3.5 h-3.5" />
-                <span>Converter Simples → NR-15</span>
-              </button>
-            )}
-
-            <span className={`text-[11px] font-mono ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
-              Modo Atual: <strong>{currentMode === 'SIMPLES' ? 'Planilha de Efetivo Mensal' : 'Auditoria NR-15'}</strong>
-            </span>
-          </div>
-        </div>
-      )}
-
       {/* RENDERIZAÇÃO CONDICIONAL POR MODO */}
       {currentMode === 'SIMPLES' || isAuxDA ? (
         <InsalubritySimpleMatrixView
