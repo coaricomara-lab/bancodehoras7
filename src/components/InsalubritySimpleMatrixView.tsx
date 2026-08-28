@@ -668,6 +668,76 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
           </div>
         </div>
 
+      {/* ------------------------------------------------------------- */}
+      {/* 2. CARDS RESUMO DO PERÍODO SELECIONADO                        */}
+      {/* ------------------------------------------------------------- */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className={`p-4 rounded-2xl border ${
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
+        }`}>
+          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+            Efetivo Filtrado
+          </span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+              {filteredEmployees.length}
+            </span>
+            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+              colaboradores
+            </span>
+          </div>
+        </div>
+
+        <div className={`p-4 rounded-2xl border ${
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
+        }`}>
+          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+            Dias Úteis no Período
+          </span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className={`text-xl font-bold text-amber-500`}>
+              {periodStats.diasUteisPeriodo}
+            </span>
+            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+              de {visibleDays.length} dias
+            </span>
+          </div>
+        </div>
+
+        <div className={`p-4 rounded-2xl border ${
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
+        }`}>
+          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+            Dias Trabalhados (Período)
+          </span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className={`text-xl font-bold text-emerald-500`}>
+              {periodStats.totalApontamentosPeriodo}
+            </span>
+            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+              apontamentos
+            </span>
+          </div>
+        </div>
+
+        <div className={`p-4 rounded-2xl border ${
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
+        }`}>
+          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+            Efetivo com Atividade
+          </span>
+          <div className="flex items-baseline gap-2 mt-1">
+            <span className={`text-xl font-bold text-blue-400`}>
+              {periodStats.totalColaboradoresAtivosPeriodo}
+            </span>
+            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+              de {filteredEmployees.length}
+            </span>
+          </div>
+        </div>
+      </div>
+
+
         {/* ------------------------------------------------------------- */}
         {/* BARRA DE CONTROLES: NAVEGAÇÃO DE MÊS, QUINZENA, DIAS & FILTROS*/}
         {/* ------------------------------------------------------------- */}
@@ -902,76 +972,6 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
           </div>
         </div>
       </div>
-
-      {/* ------------------------------------------------------------- */}
-      {/* 2. CARDS RESUMO DO PERÍODO SELECIONADO                        */}
-      {/* ------------------------------------------------------------- */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className={`p-4 rounded-2xl border ${
-          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
-        }`}>
-          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-            Efetivo Filtrado
-          </span>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
-              {filteredEmployees.length}
-            </span>
-            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-              colaboradores
-            </span>
-          </div>
-        </div>
-
-        <div className={`p-4 rounded-2xl border ${
-          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
-        }`}>
-          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-            Dias Úteis no Período
-          </span>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className={`text-xl font-bold text-amber-500`}>
-              {periodStats.diasUteisPeriodo}
-            </span>
-            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-              de {visibleDays.length} dias
-            </span>
-          </div>
-        </div>
-
-        <div className={`p-4 rounded-2xl border ${
-          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
-        }`}>
-          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-            Dias Trabalhados (Período)
-          </span>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className={`text-xl font-bold text-emerald-500`}>
-              {periodStats.totalApontamentosPeriodo}
-            </span>
-            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-              apontamentos
-            </span>
-          </div>
-        </div>
-
-        <div className={`p-4 rounded-2xl border ${
-          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
-        }`}>
-          <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-            Efetivo com Atividade
-          </span>
-          <div className="flex items-baseline gap-2 mt-1">
-            <span className={`text-xl font-bold text-blue-400`}>
-              {periodStats.totalColaboradoresAtivosPeriodo}
-            </span>
-            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-              de {filteredEmployees.length}
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* ------------------------------------------------------------- */}
       {/* 3. MATRIZ DE EFETIVO COM NAVEGAÇÃO DE DIAS & TOTAL FIXO       */}
       {/* ------------------------------------------------------------- */}
