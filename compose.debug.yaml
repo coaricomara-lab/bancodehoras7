@@ -1,0 +1,12 @@
+services:
+  re2js:
+    image: re2js
+    build:
+      context: node_modules/re2js
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: development
+    ports:
+      - 3000:3000
+      - 9229:9229
+    command: ["node", "--inspect=0.0.0.0:9229", "build/index.cjs"]

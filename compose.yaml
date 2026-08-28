@@ -1,0 +1,10 @@
+services:
+  re2js:
+    image: re2js
+    build:
+      context: node_modules/re2js
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - 3000:3000
