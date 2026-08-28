@@ -275,7 +275,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs overflow-y-auto">
       <div className={`w-full max-w-4xl rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${
-        isDark ? 'bg-[#15171C] border-[#1F2229] text-gray-100' : 'bg-white border-slate-200 text-slate-900'
+        isDark ? 'bg-[#16243D] border-[#243756] text-gray-100' : 'bg-white border-slate-200 text-slate-900'
       }`}>
         {/* Cabeçalho do Modal */}
         <div className={`p-5 border-b flex items-center justify-between ${

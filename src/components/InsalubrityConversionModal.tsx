@@ -369,7 +369,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-200">
       <div className={`w-full max-w-4xl max-h-[92vh] flex flex-col rounded-2xl border shadow-2xl overflow-hidden ${
-        isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900'
+        isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900'
       }`}>
         {/* Cabeçalho do Modal */}
         <div className="p-5 border-b border-black/10 dark:border-white/10 flex items-center justify-between gap-4">
@@ -395,7 +395,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
           <button
             onClick={onClose}
             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-              isDark ? 'hover:bg-[#1F2229] text-gray-400 hover:text-white' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-800'
+              isDark ? 'hover:bg-[#243756] text-gray-400 hover:text-white' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-800'
             }`}
           >
             <X className="w-5 h-5" />
@@ -416,7 +416,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
             </div>
 
             <div className={`p-4 rounded-xl max-w-lg mx-auto border text-left text-xs space-y-2 ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-300' : 'bg-slate-50 border-slate-200 text-slate-700'
+              isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300' : 'bg-slate-50 border-slate-200 text-slate-700'
             }`}>
               <div className="flex items-center gap-2 font-bold text-amber-400">
                 <Sparkles className="w-4 h-4" />
@@ -435,7 +435,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                 type="button"
                 onClick={onClose}
                 className={`px-5 py-2.5 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
-                  isDark ? 'border-[#2A2E38] hover:bg-[#1F2229] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
+                  isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                 }`}
               >
                 Fechar
@@ -470,7 +470,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
 
             {/* 1. Barra de Filtros Rápidos (Mês e Canteiro) */}
             <div className={`p-4 rounded-xl border flex flex-wrap items-center justify-between gap-3 ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center gap-3 flex-wrap">
                 <div>
@@ -482,7 +482,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                     value={filterMonth}
                     onChange={(e) => setFilterMonth(e.target.value)}
                     className={`px-3 py-1.5 rounded-lg border text-xs font-mono font-bold outline-none cursor-pointer ${
-                      isDark ? 'bg-[#15171C] border-[#2A2E38] text-white focus:border-amber-500' : 'bg-white border-slate-300 text-slate-900 focus:border-amber-600'
+                      isDark ? 'bg-[#16243D] border-[#335075] text-white focus:border-amber-500' : 'bg-white border-slate-300 text-slate-900 focus:border-amber-600'
                     }`}
                   />
                 </div>
@@ -495,7 +495,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                     value={filterSede}
                     onChange={(e) => setFilterSede(e.target.value)}
                     className={`px-3 py-1.5 rounded-lg border text-xs font-bold outline-none cursor-pointer ${
-                      isDark ? 'bg-[#15171C] border-[#2A2E38] text-white focus:border-amber-500' : 'bg-white border-slate-300 text-slate-900 focus:border-amber-600'
+                      isDark ? 'bg-[#16243D] border-[#335075] text-white focus:border-amber-500' : 'bg-white border-slate-300 text-slate-900 focus:border-amber-600'
                     }`}
                   >
                     <option value="TODAS">Todos os Canteiros</option>
@@ -517,7 +517,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                     onChange={(e) => setFilterActivitySearch(e.target.value)}
                     placeholder="Buscar serviço..."
                     className={`px-3 py-1.5 rounded-lg border text-xs outline-none ${
-                      isDark ? 'bg-[#15171C] border-[#2A2E38] text-white placeholder-gray-500' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'
+                      isDark ? 'bg-[#16243D] border-[#335075] text-white placeholder-gray-500' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'
                     }`}
                   />
                 </div>
@@ -567,7 +567,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
 
               {activitiesSummary.length === 0 ? (
                 <div className={`p-8 rounded-xl border text-center ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-400' : 'bg-slate-50 border-slate-200 text-slate-500'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-400' : 'bg-slate-50 border-slate-200 text-slate-500'
                 }`}>
                   Nenhum registro de atividade de campo localizado para o período e canteiro selecionados.
                 </div>
@@ -587,10 +587,10 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                         className={`p-3.5 rounded-xl border transition-all ${
                           isSelected
                             ? isDark
-                              ? 'bg-[#181B22] border-blue-500/40 shadow-sm'
+                              ? 'bg-[#1B2D4A] border-blue-500/40 shadow-sm'
                               : 'bg-blue-50/50 border-blue-300 shadow-sm'
                             : isDark
-                              ? 'bg-[#0D0F14] border-[#1F2229] opacity-60'
+                              ? 'bg-[#0F1B33] border-[#243756] opacity-60'
                               : 'bg-slate-50 border-slate-200 opacity-60'
                         }`}
                       >
@@ -656,7 +656,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                                 value={currentRule.horas}
                                 onChange={(e) => handleChangeHoras(item.activity, Number(e.target.value))}
                                 className={`w-14 px-2 py-1 rounded-lg border text-center font-mono font-bold text-xs outline-none ${
-                                  isDark ? 'bg-[#0D0F14] border-[#2A2E38] text-white' : 'bg-white border-slate-300 text-slate-900'
+                                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white' : 'bg-white border-slate-300 text-slate-900'
                                 }`}
                               />
                               <span className="text-[10px] text-gray-400 font-mono">h/dia</span>
@@ -686,7 +686,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
                 onClick={onClose}
                 disabled={isProcessing}
                 className={`px-4 py-2 rounded-xl border text-xs font-bold cursor-pointer transition-colors ${
-                  isDark ? 'border-[#2A2E38] hover:bg-[#1F2229] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
+                  isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                 }`}
               >
                 Cancelar

@@ -1,10 +1,90 @@
 @import "tailwindcss";
 
-@layer base {
-  :root {
-    color-scheme: dark light;
-  }
+/* ============================================================ */
+/* DESIGN TOKENS — Paleta Institucional Aeronáutica (CSS vars)  */
+/* Espelha src/constants/designTokens.ts                        */
+/* ============================================================ */
+:root {
+  color-scheme: dark light;
 
+  /* Brand */
+  --brand-primary: #2563EB;
+  --brand-primary-hover: #1D4ED8;
+  --brand-primary-bg: #EFF6FF;
+  --brand-primary-border: #BFDBFE;
+
+  /* Surfaces — light */
+  --surface-base: #F1F5F9;
+  --surface-secondary: #F8FAFC;
+  --surface-header: #FFFFFF;
+  --surface-card: #FFFFFF;
+  --surface-card-elevated: #FFFFFF;
+  --surface-subtle: #F8FAFC;
+  --surface-border: #E2E8F0;
+  --surface-border-subtle: #CBD5E1;
+
+  /* Text — light */
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --text-subtle: #94A3B8;
+
+  /* Semantic */
+  --success: #10B981;
+  --success-bg: #ECFDF5;
+  --danger: #EF4444;
+  --danger-bg: #FEF2F2;
+  --warning: #F59E0B;
+  --warning-bg: #FFFBEB;
+  --purple: #8B5CF6;
+  --purple-bg: #F5F3FF;
+
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-elevated: 0 10px 25px rgba(15, 23, 42, 0.12), 0 4px 10px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Brand */
+  --brand-primary: #3B82F6;
+  --brand-primary-hover: #2563EB;
+  --brand-primary-bg: rgba(59, 130, 246, 0.15);
+  --brand-primary-border: rgba(59, 130, 246, 0.3);
+
+  /* Surfaces — dark (navy institucional) */
+  --surface-base: #0B1426;
+  --surface-secondary: #0F1B33;
+  --surface-header: #11203A;
+  --surface-card: #16243D;
+  --surface-card-elevated: #1E3252;
+  --surface-subtle: #1B2D4A;
+  --surface-border: #243756;
+  --surface-border-subtle: #335075;
+
+  /* Text — dark */
+  --text-primary: #E2E8F0;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --text-subtle: #64748B;
+
+  /* Semantic */
+  --success: #10B981;
+  --success-bg: rgba(16, 185, 129, 0.15);
+  --danger: #EF4444;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+  --warning: #F59E0B;
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --purple: #8B5CF6;
+  --purple-bg: rgba(139, 92, 246, 0.15);
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+@layer base {
   body {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -14,29 +94,29 @@
 
   /* Default theme behavior */
   body[data-theme="light"], .light-mode {
-    background-color: #F8FAFC;
+    background-color: #F1F5F9;
     color: #0F172A;
   }
 
   body[data-theme="dark"], .dark-mode {
-    background-color: #0A0B0D;
-    color: #E0E2E5;
+    background-color: #0B1426;
+    color: #E2E8F0;
   }
 
-  /* Custom subtle scrollbars */
+  /* Custom subtle scrollbars — institucional */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #47556940;
+    background: rgba(100, 116, 139, 0.3);
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #47556980;
+    background: rgba(100, 116, 139, 0.5);
   }
 }
 

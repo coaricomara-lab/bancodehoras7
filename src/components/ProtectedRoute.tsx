@@ -117,11 +117,11 @@ const AccessDeniedCard: React.FC<AccessDeniedCardProps> = ({
       </div>
 
       <div className="pt-2 flex items-center justify-center gap-2 flex-wrap text-[11px] font-mono">
-        <span className="px-2.5 py-1 rounded-lg bg-[#0D0F14] border border-[#1F2229] text-slate-300">
+        <span className="px-2.5 py-1 rounded-lg bg-[#0F1B33] border border-[#243756] text-slate-300">
           Perfil: <strong className="text-amber-400">{ROLE_INFO[currentRole]?.label || currentRole}</strong>
         </span>
         {targetCanteiro && (
-          <span className="px-2.5 py-1 rounded-lg bg-[#0D0F14] border border-[#1F2229] text-slate-300 flex items-center gap-1">
+          <span className="px-2.5 py-1 rounded-lg bg-[#0F1B33] border border-[#243756] text-slate-300 flex items-center gap-1">
             <Building2 className="w-3 h-3 text-cyan-400" />
             Alvo: <strong className="text-cyan-400">{targetCanteiro}</strong>
           </span>

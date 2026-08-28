@@ -261,13 +261,13 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
   }, [myPaystubs, selectedPaystubId]);
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-[#0A0B0D] text-[#E0E2E5]' : 'bg-[#F4F6F9] text-slate-900'} flex flex-col font-sans transition-colors`}>
+    <div className={`min-h-screen ${isDark ? 'bg-[#0B1426] text-[#E2E8F0]' : 'bg-[#F1F5F9] text-slate-900'} flex flex-col font-sans transition-colors`}>
       
       {/* ------------------------------------------------------------- */}
       {/* CABEÇALHO LIMPO COM BOTÃO DE ACESSO GESTÃO RH */}
       {/* ------------------------------------------------------------- */}
       <header className={`py-4 px-6 sm:px-10 border-b flex items-center justify-between ${
-        isDark ? 'bg-[#121418] border-[#1E2128]' : 'bg-white border-slate-200 shadow-xs'
+        isDark ? 'bg-[#11203A] border-[#233654]' : 'bg-white border-slate-200 shadow-xs'
       }`}>
         <div className="flex items-center space-x-3">
           <ComaraLogo size="md" />
@@ -280,7 +280,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                 Autoatendimento SPTF
               </span>
             </div>
-            <p className={`text-[11px] font-medium hidden sm:block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <p className={`text-[11px] font-medium hidden sm:block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Portal do Colaborador • Consulta Segura de Banco de Horas
             </p>
           </div>
@@ -293,7 +293,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
             onClick={onToggleTheme}
             className={`p-2 rounded-xl border transition-colors cursor-pointer ${
               isDark 
-                ? 'bg-[#1A1D24] border-[#2A2E38] text-amber-400 hover:text-amber-300' 
+                ? 'bg-[#1B2D4A] border-[#335075] text-amber-400 hover:text-amber-300' 
                 : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
             }`}
             title="Alternar Tema Visual"
@@ -306,7 +306,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
             onClick={onOpenAdminLogin}
             className={`flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
               isDark 
-                ? 'bg-[#1F2229] hover:bg-[#2A2E38] text-blue-400 hover:text-blue-300 border border-[#2F3440]' 
+                ? 'bg-[#243756] hover:bg-[#335075] text-blue-400 hover:text-blue-300 border border-[#335075]' 
                 : 'bg-white hover:bg-slate-50 text-blue-700 hover:text-blue-800 border border-blue-200'
             }`}
           >
@@ -339,14 +339,14 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                 Consulte seu Banco de Horas
               </h1>
-              <p className={`text-xs sm:text-sm ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+              <p className={`text-xs sm:text-sm ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                 Informe sua matrícula e senha cadastrada para visualizar seu saldo e extrato individual.
               </p>
             </div>
 
             {/* Card Central de Login */}
             <div className={`p-6 sm:p-8 rounded-3xl border shadow-xl transition-all ${
-              isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200'
+              isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'
             }`}>
               
               <form onSubmit={handleLogin} className="space-y-5">
@@ -379,7 +379,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
 
                 {/* Campo Matrícula */}
                 <div className="space-y-1.5">
-                  <label className={`block text-xs font-bold uppercase tracking-wider ${isDark ? 'text-[#A0A4AB]' : 'text-slate-700'}`}>
+                  <label className={`block text-xs font-bold uppercase tracking-wider ${isDark ? 'text-[#CBD5E1]' : 'text-slate-700'}`}>
                     Matrícula do Colaborador
                   </label>
                   <div className="relative">
@@ -392,7 +392,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                       required
                       className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm font-bold tracking-wider uppercase border transition-all outline-none ${
                         isDark 
-                          ? 'bg-[#0D0F14] border-[#222630] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                          ? 'bg-[#0F1B33] border-[#2A4063] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                           : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
                       }`}
                     />
@@ -402,7 +402,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                 {/* Campo Senha */}
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <label className={`block text-xs font-bold uppercase tracking-wider ${isDark ? 'text-[#A0A4AB]' : 'text-slate-700'}`}>
+                    <label className={`block text-xs font-bold uppercase tracking-wider ${isDark ? 'text-[#CBD5E1]' : 'text-slate-700'}`}>
                       Senha de Acesso
                     </label>
                     <button
@@ -423,7 +423,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                       required
                       className={`w-full pl-10 pr-11 py-3 rounded-xl text-sm border transition-all outline-none ${
                         isDark 
-                          ? 'bg-[#0D0F14] border-[#222630] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                          ? 'bg-[#0F1B33] border-[#2A4063] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                           : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
                       }`}
                     />
@@ -456,7 +456,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                 </button>
 
                 {/* Link de Primeiro Acesso em Destaque */}
-                <div className={`pt-3 border-t text-center ${isDark ? 'border-[#222630]' : 'border-slate-100'}`}>
+                <div className={`pt-3 border-t text-center ${isDark ? 'border-[#2A4063]' : 'border-slate-100'}`}>
                   <button
                     type="button"
                     onClick={handleOpenFirstAccess}
@@ -475,7 +475,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
 
             {/* Rodapé Informativo de Segurança */}
             <div className={`p-4 rounded-2xl border text-center text-xs space-y-1 ${
-              isDark ? 'bg-[#121418]/60 border-[#1E2128] text-[#8E9299]' : 'bg-slate-50 border-slate-200 text-slate-500'
+              isDark ? 'bg-[#11203A]/60 border-[#233654] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-500'
             }`}>
               <div className="flex items-center justify-center gap-1.5 font-semibold text-[11px]">
                 <Lock className="w-3.5 h-3.5 text-emerald-500" />
@@ -502,7 +502,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                     type="button"
                     onClick={() => handleEmployeeLogout()}
                     className={`flex items-center gap-2 py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                      isDark ? 'bg-[#15171C] border-[#222630] text-gray-300 hover:text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+                      isDark ? 'bg-[#16243D] border-[#2A4063] text-gray-300 hover:text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
@@ -518,7 +518,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                     type="button"
                     onClick={() => window.print()}
                     className={`flex items-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
-                      isDark ? 'bg-[#1F2229] border-[#2E333F] text-blue-400 hover:text-blue-300' : 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
+                      isDark ? 'bg-[#243756] border-[#335075] text-blue-400 hover:text-blue-300' : 'bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100'
                     }`}
                   >
                     <Printer className="w-3.5 h-3.5" />
@@ -543,7 +543,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
                     collaboratorTab === 'EXTRATO'
                       ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
-                      : isDark ? 'bg-[#15171C] hover:bg-[#1E2128] text-gray-300' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+                      : isDark ? 'bg-[#16243D] hover:bg-[#233654] text-gray-300' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
                   }`}
                 >
                   <Clock className="w-4 h-4" />
@@ -556,7 +556,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
                     collaboratorTab === 'CONTRACHEQUE'
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20'
-                      : isDark ? 'bg-[#15171C] hover:bg-[#1E2128] text-gray-300' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+                      : isDark ? 'bg-[#16243D] hover:bg-[#233654] text-gray-300' : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
                   }`}
                 >
                   <Receipt className="w-4 h-4 text-emerald-400" />
@@ -573,7 +573,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
               {collaboratorTab === 'CONTRACHEQUE' && (
                 <div className="space-y-6">
                   <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-center justify-between gap-3 ${
-                    isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200'
+                    isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'
                   }`}>
                     <div className="flex items-center gap-2">
                       <Receipt className="w-5 h-5 text-blue-500" />
@@ -592,7 +592,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                           value={currentPaystub?.id || ''}
                           onChange={(e) => setSelectedPaystubId(e.target.value)}
                           className={`py-2 px-3.5 rounded-xl text-xs font-bold font-mono border ${
-                            isDark ? 'bg-[#0D0F14] border-[#222630] text-white' : 'bg-white border-slate-300 text-slate-900'
+                            isDark ? 'bg-[#0F1B33] border-[#2A4063] text-white' : 'bg-white border-slate-300 text-slate-900'
                           }`}
                         >
                           {myPaystubs.map((p) => (
@@ -616,7 +616,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                     />
                   ) : (
                     <div className={`p-12 rounded-2xl border text-center ${
-                      isDark ? 'bg-[#15171C] border-[#222630] text-gray-400' : 'bg-white border-slate-200 text-slate-500'
+                      isDark ? 'bg-[#16243D] border-[#2A4063] text-gray-400' : 'bg-white border-slate-200 text-slate-500'
                     }`}>
                       <Receipt className="w-12 h-12 text-slate-500 mx-auto mb-3 stroke-1" />
                       <h5 className="font-bold text-base text-gray-200 mb-1">Nenhum Contracheque Disponível</h5>
@@ -639,14 +639,14 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
               <div className={`p-6 sm:p-8 rounded-3xl border-2 shadow-2xl transition-all relative overflow-hidden ${
                 employeeData.statusSaldo === 'POSITIVO'
                   ? isDark 
-                    ? 'bg-gradient-to-br from-[#062414] via-[#0b331f] to-[#15171C] border-emerald-500/60 text-white shadow-emerald-950/40' 
+                    ? 'bg-gradient-to-br from-[#062414] via-[#0b331f] to-[#16243D] border-emerald-500/60 text-white shadow-emerald-950/40' 
                     : 'bg-gradient-to-br from-emerald-50 via-teal-50 to-white border-emerald-500 text-emerald-950 shadow-emerald-200/50'
                   : employeeData.statusSaldo === 'NEGATIVO'
                   ? isDark 
-                    ? 'bg-gradient-to-br from-[#2b0808] via-[#3d0f0f] to-[#15171C] border-red-500/60 text-white shadow-red-950/40' 
+                    ? 'bg-gradient-to-br from-[#2b0808] via-[#3d0f0f] to-[#16243D] border-red-500/60 text-white shadow-red-950/40' 
                     : 'bg-gradient-to-br from-red-50 via-rose-50 to-white border-red-500 text-red-950 shadow-red-200/50'
                   : isDark 
-                    ? 'bg-gradient-to-br from-[#0c1a2e] via-[#11233d] to-[#15171C] border-blue-500/50 text-white shadow-blue-950/30' 
+                    ? 'bg-gradient-to-br from-[#0c1a2e] via-[#11233d] to-[#16243D] border-blue-500/50 text-white shadow-blue-950/30' 
                     : 'bg-gradient-to-br from-blue-50 via-slate-50 to-white border-blue-400 text-slate-900 shadow-slate-200/50'
               }`}>
                 
@@ -748,29 +748,29 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
               {/* CARDS DE RESUMO DE MÉTRICAS                         */}
               {/* --------------------------------------------------- */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className={`p-3.5 sm:p-4 rounded-2xl border ${isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200'}`}>
-                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Créditos Extras</span>
+                <div className={`p-3.5 sm:p-4 rounded-2xl border ${isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'}`}>
+                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Créditos Extras</span>
                   <div className="text-lg sm:text-xl font-bold text-emerald-500 mt-1 font-mono">
                     +{employeeData.totalCreditos.toFixed(1)}h
                   </div>
                 </div>
 
-                <div className={`p-3.5 sm:p-4 rounded-2xl border ${isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200'}`}>
-                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Débitos / Faltas</span>
+                <div className={`p-3.5 sm:p-4 rounded-2xl border ${isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'}`}>
+                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Débitos / Faltas</span>
                   <div className="text-lg sm:text-xl font-bold text-red-500 mt-1 font-mono">
                     -{employeeData.totalDebitos.toFixed(1)}h
                   </div>
                 </div>
 
-                <div className={`p-3.5 sm:p-4 rounded-2xl border ${isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200'}`}>
-                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Saldo Inicial</span>
+                <div className={`p-3.5 sm:p-4 rounded-2xl border ${isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'}`}>
+                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Saldo Inicial</span>
                   <div className="text-lg sm:text-xl font-bold text-blue-400 mt-1 font-mono">
                     {employeeData.saldoInicial >= 0 ? `+${employeeData.saldoInicial.toFixed(1)}` : employeeData.saldoInicial.toFixed(1)}h
                   </div>
                 </div>
 
-                <div className={`p-3.5 sm:p-4 rounded-2xl border ${isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200'}`}>
-                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Atestados</span>
+                <div className={`p-3.5 sm:p-4 rounded-2xl border ${isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'}`}>
+                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Atestados</span>
                   <div className="text-lg sm:text-xl font-bold text-purple-400 mt-1 font-mono">
                     {employeeData.totalAtestados} homologados
                   </div>
@@ -781,7 +781,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
               {/* CARD DE INFORMAÇÕES DE INSALUBRIDADE & LAUDOS NR-15 */}
               {/* --------------------------------------------------- */}
               <div className={`p-4 sm:p-5 rounded-2xl border transition-all ${
-                isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200'
+                isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'
               }`}>
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2.5">
@@ -798,7 +798,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                     </div>
                     <div>
                       <h4 className="font-bold text-sm">Quadro de Insalubridade & Saúde Ocupacional</h4>
-                      <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                      <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                         Informações do enquadramento conforme NR-15 e Laudo Técnico das Condições Ambientais (LTCAT)
                       </p>
                     </div>
@@ -832,7 +832,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {employeeData.collabInsalubrities.map((ins) => (
                         <div key={ins.id} className={`p-3 rounded-xl border text-xs flex flex-col justify-between ${
-                          isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+                          isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
                         }`}>
                           <div className="flex items-center justify-between gap-2 font-bold mb-1">
                             <span className="text-amber-400 font-mono">{ins.dataEvento} • {ins.grauExposicao}</span>
@@ -856,7 +856,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   </div>
                 ) : (
                   <div className={`mt-2 p-3 rounded-xl border text-xs flex items-center gap-2 ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-400' : 'bg-slate-50 border-slate-200 text-slate-600'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-400' : 'bg-slate-50 border-slate-200 text-slate-600'
                   }`}>
                     <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
                     <span>
@@ -878,7 +878,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   onClick={() => setIsMobileRecordsOpen(!isMobileRecordsOpen)}
                   className={`w-full p-4 rounded-2xl border flex items-center justify-between gap-3 font-bold text-xs transition-all cursor-pointer shadow-xs ${
                     isDark 
-                      ? 'bg-[#15171C] border-[#222630] text-white hover:border-blue-500/50' 
+                      ? 'bg-[#16243D] border-[#2A4063] text-white hover:border-blue-500/50' 
                       : 'bg-white border-slate-200 text-slate-900 hover:border-blue-400'
                   }`}
                 >
@@ -895,7 +895,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   <div className="mt-3 space-y-2 animate-in fade-in duration-200">
                     {employeeData.records.length === 0 ? (
                       <div className={`p-4 rounded-xl border text-center text-xs ${
-                        isDark ? 'bg-[#15171C] border-[#222630] text-gray-500' : 'bg-white border-slate-200 text-slate-400'
+                        isDark ? 'bg-[#16243D] border-[#2A4063] text-gray-500' : 'bg-white border-slate-200 text-slate-400'
                       }`}>
                         Nenhum lançamento no histórico.
                       </div>
@@ -908,7 +908,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                           <div
                             key={`mobile-rec-${rec.id}`}
                             className={`p-3 rounded-xl border flex items-center justify-between gap-2 text-xs ${
-                              isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200 shadow-xs'
+                              isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200 shadow-xs'
                             }`}
                           >
                             <div>
@@ -928,7 +928,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                                   {rec.tipoOcorrencia === 'ACABOU_BANHOU' ? '✨ ACABOU BANHOU' : rec.tipoOcorrencia}
                                 </span>
                               </div>
-                              <div className={`text-[11px] mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                              <div className={`text-[11px] mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                                 {rec.diaSemanaNome || 'Dia Útil'} • {rec.horasBrutas}h ({rec.multiplicador}x)
                               </div>
                             </div>
@@ -962,16 +962,16 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
               {/* VISÃO DESKTOP: TABELA DE EXTRATO COMPLETO           */}
               {/* --------------------------------------------------- */}
               <div className={`hidden md:block rounded-2xl border shadow-sm overflow-hidden ${
-                isDark ? 'bg-[#15171C] border-[#222630]' : 'bg-white border-slate-200'
+                isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'
               }`}>
                 
                 {/* Header da Tabela com Filtros de Período */}
                 <div className={`p-4 sm:p-5 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                  isDark ? 'border-[#222630]' : 'border-slate-100'
+                  isDark ? 'border-[#2A4063]' : 'border-slate-100'
                 }`}>
                   <div>
                     <h3 className="font-bold text-sm sm:text-base">Extrato Detalhado de Lançamentos</h3>
-                    <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                    <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                       Exibindo {employeeData.records.length} ocorrências registradas na base oficial
                     </p>
                   </div>
@@ -985,7 +985,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                         className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                           periodFilter === period
                             ? 'bg-blue-600 text-white shadow-xs'
-                            : isDark ? 'bg-[#1F2229] text-[#8E9299] hover:text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                            : isDark ? 'bg-[#243756] text-[#94A3B8] hover:text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                         }`}
                       >
                         {period === 'ALL' ? 'Todos' : period === '30D' ? '30 Dias' : period === '90D' ? '90 Dias' : '180 Dias (Semestre)'}
@@ -998,7 +998,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
                     <thead className={`uppercase font-bold border-b ${
-                      isDark ? 'bg-[#0E1015] border-[#222630] text-[#8E9299]' : 'bg-slate-50 border-slate-200 text-slate-600'
+                      isDark ? 'bg-[#0F1B33] border-[#2A4063] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-600'
                     }`}>
                       <tr>
                         <th className="py-3 px-4">Data Registro</th>
@@ -1023,7 +1023,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                           const isNeg = rec.saldoCalculado < 0;
 
                           return (
-                            <tr key={rec.id} className={isDark ? 'hover:bg-[#1A1D24]' : 'hover:bg-slate-50'}>
+                            <tr key={rec.id} className={isDark ? 'hover:bg-[#1B2D4A]' : 'hover:bg-slate-50'}>
                               <td className="py-3 px-4 font-mono font-semibold">
                                 {rec.dataRegistro}
                               </td>
@@ -1042,7 +1042,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                                   {rec.tipoOcorrencia === 'ACABOU_BANHOU' ? '✨ ACABOU BANHOU' : rec.tipoOcorrencia}
                                 </span>
                               </td>
-                              <td className={`py-3 px-4 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                              <td className={`py-3 px-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                                 {rec.diaSemanaNome || 'Dia Útil'}
                               </td>
                               <td className="py-3 px-4 text-center font-mono font-medium">
@@ -1119,7 +1119,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
 
       {/* Footer */}
       <footer className={`py-4 px-6 border-t text-center text-xs mt-auto ${
-        isDark ? 'bg-[#0D0F14] border-[#1E2128] text-[#8E9299]' : 'bg-white border-slate-200 text-slate-500'
+        isDark ? 'bg-[#0F1B33] border-[#233654] text-[#94A3B8]' : 'bg-white border-slate-200 text-slate-500'
       }`}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>© COMARA • Sistema de Banco de Horas SPTF • LGPD Segura</span>

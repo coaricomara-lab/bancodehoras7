@@ -112,7 +112,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
         {/* Formulário de Novo Cargo */}
         {isAddingNew && (
           <div className={`p-4 mb-5 rounded-2xl border ${
-            isDark ? 'bg-[#0D0F14] border-blue-500/30' : 'bg-blue-50/50 border-blue-200'
+            isDark ? 'bg-[#0F1B33] border-blue-500/30' : 'bg-blue-50/50 border-blue-200'
           } animate-in fade-in duration-150`}>
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-bold text-blue-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -159,7 +159,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
                 type="button"
                 onClick={() => setIsAddingNew(false)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${
-                  isDark ? 'border-[#2A2E38] text-gray-400 hover:text-white' : 'border-slate-300 text-slate-600 hover:bg-slate-100'
+                  isDark ? 'border-[#335075] text-gray-400 hover:text-white' : 'border-slate-300 text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 Cancelar
@@ -180,7 +180,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
         <div className="space-y-2.5">
           {cargos.length === 0 ? (
             <div className={`p-8 text-center rounded-xl border border-dashed ${
-              isDark ? 'border-[#2A2E38] text-[#8E9299]' : 'border-slate-200 text-slate-400'
+              isDark ? 'border-[#335075] text-[#94A3B8]' : 'border-slate-200 text-slate-400'
             }`}>
               <Shield className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p className="text-xs">Nenhum cargo configurado no momento.</p>
@@ -194,7 +194,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
                   key={cargo.id}
                   className={`p-3.5 rounded-xl border transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
                     isDark
-                      ? 'bg-[#0D0F14]/70 border-[#1F2229] hover:border-[#2A2E38]'
+                      ? 'bg-[#0F1B33]/70 border-[#243756] hover:border-[#335075]'
                       : 'bg-slate-50/80 border-slate-200 hover:border-slate-300'
                   }`}
                 >
@@ -211,7 +211,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
                         <ArrowUp className="w-3.5 h-3.5" />
                       </button>
                       <span className={`text-[10px] font-mono font-bold w-5 h-5 rounded-full flex items-center justify-center ${
-                        isDark ? 'bg-[#1F2229] text-blue-400' : 'bg-slate-200 text-slate-700'
+                        isDark ? 'bg-[#243756] text-blue-400' : 'bg-slate-200 text-slate-700'
                       }`}>
                         {index + 1}
                       </span>
@@ -233,7 +233,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
                           value={cargo.nome}
                           onChange={(e) => handleUpdateCargo(cargo.id, { nome: e.target.value })}
                           className={`text-xs px-2.5 py-1.5 rounded-lg border outline-hidden ${
-                            isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-300'
+                            isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-300'
                           }`}
                           placeholder="Nome do cargo"
                         />
@@ -241,7 +241,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
                           value={cargo.tratamento || 'Chefe'}
                           onChange={(e) => handleUpdateCargo(cargo.id, { tratamento: e.target.value as any })}
                           className={`text-xs px-2.5 py-1.5 rounded-lg border outline-hidden ${
-                            isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-300'
+                            isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-300'
                           }`}
                         >
                           {TRATAMENTOS.map((t) => (
@@ -255,7 +255,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
                           value={cargo.departamento || ''}
                           onChange={(e) => handleUpdateCargo(cargo.id, { departamento: e.target.value })}
                           className={`text-xs px-2.5 py-1.5 rounded-lg border outline-hidden ${
-                            isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-300'
+                            isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-300'
                           }`}
                           placeholder="Departamento"
                         />
@@ -281,7 +281,7 @@ export const CargosTab: React.FC<CargosTabProps> = ({
                           )}
                           {cargo.departamento && (
                             <span className={`text-[10px] px-2 py-0.2 rounded-md ${
-                              isDark ? 'bg-[#1F2229] text-[#8E9299]' : 'bg-slate-200 text-slate-600'
+                              isDark ? 'bg-[#243756] text-[#94A3B8]' : 'bg-slate-200 text-slate-600'
                             }`}>
                               {cargo.departamento}
                             </span>

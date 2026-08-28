@@ -108,6 +108,11 @@ export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light'>(storageService.getTheme());
   const [userMode, setUserMode] = useState<UserMode>('ADMIN');
 
+  // Sync data-theme attribute for CSS variable resolution (design token system)
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   // Modals state
   const [isLogoModalOpen, setIsLogoModalOpen] = useState(false);
   const [isSafetyModalOpen, setIsSafetyModalOpen] = useState(false);
@@ -1229,7 +1234,7 @@ export default function App() {
       <div 
         translate="no"
         className={`notranslate min-h-screen flex items-center justify-center font-mono text-xs ${
-          isDark ? 'bg-[#0D0F14] text-white' : 'bg-slate-50 text-slate-900'
+          isDark ? 'bg-[#0F1B33] text-white' : 'bg-slate-50 text-slate-900'
         }`}
       >
         <div className="flex flex-col items-center gap-3">
@@ -1248,7 +1253,7 @@ export default function App() {
       <div 
         translate="no"
         className={`notranslate min-h-screen flex items-center justify-center font-mono text-xs ${
-          isDark ? 'bg-[#0D0F14] text-white' : 'bg-slate-50 text-slate-900'
+          isDark ? 'bg-[#0F1B33] text-white' : 'bg-slate-50 text-slate-900'
         }`}
       >
         <div className="flex flex-col items-center gap-3">
@@ -1290,7 +1295,7 @@ export default function App() {
         {/* Toast Notification */}
         {toastMessage && (
           <div className={`fixed bottom-5 right-5 z-50 ${
-            isDark ? 'bg-[#15171C] text-[#E0E2E5] border-[#1F2229]' : 'bg-white text-slate-900 border-slate-200'
+            isDark ? 'bg-[#16243D] text-[#E2E8F0] border-[#243756]' : 'bg-white text-slate-900 border-slate-200'
           } px-4 py-3 rounded-xl shadow-2xl border flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom-5 duration-200`}>
             {toastMessage.type === 'error' ? (
               <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
@@ -1339,7 +1344,7 @@ export default function App() {
       <div translate="no" className="notranslate min-h-screen flex flex-col">
         {toastMessage && (
           <div className={`fixed bottom-5 right-5 z-50 ${
-            isDark ? 'bg-[#15171C] text-[#E0E2E5] border-[#1F2229]' : 'bg-white text-slate-900 border-slate-200'
+            isDark ? 'bg-[#16243D] text-[#E2E8F0] border-[#243756]' : 'bg-white text-slate-900 border-slate-200'
           } px-4 py-3 rounded-xl shadow-2xl border flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom-5 duration-200`}>
             {toastMessage.type === 'error' ? (
               <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
@@ -1401,7 +1406,7 @@ export default function App() {
   return (
     <div 
       translate="no"
-      className={`notranslate min-h-screen ${isDark ? 'bg-[#0A0B0D] text-[#E0E2E5]' : 'bg-[#F8FAFC] text-slate-900'} flex flex-col font-sans antialiased selection:bg-[#3B82F6] selection:text-white transition-colors`}
+      className={`notranslate min-h-screen ${isDark ? 'bg-[#0B1426] text-[#E2E8F0]' : 'bg-[#F8FAFC] text-slate-900'} flex flex-col font-sans antialiased selection:bg-[#3B82F6] selection:text-white transition-colors`}
     >
       
       {/* Banner de Aviso de Permissão de Banco de Dados */}
@@ -1429,7 +1434,7 @@ export default function App() {
       {/* Toast Notification */}
       {toastMessage && (
         <div className={`fixed bottom-5 right-5 z-50 ${
-          isDark ? 'bg-[#15171C] text-[#E0E2E5] border-[#1F2229]' : 'bg-white text-slate-900 border-slate-200'
+          isDark ? 'bg-[#16243D] text-[#E2E8F0] border-[#243756]' : 'bg-white text-slate-900 border-slate-200'
         } px-4 py-3 rounded-xl shadow-2xl border flex items-center gap-2.5 text-xs font-semibold animate-in slide-in-from-bottom-5 duration-200`}>
           {toastMessage.type === 'error' ? (
             <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
@@ -1444,7 +1449,7 @@ export default function App() {
       {batchProgress && batchProgress.isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
           <div className={`w-full max-w-md p-6 rounded-2xl border shadow-2xl ${
-            isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900'
+            isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900'
           }`}>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center border border-blue-500/20">
@@ -1725,7 +1730,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className={`${isDark ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299]' : 'bg-white border-slate-200 text-slate-500'} border-t py-4 px-6 text-center text-xs mt-auto transition-colors`}>
+      <footer className={`${isDark ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8]' : 'bg-white border-slate-200 text-slate-500'} border-t py-4 px-6 text-center text-xs mt-auto transition-colors`}>
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span className="font-mono text-[11px] flex items-center gap-1.5 justify-center sm:justify-start">
             <Cloud className="w-3.5 h-3.5 text-blue-500" />

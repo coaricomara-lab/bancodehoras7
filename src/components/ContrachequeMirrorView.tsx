@@ -81,7 +81,7 @@ export const ContrachequeMirrorView: React.FC<ContrachequeMirrorViewProps> = ({
         ref={printRef}
         id={`contracheque-${paystub.matricula}-${paystub.mesAno}`}
         className={`w-full max-w-4xl rounded-2xl p-6 sm:p-8 border shadow-xl print:shadow-none print:border-slate-300 print:rounded-none print:p-4 print:max-w-none print:w-full print:bg-white print:text-black ${
-          isDark ? 'bg-[#15171C] border-[#1F2229] text-gray-100' : 'bg-white border-slate-200 text-slate-900'
+          isDark ? 'bg-[#16243D] border-[#243756] text-gray-100' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
         {/* 1. Cabeçalho Oficial */}

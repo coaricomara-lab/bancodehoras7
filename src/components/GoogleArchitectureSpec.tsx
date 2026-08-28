@@ -267,7 +267,7 @@ function gerarRelatorioAuditoria() {
 function montarCorpoEmailAuditoria(dados) {
   let html = '<div style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 20px;">';
   html += '<div style="max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">';
-  html += '<div style="background-color: #0A0B0D; padding: 20px; text-align: center; border-bottom: 3px solid #3B82F6;">';
+  html += '<div style="background-color: #0B1426; padding: 20px; text-align: center; border-bottom: 3px solid #3B82F6;">';
   html += '<h2 style="color: #ffffff; margin: 0; font-size: 18px;">COMARA SPTF • Relatório de Auditoria</h2>';
   html += '<p style="color: #9CA3AF; margin: 5px 0 0 0; font-size: 12px;">Data da Varredura: ' + dados.dataAuditoria + '</p>';
   html += '</div>';
@@ -312,7 +312,7 @@ function sanitizeDate(dateStr) {
         padding: 20px;
       }
       .card {
-        background: #1E293B;
+        background: #16243D;
         border: 1px solid #334155;
         border-radius: 12px;
         padding: 20px;
@@ -381,7 +381,7 @@ function sanitizeDate(dateStr) {
       {/* ------------------------------------------------------------- */}
       <div className={`p-6 rounded-2xl border shadow-md transition-colors ${
         isDark 
-          ? 'bg-[#15171C] border-[#1F2229]' 
+          ? 'bg-[#16243D] border-[#243756]' 
           : 'bg-white border-slate-200 shadow-slate-200/50'
       }`}>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -407,7 +407,7 @@ function sanitizeDate(dateStr) {
               Guia Completo de Operação, Perfis de Acesso & Normas Técnicas
             </h2>
             <p className={`text-xs max-w-3xl mt-1 leading-relaxed ${
-              isDark ? 'text-[#8E9299]' : 'text-slate-600'
+              isDark ? 'text-[#94A3B8]' : 'text-slate-600'
             }`}>
               Documentação oficial para Supervisores de Sede, Analistas de RH, Auxiliares de DA e Auditores, abrangendo regras da jornada SPTF, gestão de insalubridade quinzenal, travas de segurança e integração com Cloud Firestore e Looker Studio.
             </p>
@@ -419,7 +419,7 @@ function sanitizeDate(dateStr) {
               className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'manual_perfis'
                   ? 'bg-blue-600 text-white shadow-sm'
-                  : isDark ? 'bg-[#1F2229] text-slate-300 hover:text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  : isDark ? 'bg-[#243756] text-slate-300 hover:text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
               <UserCheck className="w-3.5 h-3.5" />
@@ -430,7 +430,7 @@ function sanitizeDate(dateStr) {
               className={`px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'insalubridade_sptf'
                   ? 'bg-amber-600 text-white shadow-sm'
-                  : isDark ? 'bg-[#1F2229] text-slate-300 hover:text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  : isDark ? 'bg-[#243756] text-slate-300 hover:text-white' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
               <TableProperties className="w-3.5 h-3.5" />
@@ -444,19 +444,19 @@ function sanitizeDate(dateStr) {
       {/* NAVEGAÇÃO DE ABAS DO MANUAL                                    */}
       {/* ------------------------------------------------------------- */}
       <div className={`rounded-2xl border shadow-md overflow-hidden transition-colors ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className={`flex border-b px-3 pt-2 overflow-x-auto gap-1.5 ${
-          isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50/80'
+          isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50/80'
         }`}>
           <button
             onClick={() => setActiveTab('manual_perfis')}
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'manual_perfis'
                 ? isDark 
-                  ? 'border-blue-500 text-blue-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-blue-500 text-blue-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-blue-600 text-blue-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <Users className="w-4 h-4 text-blue-500" />
@@ -468,9 +468,9 @@ function sanitizeDate(dateStr) {
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'insalubridade_sptf'
                 ? isDark 
-                  ? 'border-amber-500 text-amber-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-amber-500 text-amber-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-amber-600 text-amber-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <TableProperties className="w-4 h-4 text-amber-500" />
@@ -482,9 +482,9 @@ function sanitizeDate(dateStr) {
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'seguranca_backups'
                 ? isDark 
-                  ? 'border-rose-500 text-rose-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-rose-500 text-rose-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-rose-600 text-rose-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <Shield className="w-4 h-4 text-rose-500" />
@@ -496,9 +496,9 @@ function sanitizeDate(dateStr) {
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'etapa5_golive'
                 ? isDark 
-                  ? 'border-emerald-500 text-emerald-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-emerald-500 text-emerald-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-emerald-600 text-emerald-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <Rocket className="w-4 h-4 text-emerald-500" />
@@ -510,9 +510,9 @@ function sanitizeDate(dateStr) {
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'etapa4_auditoria'
                 ? isDark 
-                  ? 'border-purple-500 text-purple-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-purple-500 text-purple-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-purple-600 text-purple-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <ShieldAlert className="w-4 h-4 text-purple-500" />
@@ -524,9 +524,9 @@ function sanitizeDate(dateStr) {
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'etapa2_csv_drive'
                 ? isDark 
-                  ? 'border-cyan-500 text-cyan-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-cyan-500 text-cyan-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-cyan-600 text-cyan-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <UploadCloud className="w-4 h-4 text-cyan-500" />
@@ -538,9 +538,9 @@ function sanitizeDate(dateStr) {
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'code_gs'
                 ? isDark 
-                  ? 'border-amber-500 text-amber-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-amber-500 text-amber-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-amber-600 text-amber-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <FileCode2 className="w-4 h-4 text-amber-500" />
@@ -552,9 +552,9 @@ function sanitizeDate(dateStr) {
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'html_modal'
                 ? isDark 
-                  ? 'border-indigo-500 text-indigo-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-indigo-500 text-indigo-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-indigo-600 text-indigo-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <Code2 className="w-4 h-4 text-indigo-500" />
@@ -566,9 +566,9 @@ function sanitizeDate(dateStr) {
             className={`px-3.5 py-2.5 text-xs font-bold border-b-2 transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'looker_sql'
                 ? isDark 
-                  ? 'border-teal-500 text-teal-400 bg-[#15171C] rounded-t-lg' 
+                  ? 'border-teal-500 text-teal-400 bg-[#16243D] rounded-t-lg' 
                   : 'border-teal-600 text-teal-700 bg-white rounded-t-lg shadow-xs'
-                : isDark ? 'border-transparent text-[#8E9299] hover:text-[#E0E2E5]' : 'border-transparent text-slate-500 hover:text-slate-900'
+                : isDark ? 'border-transparent text-[#94A3B8] hover:text-[#E2E8F0]' : 'border-transparent text-slate-500 hover:text-slate-900'
             }`}
           >
             <Sparkles className="w-4 h-4 text-teal-500" />
@@ -582,7 +582,7 @@ function sanitizeDate(dateStr) {
         {activeTab === 'manual_perfis' && (
           <div className="p-6 space-y-6">
             <div className={`p-5 rounded-xl border space-y-3 ${
-              isDark ? 'bg-[#1C1F26] border-[#2A2E38]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#1E3252] border-[#335075]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -597,7 +597,7 @@ function sanitizeDate(dateStr) {
                   HIERARQUIA RH / COMARA
                 </span>
               </div>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                 O sistema é estruturado em níveis de privilégio para garantir a integridade dos cálculos SPTF, a precisão das apontações em campo e a confidencialidade das informações de folha de pagamento.
               </p>
             </div>
@@ -606,7 +606,7 @@ function sanitizeDate(dateStr) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Perfil 1: Super Admin & RH */}
               <div className={`p-4 rounded-xl border flex flex-col justify-between space-y-3 ${
-                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
               }`}>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -618,12 +618,12 @@ function sanitizeDate(dateStr) {
                   <h4 className={`font-bold text-xs font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
                     Super Admin / Chefe de RH
                   </h4>
-                  <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Acesso irrestrito a todos os canteiros (KO, BE, MN), parametrização do sistema, gestão de acessos, fechamento mensal da folha e auditorias completas.
                   </p>
                 </div>
                 <div className={`pt-2 border-t text-[10px] space-y-1 ${
-                  isDark ? 'border-[#1F2229] text-purple-400' : 'border-slate-100 text-purple-700'
+                  isDark ? 'border-[#243756] text-purple-400' : 'border-slate-100 text-purple-700'
                 }`}>
                   <div>✓ Configuração Geral</div>
                   <div>✓ Limpeza com Snapshot</div>
@@ -633,7 +633,7 @@ function sanitizeDate(dateStr) {
 
               {/* Perfil 2: Supervisor de Campo / Gestor */}
               <div className={`p-4 rounded-xl border flex flex-col justify-between space-y-3 ${
-                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
               }`}>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -645,12 +645,12 @@ function sanitizeDate(dateStr) {
                   <h4 className={`font-bold text-xs font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
                     Gestor / Supervisor de Sede
                   </h4>
-                  <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Gestão diária de lançamentos, consulta do extrato dos subordinados, acompanhamento de faltas e atestados com anexo e aprovação prévia de compensações.
                   </p>
                 </div>
                 <div className={`pt-2 border-t text-[10px] space-y-1 ${
-                  isDark ? 'border-[#1F2229] text-blue-400' : 'border-slate-100 text-blue-700'
+                  isDark ? 'border-[#243756] text-blue-400' : 'border-slate-100 text-blue-700'
                 }`}>
                   <div>✓ Lançamentos Rápidos</div>
                   <div>✓ Grade Diária</div>
@@ -661,7 +661,7 @@ function sanitizeDate(dateStr) {
               {/* Perfil 3: Auxiliar de DA (Enxuto) */}
               <div className={`p-4 rounded-xl border flex flex-col justify-between space-y-3 relative overflow-hidden ${
                 isDark 
-                  ? 'bg-gradient-to-b from-[#181B22] to-[#15171C] border-blue-500/40' 
+                  ? 'bg-gradient-to-b from-[#1B2D4A] to-[#16243D] border-blue-500/40' 
                   : 'bg-gradient-to-b from-blue-50/50 to-white border-blue-300 shadow-xs'
               }`}>
                 <div className="space-y-2">
@@ -677,12 +677,12 @@ function sanitizeDate(dateStr) {
                     <span>Auxiliar de DA</span>
                     <span className="text-[9px] px-1 py-0.2 rounded bg-blue-500/10 text-blue-400">Aux DA</span>
                   </h4>
-                  <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Interface simplificada sem poluição visual. Foco em apontamento por equipe/canteiro e conferência da Matriz Quinzenal de Insalubridade.
                   </p>
                 </div>
                 <div className={`pt-2 border-t text-[10px] space-y-1 ${
-                  isDark ? 'border-[#1F2229] text-emerald-400' : 'border-slate-100 text-emerald-700'
+                  isDark ? 'border-[#243756] text-emerald-400' : 'border-slate-100 text-emerald-700'
                 }`}>
                   <div>✓ Lote por Seleção</div>
                   <div>✓ Matriz Quinzenal Direta</div>
@@ -692,7 +692,7 @@ function sanitizeDate(dateStr) {
 
               {/* Perfil 4: Auditor & Fiscal */}
               <div className={`p-4 rounded-xl border flex flex-col justify-between space-y-3 ${
-                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
               }`}>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -704,12 +704,12 @@ function sanitizeDate(dateStr) {
                   <h4 className={`font-bold text-xs font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
                     Auditor / Órgão de Controle
                   </h4>
-                  <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Acesso somente-leitura (Read-Only) para fiscalização de conformidade trabalhista, validação de comprovantes no Drive e laudos de insalubridade.
                   </p>
                 </div>
                 <div className={`pt-2 border-t text-[10px] space-y-1 ${
-                  isDark ? 'border-[#1F2229] text-amber-400' : 'border-slate-100 text-amber-700'
+                  isDark ? 'border-[#243756] text-amber-400' : 'border-slate-100 text-amber-700'
                 }`}>
                   <div>✓ Extratos e Espelhos</div>
                   <div>✓ Relatórios Executivos</div>
@@ -720,7 +720,7 @@ function sanitizeDate(dateStr) {
 
             {/* Destaque do Perfil Auxiliar de DA */}
             <div className={`p-5 rounded-xl border space-y-3 ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-blue-50/60 border-blue-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-blue-50/60 border-blue-200'
             }`}>
               <div className="flex items-center gap-2">
                 <ShieldCheck className="w-4 h-4 text-emerald-500" />
@@ -729,22 +729,22 @@ function sanitizeDate(dateStr) {
                 </h4>
               </div>
               <div className={`grid grid-cols-1 md:grid-cols-3 gap-3 text-[11px] ${
-                isDark ? 'text-[#8E9299]' : 'text-slate-600'
+                isDark ? 'text-[#94A3B8]' : 'text-slate-600'
               }`}>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <strong className={isDark ? 'text-white' : 'text-slate-900'}>1. Dashboard Operacional</strong>
                   <p className="mt-1">Oculta os cards de estatísticas globais e as abas secundárias, mantendo a listagem ágil de colaboradores, saldo e busca por canteiro.</p>
                 </div>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <strong className={isDark ? 'text-white' : 'text-slate-900'}>2. Lançamento Rápido em Lote</strong>
                   <p className="mt-1">Fixa o modal no modo <em>Seleção de Equipe / Canteiro</em>, permitindo lançar múltiplos colaboradores simultaneamente com apenas 1 clique.</p>
                 </div>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <strong className={isDark ? 'text-white' : 'text-slate-900'}>3. Insalubridade Direta</strong>
                   <p className="mt-1">Abre diretamente a <em>Matriz Quinzenal de Efetivo</em>, ocultando telas de fichas fixas e auditorias complexas da NR-15.</p>
@@ -760,7 +760,7 @@ function sanitizeDate(dateStr) {
         {activeTab === 'insalubridade_sptf' && (
           <div className="p-6 space-y-6">
             <div className={`p-5 rounded-xl border space-y-3 ${
-              isDark ? 'bg-[#1C1F26] border-[#2A2E38]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#1E3252] border-[#335075]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -775,7 +775,7 @@ function sanitizeDate(dateStr) {
                   NORMAS NR-15 / SPTF
                 </span>
               </div>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                 A Matriz de Insalubridade oferece controle visual diário de presença, faltas, folgas e atestados, com janela deslizante de dias e coluna totalizadora fixa para conferência instantânea.
               </p>
             </div>
@@ -783,7 +783,7 @@ function sanitizeDate(dateStr) {
             {/* Matriz Quinzenal - Como Funciona */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className={`p-4 rounded-xl border space-y-3 ${
-                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
               }`}>
                 <h4 className={`font-bold text-xs font-sans flex items-center gap-2 ${
                   isDark ? 'text-white' : 'text-slate-900'
@@ -792,7 +792,7 @@ function sanitizeDate(dateStr) {
                   Navegação de Janela Temporal Deslizante
                 </h4>
                 <div className={`space-y-2 text-[11px] leading-relaxed ${
-                  isDark ? 'text-[#8E9299]' : 'text-slate-600'
+                  isDark ? 'text-[#94A3B8]' : 'text-slate-600'
                 }`}>
                   <p>
                     <strong>• Botões Quinzenais:</strong> Alterne rapidamente entre a <em>1ª Quinzena (Dias 01 a 15)</em> e a <em>2ª Quinzena (Dias 16 a 31)</em> do mês selecionado.
@@ -807,7 +807,7 @@ function sanitizeDate(dateStr) {
               </div>
 
               <div className={`p-4 rounded-xl border space-y-3 ${
-                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
               }`}>
                 <h4 className={`font-bold text-xs font-sans flex items-center gap-2 ${
                   isDark ? 'text-white' : 'text-slate-900'
@@ -846,39 +846,39 @@ function sanitizeDate(dateStr) {
 
             {/* Regras de Cálculo SPTF */}
             <div className={`p-5 rounded-xl border space-y-3 ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
             }`}>
               <h4 className={`font-bold text-xs font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
                 Tabela de Multiplicadores da Jornada de Trabalho SPTF
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-[11px]">
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <span className="text-[10px] text-blue-500 font-bold uppercase">Segunda a Sexta</span>
                   <div className={`text-sm font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>1.0x (Normal)</div>
-                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>1 hora trabalhada = 1 hora no saldo.</p>
+                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>1 hora trabalhada = 1 hora no saldo.</p>
                 </div>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <span className="text-[10px] text-amber-500 font-bold uppercase">Sábados</span>
                   <div className={`text-sm font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>1.5x (Adicional)</div>
-                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>8 horas = 12 horas apuradas no banco.</p>
+                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>8 horas = 12 horas apuradas no banco.</p>
                 </div>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <span className="text-[10px] text-rose-500 font-bold uppercase">Domingos e Feriados</span>
                   <div className={`text-sm font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>2.0x (Dobro)</div>
-                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>8 horas = 16 horas apuradas no banco.</p>
+                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>8 horas = 16 horas apuradas no banco.</p>
                 </div>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <span className="text-[10px] text-purple-500 font-bold uppercase">Falta Injustificada</span>
                   <div className={`text-sm font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>-8.0h (Débito)</div>
-                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Desconto integral da jornada diária.</p>
+                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Desconto integral da jornada diária.</p>
                 </div>
               </div>
             </div>
@@ -891,7 +891,7 @@ function sanitizeDate(dateStr) {
         {activeTab === 'seguranca_backups' && (
           <div className="p-6 space-y-6">
             <div className={`p-5 rounded-xl border space-y-3 ${
-              isDark ? 'bg-[#1C1F26] border-[#2A2E38]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#1E3252] border-[#335075]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -906,7 +906,7 @@ function sanitizeDate(dateStr) {
                   PROTEÇÃO ATIVA
                 </span>
               </div>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                 Para prevenir perdas acidentais de registros reais de colaboradores e lançamentos de ponto, o sistema implementa camadas estritas de verificação e criação automática de backups.
               </p>
             </div>
@@ -914,34 +914,34 @@ function sanitizeDate(dateStr) {
             {/* Grid dos 3 Mecanismos de Proteção */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className={`p-4 rounded-xl border space-y-2.5 ${
-                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
               }`}>
                 <div className="flex items-center gap-2 text-rose-500 font-bold text-xs">
                   <Lock className="w-4 h-4" /> 1. Confirmação por Digitação
                 </div>
-                <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Ações críticas como <strong>Limpar Base Central</strong> ou <strong>Carregar Exemplos Mocks</strong> exigem a digitação exata de frases de segurança (ex: <code>LIMPAR BASE</code>).
                 </p>
               </div>
 
               <div className={`p-4 rounded-xl border space-y-2.5 ${
-                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
               }`}>
                 <div className="flex items-center gap-2 text-blue-500 font-bold text-xs">
                   <UploadCloud className="w-4 h-4" /> 2. Backup JSON Automático
                 </div>
-                <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Antes de qualquer exclusão em lote, o usuário pode baixar o arquivo <code>backup_comara_sptf.json</code> contendo colaboradores, lançamentos, canteiros e insalubridade.
                 </p>
               </div>
 
               <div className={`p-4 rounded-xl border space-y-2.5 ${
-                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
               }`}>
                 <div className="flex items-center gap-2 text-emerald-500 font-bold text-xs">
                   <History className="w-4 h-4" /> 3. Snapshots com 1-Clique
                 </div>
-                <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-[11px] leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   O sistema salva pontos de restauração históricos numerados. Caso uma operação indevida ocorra, basta clicar em <em>Restaurar Este Ponto</em> para recuperar o banco intacto.
                 </p>
               </div>
@@ -956,7 +956,7 @@ function sanitizeDate(dateStr) {
           <div className="p-6 space-y-6">
             <div className={`p-6 rounded-xl border space-y-4 ${
               isDark 
-                ? 'bg-gradient-to-r from-blue-950/40 via-[#1C1F26] to-[#1C1F26] border-blue-500/30' 
+                ? 'bg-gradient-to-r from-blue-950/40 via-[#1E3252] to-[#1E3252] border-blue-500/30' 
                 : 'bg-gradient-to-r from-blue-50/80 via-white to-white border-blue-200'
             }`}>
               <div className="flex items-center justify-between">
@@ -973,44 +973,44 @@ function sanitizeDate(dateStr) {
                   PRONTO PARA PRODUÇÃO
                 </span>
               </div>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#E0E2E5]' : 'text-slate-700'}`}>
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#E2E8F0]' : 'text-slate-700'}`}>
                 O <strong>Sistema Corporativo de Gestão de Banco de Horas SPTF</strong> centraliza e automatiza com rigor legal a apuração da jornada de trabalho para as bases operacionais de <strong>Coari (KO), Belém (BE) e Manaus (MN)</strong>. Desenvolvido nativamente sobre <strong>Cloud Firestore, Google Workspace e Looker Studio</strong>, o sistema elimina 100% dos custos recorrentes de licenças de terceiros.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3 pt-2">
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">Passivo Zero</span>
                   <div className={`text-sm font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>Controle SPTF Rígido</div>
-                  <p className={`text-[11px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Multiplicadores automáticos (1.0x, 1.5x, 2.0x) e limite de +40h.</p>
+                  <p className={`text-[11px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Multiplicadores automáticos (1.0x, 1.5x, 2.0x) e limite de +40h.</p>
                 </div>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <span className="text-[10px] text-blue-500 font-bold uppercase tracking-wider">Drive Seguro</span>
                   <div className={`text-sm font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>Pastas Hierárquicas</div>
-                  <p className={`text-[11px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Organização automática por Ano e Sede com link auditável.</p>
+                  <p className={`text-[11px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Organização automática por Ano e Sede com link auditável.</p>
                 </div>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <span className="text-[10px] text-amber-500 font-bold uppercase tracking-wider">Auditoria Ativa</span>
                   <div className={`text-sm font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>Alertas no E-mail</div>
-                  <p className={`text-[11px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Notificação imediata ao RH de atestados sem anexo e duplicidades.</p>
+                  <p className={`text-[11px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Notificação imediata ao RH de atestados sem anexo e duplicidades.</p>
                 </div>
                 <div className={`p-3 rounded-lg border ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <span className="text-[10px] text-purple-500 font-bold uppercase tracking-wider">BI Executivo</span>
                   <div className={`text-sm font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-900'}`}>Looker Studio 24/7</div>
-                  <p className={`text-[11px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Dashboards em tempo real com extrato individual e distribuição por bases.</p>
+                  <p className={`text-[11px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Dashboards em tempo real com extrato individual e distribuição por bases.</p>
                 </div>
               </div>
             </div>
 
             {/* Checklist de 5 Passos */}
             <div className={`p-6 rounded-xl border space-y-4 ${
-              isDark ? 'bg-[#1C1F26] border-[#2A2E38]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#1E3252] border-[#335075]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center justify-between border-b pb-3">
                 <div className="flex items-center gap-2">
@@ -1019,7 +1019,7 @@ function sanitizeDate(dateStr) {
                     Checklist Oficial de Entrada em Produção (Go-Live em 5 Passos)
                   </h3>
                 </div>
-                <span className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Roteiro RH & TI</span>
+                <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Roteiro RH & TI</span>
               </div>
 
               <div className="space-y-3">
@@ -1051,14 +1051,14 @@ function sanitizeDate(dateStr) {
                   }
                 ].map((item) => (
                   <div key={item.step} className={`flex items-start gap-3 p-3.5 rounded-lg border ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                    isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
                   }`}>
                     <div className="w-6 h-6 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                       {item.step}
                     </div>
                     <div className="space-y-1">
                       <h4 className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-900'}`}>{item.title}</h4>
-                      <p className={`text-xs leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>{item.desc}</p>
+                      <p className={`text-xs leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -1073,7 +1073,7 @@ function sanitizeDate(dateStr) {
         {activeTab === 'etapa4_auditoria' && (
           <div className="p-6 space-y-6">
             <div className={`p-5 rounded-xl border space-y-3 ${
-              isDark ? 'bg-[#1C1F26] border-[#2A2E38]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#1E3252] border-[#335075]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -1088,52 +1088,52 @@ function sanitizeDate(dateStr) {
                   COMPLIANCE SPTF
                 </span>
               </div>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                 A função <code>gerarRelatorioAuditoria()</code> executa uma varredura automatizada nas tabelas e envia um relatório HTML por e-mail para o RH detectando 4 condições críticas:
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
               <div className={`p-4 rounded-xl border space-y-2 ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
               }`}>
                 <div className="flex items-center gap-1.5 text-amber-500 font-bold text-xs">
                   <AlertTriangle className="w-4 h-4" /> 1. Atestado sem Link
                 </div>
-                <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Lançamento ATESTADO_MEDICO sem URL do Google Drive gravada.
                 </p>
               </div>
 
               <div className={`p-4 rounded-xl border space-y-2 ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
               }`}>
                 <div className="flex items-center gap-1.5 text-red-500 font-bold text-xs">
                   <Clock className="w-4 h-4" /> 2. Passivo &gt; +40h
                 </div>
-                <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Colaborador acumulando mais de 40h positivas. Risco de passivo trabalhista.
                 </p>
               </div>
 
               <div className={`p-4 rounded-xl border space-y-2 ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
               }`}>
                 <div className="flex items-center gap-1.5 text-purple-500 font-bold text-xs">
                   <AlertTriangle className="w-4 h-4" /> 3. Déficit &lt; -20h
                 </div>
-                <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Saldo acumulado negativo abaixo de 20h. Requer intervenção do gestor.
                 </p>
               </div>
 
               <div className={`p-4 rounded-xl border space-y-2 ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
               }`}>
                 <div className="flex items-center gap-1.5 text-blue-500 font-bold text-xs">
                   <CheckCircle2 className="w-4 h-4" /> 4. Duplicidades
                 </div>
-                <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Mais de um registro de ocorrência para o mesmo colaborador na mesma data.
                 </p>
               </div>
@@ -1147,7 +1147,7 @@ function sanitizeDate(dateStr) {
         {activeTab === 'etapa2_csv_drive' && (
           <div className="p-6 space-y-6">
             <div className={`p-5 rounded-xl border space-y-4 ${
-              isDark ? 'bg-[#1C1F26] border-[#2A2E38]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#1E3252] border-[#335075]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -1162,27 +1162,27 @@ function sanitizeDate(dateStr) {
                   UPSERT AUTOMÁTICO
                 </span>
               </div>
-              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+              <p className={`text-xs leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                 O script lê qualquer arquivo <code>.csv</code> enviado pelo usuário no modal do Google Sheets, mapeia dinamicamente os cabeçalhos e aplica a regra de negócio do RH:
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
                 <div className={`p-3.5 rounded-lg border ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <div className="flex items-center gap-2 text-blue-500 font-bold text-xs mb-1">
                     <ArrowRightLeft className="w-3.5 h-3.5" /> Se a Matrícula JÁ EXISTIR (UPDATE)
                   </div>
-                  <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Atualiza Nome, Função, Sede, Status, Saldo Inicial, Email e Telefone preservando o ID original.
                   </p>
                 </div>
                 <div className={`p-3.5 rounded-lg border ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <div className="flex items-center gap-2 text-emerald-500 font-bold text-xs mb-1">
                     <FileCheck2 className="w-3.5 h-3.5" /> Se a Matrícula NÃO EXISTIR (INSERT)
                   </div>
-                  <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Gera um novo ID único (ex: <code>COL_1094</code>), aplica o carimbo de data/hora atual e adiciona a nova linha.
                   </p>
                 </div>
@@ -1190,7 +1190,7 @@ function sanitizeDate(dateStr) {
 
               {/* Template CSV */}
               <div className={`p-4 rounded-lg border space-y-2 ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
               }`}>
                 <div className="flex justify-between items-center text-[11px]">
                   <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>Formato Padrão do CSV de Entrada:</span>
@@ -1206,7 +1206,7 @@ MAT-1093,Roberto Santos,Operador de Produção,MN,2023-01-10,Ativo,0.0,roberto.s
                   </button>
                 </div>
                 <pre className={`text-[11px] overflow-x-auto p-2.5 rounded border font-mono ${
-                  isDark ? 'bg-[#15171C] text-emerald-400 border-[#1F2229]' : 'bg-slate-900 text-emerald-300 border-slate-700'
+                  isDark ? 'bg-[#16243D] text-emerald-400 border-[#243756]' : 'bg-slate-900 text-emerald-300 border-slate-700'
                 }`}>
 {`Matricula,Nome,Funcao,Sede,Data_Admissao,Status,Saldo_Inicial,Email,Telefone
 MAT-1091,Carlos Eduardo Silva,Técnico de Manutenção,KO,2022-03-15,Ativo,4.0,carlos.silva@empresa.com.br,(92) 98111-2233
@@ -1228,7 +1228,7 @@ MAT-1093,Roberto Santos,Operador de Produção,MN,2023-01-10,Ativo,0.0,roberto.s
                 <h3 className={`font-bold text-sm font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
                   Código Google Apps Script Completo (Code.gs)
                 </h3>
-                <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Rotinas de criação das tabelas, menu personalizado, UPSERT de CSV e auditoria.
                 </p>
               </div>
@@ -1242,7 +1242,7 @@ MAT-1093,Roberto Santos,Operador de Produção,MN,2023-01-10,Ativo,0.0,roberto.s
             </div>
 
             <div className={`p-4 rounded-xl font-mono text-xs overflow-x-auto max-h-[600px] leading-relaxed border ${
-              isDark ? 'bg-[#0B0F19] text-emerald-400 border-[#1F2229]' : 'bg-slate-900 text-emerald-300 border-slate-800'
+              isDark ? 'bg-[#0F1B33] text-emerald-400 border-[#243756]' : 'bg-slate-900 text-emerald-300 border-slate-800'
             }`}>
               <pre>{completeAppsScriptCode}</pre>
             </div>
@@ -1259,7 +1259,7 @@ MAT-1093,Roberto Santos,Operador de Produção,MN,2023-01-10,Ativo,0.0,roberto.s
                 <h3 className={`font-bold text-sm font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
                   Arquivo HTML do Modal de Importação (ImportModal.html)
                 </h3>
-                <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   No Editor do Apps Script, crie o arquivo HTML com o nome <code>ImportModal</code>.
                 </p>
               </div>
@@ -1273,7 +1273,7 @@ MAT-1093,Roberto Santos,Operador de Produção,MN,2023-01-10,Ativo,0.0,roberto.s
             </div>
 
             <div className={`p-4 rounded-xl font-mono text-xs overflow-x-auto max-h-[600px] leading-relaxed border ${
-              isDark ? 'bg-[#0B0F19] text-indigo-300 border-[#1F2229]' : 'bg-slate-900 text-indigo-200 border-slate-800'
+              isDark ? 'bg-[#0F1B33] text-indigo-300 border-[#243756]' : 'bg-slate-900 text-indigo-200 border-slate-800'
             }`}>
               <pre>{htmlModalCode}</pre>
             </div>
@@ -1290,7 +1290,7 @@ MAT-1093,Roberto Santos,Operador de Produção,MN,2023-01-10,Ativo,0.0,roberto.s
                 <h3 className={`font-bold text-sm font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
                   Fórmulas de Campos Calculados para o Looker Studio
                 </h3>
-                <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Copie e cole nos campos calculados da sua fonte conectada à <code>tb_lancamentos_diarios</code>.
                 </p>
               </div>
@@ -1315,7 +1315,7 @@ Horas_Ponderadas_SPTF / 8.0`, 'looker')}
             </div>
 
             <div className={`p-4 rounded-xl font-mono text-xs overflow-x-auto leading-relaxed border ${
-              isDark ? 'bg-[#0B0F19] text-teal-300 border-[#1F2229]' : 'bg-slate-900 text-teal-200 border-slate-800'
+              isDark ? 'bg-[#0F1B33] text-teal-300 border-[#243756]' : 'bg-slate-900 text-teal-200 border-slate-800'
             }`}>
               <pre>{`/* CAMPO 1: Horas_Ponderadas_SPTF (Looker Studio) */
 CASE 

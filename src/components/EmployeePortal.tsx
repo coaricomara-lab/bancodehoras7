@@ -147,18 +147,18 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
             <h1 className="text-xl font-bold text-white tracking-tight">
               Portal do Colaborador • {institutionSettings?.siglaInstituicao || 'COMARA'}
             </h1>
-            <p className="text-xs text-[#8E9299] font-mono">
+            <p className="text-xs text-[#94A3B8] font-mono">
               {institutionSettings?.nomeInstituicao || 'Comissão de Aeroportos da Região Amazônica'} • SPTF
             </p>
           </div>
 
           {/* Form Container */}
-          <div className="bg-[#15171C] border border-[#1F2229] rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+          <div className="bg-[#16243D] border border-[#243756] rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400"></div>
 
-            <div className="flex items-center gap-2 mb-5 pb-3 border-b border-[#1F2229]">
+            <div className="flex items-center gap-2 mb-5 pb-3 border-b border-[#243756]">
               <Lock className="w-4 h-4 text-blue-400" />
-              <span className="text-xs font-bold text-[#E0E2E5] uppercase tracking-wider">
+              <span className="text-xs font-bold text-[#E2E8F0] uppercase tracking-wider">
                 Autenticação de Acesso
               </span>
             </div>
@@ -172,7 +172,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#8E9299] mb-1.5 font-mono">
+                <label className="block text-xs font-semibold text-[#94A3B8] mb-1.5 font-mono">
                   MATRÍCULA FUNCIONAL
                 </label>
                 <div className="relative">
@@ -182,15 +182,15 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                     placeholder="Ex: MAT-1001"
                     value={matriculaInput}
                     onChange={(e) => setMatriculaInput(e.target.value)}
-                    className="w-full bg-[#0D0F14] border border-[#1F2229] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder:text-gray-600 outline-none transition-colors"
+                    className="w-full bg-[#0F1B33] border border-[#243756] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder:text-gray-600 outline-none transition-colors"
                   />
-                  <UserCheck className="absolute right-3.5 top-3.5 w-4 h-4 text-[#8E9299]" />
+                  <UserCheck className="absolute right-3.5 top-3.5 w-4 h-4 text-[#94A3B8]" />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-semibold text-[#8E9299] font-mono">
+                  <label className="block text-xs font-semibold text-[#94A3B8] font-mono">
                     PIN DE SEGURANÇA / CPF
                   </label>
                   <span className="text-[10px] text-blue-400/80 font-mono">4 últimos dígitos</span>
@@ -203,9 +203,9 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                     placeholder="••••"
                     value={pinInput}
                     onChange={(e) => setPinInput(e.target.value)}
-                    className="w-full bg-[#0D0F14] border border-[#1F2229] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder:text-gray-600 outline-none transition-colors tracking-widest text-center"
+                    className="w-full bg-[#0F1B33] border border-[#243756] focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl px-4 py-3 text-sm text-white font-mono placeholder:text-gray-600 outline-none transition-colors tracking-widest text-center"
                   />
-                  <KeyRound className="absolute right-3.5 top-3.5 w-4 h-4 text-[#8E9299]" />
+                  <KeyRound className="absolute right-3.5 top-3.5 w-4 h-4 text-[#94A3B8]" />
                 </div>
               </div>
 
@@ -229,8 +229,8 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
             </form>
 
             {/* Guia Rápido de Teste */}
-            <div className="mt-6 pt-4 border-t border-[#1F2229] text-center">
-              <p className="text-[11px] text-[#8E9299] mb-2 font-mono">
+            <div className="mt-6 pt-4 border-t border-[#243756] text-center">
+              <p className="text-[11px] text-[#94A3B8] mb-2 font-mono">
                 Matrículas disponíveis para teste no ambiente:
               </p>
               <div className="flex flex-wrap items-center justify-center gap-1.5">
@@ -242,7 +242,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                       setMatriculaInput(emp.matricula);
                       setPinInput('1234');
                     }}
-                    className="px-2 py-1 bg-[#0D0F14] hover:bg-[#1F2229] border border-[#1F2229] rounded-md text-[10px] text-blue-400 font-mono transition-colors"
+                    className="px-2 py-1 bg-[#0F1B33] hover:bg-[#243756] border border-[#243756] rounded-md text-[10px] text-blue-400 font-mono transition-colors"
                   >
                     {emp.matricula} ({emp.nome.split(' ')[0]})
                   </button>
@@ -251,7 +251,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
             </div>
           </div>
 
-          <div className="mt-6 text-center text-xs text-[#8E9299] space-y-1">
+          <div className="mt-6 text-center text-xs text-[#94A3B8] space-y-1">
             <p className="flex items-center justify-center gap-1.5">
               <Lock className="w-3 h-3 text-emerald-400" />
               <span>Conexão Segura com Criptografia Google Workspace</span>
@@ -271,7 +271,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
   return (
     <div className="space-y-6 pb-12">
       {/* Top Bar com Ações */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#15171C] border border-[#1F2229] p-4 rounded-2xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#16243D] border border-[#243756] p-4 rounded-2xl">
         <div className="flex items-center gap-2 text-xs text-emerald-400 font-semibold">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>Sessão Autenticada com Sucesso</span>
@@ -280,7 +280,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={handleDownloadPDF}
-            className="px-3.5 py-2 bg-[#0D0F14] hover:bg-[#1F2229] text-[#E0E2E5] border border-[#1F2229] rounded-xl text-xs font-semibold flex items-center gap-2 transition-colors shadow-xs"
+            className="px-3.5 py-2 bg-[#0F1B33] hover:bg-[#243756] text-[#E2E8F0] border border-[#243756] rounded-xl text-xs font-semibold flex items-center gap-2 transition-colors shadow-xs"
           >
             <Download className="w-3.5 h-3.5 text-blue-400" />
             <span>Baixar Extrato (PDF)</span>
@@ -296,7 +296,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
       </div>
 
       {/* Cabeçalho Institucional Oficial (Visível na Impressão e Tela) */}
-      <div className="bg-[#15171C] border border-[#1F2229] p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-4 print:border-b-2 print:border-slate-300 print:shadow-none print:rounded-none print:p-2 print:bg-white print:text-black">
+      <div className="bg-[#16243D] border border-[#243756] p-4 sm:p-5 rounded-2xl flex items-center justify-between gap-4 print:border-b-2 print:border-slate-300 print:shadow-none print:rounded-none print:p-2 print:bg-white print:text-black">
         <div className="flex items-center gap-3.5">
           <ComaraLogo logoUrl={institutionSettings?.logoUrl} size="lg" />
           <div>
@@ -306,19 +306,19 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
             <h1 className="text-sm sm:text-base font-black tracking-tight text-white print:text-black">
               PORTAL DO COLABORADOR • EXTRATO OFICIAL DE HORAS
             </h1>
-            <p className="text-xs text-[#8E9299] print:text-slate-600">
+            <p className="text-xs text-[#94A3B8] print:text-slate-600">
               Documento expedido em: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
         </div>
-        <div className="hidden sm:block text-right text-[10px] font-mono text-[#8E9299] print:text-slate-700">
+        <div className="hidden sm:block text-right text-[10px] font-mono text-[#94A3B8] print:text-slate-700">
           <div className="font-bold text-white print:text-black">{institutionSettings?.siglaInstituicao || 'COMARA'} • SPTF</div>
           <div>Consulta de Efetivo</div>
         </div>
       </div>
 
       {/* Header do Perfil do Colaborador */}
-      <div className="bg-[#15171C] border border-[#1F2229] rounded-2xl p-6 relative overflow-hidden shadow-xl print:border print:border-slate-300 print:bg-white print:text-black print:rounded-none">
+      <div className="bg-[#16243D] border border-[#243756] rounded-2xl p-6 relative overflow-hidden shadow-xl print:border print:border-slate-300 print:bg-white print:text-black print:rounded-none">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-center gap-4 sm:gap-5">
             {/* Foto / Avatar */}
@@ -331,7 +331,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#0D0F14] border-2 border-blue-500/30 text-blue-400 flex items-center justify-center font-bold text-xl sm:text-2xl font-mono shadow-inner">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#0F1B33] border-2 border-blue-500/30 text-blue-400 flex items-center justify-center font-bold text-xl sm:text-2xl font-mono shadow-inner">
                   {authenticatedEmployee.nome
                     .split(' ')
                     .map((n) => n[0])
@@ -354,12 +354,12 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                   {authenticatedEmployee.status}
                 </span>
               </div>
-              <p className="text-xs text-[#8E9299] font-medium flex items-center gap-2">
+              <p className="text-xs text-[#94A3B8] font-medium flex items-center gap-2">
                 <span>{authenticatedEmployee.funcao}</span>
                 <span>•</span>
                 <span className="font-mono text-blue-400">{authenticatedEmployee.matricula}</span>
               </p>
-              <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] text-[#8E9299] font-mono">
+              <div className="flex flex-wrap items-center gap-3 pt-1 text-[11px] text-[#94A3B8] font-mono">
                 <span className="flex items-center gap-1">
                   <Building2 className="w-3 h-3 text-blue-400" />
                   Sede: {authenticatedEmployee.sede === 'KO' ? 'Coari (KO)' : authenticatedEmployee.sede === 'BE' ? 'Belém (BE)' : 'Manaus (MN)'}
@@ -373,8 +373,8 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
           </div>
 
           {/* Saldo Destaque (Header Right) */}
-          <div className="bg-[#0D0F14] border border-[#1F2229] rounded-xl p-4 sm:p-5 flex flex-col items-center sm:items-end justify-center min-w-[200px]">
-            <span className="text-[10px] font-bold text-[#8E9299] uppercase tracking-wider font-mono">
+          <div className="bg-[#0F1B33] border border-[#243756] rounded-xl p-4 sm:p-5 flex flex-col items-center sm:items-end justify-center min-w-[200px]">
+            <span className="text-[10px] font-bold text-[#94A3B8] uppercase tracking-wider font-mono">
               STATUS ATUAL DO BANCO
             </span>
             <div className="flex items-center gap-2 mt-1">
@@ -392,7 +392,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-[#8E9299] font-mono mt-1.5">
+            <p className="text-[11px] text-[#94A3B8] font-mono mt-1.5">
               Equivale a <strong className="text-white">{saldoTotalDias} dias</strong> (jornada 8h)
             </p>
           </div>
@@ -402,22 +402,22 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
       {/* Cards de Métricas Principais (KPIs) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Saldo Geral */}
-        <div className="bg-[#15171C] border border-[#1F2229] rounded-2xl p-4 relative overflow-hidden">
-          <div className="flex items-center justify-between text-[#8E9299] text-xs font-mono mb-2">
+        <div className="bg-[#16243D] border border-[#243756] rounded-2xl p-4 relative overflow-hidden">
+          <div className="flex items-center justify-between text-[#94A3B8] text-xs font-mono mb-2">
             <span>SALDO TOTAL ACUMULADO</span>
             <Clock className="w-4 h-4 text-blue-400" />
           </div>
           <div className={`text-2xl font-bold font-mono ${saldoTotalAcumulado >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
             {saldoTotalAcumulado >= 0 ? `+${saldoTotalAcumulado.toFixed(2)}h` : `${saldoTotalAcumulado.toFixed(2)}h`}
           </div>
-          <p className="text-[11px] text-[#8E9299] font-mono mt-1">
+          <p className="text-[11px] text-[#94A3B8] font-mono mt-1">
             Saldo Inicial: {saldoInicial >= 0 ? `+${saldoInicial}h` : `${saldoInicial}h`}
           </p>
         </div>
 
         {/* Card 2: Horas Extras no Período */}
-        <div className="bg-[#15171C] border border-[#1F2229] rounded-2xl p-4 relative overflow-hidden">
-          <div className="flex items-center justify-between text-[#8E9299] text-xs font-mono mb-2">
+        <div className="bg-[#16243D] border border-[#243756] rounded-2xl p-4 relative overflow-hidden">
+          <div className="flex items-center justify-between text-[#94A3B8] text-xs font-mono mb-2">
             <span>HORAS EXTRAS CREDITADAS</span>
             <TrendingUp className="w-4 h-4 text-emerald-400" />
           </div>
@@ -430,13 +430,13 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
         </div>
 
         {/* Card 3: Atestados Médicos */}
-        <div className="bg-[#15171C] border border-[#1F2229] rounded-2xl p-4 relative overflow-hidden">
-          <div className="flex items-center justify-between text-[#8E9299] text-xs font-mono mb-2">
+        <div className="bg-[#16243D] border border-[#243756] rounded-2xl p-4 relative overflow-hidden">
+          <div className="flex items-center justify-between text-[#94A3B8] text-xs font-mono mb-2">
             <span>ATESTADOS NO PERÍODO</span>
             <FileCheck className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-2xl font-bold font-mono text-white">
-            {atestadosMes} <span className="text-xs font-normal text-[#8E9299]">registros</span>
+            {atestadosMes} <span className="text-xs font-normal text-[#94A3B8]">registros</span>
           </div>
           <p className="text-[11px] text-amber-400/80 font-mono mt-1">
             Todos abonados com 0h
@@ -444,8 +444,8 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
         </div>
 
         {/* Card 4: Folgas Compensatórias */}
-        <div className="bg-[#15171C] border border-[#1F2229] rounded-2xl p-4 relative overflow-hidden">
-          <div className="flex items-center justify-between text-[#8E9299] text-xs font-mono mb-2">
+        <div className="bg-[#16243D] border border-[#243756] rounded-2xl p-4 relative overflow-hidden">
+          <div className="flex items-center justify-between text-[#94A3B8] text-xs font-mono mb-2">
             <span>COMPENSAÇÕES GOZADAS</span>
             <TrendingDown className="w-4 h-4 text-blue-400" />
           </div>
@@ -459,15 +459,15 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
       </div>
 
       {/* Tabela do Extrato Mensal */}
-      <div className="bg-[#15171C] border border-[#1F2229] rounded-2xl p-6 shadow-xl space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#1F2229]">
+      <div className="bg-[#16243D] border border-[#243756] rounded-2xl p-6 shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#243756]">
           <div className="flex items-center gap-2.5">
             <FileText className="w-5 h-5 text-blue-400" />
             <div>
               <h3 className="text-sm font-bold text-white tracking-tight">
                 Lançamentos Detalhados do Extrato
               </h3>
-              <p className="text-xs text-[#8E9299] font-mono">
+              <p className="text-xs text-[#94A3B8] font-mono">
                 Exibindo {filteredRecords.length} lançamentos registrados no sistema
               </p>
             </div>
@@ -475,11 +475,11 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
 
           {/* Filtro por Mês */}
           <div className="flex items-center gap-2">
-            <label className="text-xs font-mono text-[#8E9299]">Filtrar Mês:</label>
+            <label className="text-xs font-mono text-[#94A3B8]">Filtrar Mês:</label>
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="bg-[#0D0F14] border border-[#1F2229] text-white text-xs font-mono rounded-lg px-3 py-1.5 outline-none focus:border-blue-500"
+              className="bg-[#0F1B33] border border-[#243756] text-white text-xs font-mono rounded-lg px-3 py-1.5 outline-none focus:border-blue-500"
             >
               <option value="TODOS">Todos os Meses</option>
               {availableMonths.map((m) => (
@@ -493,7 +493,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
 
         {/* Tabela Responsiva */}
         {filteredRecords.length === 0 ? (
-          <div className="text-center py-12 text-[#8E9299] font-mono text-xs">
+          <div className="text-center py-12 text-[#94A3B8] font-mono text-xs">
             <Clock className="w-8 h-8 mx-auto mb-2 opacity-40 text-blue-400" />
             Nenhum lançamento encontrado para o período selecionado.
           </div>
@@ -501,7 +501,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
               <thead>
-                <tr className="border-b border-[#1F2229] text-[#8E9299] text-[11px]">
+                <tr className="border-b border-[#243756] text-[#94A3B8] text-[11px]">
                   <th className="pb-3 font-semibold">DATA</th>
                   <th className="pb-3 font-semibold">DIA DA SEMANA</th>
                   <th className="pb-3 font-semibold">OCORRÊNCIA</th>
@@ -512,7 +512,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                   <th className="pb-3 font-semibold">OBSERVAÇÃO</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1F2229]/60">
+              <tbody className="divide-y divide-[#243756]/60">
                 {filteredRecords.map((rec) => {
                   let badgeColor = 'bg-blue-500/10 text-blue-400 border-blue-500/20';
                   if (rec.tipoOcorrencia === 'FALTA_INJUSTIFICADA') {
@@ -526,11 +526,11 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                   }
 
                   return (
-                    <tr key={rec.id} className="hover:bg-[#0D0F14]/50 transition-colors">
+                    <tr key={rec.id} className="hover:bg-[#0F1B33]/50 transition-colors">
                       <td className="py-3 font-bold text-white whitespace-nowrap">
                         {rec.dataRegistro}
                       </td>
-                      <td className="py-3 text-[#8E9299] whitespace-nowrap">
+                      <td className="py-3 text-[#94A3B8] whitespace-nowrap">
                         {rec.diaSemanaNome} {rec.eFeriado && <span className="text-amber-400 font-bold">(Feriado)</span>}
                       </td>
                       <td className="py-3">
@@ -541,7 +541,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                       <td className="py-3 text-right text-white">
                         {rec.horasBrutas > 0 ? `${rec.horasBrutas.toFixed(1)}h` : '-'}
                       </td>
-                      <td className="py-3 text-center text-[#8E9299]">
+                      <td className="py-3 text-center text-[#94A3B8]">
                         {rec.multiplicador > 0 ? `${rec.multiplicador.toFixed(1)}x` : '-'}
                       </td>
                       <td className="py-3 text-right font-bold whitespace-nowrap">
@@ -550,14 +550,14 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                         ) : rec.saldoCalculado < 0 ? (
                           <span className="text-red-400">{rec.saldoCalculado.toFixed(2)}h</span>
                         ) : (
-                          <span className="text-[#8E9299]">0.00h</span>
+                          <span className="text-[#94A3B8]">0.00h</span>
                         )}
                       </td>
                       <td className="py-3 text-center">
                         {rec.comprovante ? (
                           <button
                             onClick={() => onViewAttachment?.(rec.comprovante!, authenticatedEmployee.nome, rec.dataRegistro)}
-                            className="p-1.5 bg-[#0D0F14] hover:bg-[#1F2229] border border-[#1F2229] rounded-md text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1 text-[10px]"
+                            className="p-1.5 bg-[#0F1B33] hover:bg-[#243756] border border-[#243756] rounded-md text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1 text-[10px]"
                             title="Visualizar Comprovante do Google Drive"
                           >
                             <Paperclip className="w-3.5 h-3.5" />
@@ -567,7 +567,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
                           <span className="text-gray-600">-</span>
                         )}
                       </td>
-                      <td className="py-3 text-[#8E9299] max-w-[200px] truncate" title={rec.observacao}>
+                      <td className="py-3 text-[#94A3B8] max-w-[200px] truncate" title={rec.observacao}>
                         {rec.observacao || '-'}
                       </td>
                     </tr>
@@ -580,7 +580,7 @@ export const EmployeePortal: React.FC<EmployeePortalProps> = ({
       </div>
 
       {/* Nota de Auditoria e Conformidade SPTF */}
-      <div className="bg-[#0D0F14] border border-[#1F2229] rounded-xl p-4 text-xs font-mono text-[#8E9299] flex items-center justify-between">
+      <div className="bg-[#0F1B33] border border-[#243756] rounded-xl p-4 text-xs font-mono text-[#94A3B8] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
           <span>Extrato individual emitido em conformidade com o Art. 59 do SPTF e Acordo Coletivo.</span>

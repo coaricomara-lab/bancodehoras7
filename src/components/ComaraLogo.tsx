@@ -22,8 +22,8 @@ export const DEFAULT_COMARA_LOGO_URL = '/comara-logo.png';
  */
 export const COMARA_LOGO_SVG_STRING = `
 <svg viewBox="0 0 100 120" style="height:58px; width:auto; max-height:60px; display:inline-block; vertical-align:middle;" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M 6 6 L 94 6 L 94 65 C 94 95 74 114 50 114 C 26 114 6 95 6 65 Z" fill="#0B2545" stroke="#134074" stroke-width="3" />
-  <path d="M 9 9 L 91 9 L 91 65 C 91 92 72 111 50 111 C 28 111 9 92 9 65 Z" fill="#134074" />
+  <path d="M 6 6 L 94 6 L 94 65 C 94 95 74 114 50 114 C 26 114 6 95 6 65 Z" fill="#0F1B33" stroke="#11203A" stroke-width="3" />
+  <path d="M 9 9 L 91 9 L 91 65 C 91 92 72 111 50 111 C 28 111 9 92 9 65 Z" fill="#11203A" />
   <rect x="12" y="14" width="76" height="18" rx="3" fill="#1E40AF" stroke="#60A5FA" stroke-width="1" />
   <text x="50" y="27" fill="#FFFFFF" font-size="10" font-weight="900" text-anchor="middle" font-family="Arial, sans-serif">COMARA</text>
   <path d="M 49 38 L 51 38 L 51 96 L 49 96 Z" fill="#F59E0B" />
@@ -117,7 +117,7 @@ export const LogoComara: React.FC<LogoComaraProps> = ({
         /* Brasão e Insígnia Vetorial com Asas Douradas */
         <div className={`relative shrink-0 flex items-center justify-center rounded-xl shadow-md transition-transform group-hover:scale-105 ${
           sizeClasses[size] || sizeClasses.md
-        } bg-gradient-to-br from-[#0B2545] via-[#134074] to-[#00509D] text-white border ${
+        } bg-gradient-to-br from-[#0F1B33] via-[#11203A] to-[#00509D] text-white border ${
           isDark ? 'border-blue-400/30 shadow-blue-900/30' : 'border-blue-700/20 shadow-blue-500/20'
         } print:border-none print:shadow-none`}>
           <svg viewBox="0 0 40 40" className="w-4/5 h-4/5" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -161,7 +161,7 @@ export const LogoComara: React.FC<LogoComaraProps> = ({
             {/* Escudo Central */}
             <path
               d="M 20 8 L 26 13 L 26 23 C 26 28 20 32 20 32 C 20 32 14 28 14 23 L 14 13 Z"
-              fill="#0B2545"
+              fill="#0F1B33"
               stroke="url(#goldGradLogo)"
               strokeWidth="1.2"
             />
@@ -196,7 +196,7 @@ export const LogoComara: React.FC<LogoComaraProps> = ({
           </div>
           {effectiveSubtitle && (
             <p className={`font-medium truncate ${(textSizes[size] || textSizes.md).sub} ${
-              isDark ? 'text-[#8E9299]' : 'text-slate-500'
+              isDark ? 'text-[#94A3B8]' : 'text-slate-500'
             }`}>
               {effectiveSubtitle}
             </p>

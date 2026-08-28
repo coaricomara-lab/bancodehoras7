@@ -158,7 +158,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
 
   return (
     <div className={`min-h-screen pb-12 font-sans transition-colors duration-200 ${
-      isDark ? 'bg-[#0B0D11] text-[#E0E2E5]' : 'bg-slate-100 text-slate-900'
+      isDark ? 'bg-[#0B1426] text-[#E2E8F0]' : 'bg-slate-100 text-slate-900'
     }`}>
       
       {/* ========================================================================= */}
@@ -166,7 +166,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
       {/* ========================================================================= */}
       <header className={`sticky top-0 z-30 px-4 py-3 border-b backdrop-blur-md transition-all ${
         isDark 
-          ? 'bg-[#15171C]/90 border-[#1F2229]' 
+          ? 'bg-[#16243D]/90 border-[#243756]' 
           : 'bg-white/95 border-slate-200 shadow-xs'
       }`}>
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
@@ -182,7 +182,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                   {roleLabel}
                 </span>
               </div>
-              <p className={`text-[10px] truncate ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-[10px] truncate ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 COMARA • Horas & Conversão em Dias (8h/dia)
               </p>
             </div>
@@ -219,7 +219,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                 title="Alternar tema"
                 className={`p-2 rounded-xl border transition-colors ${
                   isDark 
-                    ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299] hover:text-white' 
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8] hover:text-white' 
                     : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -248,9 +248,9 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
         {/* CARDS DE RESUMO OPERACIONAL COM HORAS E DIAS */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           <div className={`p-3 rounded-xl border text-center ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
           }`}>
-            <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Equipe
             </span>
             <span className={`text-lg font-black font-mono ${isDark ? 'text-white' : 'text-slate-900'}`}>
@@ -293,10 +293,10 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
 
           <div className={`p-3 rounded-xl border text-center ${
             stats.saldoGeral >= 0
-              ? isDark ? 'bg-[#15171C] border-[#1F2229] text-emerald-400' : 'bg-white border-slate-200 text-emerald-600 shadow-xs'
-              : isDark ? 'bg-[#15171C] border-[#1F2229] text-red-400' : 'bg-white border-slate-200 text-red-600 shadow-xs'
+              ? isDark ? 'bg-[#16243D] border-[#243756] text-emerald-400' : 'bg-white border-slate-200 text-emerald-600 shadow-xs'
+              : isDark ? 'bg-[#16243D] border-[#243756] text-red-400' : 'bg-white border-slate-200 text-red-600 shadow-xs'
           }`}>
-            <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Saldo Total
             </span>
             <span className="text-sm sm:text-base font-black font-mono block">
@@ -315,7 +315,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
         {/* CAMPO DE BUSCA RÁPIDA */}
         <div className="relative">
           <Search className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 ${
-            isDark ? 'text-[#8E9299]' : 'text-slate-400'
+            isDark ? 'text-[#94A3B8]' : 'text-slate-400'
           }`} />
           <input
             type="text"
@@ -324,7 +324,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
             placeholder="Buscar por Nome, Matrícula ou Cargo..."
             className={`w-full pl-10 pr-10 py-2.5 rounded-xl text-xs font-semibold border focus:outline-hidden transition-all ${
               isDark 
-                ? 'bg-[#15171C] border-[#1F2229] text-white placeholder-[#8E9299] focus:border-amber-400' 
+                ? 'bg-[#16243D] border-[#243756] text-white placeholder-[#94A3B8] focus:border-amber-400' 
                 : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-amber-500 shadow-xs'
             }`}
           />
@@ -348,7 +348,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                 sortBy === 'DEVEDORES'
                   ? 'bg-red-500/20 text-red-400 border-red-500/40 shadow-xs'
                   : isDark
-                  ? 'bg-[#15171C] border-[#1F2229] text-[#8E9299] hover:text-white'
+                  ? 'bg-[#16243D] border-[#243756] text-[#94A3B8] hover:text-white'
                   : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -362,7 +362,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                 sortBy === 'CREDORES'
                   ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40 shadow-xs'
                   : isDark
-                  ? 'bg-[#15171C] border-[#1F2229] text-[#8E9299] hover:text-white'
+                  ? 'bg-[#16243D] border-[#243756] text-[#94A3B8] hover:text-white'
                   : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -376,7 +376,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                 sortBy === 'ALFABETICA'
                   ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 shadow-xs'
                   : isDark
-                  ? 'bg-[#15171C] border-[#1F2229] text-[#8E9299] hover:text-white'
+                  ? 'bg-[#16243D] border-[#243756] text-[#94A3B8] hover:text-white'
                   : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -387,7 +387,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
 
           {/* Filtro por Sede / Obra */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
-            <span className={`text-[10px] font-bold uppercase shrink-0 px-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-[10px] font-bold uppercase shrink-0 px-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Sede:
             </span>
             {['TODAS', 'KO', 'BE', 'MN', 'SP', 'RJ'].map((sede) => (
@@ -398,7 +398,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                   selectedSede === sede
                     ? 'bg-blue-600 text-white border-blue-500 shadow-xs'
                     : isDark
-                    ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299] hover:text-white'
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8] hover:text-white'
                     : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
                 }`}
               >
@@ -410,7 +410,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
 
         {/* CONTADOR DE RESULTADOS E INSTRUÇÃO */}
         <div className="flex items-center justify-between text-[11px] px-1">
-          <span className={isDark ? 'text-[#8E9299]' : 'text-slate-500'}>
+          <span className={isDark ? 'text-[#94A3B8]' : 'text-slate-500'}>
             Exibindo <strong>{displayedEmployees.length}</strong> de {calculatedList.length} colaboradores • <strong>Jornada: 8h = 1 dia</strong>
           </span>
           {searchTerm && (
@@ -427,10 +427,10 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
         <div className="space-y-2.5">
           {displayedEmployees.length === 0 ? (
             <div className={`p-8 rounded-2xl border text-center space-y-2 ${
-              isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+              isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
             }`}>
               <Users className="w-8 h-8 mx-auto text-slate-500" />
-              <p className={`text-xs font-semibold ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+              <p className={`text-xs font-semibold ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                 Nenhum colaborador encontrado com os filtros selecionados.
               </p>
             </div>
@@ -447,7 +447,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                   key={emp.id || emp.matricula}
                   className={`rounded-xl border transition-all overflow-hidden ${
                     isDark 
-                      ? 'bg-[#15171C] border-[#1F2229] hover:border-[#2A2E38]' 
+                      ? 'bg-[#16243D] border-[#243756] hover:border-[#335075]' 
                       : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
                   }`}
                 >
@@ -460,7 +460,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 mb-1">
                         <span className={`text-xs font-mono font-bold px-1.5 py-0.2 rounded ${
-                          isDark ? 'bg-[#0D0F14] text-slate-400' : 'bg-slate-100 text-slate-600'
+                          isDark ? 'bg-[#0F1B33] text-slate-400' : 'bg-slate-100 text-slate-600'
                         }`}>
                           {emp.matricula}
                         </span>
@@ -479,7 +479,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                         {emp.nome}
                       </h3>
 
-                      <p className={`text-[11px] truncate mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                      <p className={`text-[11px] truncate mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                         {emp.funcao || emp.cargo || 'Operacional'}
                       </p>
 
@@ -518,7 +518,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                             ? 'bg-red-950/60 text-red-400 border-red-700/60 shadow-xs' 
                             : 'bg-red-600 text-white border-red-700 shadow-sm'
                           : isDark 
-                            ? 'bg-[#0D0F14] text-slate-400 border-[#1F2229]' 
+                            ? 'bg-[#0F1B33] text-slate-400 border-[#243756]' 
                             : 'bg-slate-100 text-slate-700 border-slate-300'
                       }`}>
                         {/* Horas em Fonte Grande */}
@@ -544,7 +544,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                             ? 'text-emerald-500' 
                             : isNeg 
                             ? 'text-red-500' 
-                            : isDark ? 'text-[#8E9299]' : 'text-slate-400'
+                            : isDark ? 'text-[#94A3B8]' : 'text-slate-400'
                         }`}>
                           {isPos ? '● Credor' : isNeg ? '● Devedor' : '● Zerado'}
                         </span>
@@ -559,26 +559,26 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                   {/* SANFONA: DETALHAMENTO DO SALDO EM HORAS E DIAS */}
                   {isExpanded && (
                     <div className={`p-3.5 border-t space-y-2.5 animate-in fade-in duration-150 ${
-                      isDark ? 'border-[#1F2229] bg-[#0E1015]' : 'border-slate-100 bg-slate-50/90'
+                      isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-100 bg-slate-50/90'
                     }`}>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                        <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
-                          <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Créditos Extras</span>
+                        <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+                          <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Créditos Extras</span>
                           <span className="font-bold font-mono text-emerald-500">+{emp.bal.totalCreditos.toFixed(1)}h</span>
                           <span className="text-[10px] block opacity-75 font-mono">({(emp.bal.totalCreditos / 8).toFixed(1)} dias)</span>
                         </div>
-                        <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
-                          <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Débitos / Faltas</span>
+                        <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+                          <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Débitos / Faltas</span>
                           <span className="font-bold font-mono text-red-500">-{emp.bal.totalDebitos.toFixed(1)}h</span>
                           <span className="text-[10px] block opacity-75 font-mono">({(emp.bal.totalDebitos / 8).toFixed(1)} dias)</span>
                         </div>
-                        <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
-                          <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Saldo Inicial</span>
+                        <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+                          <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Saldo Inicial</span>
                           <span className="font-bold font-mono">{emp.bal.saldoInicial > 0 ? `+${emp.bal.saldoInicial.toFixed(1)}h` : `${emp.bal.saldoInicial.toFixed(1)}h`}</span>
                           <span className="text-[10px] block opacity-75 font-mono">({(emp.bal.saldoInicial / 8).toFixed(1)} dias)</span>
                         </div>
-                        <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
-                          <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Regra SPTF</span>
+                        <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+                          <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Regra SPTF</span>
                           <span className="font-bold">8 horas / dia</span>
                           <span className="text-[10px] block opacity-75">{emp.empRecords.length} lançamentos</span>
                         </div>
@@ -587,7 +587,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                       {/* Histórico rápido de registros */}
                       {emp.empRecords.length > 0 && (
                         <div className="space-y-1 pt-1">
-                          <span className={`text-[11px] font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                          <span className={`text-[11px] font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                             Últimos Registros Diários:
                           </span>
                           <div className="space-y-1 max-h-36 overflow-y-auto text-xs">
@@ -595,7 +595,7 @@ export const SiteSupervisorMobileView: React.FC<SiteSupervisorMobileViewProps> =
                               <div
                                 key={rec.id}
                                 className={`p-1.5 rounded-lg border flex items-center justify-between gap-2 ${
-                                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                                 }`}
                               >
                                 <div className="flex items-center gap-1.5">

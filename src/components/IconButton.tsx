@@ -94,9 +94,9 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>((
     primary: 
       'bg-blue-600 hover:bg-blue-500 text-white shadow-sm hover:shadow-blue-500/25 active:bg-blue-700 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900',
     secondary: 
-      'bg-slate-100 dark:bg-[#1F2229] hover:bg-slate-200 dark:hover:bg-[#2A2E38] text-slate-700 dark:text-[#E0E2E5] border border-slate-200 dark:border-[#2A2E38] active:scale-95 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900',
+      'bg-slate-100 dark:bg-[#243756] hover:bg-slate-200 dark:hover:bg-[#335075] text-slate-700 dark:text-[#E2E8F0] border border-slate-200 dark:border-[#335075] active:scale-95 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900',
     ghost: 
-      'bg-transparent hover:bg-slate-100 dark:hover:bg-[#1F2229] text-slate-500 dark:text-[#8E9299] hover:text-slate-900 dark:hover:text-[#FFFFFF] active:scale-95 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900',
+      'bg-transparent hover:bg-slate-100 dark:hover:bg-[#243756] text-slate-500 dark:text-[#94A3B8] hover:text-slate-900 dark:hover:text-[#FFFFFF] active:scale-95 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900',
     danger: 
       'bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40 active:scale-95 focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900',
     success: 
@@ -116,10 +116,10 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>((
   };
 
   const badgeColorClasses = {
-    blue: 'bg-blue-500 text-white ring-2 ring-white dark:ring-[#15171C]',
-    emerald: 'bg-emerald-500 text-white ring-2 ring-white dark:ring-[#15171C]',
-    rose: 'bg-rose-500 text-white ring-2 ring-white dark:ring-[#15171C]',
-    amber: 'bg-amber-500 text-black ring-2 ring-white dark:ring-[#15171C]',
+    blue: 'bg-blue-500 text-white ring-2 ring-white dark:ring-[#16243D]',
+    emerald: 'bg-emerald-500 text-white ring-2 ring-white dark:ring-[#16243D]',
+    rose: 'bg-rose-500 text-white ring-2 ring-white dark:ring-[#16243D]',
+    amber: 'bg-amber-500 text-black ring-2 ring-white dark:ring-[#16243D]',
   };
 
   const currentSize = sizeClasses[size];
@@ -171,7 +171,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>((
       {tooltip && isOpen && (
         <div
           role="tooltip"
-          className={`absolute z-50 pointer-events-none whitespace-nowrap px-2.5 py-1.5 text-xs font-medium rounded-lg shadow-xl border font-sans animate-in fade-in zoom-in-95 duration-100 ${positionClasses[position]} bg-[#111317] dark:bg-[#1C1F26] text-white border-[#2A2E38] dark:border-[#383D4A] shadow-black/60`}
+          className={`absolute z-50 pointer-events-none whitespace-nowrap px-2.5 py-1.5 text-xs font-medium rounded-lg shadow-xl border font-sans animate-in fade-in zoom-in-95 duration-100 ${positionClasses[position]} bg-[#111317] dark:bg-[#1E3252] text-white border-[#335075] dark:border-[#383D4A] shadow-black/60`}
         >
           <div className="flex items-center gap-1.5">
             <span>{tooltip}</span>

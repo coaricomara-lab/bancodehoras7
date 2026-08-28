@@ -386,7 +386,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
       {/* BARRA SUPERIOR: SELETOR DE MODO, NAVEGADOR E FILTROS          */}
       {/* ------------------------------------------------------------- */}
       <div className={`p-4 rounded-2xl border flex flex-col xl:flex-row xl:items-center justify-between gap-4 ${
-        isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-gray-200 shadow-xs'
+        isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-gray-200 shadow-xs'
       }`}>
         
         {/* Lado Esquerdo: Seletor de Modo (7d / 14d) + Navegador de Período */}
@@ -394,7 +394,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
           
           {/* Seletor de Alternância [ 7 Dias | 14 Dias ] */}
           <div className={`p-1 rounded-xl border flex items-center gap-1 ${
-            isDark ? 'bg-[#15171C] border-[#2A2E38]' : 'bg-gray-100 border-gray-300'
+            isDark ? 'bg-[#16243D] border-[#335075]' : 'bg-gray-100 border-gray-300'
           }`}>
             <button
               onClick={() => setViewMode('7_DAYS')}
@@ -425,7 +425,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             <button
               onClick={handlePrevPeriod}
               className={`p-2 rounded-lg transition-colors cursor-pointer ${
-                isDark ? 'hover:bg-[#1F2229] text-gray-300' : 'hover:bg-white text-gray-700'
+                isDark ? 'hover:bg-[#243756] text-gray-300' : 'hover:bg-white text-gray-700'
               }`}
               title={`Voltar ${daysCount} dias`}
             >
@@ -441,7 +441,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             <button
               onClick={handleNextPeriod}
               className={`p-2 rounded-lg transition-colors cursor-pointer ${
-                isDark ? 'hover:bg-[#1F2229] text-gray-300' : 'hover:bg-white text-gray-700'
+                isDark ? 'hover:bg-[#243756] text-gray-300' : 'hover:bg-white text-gray-700'
               }`}
               title={`Avançar ${daysCount} dias`}
             >
@@ -453,7 +453,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
           <button
             onClick={handleSetCurrentPeriod}
             className={`px-3 py-1.5 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
-              isDark ? 'border-[#2A2E38] hover:bg-[#1F2229] text-blue-400' : 'border-gray-300 hover:bg-gray-100 text-blue-700'
+              isDark ? 'border-[#335075] hover:bg-[#243756] text-blue-400' : 'border-gray-300 hover:bg-gray-100 text-blue-700'
             }`}
           >
             Semana Atual
@@ -480,7 +480,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={`w-full sm:w-56 rounded-xl pl-8 pr-3 py-1.5 text-xs outline-none border transition-colors ${
-                isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
+                isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
               }`}
             />
             <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
@@ -490,7 +490,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             value={filterSede}
             onChange={(e) => setFilterSede(e.target.value)}
             className={`rounded-xl px-3 py-1.5 text-xs outline-none border font-medium ${
-              isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-gray-300 text-gray-900'
+              isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-gray-300 text-gray-900'
             }`}
           >
             <option value="TODAS">Todas as Sedes</option>
@@ -503,7 +503,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
             value={filterFuncao}
             onChange={(e) => setFilterFuncao(e.target.value)}
             className={`rounded-xl px-3 py-1.5 text-xs outline-none border font-medium ${
-              isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-gray-300 text-gray-900'
+              isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-gray-300 text-gray-900'
             }`}
           >
             <option value="TODAS">Todas as Funções</option>
@@ -518,7 +518,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
       {/* LEGENDA E RESUMO RÁPIDO DO PERÍODO                            */}
       {/* ------------------------------------------------------------- */}
       <div className={`p-3 rounded-xl border flex flex-wrap items-center justify-between gap-3 text-xs ${
-        isDark ? 'bg-[#101217] border-[#1F2229] text-[#8E9299]' : 'bg-gray-50 border-gray-200 text-gray-600'
+        isDark ? 'bg-[#101217] border-[#243756] text-[#94A3B8]' : 'bg-gray-50 border-gray-200 text-gray-600'
       }`}>
         <div className="flex flex-wrap items-center gap-3">
           <span className="font-bold text-white dark:text-white font-sans text-xs">Legenda:</span>
@@ -563,17 +563,17 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
       {/* GRADE DA TABELA COM NAVEGAÇÃO NAS EXTREMIDADES                */}
       {/* ------------------------------------------------------------- */}
       <div className={`rounded-2xl border overflow-x-auto shadow-inner ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-gray-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-gray-200'
       }`}>
         <table className={`w-full text-left border-collapse ${viewMode === '7_DAYS' ? 'min-w-[920px]' : 'min-w-[1180px]'}`}>
           <thead>
             <tr className={`text-xs uppercase font-mono font-bold border-b ${
-              isDark ? 'bg-[#0D0F14] text-[#8E9299] border-[#1F2229]' : 'bg-gray-100 text-gray-600 border-gray-200'
+              isDark ? 'bg-[#0F1B33] text-[#94A3B8] border-[#243756]' : 'bg-gray-100 text-gray-600 border-gray-200'
             }`}>
               
               {/* Coluna Fixa: Colaborador com botão retroceder integrado */}
               <th className={`py-3 px-3 sticky left-0 z-20 w-60 sm:w-64 min-w-[220px] max-w-[260px] shadow-sm backdrop-blur-xs border-r ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-gray-100 border-gray-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-gray-100 border-gray-200'
               }`}>
                 <div className="flex items-center justify-between gap-1.5">
                   <div className="flex items-center gap-1.5 min-w-0">
@@ -584,7 +584,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
                   <button
                     onClick={handlePrevPeriod}
                     className={`p-1 rounded-lg border transition-colors cursor-pointer flex items-center gap-0.5 text-[10px] font-bold shrink-0 ${
-                      isDark ? 'bg-[#1C202B] border-[#2A3040] hover:bg-[#252B3A] text-blue-400' : 'bg-white border-gray-300 hover:bg-gray-100 text-blue-600'
+                      isDark ? 'bg-[#1E3252] border-[#335075] hover:bg-[#2E4566] text-blue-400' : 'bg-white border-gray-300 hover:bg-gray-100 text-blue-600'
                     }`}
                     title={`Retroceder ${daysCount} dias`}
                   >
@@ -604,10 +604,10 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
                     day.isToday
                       ? 'bg-blue-500/20 text-blue-400 border-blue-500/40 font-bold'
                       : day.isSunday
-                      ? isDark ? 'bg-rose-950/20 text-rose-300 border-[#1F2229]' : 'bg-rose-50 text-rose-700 border-gray-200'
+                      ? isDark ? 'bg-rose-950/20 text-rose-300 border-[#243756]' : 'bg-rose-50 text-rose-700 border-gray-200'
                       : day.isSaturday
-                      ? isDark ? 'bg-amber-950/20 text-amber-300 border-[#1F2229]' : 'bg-amber-50 text-amber-700 border-gray-200'
-                      : isDark ? 'border-[#1F2229]' : 'border-gray-200'
+                      ? isDark ? 'bg-amber-950/20 text-amber-300 border-[#243756]' : 'bg-amber-50 text-amber-700 border-gray-200'
+                      : isDark ? 'border-[#243756]' : 'border-gray-200'
                   }`}
                 >
                   <div className="flex flex-col items-center justify-center">
@@ -623,14 +623,14 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
 
               {/* Botão de Avançar Período na extremidade direita do cabeçalho */}
               <th className={`py-3 px-2 text-center w-28 min-w-[95px] max-w-[115px] border-l ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-gray-100 border-gray-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-gray-100 border-gray-200'
               }`}>
                 <div className="flex items-center justify-between gap-1">
                   <span className="text-[10px] sm:text-[11px] font-bold font-sans truncate">SALDO</span>
                   <button
                     onClick={handleNextPeriod}
                     className={`p-1 rounded-lg border transition-colors cursor-pointer flex items-center gap-0.5 text-[10px] font-bold shrink-0 ${
-                      isDark ? 'bg-[#1C202B] border-[#2A3040] hover:bg-[#252B3A] text-blue-400' : 'bg-white border-gray-300 hover:bg-gray-100 text-blue-600'
+                      isDark ? 'bg-[#1E3252] border-[#335075] hover:bg-[#2E4566] text-blue-400' : 'bg-white border-gray-300 hover:bg-gray-100 text-blue-600'
                     }`}
                     title={`Avançar ${daysCount} dias`}
                   >
@@ -643,7 +643,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
           </thead>
 
           <tbody className={`text-xs divide-y ${
-            isDark ? 'divide-[#1F2229] text-[#E0E2E5]' : 'divide-gray-200 text-gray-800'
+            isDark ? 'divide-[#243756] text-[#E2E8F0]' : 'divide-gray-200 text-gray-800'
           }`}>
             {filteredEmployees.length === 0 ? (
               <tr>
@@ -675,11 +675,11 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
                 return (
                   <tr
                     key={emp.id || emp.matricula}
-                    className={`transition-colors ${isDark ? 'hover:bg-[#1C1F26]' : 'hover:bg-blue-50/40'}`}
+                    className={`transition-colors ${isDark ? 'hover:bg-[#1E3252]' : 'hover:bg-blue-50/40'}`}
                   >
                     {/* Coluna Fixa: Colaborador Compacta (Linha 1: Nome, Linha 2: #Mat • Sede • Função) */}
                     <td className={`py-2 px-3 sticky left-0 z-10 font-sans border-r w-60 sm:w-64 min-w-[220px] max-w-[260px] backdrop-blur-xs ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-gray-200'
+                      isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-gray-200'
                     }`}>
                       <div className="flex items-center justify-between gap-1.5">
                         <div className="flex items-center gap-2 overflow-hidden min-w-0 flex-1">
@@ -744,7 +744,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
                               : day.isSaturday
                               ? isDark ? 'bg-amber-950/5' : 'bg-amber-50/40'
                               : ''
-                          } ${isDark ? 'border-[#1F2229] hover:bg-blue-500/10' : 'border-gray-200 hover:bg-blue-50'}`}
+                          } ${isDark ? 'border-[#243756] hover:bg-blue-500/10' : 'border-gray-200 hover:bg-blue-50'}`}
                           title={
                             dayRecords.length > 0
                               ? `Clique para editar o lançamento de ${emp.nome} em ${day.dateIso}`
@@ -769,7 +769,7 @@ export const DashboardCalendarView: React.FC<DashboardCalendarViewProps> = ({
 
                     {/* Saldo Acumulado no Período (7d ou 14d) */}
                     <td className={`py-2 px-2 text-center font-mono font-black border-l whitespace-nowrap w-28 min-w-[95px] max-w-[115px] ${
-                      isDark ? 'border-[#1F2229]' : 'border-gray-200'
+                      isDark ? 'border-[#243756]' : 'border-gray-200'
                     }`}>
                       <span className={`px-2 py-0.5 rounded-md text-[11px] inline-block font-mono ${
                         empPeriodBalance > 0

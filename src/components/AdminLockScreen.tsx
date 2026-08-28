@@ -18,7 +18,7 @@ export const AdminLockScreen: React.FC<AdminLockScreenProps> = ({
     <div className="flex items-center justify-center py-12 px-4 sm:px-6">
       <div className={`max-w-md w-full p-8 rounded-2xl border text-center transition-all ${
         isDark 
-          ? 'bg-[#15171C] border-[#1F2229] shadow-2xl' 
+          ? 'bg-[#16243D] border-[#243756] shadow-2xl' 
           : 'bg-white border-slate-200 shadow-xl'
       }`}>
         <div className={`w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-5 border ${
@@ -44,13 +44,13 @@ export const AdminLockScreen: React.FC<AdminLockScreenProps> = ({
         </h3>
 
         <p className={`text-xs font-sans leading-relaxed mb-6 ${
-          isDark ? 'text-[#8E9299]' : 'text-slate-600'
+          isDark ? 'text-[#94A3B8]' : 'text-slate-600'
         }`}>
           A visualização e manipulação do módulo <strong className={isDark ? 'text-white' : 'text-slate-900'}>"{tabTitle}"</strong> é restrita a gestores autorizados com e-mail corporativo cadastrado na tabela de permissões (<code className="font-mono text-blue-500">tb_usuarios_admin</code>).
         </p>
 
         <div className={`p-4 rounded-xl border mb-6 text-left text-xs font-mono space-y-1.5 ${
-          isDark ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299]' : 'bg-slate-50 border-slate-200 text-slate-600'
+          isDark ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-600'
         }`}>
           <div className="flex items-center gap-1.5 font-bold text-amber-500 text-[11px]">
             <KeyRound className="w-3.5 h-3.5" />

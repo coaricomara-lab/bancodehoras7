@@ -105,7 +105,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in">
       <div className={`w-full max-w-md p-6 sm:p-8 rounded-3xl border shadow-2xl space-y-6 relative animate-in zoom-in-95 ${
-        isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-200 text-slate-900'
+        isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-200 text-slate-900'
       }`}>
         
         {/* Close Button */}
@@ -113,7 +113,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           type="button"
           onClick={onClose}
           className={`absolute top-5 right-5 p-1.5 rounded-xl border transition-colors cursor-pointer ${
-            isDark ? 'bg-[#1F2229] border-[#2E333F] text-gray-400 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-800'
+            isDark ? 'bg-[#243756] border-[#335075] text-gray-400 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-800'
           }`}
         >
           <X className="w-4 h-4" />
@@ -127,7 +127,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">
             Acesso à Gestão & RH • COMARA
           </h2>
-          <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
             Área restrita a Gestores de RH, Auditores e Super Administradores
           </p>
         </div>
@@ -174,7 +174,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
             disabled={isLoading}
             className={`w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center justify-center gap-3 cursor-pointer shadow-xs ${
               isDark 
-                ? 'bg-[#1F2229] hover:bg-[#2A2E38] border-[#2F3440] text-white' 
+                ? 'bg-[#243756] hover:bg-[#335075] border-[#335075] text-white' 
                 : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700'
             } disabled:opacity-50`}
           >
@@ -190,9 +190,9 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 
         {/* Divisor */}
         <div className="relative flex items-center justify-center">
-          <div className={`border-t w-full ${isDark ? 'border-[#2A2E38]' : 'border-slate-200'}`} />
+          <div className={`border-t w-full ${isDark ? 'border-[#335075]' : 'border-slate-200'}`} />
           <span className={`absolute px-3 text-[11px] font-bold uppercase tracking-wider ${
-            isDark ? 'bg-[#15171C] text-[#8E9299]' : 'bg-white text-slate-400'
+            isDark ? 'bg-[#16243D] text-[#94A3B8]' : 'bg-white text-slate-400'
           }`}>
             ou e-mail corporativo
           </span>
@@ -213,7 +213,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 placeholder="gestor.rh@comara.aer.mil.br"
                 required
                 className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none ${
-                  isDark ? 'bg-[#0D0F14] border-[#2A2E38] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
+                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
                 }`}
               />
             </div>
@@ -232,7 +232,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 placeholder="••••••••"
                 required
                 className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none ${
-                  isDark ? 'bg-[#0D0F14] border-[#2A2E38] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
+                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
                 }`}
               />
             </div>
@@ -248,7 +248,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         </form>
 
         {/* Footer info */}
-        <div className={`pt-2 text-center text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+        <div className={`pt-2 text-center text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
           <span>Super Administrador padrão: <strong>coari.comara@gmail.com</strong></span>
         </div>
 

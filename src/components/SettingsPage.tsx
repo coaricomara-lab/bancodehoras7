@@ -151,17 +151,17 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   if (!canEditSettings && userRole !== 'SUPER_ADMIN') {
     return (
       <div className={`p-8 rounded-2xl border text-center max-w-2xl mx-auto my-12 ${
-        isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900 shadow-sm'
+        isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900 shadow-sm'
       }`}>
         <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto mb-4 border border-amber-500/20">
           <Lock className="w-6 h-6" />
         </div>
         <h3 className="text-base font-bold mb-2">Painel de Configurações Institucionais Restrito</h3>
-        <p className={`text-xs max-w-md mx-auto mb-6 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+        <p className={`text-xs max-w-md mx-auto mb-6 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
           A parametrização de identidade da Organização Militar, cargos de comando, horários e normas de cálculo é restrita exclusivamente ao Administrador Geral (SUPER_ADMIN / TI).
         </p>
         <div className={`p-3 rounded-xl text-xs font-mono inline-block ${
-          isDark ? 'bg-[#0D0F14] text-amber-400 border border-[#2A2E38]' : 'bg-amber-50 text-amber-800 border border-amber-200'
+          isDark ? 'bg-[#0F1B33] text-amber-400 border border-[#335075]' : 'bg-amber-50 text-amber-800 border border-amber-200'
         }`}>
           Sua credencial atual: {currentUserEmail || 'Não identificado'} ({userRole || 'SEM_PERFIL'})
         </div>
@@ -175,7 +175,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       {/* 1. CABEÇALHO DA TELA DE CONFIGURAÇÕES */}
       {/* ========================================================= */}
       <div className={`p-6 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
-        isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900 shadow-xs'
+        isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900 shadow-xs'
       }`}>
         <div className="flex items-start gap-4">
           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${
@@ -191,7 +191,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 Configurações da Instituição
               </h1>
               <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
-                isDark ? 'bg-[#1F2229] text-blue-400 border-[#2A2E38]' : 'bg-blue-50 text-blue-700 border-blue-200'
+                isDark ? 'bg-[#243756] text-blue-400 border-[#335075]' : 'bg-blue-50 text-blue-700 border-blue-200'
               }`}>
                 {formData.siglaInstituicao || 'OM'} • v{formData.versao || 1}
               </span>
@@ -199,7 +199,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 Super Admin TI
               </span>
             </div>
-            <p className={`text-xs mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <p className={`text-xs mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Personalize a identidade da Organização Militar, cargos de chefia, canteiros ativos, regras de almoço e modelos de documentos impressos.
             </p>
             {formData.atualizadoEm && (
@@ -217,7 +217,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
             onClick={() => setIsResetModalOpen(true)}
             className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold border transition-colors cursor-pointer ${
               isDark
-                ? 'bg-[#15171C] hover:bg-[#1F2229] text-[#8E9299] hover:text-white border-[#2A2E38]'
+                ? 'bg-[#16243D] hover:bg-[#243756] text-[#94A3B8] hover:text-white border-[#335075]'
                 : 'bg-white hover:bg-slate-50 text-slate-700 border-slate-200'
             }`}
             title="Restaurar valores padrão originais da COMARA"
@@ -277,7 +277,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       {/* 3. BARRA DE NAVEGAÇÃO ENTRE ABAS */}
       {/* ========================================================= */}
       <div className={`p-1.5 rounded-2xl border flex items-center gap-1.5 overflow-x-auto ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-slate-100 border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-slate-100 border-slate-200'
       }`}>
         <button
           type="button"
@@ -288,7 +288,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-white text-blue-700 shadow-xs'
               : isDark
-                ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]'
+                ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
@@ -305,7 +305,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-white text-blue-700 shadow-xs'
               : isDark
-                ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]'
+                ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
@@ -314,7 +314,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
             activeSubTab === 'cargos'
               ? 'bg-white/20 text-white'
-              : isDark ? 'bg-[#0D0F14] text-gray-400' : 'bg-slate-200 text-slate-600'
+              : isDark ? 'bg-[#0F1B33] text-gray-400' : 'bg-slate-200 text-slate-600'
           }`}>
             {formData.cargos?.length || 0}
           </span>
@@ -329,7 +329,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-white text-blue-700 shadow-xs'
               : isDark
-                ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]'
+                ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
@@ -338,7 +338,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
             activeSubTab === 'sedes'
               ? 'bg-white/20 text-white'
-              : isDark ? 'bg-[#0D0F14] text-gray-400' : 'bg-slate-200 text-slate-600'
+              : isDark ? 'bg-[#0F1B33] text-gray-400' : 'bg-slate-200 text-slate-600'
           }`}>
             {formData.sedes?.length || 0}
           </span>
@@ -353,7 +353,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-white text-blue-700 shadow-xs'
               : isDark
-                ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]'
+                ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
@@ -370,7 +370,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-white text-blue-700 shadow-xs'
               : isDark
-                ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]'
+                ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
           }`}
         >
@@ -446,7 +446,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       {/* 5. RODAPÉ DE AÇÃO FIXO / FINAL */}
       {/* ========================================================= */}
       <div className={`p-4 rounded-2xl border flex items-center justify-between gap-4 ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="flex items-center gap-2 text-xs text-gray-400">
           <Info className="w-4 h-4 text-blue-500 shrink-0" />
@@ -481,7 +481,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       {isResetModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
           <div className={`w-full max-w-md p-6 rounded-2xl border shadow-2xl ${
-            isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900'
+            isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900'
           }`}>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20">
@@ -504,7 +504,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 type="button"
                 onClick={() => setIsResetModalOpen(false)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold border ${
-                  isDark ? 'border-[#2A2E38] text-gray-400 hover:text-white' : 'border-slate-200 text-slate-700 hover:bg-slate-100'
+                  isDark ? 'border-[#335075] text-gray-400 hover:text-white' : 'border-slate-200 text-slate-700 hover:bg-slate-100'
                 }`}
               >
                 Cancelar

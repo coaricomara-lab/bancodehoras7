@@ -179,9 +179,9 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
   if (!currentEmployee || !balance) {
     return (
       <div className={`p-8 text-center rounded-2xl border ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
-        <p className={isDark ? 'text-[#8E9299]' : 'text-slate-600'}>Nenhum colaborador selecionado.</p>
+        <p className={isDark ? 'text-[#94A3B8]' : 'text-slate-600'}>Nenhum colaborador selecionado.</p>
         <button onClick={onBack} className="mt-3 text-[#3B82F6] font-bold text-sm">
           Voltar para o painel
         </button>
@@ -193,13 +193,13 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
     <div className="space-y-6 font-sans">
       {/* Top Bar with Selector and Actions */}
       <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl border shadow-xs print:hidden transition-all ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="flex items-center space-x-3">
           <button
             onClick={onBack}
             className={`p-2 rounded-lg transition-colors ${
-              isDark ? 'hover:bg-[#1F2229] text-[#8E9299] hover:text-[#E0E2E5]' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-800'
+              isDark ? 'hover:bg-[#243756] text-[#94A3B8] hover:text-[#E2E8F0]' : 'hover:bg-slate-100 text-slate-500 hover:text-slate-800'
             }`}
             title="Voltar ao Dashboard"
           >
@@ -207,13 +207,13 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
           </button>
           
           <div className="flex items-center space-x-2">
-            <span className={`text-xs font-mono font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Colaborador:</span>
+            <span className={`text-xs font-mono font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Colaborador:</span>
             <select
               value={currentEmployee.matricula}
               onChange={(e) => onSelectMatricula(e.target.value)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold font-mono border focus:outline-hidden ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-[#3B82F6]' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6]' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
               }`}
             >
@@ -270,7 +270,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
 
       {/* Cabeçalho Institucional Oficial COMARA (Visível na Tela e na Impressão/PDF) */}
       <div className={`p-4 sm:p-5 rounded-2xl border shadow-xs flex items-center justify-between gap-4 transition-all print:border-b-2 print:border-slate-300 print:shadow-none print:rounded-none print:p-2 ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="flex items-center gap-4">
           <ComaraLogo size="lg" />
@@ -281,7 +281,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
             <h2 className={`text-sm sm:text-base font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'} print:text-black`}>
               EXTRATO INDIVIDUAL DE BANCO DE HORAS & COMPENSAÇÕES (SPTF)
             </h2>
-            <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'} print:text-slate-600`}>
+            <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'} print:text-slate-600`}>
               Sede/Canteiro: <span className="font-bold text-blue-400 print:text-black">{currentEmployee.sede}</span> • Gerado em: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
             </p>
           </div>
@@ -294,7 +294,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
 
       {/* Employee Profile Header Card */}
       <div className={`p-6 rounded-2xl border shadow-md relative overflow-hidden transition-all ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
           <div className="flex items-center space-x-4">
@@ -303,13 +303,13 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                 src={currentEmployee.avatarUrl || currentEmployee.url_foto_perfil}
                 alt={currentEmployee.nome}
                 className={`w-16 h-16 rounded-2xl object-cover border-2 shadow-lg ${
-                  isDark ? 'border-[#2A2E38]' : 'border-slate-200'
+                  isDark ? 'border-[#335075]' : 'border-slate-200'
                 }`}
                 referrerPolicy="no-referrer"
               />
             ) : (
               <div className={`w-16 h-16 rounded-2xl border flex items-center justify-center font-bold text-xl shadow-lg font-mono ${
-                isDark ? 'bg-[#1F2229] border-[#2A2E38] text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'
+                isDark ? 'bg-[#243756] border-[#335075] text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-600'
               }`}>
                 {currentEmployee.nome.split(' ').map(n => n[0]).slice(0, 2).join('')}
               </div>
@@ -330,7 +330,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
               </div>
               
               <div className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-mono ${
-                isDark ? 'text-[#8E9299]' : 'text-slate-600'
+                isDark ? 'text-[#94A3B8]' : 'text-slate-600'
               }`}>
                 <span className="flex items-center gap-1 font-bold">
                   <span className="text-blue-500">#{currentEmployee.matricula}</span>
@@ -340,7 +340,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                 <span>•</span>
                 <span className="flex items-center gap-1">
                   <Building className="w-3.5 h-3.5 text-blue-500" />
-                  Sede Origem: <strong className={isDark ? 'text-[#E0E2E5]' : 'text-slate-800'}>{currentEmployee.sede}</strong>
+                  Sede Origem: <strong className={isDark ? 'text-[#E2E8F0]' : 'text-slate-800'}>{currentEmployee.sede}</strong>
                 </span>
                 {currentEmployee.sede_atual && currentEmployee.sede_atual !== currentEmployee.sede && (
                   <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold border ${
@@ -378,11 +378,11 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
 
           {/* Quick Balance KPI Widget */}
           <div className={`flex items-center gap-6 p-4 rounded-xl border ${
-            isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+            isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
           }`}>
             <div>
               <span className={`text-[10px] font-mono uppercase tracking-wider block ${
-                isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                isDark ? 'text-[#94A3B8]' : 'text-slate-500'
               }`}>
                 Saldo Consolidado SPTF
               </span>
@@ -391,38 +391,38 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                   ? isDark ? 'text-green-400' : 'text-emerald-600'
                   : balance.saldoTotalHoras < 0 
                   ? isDark ? 'text-red-400' : 'text-red-600'
-                  : isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                  : isDark ? 'text-[#94A3B8]' : 'text-slate-500'
               }`}>
                 {formatHoursDecimal(balance.saldoTotalHoras)}
               </div>
-              <span className={`text-[11px] font-mono block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <span className={`text-[11px] font-mono block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 {formatHoursToDays(balance.saldoTotalHoras)}
               </span>
             </div>
 
             <div className={`border-l pl-5 space-y-1 text-xs font-mono ${
-              isDark ? 'border-[#1F2229]' : 'border-slate-200'
+              isDark ? 'border-[#243756]' : 'border-slate-200'
             }`}>
               <div className="flex items-center gap-2">
-                <span className={isDark ? 'text-[#8E9299]' : 'text-slate-500'}>Positivas (Créditos):</span>
+                <span className={isDark ? 'text-[#94A3B8]' : 'text-slate-500'}>Positivas (Créditos):</span>
                 <strong className={isDark ? 'text-green-400' : 'text-emerald-600'}>
                   +{balance.totalCreditos.toFixed(1)}h
                 </strong>
               </div>
               <div className="flex items-center gap-2">
-                <span className={isDark ? 'text-[#8E9299]' : 'text-slate-500'}>Negativas (Débitos):</span>
+                <span className={isDark ? 'text-[#94A3B8]' : 'text-slate-500'}>Negativas (Débitos):</span>
                 <strong className={isDark ? 'text-red-400' : 'text-red-600'}>
                   -{balance.totalDebitos.toFixed(1)}h
                 </strong>
               </div>
               <div className="flex items-center gap-2 pt-0.5">
-                <span className={isDark ? 'text-[#8E9299]' : 'text-slate-500'}>Status Geral:</span>
+                <span className={isDark ? 'text-[#94A3B8]' : 'text-slate-500'}>Status Geral:</span>
                 <span className={`px-1.5 py-0.2 rounded font-bold text-[10px] border ${
                   balance.status === 'CREDOR'
                     ? isDark ? 'bg-emerald-950/40 text-green-400 border-emerald-800/40' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                     : balance.status === 'DEVEDOR'
                     ? isDark ? 'bg-red-950/40 text-red-400 border-red-800/40' : 'bg-red-50 text-red-700 border-red-200'
-                    : isDark ? 'bg-[#1F2229] text-[#8E9299]' : 'bg-slate-200 text-slate-700'
+                    : isDark ? 'bg-[#243756] text-[#94A3B8]' : 'bg-slate-200 text-slate-700'
                 }`}>
                   {balance.status}
                 </span>
@@ -436,17 +436,17 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Card 1: Horas Liquidadas / Abatidas */}
         <div className={`p-4 rounded-xl border flex items-center justify-between ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
         }`}>
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-mono text-[#8E9299]">
+            <div className="flex items-center gap-1.5 text-xs font-mono text-[#94A3B8]">
               <Layers className="w-4 h-4 text-blue-500" />
               <span>HORAS LIQUIDADAS (FIFO)</span>
             </div>
             <div className="text-xl font-bold font-mono text-blue-500 mt-1">
               {fifoResult.totalHorasLiquidadas.toFixed(1)}h
             </div>
-            <p className="text-[11px] font-mono text-[#8E9299] mt-0.5">
+            <p className="text-[11px] font-mono text-[#94A3B8] mt-0.5">
               {compensatedRecordsCount} lançamentos quitados via folgas
             </p>
           </div>
@@ -457,17 +457,17 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
 
         {/* Card 2: Saldo Remanescente em Aberto */}
         <div className={`p-4 rounded-xl border flex items-center justify-between ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
         }`}>
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-mono text-[#8E9299]">
+            <div className="flex items-center gap-1.5 text-xs font-mono text-[#94A3B8]">
               <Clock className="w-4 h-4 text-amber-500" />
               <span>SALDO REMANESCENTE ABERTO</span>
             </div>
             <div className="text-xl font-bold font-mono text-amber-500 mt-1">
               +{fifoResult.totalHorasPendentes.toFixed(1)}h
             </div>
-            <p className="text-[11px] font-mono text-[#8E9299] mt-0.5">
+            <p className="text-[11px] font-mono text-[#94A3B8] mt-0.5">
               {pendingRecordsCount} dias pendentes de compensação
             </p>
           </div>
@@ -480,17 +480,17 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
         <div className={`p-4 rounded-xl border flex items-center justify-between ${
           expiringRecords.length > 0 
             ? isDark ? 'bg-red-950/20 border-red-900/50' : 'bg-red-50/70 border-red-200'
-            : isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            : isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
         }`}>
           <div>
-            <div className="flex items-center gap-1.5 text-xs font-mono text-[#8E9299]">
+            <div className="flex items-center gap-1.5 text-xs font-mono text-[#94A3B8]">
               <ShieldCheck className={`w-4 h-4 ${expiringRecords.length > 0 ? 'text-red-500' : 'text-emerald-500'}`} />
               <span>PRESCRIÇÃO SPTF (180 DIAS)</span>
             </div>
             <div className={`text-xl font-bold font-mono mt-1 ${expiringRecords.length > 0 ? 'text-red-400' : 'text-emerald-500'}`}>
               {expiringRecords.length > 0 ? `${expiringRecords.length} Alertas` : 'Conforme Art. 59 SPTF'}
             </div>
-            <p className="text-[11px] font-mono text-[#8E9299] mt-0.5">
+            <p className="text-[11px] font-mono text-[#94A3B8] mt-0.5">
               {expiringRecords.length > 0 
                 ? 'Lançamentos próximos de prescrever 6 meses' 
                 : 'Nenhum lançamento vencido de banco'}
@@ -523,29 +523,29 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
 
       {/* Extrato Detalhado de Ocorrências com Filtro de Rastreabilidade FIFO */}
       <div className={`rounded-2xl border shadow-md overflow-hidden ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className={`p-4 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-          isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+          isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
         }`}>
           <div className="flex items-center space-x-2">
             <FileText className="w-4 h-4 text-blue-500" />
             <h3 className={`font-bold text-sm ${isDark ? 'text-white' : 'text-slate-900'}`}>
               Rastreabilidade de Horas & Compensação FIFO
             </h3>
-            <span className={`text-xs font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-xs font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               ({displayedRecords.length} lançamentos exibidos)
             </span>
           </div>
 
           {/* Abas de Visualização / Filtro FIFO */}
-          <div className="flex items-center bg-[#0A0B0D] p-1 rounded-xl border border-[#1F2229] text-xs font-mono">
+          <div className="flex items-center bg-[#0B1426] p-1 rounded-xl border border-[#243756] text-xs font-mono">
             <button
               onClick={() => setFifoFilter('TODOS')}
               className={`px-3 py-1.5 rounded-lg transition-all font-semibold ${
                 fifoFilter === 'TODOS'
                   ? 'bg-blue-600 text-white shadow-xs'
-                  : isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                  : isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Todos os Lançamentos ({allProcessedRecords.length})
@@ -555,7 +555,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
               className={`px-3 py-1.5 rounded-lg transition-all font-semibold flex items-center gap-1.5 ${
                 fifoFilter === 'PENDENTES'
                   ? 'bg-amber-600 text-white shadow-xs'
-                  : isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                  : isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>Apenas Saldos Pendentes</span>
@@ -568,7 +568,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
               className={`px-3 py-1.5 rounded-lg transition-all font-semibold flex items-center gap-1.5 ${
                 fifoFilter === 'COMPENSACOES'
                   ? 'bg-emerald-600 text-white shadow-xs'
-                  : isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                  : isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <span>Histórico de Compensações</span>
@@ -581,9 +581,9 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse font-mono">
-            <thead className={isDark ? 'bg-[#0D0F14]' : 'bg-slate-50'}>
+            <thead className={isDark ? 'bg-[#0F1B33]' : 'bg-slate-50'}>
               <tr className={`text-[10px] uppercase font-bold border-b tracking-wider ${
-                isDark ? 'text-[#8E9299] border-[#1F2229]' : 'text-slate-600 border-slate-200'
+                isDark ? 'text-[#94A3B8] border-[#243756]' : 'text-slate-600 border-slate-200'
               }`}>
                 <th className="py-3 px-4">Data Ocorrência</th>
                 <th className="py-3 px-4">Tipo & Regime</th>
@@ -596,11 +596,11 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
               </tr>
             </thead>
             <tbody className={`divide-y ${
-              isDark ? 'divide-[#1F2229] text-[#E0E2E5]' : 'divide-slate-200 text-slate-800'
+              isDark ? 'divide-[#243756] text-[#E2E8F0]' : 'divide-slate-200 text-slate-800'
             }`}>
               {displayedRecords.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className={`py-10 text-center ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                  <td colSpan={8} className={`py-10 text-center ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                     Nenhum lançamento corresponde ao filtro de visualização selecionado ({fifoFilter}).
                   </td>
                 </tr>
@@ -615,13 +615,13 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                     <React.Fragment key={rec.id}>
                       <tr className={`transition-colors ${
                         isExpanded 
-                          ? isDark ? 'bg-[#1C1F26]' : 'bg-slate-100' 
-                          : isDark ? 'hover:bg-[#1C1F26]/70' : 'hover:bg-slate-50/80'
+                          ? isDark ? 'bg-[#1E3252]' : 'bg-slate-100' 
+                          : isDark ? 'hover:bg-[#1E3252]/70' : 'hover:bg-slate-50/80'
                       }`}>
                         {/* Data Ocorrência */}
                         <td className={`py-3.5 px-4 font-bold whitespace-nowrap ${isDark ? 'text-white' : 'text-slate-900'}`}>
                           <div>{rec.data_ocorrencia || rec.dataRegistro}</div>
-                          <div className={`text-[10px] font-normal ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                          <div className={`text-[10px] font-normal ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                             {rec.diaSemanaNome}
                             {rec.eFeriado && <span className="text-amber-500 font-bold ml-1">({rec.nomeFeriado || 'Feriado'})</span>}
                           </div>
@@ -660,7 +660,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                               ? isDark ? 'text-green-400' : 'text-emerald-600'
                               : isDebito 
                               ? isDark ? 'text-red-400' : 'text-red-600'
-                              : isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                              : isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                           }`}>
                             {rec.saldoCalculado > 0 ? `+${rec.saldoCalculado.toFixed(1)}h` : rec.saldoCalculado < 0 ? `${rec.saldoCalculado.toFixed(1)}h` : '0.0h'}
                           </span>
@@ -688,7 +688,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                         {/* Saldo Remanescente */}
                         <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold">
                           {rec.saldoCalculado === 0 ? (
-                            <span className={isDark ? 'text-[#8E9299]' : 'text-slate-400'}>—</span>
+                            <span className={isDark ? 'text-[#94A3B8]' : 'text-slate-400'}>—</span>
                           ) : (rec.saldo_remanescente && rec.saldo_remanescente > 0.001) ? (
                             <span className={rec.saldoCalculado > 0 ? 'text-amber-400' : 'text-red-400'}>
                               {rec.saldoCalculado > 0 ? `+${rec.saldo_remanescente.toFixed(1)}h` : `-${rec.saldo_remanescente.toFixed(1)}h`}
@@ -705,7 +705,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                               {rec.liquidacoes.slice(0, 1).map((liq, lIdx) => (
                                 <div key={lIdx} className="text-[11px] flex items-center gap-1">
                                   <LinkIcon className="w-3 h-3 text-blue-400 shrink-0" />
-                                  <span className={isDark ? 'text-[#E0E2E5]' : 'text-slate-700'}>
+                                  <span className={isDark ? 'text-[#E2E8F0]' : 'text-slate-700'}>
                                     {rec.saldoCalculado > 0 ? `Baixado em ${liq.data_baixa}` : `Originado em ${liq.data_origem}`}
                                   </span>
                                   <span className="text-blue-400 font-bold">({liq.horas_liquidadas}h)</span>
@@ -718,7 +718,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                               )}
                             </div>
                           ) : (
-                            <span className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                            <span className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                               {rec.saldoCalculado === 0 ? 'Abonado SPTF' : 'Aguardando compensação'}
                             </span>
                           )}
@@ -740,7 +740,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                               <span>Ver Anexo</span>
                             </button>
                           ) : (
-                            <span className={isDark ? 'text-[#5C616A]' : 'text-slate-400'}>—</span>
+                            <span className={isDark ? 'text-[#64748B]' : 'text-slate-400'}>—</span>
                           )}
                         </td>
 
@@ -778,7 +778,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                             <button
                               onClick={() => toggleExpandRecord(rec.id)}
                               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                                isDark ? 'hover:bg-[#2A2E38] text-[#8E9299]' : 'hover:bg-slate-200 text-slate-500'
+                                isDark ? 'hover:bg-[#335075] text-[#94A3B8]' : 'hover:bg-slate-200 text-slate-500'
                               }`}
                               title="Ver detalhes de rastreabilidade"
                             >
@@ -790,11 +790,11 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
 
                       {/* Linha Expansível com Rastreabilidade Completa */}
                       {isExpanded && (
-                        <tr className={isDark ? 'bg-[#0D0F14]/90 border-b border-[#1F2229]' : 'bg-slate-50 border-b border-slate-200'}>
+                        <tr className={isDark ? 'bg-[#0F1B33]/90 border-b border-[#243756]' : 'bg-slate-50 border-b border-slate-200'}>
                           <td colSpan={8} className="p-4 space-y-3">
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
                               {/* Coluna 1: Dados do Lançamento */}
-                              <div className={`p-3 rounded-xl border flex flex-col justify-between ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+                              <div className={`p-3 rounded-xl border flex flex-col justify-between ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
                                 <div>
                                   <div className="font-bold text-blue-400 mb-1 flex items-center gap-1.5">
                                     <FileText className="w-3.5 h-3.5" />
@@ -810,7 +810,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                                 </div>
 
                                 {onOpenEditEntry && (
-                                  <div className="pt-2 mt-2 border-t border-[#1F2229] flex items-center gap-2">
+                                  <div className="pt-2 mt-2 border-t border-[#243756] flex items-center gap-2">
                                     <button
                                       onClick={() => onOpenEditEntry(rec)}
                                       className="px-2.5 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[11px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -823,7 +823,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                               </div>
 
                               {/* Coluna 2: Histórico de Liquidações FIFO */}
-                              <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+                              <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
                                 <div className="font-bold text-emerald-400 mb-1 flex items-center gap-1.5">
                                   <LinkIcon className="w-3.5 h-3.5" />
                                   <span>Vínculos de Baixa FIFO</span>
@@ -831,22 +831,22 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
                                 {rec.liquidacoes && rec.liquidacoes.length > 0 ? (
                                   <div className="space-y-1.5 text-[11px] max-h-32 overflow-y-auto">
                                     {rec.liquidacoes.map((l, i) => (
-                                      <div key={i} className="p-1.5 rounded bg-[#0D0F14] border border-[#1F2229]">
+                                      <div key={i} className="p-1.5 rounded bg-[#0F1B33] border border-[#243756]">
                                         <div className="flex justify-between font-bold">
                                           <span>{rec.saldoCalculado > 0 ? `Baixa em ${l.data_baixa}` : `Origem em ${l.data_origem}`}</span>
                                           <span className="text-emerald-400">{l.horas_liquidadas}h</span>
                                         </div>
-                                        <div className="text-[10px] text-[#8E9299]">Tipo: {l.tipo_baixa} • {l.observacao}</div>
+                                        <div className="text-[10px] text-[#94A3B8]">Tipo: {l.tipo_baixa} • {l.observacao}</div>
                                       </div>
                                     ))}
                                   </div>
                                 ) : (
-                                  <p className="text-[11px] text-[#8E9299]">Nenhuma liquidação registrada ainda.</p>
+                                  <p className="text-[11px] text-[#94A3B8]">Nenhuma liquidação registrada ainda.</p>
                                 )}
                               </div>
 
                               {/* Coluna 3: Prescrição e Validade SPTF */}
-                              <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+                              <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
                                 <div className="font-bold text-amber-400 mb-1 flex items-center gap-1.5">
                                   <ShieldCheck className="w-3.5 h-3.5" />
                                   <span>Validade SPTF (180 dias)</span>
@@ -883,7 +883,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
         {/* (Servidor SPTF, Chefe do Canteiro/Seção, Chefe da DA)         */}
         {/* ------------------------------------------------------------- */}
         <div className={`p-6 border-t ${
-          isDark ? 'border-[#1F2229] bg-[#0D0F14]/60' : 'border-slate-200 bg-slate-50/70'
+          isDark ? 'border-[#243756] bg-[#0F1B33]/60' : 'border-slate-200 bg-slate-50/70'
         } print:bg-white print:border-black print:p-4 print-avoid-break`}>
           <div className="text-[10px] font-mono uppercase font-bold text-center mb-6 text-slate-500 print:text-black">
             AUTENTICAÇÃO & CONFORMIDADE REGULAMENTAR — {institutionSettings?.siglaInstituicao || 'COMARA'} / SPTF

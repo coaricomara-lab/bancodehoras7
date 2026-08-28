@@ -528,14 +528,14 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
     >
       <div 
         className={`w-full max-w-4xl rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[94vh] ${
-          isDark ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-slate-200 text-slate-800'
+          isDark ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]' : 'bg-white border-slate-200 text-slate-800'
         }`}
       >
         {/* ========================================================= */}
         {/* 1. CABEÇALHO DO MODAL                                     */}
         {/* ========================================================= */}
         <div className={`px-5 py-4 border-b flex items-center justify-between shrink-0 ${
-          isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+          isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
         }`}>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 shrink-0">
@@ -550,7 +550,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                   Múltiplos Apontamentos
                 </span>
               </div>
-              <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Cadastre horas para múltiplos colaboradores ou equipes de canteiro simultaneamente com cálculo CLT automático.
               </p>
             </div>
@@ -560,7 +560,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
             onClick={handleClose}
             aria-label="Fechar Modal de Lançamento em Lote"
             className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${
-              isDark ? 'border-[#1F2229] hover:bg-[#1F2229] text-[#8E9299]' : 'border-slate-200 hover:bg-slate-100 text-slate-500'
+              isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-200 hover:bg-slate-100 text-slate-500'
             }`}
             title="Fechar Modal (Esc)"
           >
@@ -572,7 +572,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
         {/* 2. BARRA DE ABAS DE OPERAÇÃO                             */}
         {/* ========================================================= */}
         <div className={`px-4 py-2 border-b flex flex-wrap items-center gap-1.5 shrink-0 ${
-          isDark ? 'bg-[#101217] border-[#1F2229]' : 'bg-slate-100/80 border-slate-200'
+          isDark ? 'bg-[#101217] border-[#243756]' : 'bg-slate-100/80 border-slate-200'
         }`}>
           <button
             type="button"
@@ -583,7 +583,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
               activeMode === 'MULTI_SELECAO'
                 ? 'bg-blue-600 text-white shadow-xs'
-                : isDark ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+                : isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
             }`}
           >
             <Users className="w-3.5 h-3.5" />
@@ -606,7 +606,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeMode === 'GRADE_DIARIA'
                   ? 'bg-blue-600 text-white shadow-xs'
-                  : isDark ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+                  : isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
               }`}
             >
               <Table className="w-3.5 h-3.5" />
@@ -625,7 +625,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                 activeMode === 'FLUXO_RAPIDO'
                   ? 'bg-blue-600 text-white shadow-xs'
-                  : isDark ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
+                  : isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-600 hover:text-slate-900 hover:bg-white'
               }`}
             >
               <Zap className="w-3.5 h-3.5" />
@@ -667,13 +667,13 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
           {/* AVISO QUANDO BASE DE COLABORADORES ESTIVER VAZIA */}
           {safeEmployees.length === 0 && (
             <div className={`p-6 rounded-2xl border text-center space-y-3 ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
             }`}>
               <Users className="w-8 h-8 text-blue-500 mx-auto opacity-70" />
               <h3 className={`font-bold text-sm ${isDark ? 'text-white' : 'text-slate-900'}`}>
                 Nenhum Colaborador Cadastrado
               </h3>
-              <p className={`text-xs max-w-md mx-auto ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+              <p className={`text-xs max-w-md mx-auto ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                 Para realizar lançamentos em lote, primeiro cadastre ou importe colaboradores via CSV na aba "Colaboradores".
               </p>
             </div>
@@ -687,10 +687,10 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
               
               {/* Painel de Parâmetros do Lançamento */}
               <div className={`p-4 rounded-xl border grid grid-cols-1 sm:grid-cols-3 gap-3 ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
               }`}>
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Data da Ocorrência *
                   </label>
                   <input
@@ -699,13 +699,13 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={dataRegistro}
                     onChange={(e) => setDataRegistro(e.target.value)}
                     className={`w-full rounded-lg px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Tipo de Ocorrência *
                   </label>
                   <select
@@ -721,7 +721,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       }
                     }}
                     className={`w-full rounded-lg px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   >
                     <option value="ACABOU_BANHOU">✨ ACABOU BANHOU: Missão Cumprida (Sem Débito / Não Desconta)</option>
@@ -737,7 +737,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                 </div>
 
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Horas Brutas {tipoOcorrencia === 'TRABALHO' ? '*' : ''}
                   </label>
                   <input
@@ -749,13 +749,13 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={tipoOcorrencia === 'FALTA_INJUSTIFICADA' ? 8.0 : (tipoOcorrencia === 'ACABOU_BANHOU' ? 0.0 : horasBrutas)}
                     onChange={(e) => setHorasBrutas(parseFloat(e.target.value) || 0)}
                     className={`w-full rounded-lg px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500 disabled:opacity-50' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 disabled:opacity-50'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500 disabled:opacity-50' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 disabled:opacity-50'
                     }`}
                   />
                 </div>
 
                 <div className="sm:col-span-3">
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Observação do Lote {tipoOcorrencia === 'ACABOU_BANHOU' ? '(Preenchida Automaticamente)' : '(Opcional)'}
                   </label>
                   <input
@@ -764,14 +764,14 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={observacao}
                     onChange={(e) => setObservacao(e.target.value)}
                     className={`w-full rounded-lg px-3 py-2 border text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   />
                 </div>
 
                 {/* Prévia do cálculo SPTF */}
                 <div className={`sm:col-span-3 p-3 rounded-lg border flex flex-wrap items-center justify-between gap-2 ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                  isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                 }`}>
                   <div className="flex items-center gap-2">
                     <span className="font-semibold text-blue-500">Regra SPTF:</span>
@@ -808,7 +808,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] ${
                       selectedMatriculas.length > 0
                         ? 'bg-blue-600 text-white font-bold'
-                        : isDark ? 'bg-[#0D0F14] text-[#8E9299]' : 'bg-slate-200 text-slate-700'
+                        : isDark ? 'bg-[#0F1B33] text-[#94A3B8]' : 'bg-slate-200 text-slate-700'
                     }`}>
                       {selectedMatriculas.length} selecionado(s) de {filteredEmployeesForSelection.length} filtrados
                     </span>
@@ -819,7 +819,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       type="button"
                       onClick={handleSelectAllFiltered}
                       className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-colors cursor-pointer ${
-                        isDark ? 'border-[#2A2E38] hover:bg-[#1F2229] text-blue-400' : 'border-blue-200 hover:bg-blue-50 text-blue-700'
+                        isDark ? 'border-[#335075] hover:bg-[#243756] text-blue-400' : 'border-blue-200 hover:bg-blue-50 text-blue-700'
                       }`}
                     >
                       {filteredEmployeesForSelection.length > 0 && filteredEmployeesForSelection.every(e => selectedMatriculas.includes(e.matricula || e.id || ''))
@@ -831,7 +831,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                         type="button"
                         onClick={() => setSelectedMatriculas([])}
                         className={`text-xs font-semibold px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                          isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-500 hover:text-slate-800'
+                          isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-500 hover:text-slate-800'
                         }`}
                       >
                         Limpar Seleção
@@ -849,10 +849,10 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       value={searchEmployeeQuery}
                       onChange={(e) => setSearchEmployeeQuery(e.target.value)}
                       className={`w-full rounded-lg pl-8 pr-3 py-1.5 border text-xs focus:outline-hidden ${
-                        isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
                       }`}
                     />
-                    <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-400'}`} />
+                    <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
                   </div>
 
                   <div>
@@ -860,7 +860,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       value={filterSede}
                       onChange={(e) => setFilterSede(e.target.value)}
                       className={`w-full rounded-lg px-2.5 py-1.5 border text-xs focus:outline-hidden ${
-                        isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
                       }`}
                     >
                       <option value="TODAS">Todas as Sedes / Canteiros</option>
@@ -875,7 +875,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       value={filterFuncao}
                       onChange={(e) => setFilterFuncao(e.target.value)}
                       className={`w-full rounded-lg px-2.5 py-1.5 border text-xs focus:outline-hidden ${
-                        isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                        isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
                       }`}
                     >
                       <option value="TODAS">Todas as Funções</option>
@@ -888,10 +888,10 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
 
                 {/* Lista com Checkboxes */}
                 <div className={`border rounded-xl max-h-60 overflow-y-auto divide-y shadow-inner ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] divide-[#1F2229]' : 'bg-white border-slate-200 divide-slate-100'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] divide-[#243756]' : 'bg-white border-slate-200 divide-slate-100'
                 }`}>
                   {filteredEmployeesForSelection.length === 0 ? (
-                    <div className={`p-6 text-center ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                    <div className={`p-6 text-center ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                       Nenhum colaborador encontrado para os filtros selecionados.
                     </div>
                   ) : (
@@ -906,7 +906,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                           className={`px-3.5 py-2.5 flex items-center justify-between cursor-pointer transition-colors ${
                             isSelected
                               ? isDark ? 'bg-blue-950/40 border-l-2 border-blue-500' : 'bg-blue-50/80 border-l-2 border-blue-500'
-                              : isDark ? 'hover:bg-[#15171C]' : 'hover:bg-slate-50'
+                              : isDark ? 'hover:bg-[#16243D]' : 'hover:bg-slate-50'
                           }`}
                         >
                           <div className="flex items-center gap-3">
@@ -937,7 +937,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                                   #{mat}
                                 </span>
                               </div>
-                              <div className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                              <div className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                                 {emp.funcao || 'Operacional'}
                               </div>
                             </div>
@@ -945,7 +945,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
 
                           <div className="flex items-center gap-2 text-[10px] font-mono">
                             <span className={`px-2 py-0.5 rounded ${
-                              isDark ? 'bg-[#15171C] text-slate-300 border border-[#2A2E38]' : 'bg-slate-100 text-slate-700 border border-slate-200'
+                              isDark ? 'bg-[#16243D] text-slate-300 border border-[#335075]' : 'bg-slate-100 text-slate-700 border border-slate-200'
                             }`}>
                               Canteiro: {emp.sede_atual || emp.sede || 'KO'}
                             </span>
@@ -959,9 +959,9 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
 
               {/* Ações Inferiores */}
               <div className={`pt-3 border-t flex items-center justify-between ${
-                isDark ? 'border-[#1F2229]' : 'border-slate-200'
+                isDark ? 'border-[#243756]' : 'border-slate-200'
               }`}>
-                <span className={`text-[11px] font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <span className={`text-[11px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   {selectedMatriculas.length} registro(s) pronto(s) para gravação.
                 </span>
 
@@ -970,7 +970,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     type="button"
                     onClick={handleClose}
                     className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
-                      isDark ? 'border-[#1F2229] hover:bg-[#1F2229] text-[#8E9299]' : 'border-slate-200 hover:bg-slate-100 text-slate-600'
+                      isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-200 hover:bg-slate-100 text-slate-600'
                     }`}
                   >
                     Cancelar
@@ -1004,10 +1004,10 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
             <form onSubmit={handleSaveGridBatch} className="space-y-4">
               {/* Barra Superior da Grade: Data & Filtros */}
               <div className={`p-4 rounded-xl border grid grid-cols-1 sm:grid-cols-4 gap-3 ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
               }`}>
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Data da Grade *
                   </label>
                   <input
@@ -1016,20 +1016,20 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={dataRegistro}
                     onChange={(e) => setDataRegistro(e.target.value)}
                     className={`w-full rounded-lg px-3 py-1.5 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Filtrar Canteiro/Sede
                   </label>
                   <select
                     value={filterSede}
                     onChange={(e) => setFilterSede(e.target.value)}
                     className={`w-full rounded-lg px-2.5 py-1.5 border text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   >
                     <option value="TODAS">Todas as Sedes / Canteiros</option>
@@ -1040,7 +1040,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     Buscar Colaborador
                   </label>
                   <div className="relative">
@@ -1050,21 +1050,21 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       value={searchEmployeeQuery}
                       onChange={(e) => setSearchEmployeeQuery(e.target.value)}
                       className={`w-full rounded-lg pl-8 pr-3 py-1.5 border text-xs focus:outline-hidden ${
-                        isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                        isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                       }`}
                     />
-                    <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-400'}`} />
+                    <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
                   </div>
                 </div>
               </div>
 
               {/* Tabela Interativa de Grade Diária */}
               <div className={`border rounded-xl overflow-hidden shadow-inner max-h-72 overflow-y-auto ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-slate-200'
               }`}>
                 <table className="w-full text-left text-xs border-collapse">
                   <thead className={`sticky top-0 z-10 text-[10px] uppercase font-bold tracking-wider border-b ${
-                    isDark ? 'bg-[#15171C] border-[#1F2229] text-[#8E9299]' : 'bg-slate-100 border-slate-200 text-slate-600'
+                    isDark ? 'bg-[#16243D] border-[#243756] text-[#94A3B8]' : 'bg-slate-100 border-slate-200 text-slate-600'
                   }`}>
                     <tr>
                       <th className="py-2.5 px-3 w-12 text-center">Incluir</th>
@@ -1075,10 +1075,10 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       <th className="py-2.5 px-3">Observação</th>
                     </tr>
                   </thead>
-                  <tbody className={`divide-y ${isDark ? 'divide-[#1F2229]' : 'divide-slate-100'}`}>
+                  <tbody className={`divide-y ${isDark ? 'divide-[#243756]' : 'divide-slate-100'}`}>
                     {currentGridList.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className={`py-6 text-center ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <td colSpan={6} className={`py-6 text-center ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Nenhum colaborador encontrado com os filtros ativos.
                         </td>
                       </tr>
@@ -1090,7 +1090,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                             key={row.matricula}
                             className={`transition-colors ${
                               isChecked
-                                ? isDark ? 'hover:bg-[#15171C]' : 'hover:bg-slate-50'
+                                ? isDark ? 'hover:bg-[#16243D]' : 'hover:bg-slate-50'
                                 : isDark ? 'opacity-40 bg-[#0A0C0F]' : 'opacity-40 bg-slate-50'
                             }`}
                           >
@@ -1122,7 +1122,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                             </td>
                             <td className="py-2 px-3 font-mono text-[11px]">
                               <span className={`px-1.5 py-0.5 rounded ${
-                                isDark ? 'bg-[#15171C] text-slate-300' : 'bg-slate-100 text-slate-700'
+                                isDark ? 'bg-[#16243D] text-slate-300' : 'bg-slate-100 text-slate-700'
                               }`}>
                                 {row.sede}
                               </span>
@@ -1144,7 +1144,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                                   }));
                                 }}
                                 className={`w-full rounded-md px-2 py-1 border text-[11px] font-mono focus:outline-hidden ${
-                                  isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                                 }`}
                               >
                                 <option value="ACABOU_BANHOU">✨ ACABOU BANHOU (0h)</option>
@@ -1178,7 +1178,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                                   }));
                                 }}
                                 className={`w-16 text-center rounded-md px-1 py-1 border font-mono text-[11px] focus:outline-hidden ${
-                                  isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                                 }`}
                               />
                             </td>
@@ -1201,7 +1201,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                                   }));
                                 }}
                                 className={`w-full rounded-md px-2 py-1 border text-[11px] focus:outline-hidden ${
-                                  isDark ? 'bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
+                                  isDark ? 'bg-[#16243D] border-[#243756] text-white focus:border-blue-500' : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                                 }`}
                               />
                             </td>
@@ -1215,9 +1215,9 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
 
               {/* Botão de Gravar Grade */}
               <div className={`pt-3 border-t flex items-center justify-between ${
-                isDark ? 'border-[#1F2229]' : 'border-slate-200'
+                isDark ? 'border-[#243756]' : 'border-slate-200'
               }`}>
-                <span className={`text-[11px] font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <span className={`text-[11px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   {currentGridList.filter(r => r.incluir).length} apontamentos selecionados para salvar.
                 </span>
 
@@ -1226,7 +1226,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     type="button"
                     onClick={handleClose}
                     className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
-                      isDark ? 'border-[#1F2229] hover:bg-[#1F2229] text-[#8E9299]' : 'border-slate-200 hover:bg-slate-100 text-slate-600'
+                      isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-200 hover:bg-slate-100 text-slate-600'
                     }`}
                   >
                     Cancelar
@@ -1260,7 +1260,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
             <form onSubmit={handleSaveQuickSingle} className="space-y-4">
               {/* Campo de Busca / Auto-Complete */}
               <div>
-                <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   1. Matrícula ou Nome do Colaborador *
                 </label>
                 <div className="relative">
@@ -1280,17 +1280,17 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     }}
                     className={`w-full rounded-xl pl-4 pr-10 py-2.5 border text-xs focus:outline-hidden font-mono ${
                       isDark
-                        ? 'bg-[#0D0F14] border-[#1F2229] focus:border-blue-500 text-white'
+                        ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 text-white'
                         : 'bg-slate-50 border-slate-300 focus:border-blue-500 text-slate-900'
                     }`}
                   />
-                  <Search className={`absolute right-3.5 top-3 w-4 h-4 ${isDark ? 'text-[#8E9299]' : 'text-slate-400'}`} />
+                  <Search className={`absolute right-3.5 top-3 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
                 </div>
 
                 {/* Sugestões de Auto-complete */}
                 {matchingEmployeesQuick.length > 0 && !selectedEmployee && (
                   <div className={`mt-1.5 border rounded-xl max-h-44 overflow-y-auto shadow-xl z-20 divide-y ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] divide-[#1F2229]' : 'bg-white border-slate-200 divide-slate-100'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] divide-[#243756]' : 'bg-white border-slate-200 divide-slate-100'
                   }`}>
                     {matchingEmployeesQuick.map((emp) => {
                       const mat = emp.matricula || emp.id || '';
@@ -1302,7 +1302,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                           type="button"
                           onClick={() => handleSelectQuickEmployee(emp)}
                           className={`w-full px-3 py-2 text-left flex items-center justify-between transition-colors cursor-pointer ${
-                            isDark ? 'hover:bg-[#1F2229]' : 'hover:bg-blue-50'
+                            isDark ? 'hover:bg-[#243756]' : 'hover:bg-blue-50'
                           }`}
                         >
                           <div className="flex items-center gap-2.5">
@@ -1337,7 +1337,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                 {/* Card do Colaborador Selecionado */}
                 {selectedEmployee && (
                   <div className={`mt-2 p-3 rounded-xl border flex items-center justify-between ${
-                    isDark ? 'bg-[#0D0F14] border-blue-500/30' : 'bg-blue-50/70 border-blue-200'
+                    isDark ? 'bg-[#0F1B33] border-blue-500/30' : 'bg-blue-50/70 border-blue-200'
                   }`}>
                     <div className="flex items-center gap-3">
                       {selectedEmployee.url_foto_perfil || selectedEmployee.avatarUrl ? (
@@ -1384,7 +1384,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
               {/* Data, Tipo e Horas */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     2. Data da Ocorrência *
                   </label>
                   <input
@@ -1393,13 +1393,13 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={dataRegistro}
                     onChange={(e) => setDataRegistro(e.target.value)}
                     className={`w-full rounded-xl px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     3. Tipo de Ocorrência *
                   </label>
                   <select
@@ -1415,7 +1415,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                       }
                     }}
                     className={`w-full rounded-xl px-3 py-2 border font-mono text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   >
                     <option value="ACABOU_BANHOU">✨ ACABOU BANHOU (Sem Débito)</option>
@@ -1430,7 +1430,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                 </div>
 
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                     4. Horas Brutas *
                   </label>
                   <input
@@ -1442,7 +1442,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                     value={tipoOcorrencia === 'FALTA_INJUSTIFICADA' ? 8.0 : (tipoOcorrencia === 'ACABOU_BANHOU' ? 0.0 : horasBrutas)}
                     onChange={(e) => setHorasBrutas(parseFloat(e.target.value) || 0)}
                     className={`w-full rounded-xl px-3 py-2 border font-mono font-bold text-center text-xs focus:outline-hidden ${
-                      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   />
                 </div>
@@ -1450,7 +1450,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
 
               {/* Botão de Salvar & Próximo */}
               <div className="pt-2 flex items-center justify-between">
-                <span className={`text-[11px] font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <span className={`text-[11px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   Dica: Pressione <strong className="text-blue-500">ENTER</strong> para salvar e continuar o fluxo.
                 </span>
                 <button
@@ -1466,10 +1466,10 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
               {/* Histórico Recente de Lançamentos Rápidos */}
               {recentLogs.length > 0 && (
                 <div className={`p-3 rounded-xl border space-y-1.5 ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+                  isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
                 }`}>
                   <span className={`text-[10px] font-bold uppercase tracking-wider block ${
-                    isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                    isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                   }`}>
                     Últimos apontamentos salvos nesta sessão:
                   </span>

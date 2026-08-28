@@ -365,14 +365,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
       {/* Top Banner com Indicador de Conexão e Exportações Rápidas */}
       <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-2xl shadow-xs border transition-colors ${
         isDark 
-          ? 'bg-[#15171C] text-white border-[#1F2229]' 
+          ? 'bg-[#16243D] text-white border-[#243756]' 
           : 'bg-white text-slate-900 border-slate-200'
       }`}>
         <div>
           <div className="flex items-center space-x-2">
             <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-full flex items-center gap-1.5 font-mono border ${
               isDark 
-                ? 'bg-[#1F2229] text-blue-400 border-[#2A2E38]' 
+                ? 'bg-[#243756] text-blue-400 border-[#335075]' 
                 : 'bg-blue-50 text-blue-700 border-blue-200'
             }`}>
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -458,12 +458,12 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
       {/* PAINEL DE FILTROS GLOBAIS (EXPANSÍVEL) */}
       {isFiltersExpanded && (
         <div className={`p-4 rounded-2xl shadow-xs border transition-all duration-200 space-y-3 animate-in fade-in zoom-in-98 ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
         }`}>
-          <div className={`flex items-center justify-between border-b pb-2.5 ${isDark ? 'border-[#1F2229]' : 'border-slate-100'}`}>
+          <div className={`flex items-center justify-between border-b pb-2.5 ${isDark ? 'border-[#243756]' : 'border-slate-100'}`}>
             <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider">
               <Filter className="w-4 h-4 text-[#3B82F6]" />
-              <span className={isDark ? 'text-[#E0E2E5]' : 'text-slate-800'}>Filtros Globais</span>
+              <span className={isDark ? 'text-[#E2E8F0]' : 'text-slate-800'}>Filtros Globais</span>
               <InfoTooltip 
                 theme={theme}
                 content="Filtre simultaneamente por colaborador, lotação de canteiro, cargo, status positivo/negativo ou período de datas do evento."
@@ -505,11 +505,11 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
             {/* 1. Busca por Nome/Matrícula */}
             <div>
-              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Colaborador / MAT
               </label>
               <div className="relative">
-                <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-[#5C616A]' : 'text-slate-400'}`} />
+                <Search className={`w-3.5 h-3.5 absolute left-2.5 top-2.5 ${isDark ? 'text-[#64748B]' : 'text-slate-400'}`} />
                 <input
                   type="text"
                   placeholder="Buscar nome ou MAT..."
@@ -517,7 +517,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   onChange={(e) => setFilters({ ...filters, matriculaOrNome: e.target.value })}
                   className={`w-full pl-8 pr-2.5 py-1.5 rounded-xl border text-xs font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] placeholder-[#5C616A]' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] placeholder-[#64748B]' 
                       : 'bg-slate-50 border-slate-300 text-slate-900 placeholder-slate-400'
                   }`}
                 />
@@ -526,7 +526,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
 
             {/* 2. Sede */}
             <div>
-              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Sede / Canteiro
               </label>
               <select
@@ -534,7 +534,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                 onChange={(e) => setFilters({ ...filters, sede: e.target.value })}
                 className={`w-full px-2 py-1.5 rounded-xl border text-xs font-mono font-medium transition-colors focus:outline-hidden focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] ${
                   isDark 
-                    ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5]' 
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' 
                     : 'bg-slate-50 border-slate-300 text-slate-900'
                 }`}
               >
@@ -561,7 +561,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
 
             {/* 3. Função */}
             <div>
-              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Função
               </label>
               <select
@@ -569,7 +569,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                 onChange={(e) => setFilters({ ...filters, funcao: e.target.value })}
                 className={`w-full px-2 py-1.5 rounded-xl border text-xs font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] ${
                   isDark 
-                    ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5]' 
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' 
                     : 'bg-slate-50 border-slate-300 text-slate-900'
                 }`}
               >
@@ -582,7 +582,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
 
             {/* 4. Status do Banco */}
             <div>
-              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Status do Banco
               </label>
               <select
@@ -590,7 +590,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                 onChange={(e) => setFilters({ ...filters, statusBanco: e.target.value as any })}
                 className={`w-full px-2.5 py-1.5 rounded-xl border text-xs font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] ${
                   isDark 
-                    ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5]' 
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' 
                     : 'bg-slate-50 border-slate-300 text-slate-900'
                 }`}
               >
@@ -603,7 +603,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
 
             {/* 5. Tipo de Ocorrência */}
             <div>
-              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Tipo de Ocorrência
               </label>
               <select
@@ -611,7 +611,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                 onChange={(e) => setFilters({ ...filters, tipoOcorrencia: e.target.value })}
                 className={`w-full px-2.5 py-1.5 rounded-xl border text-xs font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] ${
                   isDark 
-                    ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5]' 
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' 
                     : 'bg-slate-50 border-slate-300 text-slate-900'
                 }`}
               >
@@ -628,7 +628,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {/* 6. Intervalo de Datas do Evento */}
             <div className="grid grid-cols-2 gap-1.5">
               <div>
-                <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   De
                 </label>
                 <input
@@ -637,13 +637,13 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   onChange={(e) => setFilters({ ...filters, dataInicio: e.target.value })}
                   className={`w-full px-1.5 py-1.5 rounded-xl border text-[11px] font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5]' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' 
                       : 'bg-slate-50 border-slate-300 text-slate-900'
                   }`}
                 />
               </div>
               <div>
-                <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <label className={`block text-[10px] uppercase font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   Até
                 </label>
                 <input
@@ -652,7 +652,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                   onChange={(e) => setFilters({ ...filters, dataFim: e.target.value })}
                   className={`w-full px-1.5 py-1.5 rounded-xl border text-[11px] font-mono transition-colors focus:outline-hidden focus:border-[#3B82F6] ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5]' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' 
                       : 'bg-slate-50 border-slate-300 text-slate-900'
                   }`}
                 />
@@ -665,14 +665,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
       {/* BANNER DE BASE ZERADA / PRONTA PARA IMPORTAÇÃO */}
       {employees.length === 0 && (
         <div className={`p-6 sm:p-8 rounded-2xl border transition-all text-center space-y-4 shadow-sm ${
-          isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900'
+          isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900'
         }`}>
           <div className="w-14 h-14 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center mx-auto border border-blue-500/20">
             <UploadCloud className="w-7 h-7" />
           </div>
           <div className="max-w-md mx-auto">
             <h3 className="text-lg font-bold">Base Pronta para Importação</h3>
-            <p className={`text-xs mt-1.5 leading-relaxed ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <p className={`text-xs mt-1.5 leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               A base de dados foi limpa com sucesso. Não há registros fictícios ativos. Importe agora seus colaboradores reais e histórico de banco de horas via arquivos CSV para iniciar a gestão.
             </p>
           </div>
@@ -700,7 +700,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                 onClick={onResetData}
                 className={`inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${
                   isDark 
-                    ? 'bg-[#1F2229] text-[#8E9299] hover:text-white border-[#2A2E38]' 
+                    ? 'bg-[#243756] text-[#94A3B8] hover:text-white border-[#335075]' 
                     : 'bg-slate-100 text-slate-600 hover:text-slate-900 border-slate-300'
                 }`}
               >
@@ -718,12 +718,12 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           {/* KPI 1: Saldo Acumulado Geral */}
           <div className={`p-5 rounded-2xl border shadow-xs transition-all ${
             isDark 
-              ? 'bg-[#15171C] border-[#1F2229] hover:border-[#2A2E38]' 
+              ? 'bg-[#16243D] border-[#243756] hover:border-[#335075]' 
               : 'bg-white border-gray-200 hover:border-gray-300'
           }`}>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <p className={`text-xs font-bold uppercase font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                <p className={`text-xs font-bold uppercase font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                   Saldo Acumulado
                 </p>
                 <InfoTooltip 
@@ -754,12 +754,12 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           {/* KPI 2: Colaboradores Ativos */}
           <div className={`p-5 rounded-2xl border shadow-xs transition-all ${
             isDark 
-              ? 'bg-[#15171C] border-[#1F2229] hover:border-[#2A2E38]' 
+              ? 'bg-[#16243D] border-[#243756] hover:border-[#335075]' 
               : 'bg-white border-gray-200 hover:border-gray-300'
           }`}>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <p className={`text-xs font-bold uppercase font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                <p className={`text-xs font-bold uppercase font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                   Colaboradores
                 </p>
                 <InfoTooltip 
@@ -771,10 +771,10 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                 <Users className="w-4 h-4" />
               </div>
             </div>
-            <h2 className={`text-2xl sm:text-3xl font-mono font-light ${isDark ? 'text-[#E0E2E5]' : 'text-gray-900'}`}>
+            <h2 className={`text-2xl sm:text-3xl font-mono font-light ${isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}`}>
               {kpis.totalAtivos}
             </h2>
-            <p className={`text-[10px] mt-1.5 font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+            <p className={`text-[10px] mt-1.5 font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
               <span className={isDark ? 'text-green-400' : 'text-emerald-600 font-semibold'}>{kpis.colaboradoresCredores}</span> credores • <span className={isDark ? 'text-red-400' : 'text-red-600 font-semibold'}>{kpis.colaboradoresDevedores}</span> devedores
             </p>
           </div>
@@ -782,12 +782,12 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           {/* KPI 3: Atestados (AT) */}
           <div className={`p-5 rounded-2xl border shadow-xs transition-all ${
             isDark 
-              ? 'bg-[#15171C] border-[#1F2229] hover:border-[#2A2E38]' 
+              ? 'bg-[#16243D] border-[#243756] hover:border-[#335075]' 
               : 'bg-white border-gray-200 hover:border-gray-300'
           }`}>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <p className={`text-xs font-bold uppercase font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                <p className={`text-xs font-bold uppercase font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                   Atestados (AT)
                 </p>
                 <InfoTooltip 
@@ -810,12 +810,12 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           {/* KPI 4: Faltas Injustificadas */}
           <div className={`p-5 rounded-2xl border shadow-xs transition-all ${
             isDark 
-              ? 'bg-[#15171C] border-[#1F2229] hover:border-[#2A2E38]' 
+              ? 'bg-[#16243D] border-[#243756] hover:border-[#335075]' 
               : 'bg-white border-gray-200 hover:border-gray-300'
           }`}>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1.5">
-                <p className={`text-xs font-bold uppercase font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                <p className={`text-xs font-bold uppercase font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                   Faltas ('F' / 'D')
                 </p>
                 <InfoTooltip 
@@ -839,11 +839,11 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
 
       {/* DASHBOARD TAB NAVIGATION & CONTENT */}
       <div className={`rounded-2xl border flex flex-col overflow-hidden shadow-sm transition-colors ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-gray-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-gray-200'
       }`}>
         {/* Tab Controls */}
         <div className={`flex flex-col sm:flex-row sm:items-center justify-between px-5 py-3 border-b gap-2 ${
-          isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-gray-200 bg-gray-50'
+          isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-gray-200 bg-gray-50'
         }`}>
           <div className="flex items-center space-x-1.5 overflow-x-auto">
             {/* Aba 1: Resumo por Colaborador */}
@@ -851,8 +851,8 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
               onClick={() => setActiveTab('colaboradores')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 activeTab === 'colaboradores'
-                  ? isDark ? 'bg-[#1F2229] text-white border border-[#2A2E38] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
-                  : isDark ? 'text-[#8E9299] hover:text-[#E0E2E5]' : 'text-gray-600 hover:text-gray-900'
+                  ? isDark ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
+                  : isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <Users className="w-3.5 h-3.5 text-blue-500" />
@@ -864,8 +864,8 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
               onClick={() => setActiveTab('calendario')}
               className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 activeTab === 'calendario'
-                  ? isDark ? 'bg-[#1F2229] text-white border border-[#2A2E38] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
-                  : isDark ? 'text-[#8E9299] hover:text-[#E0E2E5]' : 'text-gray-600 hover:text-gray-900'
+                  ? isDark ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
+                  : isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               <Calendar className="w-3.5 h-3.5 text-emerald-500" />
@@ -878,8 +878,8 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                 onClick={() => setActiveTab('por_sede')}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'por_sede'
-                    ? isDark ? 'bg-[#1F2229] text-white border border-[#2A2E38] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
-                    : isDark ? 'text-[#8E9299] hover:text-[#E0E2E5]' : 'text-gray-600 hover:text-gray-900'
+                    ? isDark ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
+                    : isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 <Building className="w-3.5 h-3.5 text-amber-500" />
@@ -893,8 +893,8 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                 onClick={() => setActiveTab('extrato')}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                   activeTab === 'extrato'
-                    ? isDark ? 'bg-[#1F2229] text-white border border-[#2A2E38] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
-                    : isDark ? 'text-[#8E9299] hover:text-[#E0E2E5]' : 'text-gray-600 hover:text-gray-900'
+                    ? isDark ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' : 'bg-white text-blue-700 border border-gray-300 shadow-xs'
+                    : isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-500" />
@@ -903,18 +903,18 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             )}
           </div>
 
-          <span className={`text-[10px] font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+          <span className={`text-[10px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
             {activeTab === 'colaboradores' && (
-              <>Exibindo <strong className={isDark ? 'text-[#E0E2E5]' : 'text-gray-900'}>{filteredEmployeesWithBalance.length}</strong> colaboradores</>
+              <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{filteredEmployeesWithBalance.length}</strong> colaboradores</>
             )}
             {activeTab === 'calendario' && (
               <>Visão Matricial de Apontamentos por Dia</>
             )}
             {activeTab === 'extrato' && (
-              <>Exibindo <strong className={isDark ? 'text-[#E0E2E5]' : 'text-gray-900'}>{filteredRecords.length}</strong> lançamentos</>
+              <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{filteredRecords.length}</strong> lançamentos</>
             )}
             {activeTab === 'por_sede' && (
-              <>Exibindo <strong className={isDark ? 'text-[#E0E2E5]' : 'text-gray-900'}>{branchSummary.length}</strong> sedes operacionais</>
+              <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{branchSummary.length}</strong> sedes operacionais</>
             )}
           </span>
         </div>
@@ -926,16 +926,16 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           <div className="flex flex-col">
             <div className="overflow-x-auto">
               {filteredEmployeesWithBalance.length === 0 ? (
-                <div className={`text-center py-16 text-xs font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
-                  <Users className={`w-8 h-8 mx-auto mb-2 ${isDark ? 'text-[#5C616A]' : 'text-gray-400'}`} />
-                  <p className={`font-semibold ${isDark ? 'text-[#E0E2E5]' : 'text-gray-800'}`}>Nenhum colaborador encontrado para os filtros selecionados.</p>
-                  <p className={`mt-1 ${isDark ? 'text-[#5C616A]' : 'text-gray-400'}`}>Ajuste a busca, sede, função ou período de datas no painel acima.</p>
+                <div className={`text-center py-16 text-xs font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
+                  <Users className={`w-8 h-8 mx-auto mb-2 ${isDark ? 'text-[#64748B]' : 'text-gray-400'}`} />
+                  <p className={`font-semibold ${isDark ? 'text-[#E2E8F0]' : 'text-gray-800'}`}>Nenhum colaborador encontrado para os filtros selecionados.</p>
+                  <p className={`mt-1 ${isDark ? 'text-[#64748B]' : 'text-gray-400'}`}>Ajuste a busca, sede, função ou período de datas no painel acima.</p>
                 </div>
               ) : (
                 <table className="w-full text-left border-collapse">
-                  <thead className={`sticky top-0 ${isDark ? 'bg-[#0D0F14]' : 'bg-gray-50'}`}>
+                  <thead className={`sticky top-0 ${isDark ? 'bg-[#0F1B33]' : 'bg-gray-50'}`}>
                     <tr className={`text-[10px] uppercase font-bold border-b font-mono tracking-wider ${
-                      isDark ? 'text-[#8E9299] border-[#1F2229]' : 'text-gray-600 border-gray-200'
+                      isDark ? 'text-[#94A3B8] border-[#243756]' : 'text-gray-600 border-gray-200'
                     }`}>
                       {/* 1. MATRÍCULA (Esquerda) */}
                       <th className="py-3.5 px-5 text-left">
@@ -1008,7 +1008,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     </tr>
                   </thead>
                   <tbody className={`text-xs font-mono divide-y ${
-                    isDark ? 'divide-[#1F2229] text-[#E0E2E5]' : 'divide-gray-200 text-gray-800'
+                    isDark ? 'divide-[#243756] text-[#E2E8F0]' : 'divide-gray-200 text-gray-800'
                   }`}>
                     {paginatedEmployees.map((emp) => {
                       const isCredor = emp.saldoTotalHoras > 0.05;
@@ -1018,13 +1018,13 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                       return (
                         <tr 
                           key={emp.id || emp.matricula} 
-                          className={`transition-colors ${isDark ? 'hover:bg-[#1C1F26]' : 'hover:bg-blue-50/40'}`}
+                          className={`transition-colors ${isDark ? 'hover:bg-[#1E3252]' : 'hover:bg-blue-50/40'}`}
                         >
                           {/* 1. MATRÍCULA: Alinhado à esquerda */}
                           <td className="py-3.5 px-5 whitespace-nowrap text-left font-mono font-semibold">
                             <span className={`px-2 py-0.5 rounded text-xs border ${
                               isDark 
-                                ? 'bg-[#1F2229] text-blue-400 border-[#2A2E38]' 
+                                ? 'bg-[#243756] text-blue-400 border-[#335075]' 
                                 : 'bg-blue-50 text-blue-700 border-blue-200'
                             }`}>
                               #{emp.matricula}
@@ -1039,14 +1039,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                   src={emp.avatarUrl || emp.url_foto_perfil}
                                   alt={emp.nome}
                                   className={`w-8 h-8 rounded-full object-cover border shrink-0 ${
-                                    isDark ? 'border-[#2A2E38]' : 'border-gray-300'
+                                    isDark ? 'border-[#335075]' : 'border-gray-300'
                                   }`}
                                   referrerPolicy="no-referrer"
                                 />
                               ) : (
                                 <div className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold text-xs shrink-0 ${
                                   isDark 
-                                    ? 'bg-[#1F2229] border-[#2A2E38] text-blue-400' 
+                                    ? 'bg-[#243756] border-[#335075] text-blue-400' 
                                     : 'bg-blue-50 border-blue-200 text-blue-700'
                                 }`}>
                                   {emp.nome.split(' ').map(n => n[0]).slice(0, 2).join('')}
@@ -1056,7 +1056,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                 <button
                                   onClick={() => onViewEmployeeStatement(emp.matricula)}
                                   className={`font-semibold text-xs sm:text-sm hover:text-[#3B82F6] hover:underline text-left block transition-colors cursor-pointer ${
-                                    isDark ? 'text-[#E0E2E5]' : 'text-gray-900'
+                                    isDark ? 'text-[#E2E8F0]' : 'text-gray-900'
                                   }`}
                                   title="Clique para abrir o extrato deste colaborador"
                                 >
@@ -1065,7 +1065,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                 <div className="flex items-center gap-1.5 mt-0.5">
                                   <span className={`inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-mono font-medium border ${
                                     isDark 
-                                      ? 'bg-[#0D0F14] text-[#8E9299] border-[#1F2229]' 
+                                      ? 'bg-[#0F1B33] text-[#94A3B8] border-[#243756]' 
                                       : 'bg-gray-100 text-gray-700 border-gray-200'
                                   }`}>
                                     {emp.funcao || 'Operacional'}
@@ -1105,7 +1105,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                   ? isDark ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800/50' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                                   : isDevedor 
                                   ? isDark ? 'bg-rose-950/40 text-rose-400 border-rose-800/50' : 'bg-rose-50 text-rose-700 border-rose-200'
-                                  : isDark ? 'bg-[#1F2229] text-[#8E9299] border-[#2A2E38]' : 'bg-gray-100 text-gray-600 border-gray-200'
+                                  : isDark ? 'bg-[#243756] text-[#94A3B8] border-[#335075]' : 'bg-gray-100 text-gray-600 border-gray-200'
                               }`}>
                                 {formatHoursDecimal(emp.saldoTotalHoras)}
                               </span>
@@ -1114,7 +1114,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                   ? isDark ? 'text-emerald-400/80' : 'text-emerald-600'
                                   : isDevedor 
                                   ? isDark ? 'text-rose-400/80' : 'text-rose-600'
-                                  : isDark ? 'text-[#8E9299]' : 'text-gray-500'
+                                  : isDark ? 'text-[#94A3B8]' : 'text-gray-500'
                               }`}>
                                 ≈ {formatHoursToDays(emp.saldoTotalHoras)}
                               </span>
@@ -1143,10 +1143,10 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {/* Paginação da Tabela de Colaboradores */}
             {filteredEmployeesWithBalance.length > 0 && (
               <div className={`p-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono ${
-                isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-gray-200 bg-gray-50'
+                isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-gray-200 bg-gray-50'
               }`}>
                 <div className="flex items-center gap-2">
-                  <span className={isDark ? 'text-[#8E9299]' : 'text-gray-600'}>Linhas por página:</span>
+                  <span className={isDark ? 'text-[#94A3B8]' : 'text-gray-600'}>Linhas por página:</span>
                   <select
                     value={empPageSize}
                     onChange={(e) => {
@@ -1154,7 +1154,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                       setEmpCurrentPage(1);
                     }}
                     className={`px-2 py-1 rounded border text-xs font-mono ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-800'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-800'
                     }`}
                   >
                     <option value={10}>10</option>
@@ -1162,7 +1162,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     <option value={50}>50</option>
                     <option value={100}>100</option>
                   </select>
-                  <span className={`text-[11px] ml-2 ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                  <span className={`text-[11px] ml-2 ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                     Mostrando {Math.min((safeEmpCurrentPage - 1) * empPageSize + 1, sortedEmployees.length)} - {Math.min(safeEmpCurrentPage * empPageSize, sortedEmployees.length)} de {sortedEmployees.length}
                   </span>
                 </div>
@@ -1172,7 +1172,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     onClick={() => setEmpCurrentPage(1)}
                     disabled={safeEmpCurrentPage === 1}
                     className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-700'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Primeira Página"
                   >
@@ -1182,14 +1182,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     onClick={() => setEmpCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={safeEmpCurrentPage === 1}
                     className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-700'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Página Anterior"
                   >
                     <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
 
-                  <span className={`px-2 text-xs font-semibold ${isDark ? 'text-[#E0E2E5]' : 'text-gray-800'}`}>
+                  <span className={`px-2 text-xs font-semibold ${isDark ? 'text-[#E2E8F0]' : 'text-gray-800'}`}>
                     Pág. {safeEmpCurrentPage} de {totalEmpPages}
                   </span>
 
@@ -1197,7 +1197,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     onClick={() => setEmpCurrentPage(prev => Math.min(prev + 1, totalEmpPages))}
                     disabled={safeEmpCurrentPage >= totalEmpPages}
                     className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-700'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Próxima Página"
                   >
@@ -1207,7 +1207,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     onClick={() => setEmpCurrentPage(totalEmpPages)}
                     disabled={safeEmpCurrentPage >= totalEmpPages}
                     className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-700'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Última Página"
                   >
@@ -1247,25 +1247,25 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {branchSummary.map((b) => (
                 <div key={b.sede} className={`p-5 border rounded-xl space-y-3 transition-colors ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-gray-50 border-gray-200'
+                  isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-gray-50 border-gray-200'
                 }`}>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                       <div className={`p-2 rounded-lg ${isDark ? 'bg-blue-950/40 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
                         <Building className="w-4 h-4" />
                       </div>
-                      <h4 className={`font-bold text-sm ${isDark ? 'text-[#E0E2E5]' : 'text-gray-900'}`}>Sede {b.sede}</h4>
+                      <h4 className={`font-bold text-sm ${isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}`}>Sede {b.sede}</h4>
                     </div>
                     <span className={`text-xs font-mono font-semibold px-2 py-0.5 border rounded ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#8E9299]' : 'bg-white border-gray-200 text-gray-600'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#94A3B8]' : 'bg-white border-gray-200 text-gray-600'
                     }`}>
                       {b.colaboradores} colaboradores
                     </span>
                   </div>
 
-                  <div className={`pt-2 border-t space-y-2 text-xs font-mono ${isDark ? 'border-[#1F2229]' : 'border-gray-200'}`}>
+                  <div className={`pt-2 border-t space-y-2 text-xs font-mono ${isDark ? 'border-[#243756]' : 'border-gray-200'}`}>
                     <div className="flex items-center justify-between">
-                      <span className={isDark ? 'text-[#8E9299]' : 'text-gray-500'}>Saldo Líquido da Base:</span>
+                      <span className={isDark ? 'text-[#94A3B8]' : 'text-gray-500'}>Saldo Líquido da Base:</span>
                       <span className={`font-bold text-sm ${
                         b.saldoHoras >= 0 
                           ? isDark ? 'text-green-400' : 'text-emerald-600' 
@@ -1274,11 +1274,11 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                         {formatHoursDecimal(b.saldoHoras)} ({formatHoursToDays(b.saldoHoras)})
                       </span>
                     </div>
-                    <div className={`flex items-center justify-between ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                    <div className={`flex items-center justify-between ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                       <span>Total de Atestados:</span>
                       <span className={`font-semibold ${isDark ? 'text-yellow-400' : 'text-amber-600'}`}>{b.atestados}</span>
                     </div>
-                    <div className={`flex items-center justify-between ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                    <div className={`flex items-center justify-between ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                       <span>Total de Faltas:</span>
                       <span className={`font-semibold ${isDark ? 'text-red-400' : 'text-red-600'}`}>{b.faltas} (-{b.faltas * 8}h)</span>
                     </div>
@@ -1296,16 +1296,16 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           <div className="flex flex-col">
             <div className="overflow-x-auto">
               {filteredRecords.length === 0 ? (
-                <div className={`text-center py-16 text-xs font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
-                  <FileText className={`w-8 h-8 mx-auto mb-2 ${isDark ? 'text-[#5C616A]' : 'text-gray-400'}`} />
-                  <p className={`font-semibold ${isDark ? 'text-[#E0E2E5]' : 'text-gray-800'}`}>Nenhum registro encontrado para os filtros selecionados.</p>
-                  <p className={`mt-1 ${isDark ? 'text-[#5C616A]' : 'text-gray-400'}`}>Ajuste os filtros acima ou crie um novo lançamento diário.</p>
+                <div className={`text-center py-16 text-xs font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
+                  <FileText className={`w-8 h-8 mx-auto mb-2 ${isDark ? 'text-[#64748B]' : 'text-gray-400'}`} />
+                  <p className={`font-semibold ${isDark ? 'text-[#E2E8F0]' : 'text-gray-800'}`}>Nenhum registro encontrado para os filtros selecionados.</p>
+                  <p className={`mt-1 ${isDark ? 'text-[#64748B]' : 'text-gray-400'}`}>Ajuste os filtros acima ou crie um novo lançamento diário.</p>
                 </div>
               ) : (
                 <table className="w-full text-left border-collapse">
-                  <thead className={`sticky top-0 ${isDark ? 'bg-[#0D0F14]' : 'bg-gray-50'}`}>
+                  <thead className={`sticky top-0 ${isDark ? 'bg-[#0F1B33]' : 'bg-gray-50'}`}>
                     <tr className={`text-[10px] uppercase font-bold border-b font-mono tracking-wider ${
-                      isDark ? 'text-[#8E9299] border-[#1F2229]' : 'text-gray-600 border-gray-200'
+                      isDark ? 'text-[#94A3B8] border-[#243756]' : 'text-gray-600 border-gray-200'
                     }`}>
                       <th className="py-3 px-5">Data & Dia</th>
                       <th className="py-3 px-5">Matrícula</th>
@@ -1321,7 +1321,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     </tr>
                   </thead>
                   <tbody className={`text-xs font-mono divide-y ${
-                    isDark ? 'divide-[#1F2229] text-[#E0E2E5]' : 'divide-gray-200 text-gray-800'
+                    isDark ? 'divide-[#243756] text-[#E2E8F0]' : 'divide-gray-200 text-gray-800'
                   }`}>
                     {paginatedRecords.map((r) => {
                       const emp = employees.find(e => e.matricula === r.matricula);
@@ -1330,11 +1330,11 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                       const empFuncao = r.employeeFuncao || emp?.funcao || '';
 
                       return (
-                        <tr key={r.id} className={`transition-colors ${isDark ? 'hover:bg-[#1C1F26]' : 'hover:bg-gray-50'}`}>
+                        <tr key={r.id} className={`transition-colors ${isDark ? 'hover:bg-[#1E3252]' : 'hover:bg-gray-50'}`}>
                           {/* Data & Dia */}
                           <td className="py-3.5 px-5 whitespace-nowrap">
-                            <div className={`font-medium ${isDark ? 'text-[#E0E2E5]' : 'text-gray-900'}`}>{r.dataRegistro}</div>
-                            <div className={`text-[10px] flex items-center gap-1 ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                            <div className={`font-medium ${isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}`}>{r.dataRegistro}</div>
+                            <div className={`text-[10px] flex items-center gap-1 ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                               {r.diaSemanaNome}
                               {r.eFeriado && (
                                 <span className={`px-1 py-0.2 rounded text-[9px] border ${
@@ -1349,7 +1349,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                           </td>
 
                           {/* Matrícula */}
-                          <td className={`py-3.5 px-5 whitespace-nowrap ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                          <td className={`py-3.5 px-5 whitespace-nowrap ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                             #{r.matricula}
                           </td>
 
@@ -1361,14 +1361,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                   src={emp.avatarUrl || emp.url_foto_perfil}
                                   alt={empName}
                                   className={`w-7 h-7 rounded-full object-cover border shrink-0 ${
-                                    isDark ? 'border-[#2A2E38]' : 'border-gray-300'
+                                    isDark ? 'border-[#335075]' : 'border-gray-300'
                                   }`}
                                   referrerPolicy="no-referrer"
                                 />
                               ) : (
                                 <div className={`w-7 h-7 rounded-full border flex items-center justify-center font-bold text-[10px] shrink-0 ${
                                   isDark 
-                                    ? 'bg-[#1F2229] border-[#2A2E38] text-blue-400' 
+                                    ? 'bg-[#243756] border-[#335075] text-blue-400' 
                                     : 'bg-blue-50 border-blue-200 text-blue-700'
                                 }`}>
                                   {empName.split(' ').map(n => n[0]).slice(0, 2).join('')}
@@ -1378,12 +1378,12 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                 <button
                                   onClick={() => onViewEmployeeStatement(r.matricula)}
                                   className={`font-medium hover:text-[#3B82F6] hover:underline text-left block text-xs cursor-pointer ${
-                                    isDark ? 'text-[#E0E2E5]' : 'text-gray-900'
+                                    isDark ? 'text-[#E2E8F0]' : 'text-gray-900'
                                   }`}
                                 >
                                   {empName}
                                 </button>
-                                <span className={`text-[10px] font-mono ${isDark ? 'text-[#5C616A]' : 'text-gray-400'}`}>{empFuncao}</span>
+                                <span className={`text-[10px] font-mono ${isDark ? 'text-[#64748B]' : 'text-gray-400'}`}>{empFuncao}</span>
                               </div>
                             </div>
                           </td>
@@ -1392,7 +1392,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                           <td className="py-3.5 px-5 whitespace-nowrap">
                             <span className={`px-1.5 py-0.5 border rounded text-[10px] font-bold ${
                               isDark 
-                                ? 'bg-[#1F2229] text-[#E0E2E5] border-[#2A2E38]' 
+                                ? 'bg-[#243756] text-[#E2E8F0] border-[#335075]' 
                                 : 'bg-gray-100 text-gray-800 border-gray-300'
                             }`}>
                               {empSede}
@@ -1458,7 +1458,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                           </td>
 
                           {/* Horas Brutas */}
-                          <td className={`py-3.5 px-5 text-right whitespace-nowrap ${isDark ? 'text-[#8E9299]' : 'text-gray-600'}`}>
+                          <td className={`py-3.5 px-5 text-right whitespace-nowrap ${isDark ? 'text-[#94A3B8]' : 'text-gray-600'}`}>
                             {r.horasBrutas > 0 ? `${r.horasBrutas.toFixed(1)}h` : '- -'}
                           </td>
 
@@ -1470,7 +1470,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                 : r.multiplicador === 1.5 
                                 ? isDark ? 'bg-amber-900/40 text-amber-300 border-amber-800/40' : 'bg-amber-50 text-amber-700 border-amber-200'
                                 : r.multiplicador === 1.0 
-                                ? isDark ? 'bg-[#1F2229] text-[#8E9299] border-[#2A2E38]' : 'bg-gray-100 text-gray-700 border-gray-300'
+                                ? isDark ? 'bg-[#243756] text-[#94A3B8] border-[#335075]' : 'bg-gray-100 text-gray-700 border-gray-300'
                                 : 'bg-transparent text-gray-400 border-transparent'
                             }`}>
                               {r.multiplicador > 0 ? `${r.multiplicador.toFixed(1)}x` : 'ISENTO'}
@@ -1484,7 +1484,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                 ? isDark ? 'text-green-400' : 'text-emerald-600' 
                                 : r.saldoCalculado < 0 
                                 ? isDark ? 'text-red-400' : 'text-red-600' 
-                                : isDark ? 'text-[#8E9299]' : 'text-gray-500'
+                                : isDark ? 'text-[#94A3B8]' : 'text-gray-500'
                             }`}>
                               {formatHoursDecimal(r.saldoCalculado)}
                             </span>
@@ -1502,12 +1502,12 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                                 onClick={() => onViewAttachment(r.comprovante!, empName, r.dataRegistro)}
                               />
                             ) : (
-                              <span className={isDark ? 'text-[#5C616A] text-[11px]' : 'text-gray-300 text-[11px]'}>—</span>
+                              <span className={isDark ? 'text-[#64748B] text-[11px]' : 'text-gray-300 text-[11px]'}>—</span>
                             )}
                           </td>
 
                           {/* Observação */}
-                          <td className={`py-3.5 px-5 max-w-xs truncate text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`} title={r.observacao}>
+                          <td className={`py-3.5 px-5 max-w-xs truncate text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`} title={r.observacao}>
                             {r.observacao || '—'}
                           </td>
 
@@ -1533,10 +1533,10 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             {/* Paginação dos Registros Brutos */}
             {filteredRecords.length > 0 && (
               <div className={`p-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono ${
-                isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-gray-200 bg-gray-50'
+                isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-gray-200 bg-gray-50'
               }`}>
                 <div className="flex items-center gap-2">
-                  <span className={isDark ? 'text-[#8E9299]' : 'text-gray-600'}>Linhas por página:</span>
+                  <span className={isDark ? 'text-[#94A3B8]' : 'text-gray-600'}>Linhas por página:</span>
                   <select
                     value={recordsPageSize}
                     onChange={(e) => {
@@ -1544,14 +1544,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                       setRecordsCurrentPage(1);
                     }}
                     className={`px-2 py-1 rounded border text-xs font-mono ${
-                      isDark ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-800'
+                      isDark ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-800'
                     }`}
                   >
                     <option value={25}>25</option>
                     <option value={50}>50</option>
                     <option value={100}>100</option>
                   </select>
-                  <span className={`text-[11px] ml-2 ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                  <span className={`text-[11px] ml-2 ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                     Mostrando {Math.min((safeRecordsCurrentPage - 1) * recordsPageSize + 1, filteredRecords.length)} - {Math.min(safeRecordsCurrentPage * recordsPageSize, filteredRecords.length)} de {filteredRecords.length}
                   </span>
                 </div>
@@ -1561,7 +1561,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     onClick={() => setRecordsCurrentPage(1)}
                     disabled={safeRecordsCurrentPage === 1}
                     className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-700'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Primeira Página"
                   >
@@ -1571,14 +1571,14 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     onClick={() => setRecordsCurrentPage(prev => Math.max(prev - 1, 1))}
                     disabled={safeRecordsCurrentPage === 1}
                     className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-700'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Página Anterior"
                   >
                     <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
 
-                  <span className={`px-2 text-xs font-semibold ${isDark ? 'text-[#E0E2E5]' : 'text-gray-800'}`}>
+                  <span className={`px-2 text-xs font-semibold ${isDark ? 'text-[#E2E8F0]' : 'text-gray-800'}`}>
                     Pág. {safeRecordsCurrentPage} de {totalRecordsPages}
                   </span>
 
@@ -1586,7 +1586,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     onClick={() => setRecordsCurrentPage(prev => Math.min(prev + 1, totalRecordsPages))}
                     disabled={safeRecordsCurrentPage >= totalRecordsPages}
                     className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-700'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Próxima Página"
                   >
@@ -1596,7 +1596,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
                     onClick={() => setRecordsCurrentPage(totalRecordsPages)}
                     disabled={safeRecordsCurrentPage >= totalRecordsPages}
                     className={`p-1.5 rounded border transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                      isDark ? 'bg-[#1F2229] border-[#2A2E38] text-[#E0E2E5]' : 'bg-white border-gray-300 text-gray-700'
+                      isDark ? 'bg-[#243756] border-[#335075] text-[#E2E8F0]' : 'bg-white border-gray-300 text-gray-700'
                     }`}
                     title="Última Página"
                   >
@@ -1610,15 +1610,15 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
 
         {/* Footer info in tab container */}
         <div className={`p-3.5 border-t flex justify-between items-center text-xs ${
-          isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-gray-200 bg-gray-50'
+          isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-gray-200 bg-gray-50'
         }`}>
           <div className="flex gap-2 items-center">
             <div className="w-2 h-2 bg-[#3B82F6] rounded-full animate-pulse"></div>
-            <span className={`text-[10px] font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+            <span className={`text-[10px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
               Processamento em tempo real (SPTF Engine)
             </span>
           </div>
-          <span className={`text-[10px] font-mono ${isDark ? 'text-[#5C616A]' : 'text-gray-400'}`}>
+          <span className={`text-[10px] font-mono ${isDark ? 'text-[#64748B]' : 'text-gray-400'}`}>
             Base sincronizada Cloud Firestore
           </span>
         </div>

@@ -303,7 +303,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
       
       {/* 1. CABEÇALHO INSTITUCIONAL DA AUDITORIA */}
       <div className={`p-5 sm:p-6 rounded-2xl border transition-all ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-sm'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-sm'
       }`}>
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex items-start sm:items-center gap-4">
@@ -322,7 +322,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
               <h1 className={`text-xl sm:text-2xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
                 Trilha de Auditoria & Logs de Segurança
               </h1>
-              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Rastreamento e auditoria em tempo real de emissões de dispensas, lançamentos de horas, trocas de chefias e importações de folha.
               </p>
             </div>
@@ -334,7 +334,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
               onClick={handleExportCSV}
               className={`px-3 py-2 text-xs font-semibold rounded-xl border flex items-center gap-1.5 transition-all cursor-pointer ${
                 isDark 
-                  ? 'bg-[#1F2229] hover:bg-[#2A2E38] text-[#E0E2E5] border-[#2A2E38]' 
+                  ? 'bg-[#243756] hover:bg-[#335075] text-[#E2E8F0] border-[#335075]' 
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200'
               }`}
               title="Exportar registros filtrados para planilha CSV"
@@ -347,7 +347,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
               onClick={() => window.print()}
               className={`px-3 py-2 text-xs font-semibold rounded-xl border flex items-center gap-1.5 transition-all cursor-pointer ${
                 isDark 
-                  ? 'bg-[#1F2229] hover:bg-[#2A2E38] text-[#E0E2E5] border-[#2A2E38]' 
+                  ? 'bg-[#243756] hover:bg-[#335075] text-[#E2E8F0] border-[#335075]' 
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200'
               }`}
               title="Imprimir relatório de auditoria"
@@ -359,33 +359,33 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
         </div>
 
         {/* 2. CARDS DE ESTATÍSTICAS RÁPIDAS */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-[#1F2229]/60">
-          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0D0F14]/70 border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-            <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold">Total de Ações</span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-5 border-t border-[#243756]/60">
+          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0F1B33]/70 border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+            <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold">Total de Ações</span>
             <div className="flex items-baseline gap-2 mt-1">
               <span className={`text-xl font-bold font-mono ${isDark ? 'text-white' : 'text-slate-900'}`}>{stats.total.toLocaleString('pt-BR')}</span>
               <span className="text-[10px] text-indigo-400 font-mono font-medium">Registradas</span>
             </div>
           </div>
 
-          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0D0F14]/70 border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-            <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold">Banco de Horas</span>
+          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0F1B33]/70 border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+            <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold">Banco de Horas</span>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-xl font-bold font-mono text-blue-400">{stats.horasCount.toLocaleString('pt-BR')}</span>
               <span className="text-[10px] text-blue-400/80 font-mono font-medium">Lançamentos</span>
             </div>
           </div>
 
-          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0D0F14]/70 border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-            <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold">Dispensas SPTF</span>
+          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0F1B33]/70 border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+            <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold">Dispensas SPTF</span>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-xl font-bold font-mono text-emerald-400">{stats.dispensasCount.toLocaleString('pt-BR')}</span>
               <span className="text-[10px] text-emerald-400/80 font-mono font-medium">Guias 2 Vias</span>
             </div>
           </div>
 
-          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0D0F14]/70 border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-            <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold">Chefias & Folha</span>
+          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0F1B33]/70 border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+            <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold">Chefias & Folha</span>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-xl font-bold font-mono text-amber-400">{(stats.chefiasCount + stats.folhaCount).toLocaleString('pt-BR')}</span>
               <span className="text-[10px] text-amber-400/80 font-mono font-medium">Gestão/Folha</span>
@@ -396,7 +396,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
 
       {/* 3. BARRA DE FILTROS AVANÇADOS */}
       <div className={`p-4 rounded-2xl border ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-sm'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-sm'
       }`}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           
@@ -410,7 +410,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
               onChange={(e) => setSearchQuery(e.target.value)}
               className={`w-full pl-9 pr-8 py-2 text-xs rounded-xl border transition-colors outline-none focus:border-indigo-500 ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-white placeholder-gray-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-white placeholder-gray-500' 
                   : 'bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400'
               }`}
             />
@@ -431,7 +431,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
               onChange={(e) => setSelectedCanteiro(e.target.value)}
               className={`w-full px-3 py-2 text-xs rounded-xl border transition-colors outline-none focus:border-indigo-500 ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-white' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-white' 
                   : 'bg-slate-50 border-slate-200 text-slate-900'
               }`}
             >
@@ -449,7 +449,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
               onChange={(e) => setSelectedTipoAcao(e.target.value)}
               className={`w-full px-3 py-2 text-xs rounded-xl border transition-colors outline-none focus:border-indigo-500 ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-white' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-white' 
                   : 'bg-slate-50 border-slate-200 text-slate-900'
               }`}
             >
@@ -468,7 +468,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
               title="Data Inicial"
               className={`w-1/2 px-2 py-2 text-xs rounded-xl border transition-colors outline-none focus:border-indigo-500 ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-white' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-white' 
                   : 'bg-slate-50 border-slate-200 text-slate-900'
               }`}
             />
@@ -479,7 +479,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
               title="Data Final"
               className={`w-1/2 px-2 py-2 text-xs rounded-xl border transition-colors outline-none focus:border-indigo-500 ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-white' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-white' 
                   : 'bg-slate-50 border-slate-200 text-slate-900'
               }`}
             />
@@ -488,8 +488,8 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
 
         {/* Indicador de Filtros Ativos */}
         {(selectedCanteiro !== 'TODOS' || selectedTipoAcao !== 'TODOS' || startDate || endDate || searchQuery) && (
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#1F2229]/60 text-xs">
-            <span className="text-[#8E9299]">
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-[#243756]/60 text-xs">
+            <span className="text-[#94A3B8]">
               Exibindo <strong className={isDark ? 'text-white' : 'text-slate-900'}>{filteredLogs.length}</strong> de {logs.length} registros filtrados
             </span>
             <button
@@ -510,15 +510,15 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
 
       {/* 4. TABELA PRINCIPAL DE LOGS (SOMENTE LEITURA & PAGINADA A 50 ITENS) */}
       <div className={`rounded-2xl border overflow-hidden ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-sm'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-sm'
       }`}>
-        <div className="p-4 border-b border-[#1F2229]/70 flex items-center justify-between">
+        <div className="p-4 border-b border-[#243756]/70 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Database className="w-4 h-4 text-indigo-400" />
             <span className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
               Coleção Firestore: <code className="font-mono text-indigo-400">logs_auditoria</code>
             </span>
-            <span className="text-[10px] font-mono text-[#8E9299]">
+            <span className="text-[10px] font-mono text-[#94A3B8]">
               ({PAGE_SIZE} por página)
             </span>
           </div>
@@ -526,7 +526,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
           <button
             onClick={() => setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc')}
             className={`px-2.5 py-1 rounded-lg text-[11px] font-medium border flex items-center gap-1.5 transition-colors cursor-pointer ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-300 hover:bg-[#1F2229]' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:bg-[#243756]' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
             }`}
             title="Ordenar por data/hora"
           >
@@ -539,13 +539,13 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
         {isLoading ? (
           <div className="py-16 flex flex-col items-center justify-center gap-3">
             <div className="w-8 h-8 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
-            <span className="text-xs text-[#8E9299] font-mono">Carregando trilha de auditoria do Firestore...</span>
+            <span className="text-xs text-[#94A3B8] font-mono">Carregando trilha de auditoria do Firestore...</span>
           </div>
         ) : filteredLogs.length === 0 ? (
           <div className="py-16 text-center">
             <ShieldCheck className="w-12 h-12 text-gray-500 mx-auto mb-3 opacity-40" />
             <h3 className={`text-sm font-semibold ${isDark ? 'text-white' : 'text-slate-800'}`}>Nenhum log de auditoria encontrado</h3>
-            <p className="text-xs text-[#8E9299] mt-1 max-w-md mx-auto">
+            <p className="text-xs text-[#94A3B8] mt-1 max-w-md mx-auto">
               Não há registros para os filtros selecionados ou nenhuma alteração foi registrada recentemente.
             </p>
           </div>
@@ -554,7 +554,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className={`border-b text-[11px] font-mono uppercase tracking-wider font-semibold ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299]' : 'bg-slate-50 border-slate-200 text-slate-600'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-600'
                 }`}>
                   <th className="py-3 px-4 w-44">Data / Hora</th>
                   <th className="py-3 px-4 w-52">Operador</th>
@@ -564,7 +564,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
                   <th className="py-3 px-4 w-20 text-center">Info</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1F2229]/60">
+              <tbody className="divide-y divide-[#243756]/60">
                 {paginatedLogs.map((log) => {
                   const badge = getActionBadge(log.tipoAcao || log.acao || '');
                   const userNome = log.usuarioNome || log.nomeUsuario || 'Operador';
@@ -575,7 +575,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
                     <tr 
                       key={log.id} 
                       className={`transition-colors ${
-                        isDark ? 'hover:bg-[#1A1D24]/70 text-[#E0E2E5]' : 'hover:bg-slate-50/80 text-slate-800'
+                        isDark ? 'hover:bg-[#1B2D4A]/70 text-[#E2E8F0]' : 'hover:bg-slate-50/80 text-slate-800'
                       }`}
                     >
                       {/* 1. Timestamp */}
@@ -593,7 +593,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
                         </div>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           {getProfileBadge(log.usuarioPerfil)}
-                          <span className="text-[10px] font-mono text-[#8E9299] truncate max-w-[100px]" title={userEmail}>
+                          <span className="text-[10px] font-mono text-[#94A3B8] truncate max-w-[100px]" title={userEmail}>
                             {userEmail.split('@')[0]}
                           </span>
                         </div>
@@ -631,7 +631,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
                         <button
                           onClick={() => setSelectedLogModal(log)}
                           className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
-                            isDark ? 'bg-[#0D0F14] hover:bg-[#1F2229] border-[#1F2229] text-gray-300' : 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-700'
+                            isDark ? 'bg-[#0F1B33] hover:bg-[#243756] border-[#243756] text-gray-300' : 'bg-slate-100 hover:bg-slate-200 border-slate-200 text-slate-700'
                           }`}
                           title="Visualizar registro completo de auditoria"
                         >
@@ -649,9 +649,9 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
         {/* 5. CONTROLES DE PAGINAÇÃO (MÁXIMO 50 POR PÁGINA) */}
         {!isLoading && filteredLogs.length > 0 && (
           <div className={`p-4 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-xs ${
-            isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+            isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
           }`}>
-            <span className="text-[#8E9299] text-[11px] font-mono">
+            <span className="text-[#94A3B8] text-[11px] font-mono">
               Página <strong className={isDark ? 'text-white' : 'text-slate-900'}>{currentPage}</strong> de <strong>{totalPages}</strong> ({filteredLogs.length} logs totais)
             </span>
 
@@ -660,7 +660,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
                 onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229] text-white hover:bg-[#1F2229]' : 'bg-white border-slate-200 text-slate-800 hover:bg-slate-100'
+                  isDark ? 'bg-[#16243D] border-[#243756] text-white hover:bg-[#243756]' : 'bg-white border-slate-200 text-slate-800 hover:bg-slate-100'
                 }`}
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
@@ -675,7 +675,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
                 onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
                 className={`px-3 py-1.5 rounded-lg border text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229] text-white hover:bg-[#1F2229]' : 'bg-white border-slate-200 text-slate-800 hover:bg-slate-100'
+                  isDark ? 'bg-[#16243D] border-[#243756] text-white hover:bg-[#243756]' : 'bg-white border-slate-200 text-slate-800 hover:bg-slate-100'
                 }`}
               >
                 <span>Próximo</span>
@@ -690,10 +690,10 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
       {selectedLogModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-150">
           <div className={`w-full max-w-2xl rounded-2xl border shadow-2xl overflow-hidden animate-in zoom-in-95 duration-150 ${
-            isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900'
+            isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900'
           }`}>
             <div className={`p-4 sm:p-5 border-b flex items-center justify-between ${
-              isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+              isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
             }`}>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
@@ -701,7 +701,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
                 </div>
                 <div>
                   <h3 className="text-sm font-bold">Documento de Auditoria</h3>
-                  <p className="text-[11px] font-mono text-[#8E9299]">ID: {selectedLogModal.id}</p>
+                  <p className="text-[11px] font-mono text-[#94A3B8]">ID: {selectedLogModal.id}</p>
                 </div>
               </div>
               <button
@@ -714,36 +714,36 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
 
             <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto text-xs">
               <div className="grid grid-cols-2 gap-3">
-                <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-                  <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold">Data / Hora</span>
+                <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+                  <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold">Data / Hora</span>
                   <span className="font-mono text-xs font-bold mt-1 block">{formatTimestamp(selectedLogModal.timestamp)}</span>
                 </div>
 
-                <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-                  <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold">Canteiro / Sede</span>
+                <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+                  <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold">Canteiro / Sede</span>
                   <span className="font-mono text-xs font-bold mt-1 text-indigo-400 block">{selectedLogModal.canteiroId}</span>
                 </div>
               </div>
 
-              <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-                <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold">Operador Responsável</span>
+              <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+                <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold">Operador Responsável</span>
                 <div className="flex items-center justify-between mt-1">
                   <div>
                     <div className="font-bold text-xs">{selectedLogModal.usuarioNome || selectedLogModal.nomeUsuario}</div>
-                    <div className="text-[11px] font-mono text-[#8E9299]">{selectedLogModal.usuarioId}</div>
+                    <div className="text-[11px] font-mono text-[#94A3B8]">{selectedLogModal.usuarioId}</div>
                   </div>
                   {getProfileBadge(selectedLogModal.usuarioPerfil)}
                 </div>
               </div>
 
-              <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-                <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold">Descrição da Ação</span>
+              <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+                <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold">Descrição da Ação</span>
                 <p className="mt-1 text-xs leading-relaxed font-sans">{selectedLogModal.detalhes}</p>
               </div>
 
               {selectedLogModal.detalhesJson && (
-                <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-                  <span className="text-[10px] font-mono uppercase text-[#8E9299] block font-semibold mb-1">Metadados Estruturados (JSON)</span>
+                <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+                  <span className="text-[10px] font-mono uppercase text-[#94A3B8] block font-semibold mb-1">Metadados Estruturados (JSON)</span>
                   <pre className="p-2.5 rounded-lg bg-black/40 text-[10px] font-mono text-emerald-400 overflow-x-auto">
                     {JSON.stringify(selectedLogModal.detalhesJson, null, 2)}
                   </pre>
@@ -752,7 +752,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
             </div>
 
             <div className={`p-4 border-t flex justify-end ${
-              isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+              isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
             }`}>
               <button
                 onClick={() => setSelectedLogModal(null)}

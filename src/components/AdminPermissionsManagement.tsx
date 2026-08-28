@@ -333,7 +333,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
               <span>Firestore Sync</span>
             </span>
           </div>
-          <p className={`text-xs mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <p className={`text-xs mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
             Controle estrito de perfis de acesso: Apenas e-mails autorizados têm permissão para acessar o painel de gestão.
           </p>
         </div>
@@ -359,12 +359,12 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
       {/* Tabela de Administradores */}
       <div className={`rounded-2xl border shadow-sm overflow-hidden ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className={`uppercase font-bold border-b ${
-              isDark ? 'bg-[#0E1015] border-[#1F2229] text-[#8E9299]' : 'bg-slate-50 border-slate-200 text-slate-600'
+              isDark ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-600'
             }`}>
               <tr>
                 <th className="py-3 px-5">Administrador</th>
@@ -378,7 +378,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
               </tr>
             </thead>
             <tbody className={`divide-y ${
-              isDark ? 'divide-[#1F2229] text-[#E0E2E5]' : 'divide-slate-200 text-slate-800'
+              isDark ? 'divide-[#243756] text-[#E2E8F0]' : 'divide-slate-200 text-slate-800'
             }`}>
               {admins.map((adm) => {
                 const isSelf = adm.email.toLowerCase() === currentUserEmail.toLowerCase();
@@ -387,7 +387,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                 const canteiroDisplay = rbacService.hasGlobalAccess(roleKey) ? 'TODAS (Global)' : (adm.sede || adm.canteiroCodigo || 'KO');
 
                 return (
-                  <tr key={adm.id} className={`transition-colors ${isDark ? 'hover:bg-[#1C1F26]' : 'hover:bg-slate-50/80'}`}>
+                  <tr key={adm.id} className={`transition-colors ${isDark ? 'hover:bg-[#1E3252]' : 'hover:bg-slate-50/80'}`}>
                     {/* Nome */}
                     <td className="py-3.5 px-5 font-sans">
                       <div className="flex items-center gap-2.5">
@@ -402,14 +402,14 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                           <div className={`font-semibold ${isDark ? 'text-white' : 'text-slate-900'} text-xs`}>
                             {adm.nome} {isSelf && <span className="text-[10px] text-blue-500 font-mono">(Você)</span>}
                           </div>
-                          <span className={`text-[10px] font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>ID: {adm.id}</span>
+                          <span className={`text-[10px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>ID: {adm.id}</span>
                         </div>
                       </div>
                     </td>
 
                     {/* Email */}
                     <td className="py-3.5 px-5 whitespace-nowrap">
-                      <span className={`font-mono text-xs ${isDark ? 'text-[#E0E2E5]' : 'text-slate-900'}`}>
+                      <span className={`font-mono text-xs ${isDark ? 'text-[#E2E8F0]' : 'text-slate-900'}`}>
                         {adm.email}
                       </span>
                     </td>
@@ -468,7 +468,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
                     {/* Data de Criação */}
                     <td className={`py-3.5 px-5 text-right whitespace-nowrap text-[11px] ${
-                      isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                      isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                     }`}>
                       {adm.criadoEm}
                     </td>
@@ -524,7 +524,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
         {/* Footer Info */}
         <div className={`p-4 border-t flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs ${
-          isDark ? 'border-[#1F2229] bg-[#0D0F14] text-[#8E9299]' : 'border-slate-200 bg-slate-50 text-slate-600'
+          isDark ? 'border-[#243756] bg-[#0F1B33] text-[#94A3B8]' : 'border-slate-200 bg-slate-50 text-slate-600'
         }`}>
           <div className="flex items-center gap-1.5">
             <Lock className="w-3.5 h-3.5 text-blue-500" />
@@ -538,10 +538,10 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
           <div className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border animate-in fade-in zoom-in-95 ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <div className={`flex items-center justify-between px-6 py-4 border-b ${
-              isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+              isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
             }`}>
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-blue-500" />
@@ -551,7 +551,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
               </div>
               <button
                 onClick={() => { setIsModalOpen(false); setEditingAdmin(null); }}
-                className={`text-sm cursor-pointer ${isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-400 hover:text-slate-800'}`}
+                className={`text-sm cursor-pointer ${isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-400 hover:text-slate-800'}`}
               >
                 ✕
               </button>
@@ -566,7 +566,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
             <form onSubmit={handleSaveAdmin} className="p-6 space-y-3.5">
               <div>
-                <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   E-mail Corporativo / Google Workspace *
                 </label>
                 <input
@@ -580,14 +580,14 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     editingAdmin ? 'opacity-60 cursor-not-allowed' : ''
                   } ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                   }`}
                 />
               </div>
 
               <div>
-                <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   Nome Completo *
                 </label>
                 <input
@@ -598,7 +598,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                   required
                   className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                   }`}
                 />
@@ -606,7 +606,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     Cargo / Função Interna
                   </label>
                   <input
@@ -616,7 +616,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     placeholder="Ex: Engenheiro Fiscal, Analista"
                     className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   />
@@ -624,7 +624,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
-                    <label className={`block font-semibold text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                    <label className={`block font-semibold text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                       Título do Cargo Impresso
                     </label>
                     <InfoTooltip 
@@ -639,7 +639,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     placeholder="Ex: Capitão Encarregado de Obras"
                     className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   />
@@ -647,7 +647,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
-                    <label className={`block font-semibold text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                    <label className={`block font-semibold text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                       Nível de Acesso (Role) *
                     </label>
                     <InfoTooltip 
@@ -660,7 +660,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     onChange={(e) => setNivelAcesso(e.target.value as any)}
                     className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-semibold ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   >
@@ -676,7 +676,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
               {/* Seção Canteiro / Sede Vinculada */}
               <div>
-                <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   Canteiro de Obras / Sede Vinculada {rbacService.hasGlobalAccess(nivelAcesso) ? '(Acesso Global)' : '*'}
                 </label>
                 <select
@@ -687,7 +687,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     rbacService.hasGlobalAccess(nivelAcesso) ? 'opacity-60 cursor-not-allowed' : ''
                   } ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                   }`}
                 >
@@ -709,7 +709,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
               <div className="space-y-2 pt-1">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
-                    <span className={`font-semibold text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                    <span className={`font-semibold text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                       {editingAdmin ? 'Credenciais de Acesso' : 'Definição de Senha Inicial'}
                     </span>
                     <InfoTooltip 
@@ -734,7 +734,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className={`block text-[11px] mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                    <label className={`block text-[11px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                       {editingAdmin ? 'Nova Senha (opcional)' : 'Senha (mín. 6 dígitos) *'}
                     </label>
                     <input
@@ -745,14 +745,14 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                       required={!editingAdmin}
                       className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-mono ${
                         isDark 
-                          ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                           : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                       }`}
                     />
                   </div>
 
                   <div>
-                    <label className={`block text-[11px] mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                    <label className={`block text-[11px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                       {editingAdmin ? 'Confirmar Nova Senha' : 'Confirmar Senha *'}
                     </label>
                     <input
@@ -763,7 +763,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                       required={!editingAdmin && Boolean(senhaInicial)}
                       className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-mono ${
                         isDark 
-                          ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                           : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                       }`}
                     />
@@ -772,13 +772,13 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
               </div>
 
               <div className={`pt-4 border-t flex justify-end gap-2 ${
-                isDark ? 'border-[#1F2229]' : 'border-slate-200'
+                isDark ? 'border-[#243756]' : 'border-slate-200'
               }`}>
                 <button
                   type="button"
                   onClick={() => { setIsModalOpen(false); setEditingAdmin(null); }}
                   className={`px-4 py-2 font-semibold text-xs cursor-pointer ${
-                    isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                    isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
                   Cancelar

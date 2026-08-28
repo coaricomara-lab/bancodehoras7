@@ -39,7 +39,7 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
         id="session-timeout-card"
         className={`w-full max-w-md p-6 sm:p-7 rounded-3xl border shadow-2xl relative overflow-hidden transition-all transform animate-in zoom-in-95 duration-200 ${
           isDark 
-            ? 'bg-[#15171C] border-[#2A2E39] text-[#E0E2E5]' 
+            ? 'bg-[#16243D] border-[#335075] text-[#E2E8F0]' 
             : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
@@ -71,7 +71,7 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
             </div>
 
             {/* Badge flutuante de segurança */}
-            <div className="absolute -bottom-1.5 -right-1.5 bg-blue-600 text-white rounded-full p-1 border-2 border-[#15171C] shadow-xs">
+            <div className="absolute -bottom-1.5 -right-1.5 bg-blue-600 text-white rounded-full p-1 border-2 border-[#16243D] shadow-xs">
               <ShieldAlert className="w-3.5 h-3.5" />
             </div>
           </div>
@@ -106,7 +106,7 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
 
             {/* Visualizador de Contagem Regressiva */}
             <div className={`p-3.5 rounded-2xl border flex items-center justify-between gap-3 ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center gap-2.5 text-left">
                 <Clock className={`w-4 h-4 ${isUrgent ? 'text-red-400 animate-spin' : 'text-amber-400'}`} />
@@ -139,7 +139,7 @@ export const SessionTimeoutModal: React.FC<SessionTimeoutModalProps> = ({
             onClick={onLogoutNow}
             className={`w-full sm:w-auto sm:flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs font-bold transition-all border ${
               isDark 
-                ? 'bg-[#1F2229] hover:bg-[#2A2E39] text-[#E0E2E5] hover:text-white border-[#2A2E39]' 
+                ? 'bg-[#243756] hover:bg-[#335075] text-[#E2E8F0] hover:text-white border-[#335075]' 
                 : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
             } active:scale-95`}
           >

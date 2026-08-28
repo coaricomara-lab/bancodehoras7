@@ -381,13 +381,13 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs font-mono">
       <div 
         className={`relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border animate-in fade-in zoom-in-95 ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
         }`}
         id={`daily-entry-modal-${modalId}`}
       >
         {/* Modal Header */}
         <div className={`flex items-center justify-between px-6 py-4 border-b ${
-          isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+          isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
         }`}>
           <div className="flex items-center space-x-2.5">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-white shadow-sm ${
@@ -424,7 +424,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                   </span>
                 )}
               </h3>
-              <p className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 {tipoOcorrencia === 'FERIAS'
                   ? 'Geração automática de FÉRIAS em todos os dias do período selecionado'
                   : isEditing 
@@ -439,7 +439,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
             aria-label="Fechar modal de lançamento diário"
             title="Fechar (Esc)"
             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-              isDark ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
+              isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
             <X className="w-5 h-5" />
@@ -457,7 +457,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           {/* Colaborador */}
           <div>
-            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
               Colaborador *
             </label>
             <select
@@ -465,7 +465,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               onChange={(e) => setMatricula(e.target.value)}
               className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               }`}
               required
@@ -480,7 +480,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
 
           {/* Tipo de Ocorrência */}
           <div>
-            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
               Tipo de Ocorrência (Regra Operacional) *
             </label>
             <select
@@ -505,7 +505,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                     ? 'bg-emerald-950/30 border-emerald-500/50 text-emerald-300 focus:border-emerald-400'
                     : 'bg-emerald-50 border-emerald-300 text-emerald-900 focus:border-emerald-500'
                   : isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
               }`}
             >
@@ -560,7 +560,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                     }}
                     className={`w-full px-3 py-2 rounded-lg border font-mono text-xs focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-emerald-700/50 text-white focus:border-emerald-400' 
+                        ? 'bg-[#0F1B33] border-emerald-700/50 text-white focus:border-emerald-400' 
                         : 'bg-white border-emerald-300 text-slate-900 focus:border-emerald-500'
                     }`}
                     required
@@ -578,7 +578,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                     onChange={(e) => setDataFimFerias(e.target.value)}
                     className={`w-full px-3 py-2 rounded-lg border font-mono text-xs focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-emerald-700/50 text-white focus:border-emerald-400' 
+                        ? 'bg-[#0F1B33] border-emerald-700/50 text-white focus:border-emerald-400' 
                         : 'bg-white border-emerald-300 text-slate-900 focus:border-emerald-500'
                     }`}
                     required
@@ -600,7 +600,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                       vacationDaysCount === days
                         ? 'bg-emerald-600 text-white border-emerald-500'
                         : isDark
-                        ? 'bg-[#0D0F14] border-emerald-800/60 text-emerald-300 hover:bg-emerald-900/40'
+                        ? 'bg-[#0F1B33] border-emerald-800/60 text-emerald-300 hover:bg-emerald-900/40'
                         : 'bg-white border-emerald-300 text-emerald-800 hover:bg-emerald-100'
                     }`}
                   >
@@ -611,7 +611,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
 
               {/* Resumo do Preenchimento Automático */}
               <div className={`p-2.5 rounded-lg border text-[11px] leading-relaxed flex items-start gap-2 ${
-                isDark ? 'bg-[#0D0F14] border-emerald-900/50 text-emerald-200' : 'bg-white/80 border-emerald-200 text-emerald-900'
+                isDark ? 'bg-[#0F1B33] border-emerald-900/50 text-emerald-200' : 'bg-white/80 border-emerald-200 text-emerald-900'
               }`}>
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <div>
@@ -628,7 +628,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
           ) : (
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   Data da Ocorrência *
                 </label>
                 <input
@@ -637,7 +637,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                   onChange={(e) => setDataRegistro(e.target.value)}
                   className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                   }`}
                   required
@@ -645,7 +645,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               </div>
 
               <div>
-                <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   Horas Brutas *
                 </label>
                 <input
@@ -658,7 +658,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                   onChange={(e) => setHorasBrutas(parseFloat(e.target.value) || 0)}
                   className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500 disabled:opacity-50' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 disabled:opacity-50' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 disabled:opacity-50'
                   }`}
                   required
@@ -670,11 +670,11 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
           {/* Real-time SPTF Calculator Card (quando não for férias) */}
           {tipoOcorrencia !== 'FERIAS' && (
             <div className={`p-4 rounded-xl border space-y-2 ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                     Destino & Regime
                   </span>
                   <div className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
@@ -683,7 +683,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                 </div>
 
                 <div className="text-right">
-                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                  <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                     {calc.destinoLancamento === 'FOLHA_PAGAMENTO' ? 'Desconto Folha' : 'Saldo Banco'}
                   </span>
                   <div className={`text-base font-black ${
@@ -693,7 +693,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                       ? isDark ? 'text-green-400' : 'text-emerald-600'
                       : calc.saldoCalculado < 0
                       ? isDark ? 'text-red-400' : 'text-red-600'
-                      : isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                      : isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                   }`}>
                     {calc.destinoLancamento === 'FOLHA_PAGAMENTO'
                       ? `-${calc.horasDescontoFolha.toFixed(1)}h (Folha)`
@@ -706,7 +706,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                 </div>
               </div>
               
-              <p className={`text-[11px] pt-1 border-t ${isDark ? 'border-[#1F2229] text-[#8E9299]' : 'border-slate-200 text-slate-500'}`}>
+              <p className={`text-[11px] pt-1 border-t ${isDark ? 'border-[#243756] text-[#94A3B8]' : 'border-slate-200 text-slate-500'}`}>
                 💡 {calc.descricaoRegra}
               </p>
             </div>
@@ -714,13 +714,13 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
 
           {/* Anexo de Comprovante */}
           <div>
-            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
               Comprovante / Portaria / Atestado (Google Drive) {tipoOcorrencia === 'ATESTADO_MEDICO' && <span className="text-red-500">*</span>}
             </label>
             <div className="flex items-center gap-2">
               <label className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-colors ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299] hover:text-[#E0E2E5] hover:bg-[#15171C]' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                   : 'bg-white border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}>
                 <UploadCloud className="w-4 h-4 text-blue-500" />
@@ -747,7 +747,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
 
           {/* Observação */}
           <div>
-            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
               Observação / Justificativa
             </label>
             <input
@@ -757,14 +757,14 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
               placeholder={tipoOcorrencia === 'FERIAS' ? 'Ex: Portaria nº 123/COMARA - Férias Regulamentares' : 'Ex: Parada emergencial no gerador de Coari'}
               className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden font-sans ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               }`}
             />
           </div>
 
           <div className={`pt-4 border-t flex items-center justify-between gap-2 font-sans ${
-            isDark ? 'border-[#1F2229]' : 'border-slate-200'
+            isDark ? 'border-[#243756]' : 'border-slate-200'
           }`}>
             {isEditing && onDeleteRecord ? (
               <button
@@ -786,7 +786,7 @@ export const DailyEntryModal: React.FC<DailyEntryModalProps> = ({
                 type="button"
                 onClick={onClose}
                 className={`px-4 py-2 font-semibold text-xs rounded-lg transition-colors cursor-pointer ${
-                  isDark ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                  isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 Cancelar

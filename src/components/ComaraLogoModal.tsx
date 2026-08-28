@@ -97,11 +97,11 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs font-mono">
       <div className={`w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden relative ${
-        isDark ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-slate-200 text-slate-900'
+        isDark ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]' : 'bg-white border-slate-200 text-slate-900'
       }`}>
         {/* Header */}
         <div className={`p-5 border-b flex items-center justify-between ${
-          isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+          isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
         }`}>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center shadow-xs">
@@ -109,7 +109,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
             </div>
             <div>
               <h3 className="font-bold text-sm">Identidade Visual & Logomarca COMARA</h3>
-              <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Personalização do cabeçalho, tela de login e relatórios oficiais
               </p>
             </div>
@@ -118,7 +118,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
             type="button"
             onClick={onClose}
             className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-              isDark ? 'hover:bg-[#1F2229] text-gray-400' : 'hover:bg-slate-200 text-slate-500'
+              isDark ? 'hover:bg-[#243756] text-gray-400' : 'hover:bg-slate-200 text-slate-500'
             }`}
           >
             <X className="w-4 h-4" />
@@ -145,9 +145,9 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
 
           {/* Live Preview Box */}
           <div className={`p-4 rounded-xl border text-center space-y-2 ${
-            isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+            isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
           }`}>
-            <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-[10px] uppercase font-bold tracking-wider ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Pré-visualização em Tempo Real
             </span>
             <div className="py-2 flex items-center justify-center">
@@ -159,7 +159,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                 theme={theme}
               />
             </div>
-            <p className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-400'}`}>
+            <p className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`}>
               {logoUrl ? 'Utilizando imagem personalizada' : 'Utilizando brasão vetorial oficial padrão'}
             </p>
           </div>
@@ -167,12 +167,12 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
           {/* Upload Button or URL Input */}
           <div className="space-y-3">
             <div>
-              <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+              <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                 1. CARREGAR ARQUIVO DE IMAGEM DA LOGO (PNG / JPG / SVG)
               </label>
               <label className={`w-full py-3 px-4 border border-dashed rounded-xl flex items-center justify-center gap-2.5 cursor-pointer transition-all ${
                 isDark 
-                  ? 'border-[#2A2E38] hover:border-blue-500 bg-[#0D0F14]/50 hover:bg-blue-500/5 text-blue-400' 
+                  ? 'border-[#335075] hover:border-blue-500 bg-[#0F1B33]/50 hover:bg-blue-500/5 text-blue-400' 
                   : 'border-slate-300 hover:border-blue-500 bg-white hover:bg-blue-50/50 text-blue-600'
               }`}>
                 <Upload className="w-4 h-4" />
@@ -187,7 +187,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
             </div>
 
             <div>
-              <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+              <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                 2. OU INFORME A URL DA IMAGEM
               </label>
               <div className="relative">
@@ -198,7 +198,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                   onChange={(e) => setLogoUrl(e.target.value)}
                   className={`w-full px-4 py-2.5 rounded-xl border text-xs font-mono outline-hidden transition-colors ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' 
                       : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
                   }`}
                 />
@@ -208,7 +208,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <div>
-                <label className={`block font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   SIGLA / NOME PRINCIPAL
                 </label>
                 <input
@@ -217,12 +217,12 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder="COMARA"
                   className={`w-full px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                   }`}
                 />
               </div>
               <div>
-                <label className={`block font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   SUBTÍTULO INSTITUCIONAL
                 </label>
                 <input
@@ -231,14 +231,14 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                   onChange={(e) => setSubtitle(e.target.value)}
                   placeholder="Comissão de Aeroportos da Região Amazônica"
                   className={`w-full px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                   }`}
                 />
               </div>
             </div>
 
             {/* Configuração do Modo de Insalubridade */}
-            <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+            <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
               <label className={`block font-bold mb-1.5 ${isDark ? 'text-amber-400' : 'text-amber-800'}`}>
                 MODO DO MÓDULO DE INSALUBRIDADE
               </label>
@@ -252,7 +252,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                         ? 'bg-amber-950/40 border-amber-500/60 text-white font-bold shadow-xs'
                         : 'bg-amber-50 border-amber-400 text-amber-900 font-bold shadow-xs'
                       : isDark
-                        ? 'bg-[#15171C] border-[#1F2229] text-[#8E9299] hover:text-white'
+                        ? 'bg-[#16243D] border-[#243756] text-[#94A3B8] hover:text-white'
                         : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -260,7 +260,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                     <span>📋 Modo Simples (Planilha)</span>
                     {insalubrityMode === 'SIMPLES' && <span className="w-2 h-2 rounded-full bg-amber-400"></span>}
                   </div>
-                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                     Matriz mensal com dias do mês (1..31), atividades em destaque e cálculo automático de dias.
                   </p>
                 </button>
@@ -274,7 +274,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                         ? 'bg-blue-950/40 border-blue-500/60 text-white font-bold shadow-xs'
                         : 'bg-blue-50 border-blue-400 text-blue-900 font-bold shadow-xs'
                       : isDark
-                        ? 'bg-[#15171C] border-[#1F2229] text-[#8E9299] hover:text-white'
+                        ? 'bg-[#16243D] border-[#243756] text-[#94A3B8] hover:text-white'
                         : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -282,7 +282,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                     <span>⚙️ Modo Completo</span>
                     {insalubrityMode === 'COMPLETA' && <span className="w-2 h-2 rounded-full bg-blue-400"></span>}
                   </div>
-                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                  <p className={`text-[10px] mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                     Visão detalhada por ocorrências, guias NR-15 e controle de percentual fixo contratual.
                   </p>
                 </button>
@@ -308,7 +308,7 @@ export const ComaraLogoModal: React.FC<ComaraLogoModalProps> = ({
                 type="button"
                 onClick={onClose}
                 className={`flex-1 sm:flex-none px-4 py-2 rounded-xl border font-bold text-xs transition-colors cursor-pointer ${
-                  isDark ? 'border-[#2A2E38] hover:bg-[#1F2229] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
+                  isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                 }`}
               >
                 Cancelar

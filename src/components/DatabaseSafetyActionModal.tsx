@@ -190,7 +190,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xs animate-in fade-in duration-150 font-sans">
       <div 
         className={`w-full max-w-xl rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[92vh] ${
-          isDark ? 'bg-[#15171C] border-rose-900/50 text-[#E0E2E5]' : 'bg-white border-rose-300 text-slate-900'
+          isDark ? 'bg-[#16243D] border-rose-900/50 text-[#E2E8F0]' : 'bg-white border-rose-300 text-slate-900'
         }`}
       >
         {/* Top Danger Bar */}
@@ -198,7 +198,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
 
         {/* Modal Header */}
         <div className={`px-6 py-4 border-b flex items-center justify-between shrink-0 ${
-          isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-rose-50/50 border-rose-100'
+          isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-rose-50/50 border-rose-100'
         }`}>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-500 shrink-0">
@@ -213,7 +213,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
                   Ação Crítica
                 </span>
               </div>
-              <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 {actionType === 'CLEAR_DATABASE' 
                   ? 'Exclusão de registros com proteção contra perda de dados' 
                   : 'Substituição de registros por base de demonstração'}
@@ -224,7 +224,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
           <button
             onClick={onClose}
             className={`p-1.5 rounded-xl border transition-colors cursor-pointer ${
-              isDark ? 'border-[#1F2229] hover:bg-[#1F2229] text-[#8E9299]' : 'border-slate-200 hover:bg-slate-100 text-slate-500'
+              isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-200 hover:bg-slate-100 text-slate-500'
             }`}
             title="Cancelar e Fechar"
           >
@@ -256,33 +256,33 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
           </div>
 
           {/* 2. Resumo da Base Atual Afetada */}
-          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-            <span className={`text-[10px] uppercase font-bold tracking-wider block mb-2 font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <div className={`p-3.5 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+            <span className={`text-[10px] uppercase font-bold tracking-wider block mb-2 font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Volume de Dados Atual na Base:
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
-              <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+              <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
                 <Users className="w-3.5 h-3.5 mx-auto mb-1 text-blue-400" />
                 <span className="block font-bold font-mono text-sm">{employees.length}</span>
-                <span className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Colaboradores</span>
+                <span className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Colaboradores</span>
               </div>
 
-              <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+              <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
                 <Clock className="w-3.5 h-3.5 mx-auto mb-1 text-emerald-400" />
                 <span className="block font-bold font-mono text-sm">{records.length}</span>
-                <span className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Lançamentos</span>
+                <span className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Lançamentos</span>
               </div>
 
-              <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+              <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
                 <FileSpreadsheet className="w-3.5 h-3.5 mx-auto mb-1 text-amber-400" />
                 <span className="block font-bold font-mono text-sm">{insalubrityRecords.length}</span>
-                <span className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Insalubridade</span>
+                <span className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Insalubridade</span>
               </div>
 
-              <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+              <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
                 <Building2 className="w-3.5 h-3.5 mx-auto mb-1 text-indigo-400" />
                 <span className="block font-bold font-mono text-sm">{constructionSites.length}</span>
-                <span className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Canteiros</span>
+                <span className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Canteiros</span>
               </div>
             </div>
           </div>
@@ -301,7 +301,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
                     {hasCreatedBackup ? 'Ponto de Restauração Criado com Sucesso!' : 'Recomendação de Segurança: Criar Backup'}
                   </span>
                 </div>
-                <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                   Gere um snapshot de segurança salvo localmente e baixe o arquivo de backup (.json) no seu computador.
                 </p>
               </div>
@@ -331,13 +331,13 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
           {/* 4. Ponto de Restauração Existente (se houver) */}
           {latestSnapshot && onRestoreSnapshot && (
             <div className={`p-3 rounded-xl border flex items-center justify-between gap-3 text-[11px] ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-100 border-slate-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-100 border-slate-200'
             }`}>
               <div className="flex items-center gap-2">
                 <History className="w-4 h-4 text-indigo-400 shrink-0" />
                 <div>
                   <span className="font-semibold block">Último Ponto de Segurança Gravado:</span>
-                  <span className={`font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                  <span className={`font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                     {latestSnapshot.formattedDate} ({latestSnapshot.stats.totalEmployees} colaboradores, {latestSnapshot.stats.totalRecords} lançamentos)
                   </span>
                 </div>
@@ -376,12 +376,12 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
                   ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400 ring-2 ring-emerald-500/30'
                   : typedConfirmation.length > 0
                     ? 'border-amber-500/60 bg-amber-500/5 text-amber-300'
-                    : isDark ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5]' : 'bg-slate-50 border-slate-300 text-slate-900'
+                    : isDark ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' : 'bg-slate-50 border-slate-300 text-slate-900'
               }`}
             />
 
             <div className="flex justify-between items-center text-[11px] font-mono">
-              <span className={isDark ? 'text-[#8E9299]' : 'text-slate-500'}>
+              <span className={isDark ? 'text-[#94A3B8]' : 'text-slate-500'}>
                 {typedConfirmation.length > 0 && !isConfirmed && (
                   <span className="text-amber-400">Texto digitado ainda não coincide exatamente.</span>
                 )}
@@ -393,7 +393,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
                 )}
               </span>
 
-              <span className={`${isConfirmed ? 'text-emerald-400' : isDark ? 'text-[#8E9299]' : 'text-slate-400'}`}>
+              <span className={`${isConfirmed ? 'text-emerald-400' : isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`}>
                 {typedConfirmation.trim().length} / {requiredConfirmationText.length} caracteres
               </span>
             </div>
@@ -402,14 +402,14 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
 
         {/* Modal Footer */}
         <div className={`px-6 py-4 border-t flex items-center justify-between gap-3 shrink-0 ${
-          isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+          isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
         }`}>
           <button
             type="button"
             onClick={onClose}
             disabled={isProcessing}
             className={`px-4 py-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
-              isDark ? 'border-[#1F2229] hover:bg-[#1F2229] text-[#8E9299]' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
+              isDark ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
             }`}
           >
             Cancelar Operação

@@ -127,7 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className={`${
-      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-slate-200 text-slate-800'
+      isDark ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0]' : 'bg-white border-slate-200 text-slate-800'
     } border-b sticky top-0 z-40 shadow-xs transition-colors`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-3">
@@ -148,13 +148,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
                 <span className={`text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.2 rounded border ${
                   isDark 
-                    ? 'bg-[#1F2229] text-blue-400 border-[#2A2E38]' 
+                    ? 'bg-[#243756] text-blue-400 border-[#335075]' 
                     : 'bg-blue-50 text-blue-700 border-blue-200'
                 }`}>
                   RH Cloud
                 </span>
               </div>
-              <p className={`text-[10px] font-mono font-medium ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-[10px] font-mono font-medium ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Sedes: <span className="text-[#3B82F6] font-bold">KO</span> • BE • MN
               </p>
             </div>
@@ -170,10 +170,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'dashboard' || activeTab === 'extrato'
                   ? isDark 
-                    ? 'bg-[#1F2229] text-white border border-[#2A2E38] shadow-xs' 
+                    ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' 
                     : 'bg-blue-50 text-blue-700 border border-blue-200 font-bold shadow-xs'
                   : isDark 
-                    ? 'text-[#8E9299] hover:text-[#E0E2E5] hover:bg-[#15171C]' 
+                    ? 'text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -187,17 +187,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'colaboradores'
                   ? isDark 
-                    ? 'bg-[#1F2229] text-white border border-[#2A2E38] shadow-xs' 
+                    ? 'bg-[#243756] text-white border border-[#335075] shadow-xs' 
                     : 'bg-blue-50 text-blue-700 border border-blue-200 font-bold shadow-xs'
                   : isDark 
-                    ? 'text-[#8E9299] hover:text-[#E0E2E5] hover:bg-[#15171C]' 
+                    ? 'text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
               <Users className="w-3.5 h-3.5 text-blue-400" />
               <span>Colaboradores</span>
               <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono font-normal ${
-                isDark ? 'bg-[#0D0F14] text-[#8E9299]' : 'bg-slate-200 text-slate-700'
+                isDark ? 'bg-[#0F1B33] text-[#94A3B8]' : 'bg-slate-200 text-slate-700'
               }`}>
                 {totalEmployees}
               </span>
@@ -209,10 +209,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'insalubridade'
                   ? isDark 
-                    ? 'bg-[#1F2229] text-amber-400 border border-[#2A2E38] shadow-xs' 
+                    ? 'bg-[#243756] text-amber-400 border border-[#335075] shadow-xs' 
                     : 'bg-amber-50 text-amber-700 border border-amber-200 font-bold shadow-xs'
                   : isDark 
-                    ? 'text-[#8E9299] hover:text-[#E0E2E5] hover:bg-[#15171C]' 
+                    ? 'text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -226,10 +226,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'contracheques'
                   ? isDark 
-                    ? 'bg-[#1F2229] text-emerald-400 border border-[#2A2E38] shadow-xs' 
+                    ? 'bg-[#243756] text-emerald-400 border border-[#335075] shadow-xs' 
                     : 'bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold shadow-xs'
                   : isDark 
-                    ? 'text-[#8E9299] hover:text-[#E0E2E5] hover:bg-[#15171C]' 
+                    ? 'text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -243,10 +243,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 activeTab === 'arquitetura'
                   ? isDark 
-                    ? 'bg-[#1F2229] text-cyan-400 border border-[#2A2E38] shadow-xs' 
+                    ? 'bg-[#243756] text-cyan-400 border border-[#335075] shadow-xs' 
                     : 'bg-blue-50 text-cyan-700 border border-cyan-200 font-bold shadow-xs'
                   : isDark 
-                    ? 'text-[#8E9299] hover:text-[#E0E2E5] hover:bg-[#15171C]' 
+                    ? 'text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
               }`}
             >
@@ -280,10 +280,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Menu Suspenso de Opções de Lançamento */}
               {isLaunchDropdownOpen && (
                 <div className={`absolute right-0 mt-2 w-80 rounded-2xl shadow-2xl border py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-slate-200 text-slate-800'
+                  isDark ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]' : 'bg-white border-slate-200 text-slate-800'
                 }`}>
                   <div className={`px-3.5 py-1.5 border-b text-[10px] uppercase font-bold tracking-wider ${
-                    isDark ? 'border-[#1F2229] text-[#8E9299]' : 'border-slate-100 text-slate-500'
+                    isDark ? 'border-[#243756] text-[#94A3B8]' : 'border-slate-100 text-slate-500'
                   }`}>
                     Selecione o Lançamento
                   </div>
@@ -296,7 +296,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onOpenQuickBatchModal();
                       }}
                       className={`w-full px-3 py-2.5 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors cursor-pointer ${
-                        isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-blue-50/70 text-slate-800'
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-blue-50/70 text-slate-800'
                       }`}
                     >
                       <div className="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20 mt-0.5">
@@ -311,7 +311,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             Lote / Rápido
                           </span>
                         </div>
-                        <p className={`text-[11px] mt-0.5 leading-tight ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <p className={`text-[11px] mt-0.5 leading-tight ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Horas extras, trabalhos e faltas para múltiplos colaboradores
                         </p>
                       </div>
@@ -324,7 +324,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onOpenNewEntry();
                       }}
                       className={`w-full px-3 py-2 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors cursor-pointer ${
-                        isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-blue-50/70 text-slate-800'
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-blue-50/70 text-slate-800'
                       }`}
                     >
                       <div className="w-7 h-7 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/20 mt-0.5">
@@ -339,7 +339,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             Diário
                           </span>
                         </div>
-                        <p className={`text-[11px] mt-0.5 leading-tight ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <p className={`text-[11px] mt-0.5 leading-tight ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Lançamento único com anexo de atestado/comprovante
                         </p>
                       </div>
@@ -353,7 +353,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           onOpenSptfDispensa();
                         }}
                         className={`w-full px-3 py-2 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors cursor-pointer ${
-                          isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-blue-50/70 text-slate-800'
+                          isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-blue-50/70 text-slate-800'
                         }`}
                       >
                         <div className="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20 mt-0.5">
@@ -368,7 +368,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                               2 Vias A4
                             </span>
                           </div>
-                          <p className={`text-[11px] mt-0.5 leading-tight ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                          <p className={`text-[11px] mt-0.5 leading-tight ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                             Emissão de guia com débito automático no banco
                           </p>
                         </div>
@@ -376,7 +376,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     )}
                   </div>
 
-                  <div className={`my-1 border-t ${isDark ? 'border-[#1F2229]' : 'border-slate-100'}`} />
+                  <div className={`my-1 border-t ${isDark ? 'border-[#243756]' : 'border-slate-100'}`} />
 
                   {/* 4. Opção: Lançamento de Insalubridade */}
                   <div className="p-1">
@@ -386,7 +386,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onSelectTab('insalubridade');
                       }}
                       className={`w-full px-3 py-2.5 text-xs text-left flex items-start gap-2.5 rounded-xl transition-colors cursor-pointer ${
-                        isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-amber-50/70 text-slate-800'
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-amber-50/70 text-slate-800'
                       }`}
                     >
                       <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20 mt-0.5">
@@ -401,7 +401,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             NR-15 / Campo
                           </span>
                         </div>
-                        <p className={`text-[11px] mt-0.5 leading-tight ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <p className={`text-[11px] mt-0.5 leading-tight ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Planilha mensal de efetivo, atividades e auditoria técnica
                         </p>
                       </div>
@@ -416,7 +416,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={onToggleTheme}
               className={`p-2 rounded-xl transition-colors border cursor-pointer ${
                 isDark 
-                  ? 'bg-[#15171C] hover:bg-[#1F2229] text-amber-400 hover:text-amber-300 border-[#1F2229]' 
+                  ? 'bg-[#16243D] hover:bg-[#243756] text-amber-400 hover:text-amber-300 border-[#243756]' 
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
               }`}
               title={isDark ? 'Alternar para Tema Claro' : 'Alternar para Tema Escuro'}
@@ -435,10 +435,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className={`p-2 rounded-xl transition-colors border cursor-pointer ${
                   isSettingsOpen
                     ? isDark 
-                      ? 'bg-[#1F2229] text-white border-blue-500/50' 
+                      ? 'bg-[#243756] text-white border-blue-500/50' 
                       : 'bg-slate-200 text-slate-900 border-blue-300'
                     : isDark 
-                      ? 'bg-[#15171C] hover:bg-[#1F2229] text-[#8E9299] hover:text-white border-[#1F2229]' 
+                      ? 'bg-[#16243D] hover:bg-[#243756] text-[#94A3B8] hover:text-white border-[#243756]' 
                       : 'bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border-slate-200'
                 }`}
                 title="Configurações e Menu do Sistema"
@@ -450,10 +450,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Menu Suspenso de Configurações */}
               {isSettingsOpen && (
                 <div className={`absolute right-0 mt-2 w-72 rounded-2xl shadow-2xl border py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-slate-200 text-slate-800'
+                  isDark ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]' : 'bg-white border-slate-200 text-slate-800'
                 }`}>
                   <div className={`px-3.5 py-2 border-b text-[10px] uppercase font-bold tracking-wider ${
-                    isDark ? 'border-[#1F2229] text-[#8E9299]' : 'border-slate-100 text-slate-500'
+                    isDark ? 'border-[#243756] text-[#94A3B8]' : 'border-slate-100 text-slate-500'
                   }`}>
                     Gestão & Sistema
                   </div>
@@ -468,7 +468,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
                         activeTab === 'canteiros'
                           ? isDark ? 'bg-amber-950/30 text-amber-300' : 'bg-amber-50 text-amber-800'
-                          : isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                          : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/20">
@@ -476,7 +476,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                       <div className="flex-1">
                         <div className="font-semibold">Canteiros de Obras</div>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Cadastro de sedes, chefias e equipes
                         </span>
                       </div>
@@ -492,7 +492,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
                       activeTab === 'relatorios'
                         ? isDark ? 'bg-indigo-950/30 text-indigo-300' : 'bg-indigo-50 text-indigo-800'
-                        : isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                        : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                     }`}
                   >
                     <div className="w-6 h-6 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/20">
@@ -500,7 +500,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </div>
                     <div className="flex-1">
                       <div className="font-semibold">Relatórios</div>
-                      <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                      <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                         Extratos, auditoria e exportação
                       </span>
                     </div>
@@ -516,7 +516,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
                         activeTab === 'configuracoes_instituicao'
                           ? isDark ? 'bg-blue-950/40 text-blue-300' : 'bg-blue-50 text-blue-800 font-bold'
-                          : isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                          : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       <div className="w-6 h-6 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
@@ -529,7 +529,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             SUPER ADMIN
                           </span>
                         </div>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           OM, cargos, sedes, almoço e modelos
                         </span>
                       </div>
@@ -545,7 +545,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
                         activeTab === 'backup_restauracao'
                           ? isDark ? 'bg-cyan-950/30 text-cyan-300' : 'bg-cyan-50 text-cyan-800'
-                          : isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                          : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       <div className="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/20">
@@ -553,7 +553,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                       <div className="flex-1">
                         <div className="font-semibold flex items-center justify-between"><span>Backup e Restauração</span><span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-cyan-500/20 text-cyan-300">SUPER ADMIN</span></div>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Exportar e restaurar a base Firestore</span>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Exportar e restaurar a base Firestore</span>
                       </div>
                     </button>
                   )}
@@ -566,7 +566,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setIsSettingsOpen(false);
                       }}
                       className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
-                        isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       <div className="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/20">
@@ -574,7 +574,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                       <div className="flex-1">
                         <div className="font-semibold">Configurações do Sistema</div>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Logo COMARA e modo de insalubridade
                         </span>
                       </div>
@@ -591,7 +591,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
                         activeTab === 'permissoes_admin'
                           ? isDark ? 'bg-purple-950/30 text-purple-300' : 'bg-purple-50 text-purple-800'
-                          : isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                          : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       <div className="w-6 h-6 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0 border border-purple-500/20">
@@ -602,7 +602,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           <span>Gestão de Acessos (RBAC)</span>
                           {!isAdmin && <Lock className="w-3 h-3 text-amber-400" />}
                         </div>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Controle de permissões e administradores
                         </span>
                       </div>
@@ -619,7 +619,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
                         activeTab === 'auditoria'
                           ? isDark ? 'bg-indigo-950/30 text-indigo-300' : 'bg-indigo-50 text-indigo-800'
-                          : isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                          : isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       <div className="w-6 h-6 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/20">
@@ -632,14 +632,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                             LGPD
                           </span>
                         </div>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Logs imutáveis de segurança e operações
                         </span>
                       </div>
                     </button>
                   )}
 
-                  {(canImportFolha || canManageSystem) && <div className={`my-1 border-t ${isDark ? 'border-[#1F2229]' : 'border-slate-100'}`} />}
+                  {(canImportFolha || canManageSystem) && <div className={`my-1 border-t ${isDark ? 'border-[#243756]' : 'border-slate-100'}`} />}
 
                   {/* 5. Importar Lançamentos (CSV) */}
                   {canImportFolha && (
@@ -649,7 +649,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setIsSettingsOpen(false);
                       }}
                       className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
-                        isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       <div className="w-6 h-6 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20">
@@ -657,7 +657,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                       <div className="flex-1">
                         <div className="font-semibold">Importar Lançamentos (CSV)</div>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Carga de histórico do banco de horas
                         </span>
                       </div>
@@ -672,7 +672,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         setIsSettingsOpen(false);
                       }}
                       className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
-                        isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                        isDark ? 'hover:bg-[#243756] text-[#E2E8F0]' : 'hover:bg-slate-50 text-slate-700'
                       }`}
                     >
                       <div className="w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20">
@@ -680,7 +680,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </div>
                       <div className="flex-1">
                         <div className="font-semibold">Importar Pessoas (CSV)</div>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           Cadastro em massa de funcionários
                         </span>
                       </div>
@@ -689,7 +689,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   {canManageSystem && (
                     <>
-                      <div className={`my-1 border-t ${isDark ? 'border-[#1F2229]' : 'border-slate-100'}`} />
+                      <div className={`my-1 border-t ${isDark ? 'border-[#243756]' : 'border-slate-100'}`} />
 
                       {/* 7. Zerar Base de Dados para Importação Real */}
                       <button
@@ -698,7 +698,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           setIsSettingsOpen(false);
                         }}
                         className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
-                          isDark ? 'hover:bg-[#1F2229] text-rose-300' : 'hover:bg-rose-50 text-rose-700'
+                          isDark ? 'hover:bg-[#243756] text-rose-300' : 'hover:bg-rose-50 text-rose-700'
                         }`}
                       >
                         <div className="w-6 h-6 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
@@ -719,7 +719,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           setIsSettingsOpen(false);
                         }}
                         className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
-                          isDark ? 'hover:bg-[#1F2229] text-[#8E9299]' : 'hover:bg-slate-50 text-slate-600'
+                          isDark ? 'hover:bg-[#243756] text-[#94A3B8]' : 'hover:bg-slate-50 text-slate-600'
                         }`}
                       >
                         <div className="w-6 h-6 rounded-lg bg-slate-500/10 text-slate-400 flex items-center justify-center shrink-0 border border-slate-500/20">
@@ -748,10 +748,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className={`p-1.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 ${
                   isProfileOpen
                     ? isDark 
-                      ? 'bg-[#1F2229] border-blue-500/50' 
+                      ? 'bg-[#243756] border-blue-500/50' 
                       : 'bg-slate-100 border-blue-300'
                     : isDark 
-                      ? 'bg-[#15171C] hover:bg-[#1F2229] border-[#1F2229]' 
+                      ? 'bg-[#16243D] hover:bg-[#243756] border-[#243756]' 
                       : 'bg-slate-100 hover:bg-slate-200 border-slate-200'
                 }`}
                 title="Perfil e Sessão"
@@ -764,16 +764,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }`}>
                   {userRole === 'SUPER_ADMIN' ? 'SA' : isAdmin ? 'RH' : 'CL'}
                 </div>
-                <ChevronDown className={`w-3.5 h-3.5 text-[#8E9299] transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3.5 h-3.5 text-[#94A3B8] transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Menu Suspenso de Perfil & Preferências */}
               {isProfileOpen && (
                 <div className={`absolute right-0 mt-2 w-72 rounded-2xl shadow-2xl border py-2 z-50 animate-in fade-in zoom-in-95 duration-150 ${
-                  isDark ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-slate-200 text-slate-800'
+                  isDark ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]' : 'bg-white border-slate-200 text-slate-800'
                 }`}>
                   {/* Header do Usuário */}
-                  <div className={`px-4 py-3 border-b ${isDark ? 'border-[#1F2229]' : 'border-slate-100'}`}>
+                  <div className={`px-4 py-3 border-b ${isDark ? 'border-[#243756]' : 'border-slate-100'}`}>
                     <div className="flex items-center gap-2.5">
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm text-white ${
                         currentRole === 'SUPER_ADMIN' 
@@ -796,7 +796,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                             {roleMeta.label}
                           </span>
                         </div>
-                        <p className={`text-[10px] font-mono truncate mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                        <p className={`text-[10px] font-mono truncate mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                           {currentUserEmail}
                         </p>
                       </div>
@@ -805,7 +805,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   {/* Cloud Connection Badge */}
                   <div className={`px-4 py-2 text-[10px] font-mono flex items-center gap-1.5 border-b ${
-                    isDark ? 'bg-emerald-950/20 text-emerald-400 border-[#1F2229]' : 'bg-emerald-50 text-emerald-700 border-slate-100'
+                    isDark ? 'bg-emerald-950/20 text-emerald-400 border-[#243756]' : 'bg-emerald-50 text-emerald-700 border-slate-100'
                   }`}>
                     <Cloud className="w-3.5 h-3.5" />
                     <span>Firestore Cloud Sincronizado</span>
@@ -814,7 +814,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {/* Seção 1: Alternador de Modo de Acesso (RBAC) */}
                   <div className="p-3">
                     <span className={`text-[10px] uppercase font-bold tracking-wider block mb-2 px-1 ${
-                      isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                      isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                     }`}>
                       Perfil de Acesso Ativo (6 Níveis)
                     </span>
@@ -829,7 +829,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
                           currentRole === 'SUPER_ADMIN' && isAdmin
                             ? isDark ? 'bg-indigo-950/60 text-indigo-300 border border-indigo-700/60 shadow-xs font-bold' : 'bg-indigo-50 text-indigo-800 border border-indigo-300 shadow-xs font-bold'
-                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                            : isDark ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-white border border-[#243756]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
                         }`}
                         title="TI: Acesso total global, auditoria e configurações"
                       >
@@ -845,7 +845,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
                           currentRole === 'RH_ADMIN' && isAdmin
                             ? isDark ? 'bg-purple-950/60 text-purple-300 border border-purple-700/60 shadow-xs font-bold' : 'bg-purple-50 text-purple-800 border border-purple-300 shadow-xs font-bold'
-                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                            : isDark ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-white border border-[#243756]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
                         }`}
                         title="RH Sede: Acesso global, folha e auditoria"
                       >
@@ -861,7 +861,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
                           currentRole === 'GERENTE_CANTEIRO' && isAdmin
                             ? isDark ? 'bg-amber-950/60 text-amber-300 border border-amber-700/60 shadow-xs font-bold' : 'bg-amber-50 text-amber-800 border border-amber-300 shadow-xs font-bold'
-                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                            : isDark ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-white border border-[#243756]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
                         }`}
                         title="Gerente: Visualização e acompanhamento do canteiro ativo"
                       >
@@ -877,7 +877,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
                           currentRole === 'CHEFE_CANTEIRO' && isAdmin
                             ? isDark ? 'bg-blue-950/60 text-blue-300 border border-blue-700/60 shadow-xs font-bold' : 'bg-blue-50 text-blue-800 border border-blue-300 shadow-xs font-bold'
-                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                            : isDark ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-white border border-[#243756]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
                         }`}
                         title="Chefe / Encarregado: Operacional de campo, lançamentos e dispensas"
                       >
@@ -893,7 +893,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
                           currentRole === 'CHEFE_DA' && isAdmin
                             ? isDark ? 'bg-teal-950/60 text-teal-300 border border-teal-700/60 shadow-xs font-bold' : 'bg-teal-50 text-teal-800 border border-teal-300 shadow-xs font-bold'
-                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                            : isDark ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-white border border-[#243756]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
                         }`}
                         title="Chefe DA: Gestão administrativa e auditoria local"
                       >
@@ -909,7 +909,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className={`flex items-center gap-1.5 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all ${
                           currentRole === 'AUX_DA' && isAdmin
                             ? isDark ? 'bg-cyan-950/60 text-cyan-300 border border-cyan-700/60 shadow-xs font-bold' : 'bg-cyan-50 text-cyan-800 border border-cyan-300 shadow-xs font-bold'
-                            : isDark ? 'bg-[#0D0F14] text-[#8E9299] hover:text-white border border-[#1F2229]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
+                            : isDark ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-white border border-[#243756]' : 'bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200'
                         }`}
                         title="Auxiliar DA: Tela restrita de campo para lançamentos e dispensas"
                       >
@@ -927,7 +927,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           ? isDark 
                             ? 'bg-amber-950/60 text-amber-300 border border-amber-800/60 shadow-xs font-bold' 
                             : 'bg-white text-amber-800 border border-amber-200 shadow-xs font-bold'
-                          : isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-600 hover:text-slate-900'
+                          : isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-600 hover:text-slate-900'
                       }`}
                     >
                       <User className="w-3.5 h-3.5" />
@@ -935,12 +935,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </button>
                   </div>
 
-                  <div className={`border-t ${isDark ? 'border-[#1F2229]' : 'border-slate-100'}`} />
+                  <div className={`border-t ${isDark ? 'border-[#243756]' : 'border-slate-100'}`} />
 
                   {/* Seção 2: Alternador de Tema Claro/Escuro */}
                   <div className="p-3">
                     <span className={`text-[10px] uppercase font-bold tracking-wider block mb-2 px-1 ${
-                      isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                      isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                     }`}>
                       Tema Visual
                     </span>
@@ -953,7 +953,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all ${
                           !isDark 
                             ? 'bg-white text-blue-700 border border-blue-200 shadow-xs font-bold' 
-                            : 'text-[#8E9299] hover:text-white'
+                            : 'text-[#94A3B8] hover:text-white'
                         }`}
                       >
                         <Sun className="w-3.5 h-3.5 text-amber-500" />
@@ -966,7 +966,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }}
                         className={`flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-semibold transition-all ${
                           isDark 
-                            ? 'bg-[#1F2229] text-white border border-[#2A2E38] shadow-xs font-bold' 
+                            ? 'bg-[#243756] text-white border border-[#335075] shadow-xs font-bold' 
                             : 'text-slate-600 hover:text-slate-900'
                         }`}
                       >
@@ -978,7 +978,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                   {/* Seção 3: Logout / Desconectar */}
                   {onSignOut && (
-                    <div className={`p-2 border-t ${isDark ? 'border-[#1F2229]' : 'border-slate-100'}`}>
+                    <div className={`p-2 border-t ${isDark ? 'border-[#243756]' : 'border-slate-100'}`}>
                       <button
                         type="button"
                         onClick={() => {
@@ -1006,14 +1006,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Navegação Mobile Compacta */}
       <div className={`md:hidden flex items-center justify-around border-t ${
-        isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+        isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
       } px-2 py-1.5 text-xs overflow-x-auto`}>
         <button
           onClick={() => onSelectTab('dashboard')}
           className={`px-3 py-1.5 rounded-lg whitespace-nowrap font-medium ${
             activeTab === 'dashboard' || activeTab === 'extrato'
-              ? isDark ? 'text-blue-400 font-bold bg-[#1F2229]' : 'text-blue-700 font-bold bg-blue-50'
-              : isDark ? 'text-[#8E9299]' : 'text-slate-600'
+              ? isDark ? 'text-blue-400 font-bold bg-[#243756]' : 'text-blue-700 font-bold bg-blue-50'
+              : isDark ? 'text-[#94A3B8]' : 'text-slate-600'
           }`}
         >
           Dashboard
@@ -1022,8 +1022,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => onSelectTab('colaboradores')}
           className={`px-3 py-1.5 rounded-lg whitespace-nowrap font-medium flex items-center gap-1 ${
             activeTab === 'colaboradores'
-              ? isDark ? 'text-blue-400 font-bold bg-[#1F2229]' : 'text-blue-700 font-bold bg-blue-50'
-              : isDark ? 'text-[#8E9299]' : 'text-slate-600'
+              ? isDark ? 'text-blue-400 font-bold bg-[#243756]' : 'text-blue-700 font-bold bg-blue-50'
+              : isDark ? 'text-[#94A3B8]' : 'text-slate-600'
           }`}
         >
           <span>Pessoas</span>
@@ -1032,8 +1032,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => onSelectTab('insalubridade')}
           className={`px-3 py-1.5 rounded-lg whitespace-nowrap font-medium ${
             activeTab === 'insalubridade'
-              ? isDark ? 'text-amber-400 font-bold bg-[#1F2229]' : 'text-amber-700 font-bold bg-amber-50'
-              : isDark ? 'text-[#8E9299]' : 'text-slate-600'
+              ? isDark ? 'text-amber-400 font-bold bg-[#243756]' : 'text-amber-700 font-bold bg-amber-50'
+              : isDark ? 'text-[#94A3B8]' : 'text-slate-600'
           }`}
         >
           Insalubridade
@@ -1042,8 +1042,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => onSelectTab('arquitetura')}
           className={`px-3 py-1.5 rounded-lg whitespace-nowrap font-medium ${
             activeTab === 'arquitetura'
-              ? isDark ? 'text-cyan-400 font-bold bg-[#1F2229]' : 'text-cyan-700 font-bold bg-cyan-50'
-              : isDark ? 'text-[#8E9299]' : 'text-slate-600'
+              ? isDark ? 'text-cyan-400 font-bold bg-[#243756]' : 'text-cyan-700 font-bold bg-cyan-50'
+              : isDark ? 'text-[#94A3B8]' : 'text-slate-600'
           }`}
         >
           Manual

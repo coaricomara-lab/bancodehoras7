@@ -26,12 +26,12 @@ export const CardSection: React.FC<CardSectionProps> = ({
     <div
       className={`rounded-2xl border transition-all ${
         isDark
-          ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]'
+          ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]'
           : 'bg-white border-slate-200 text-slate-900 shadow-xs'
       } ${className}`}
     >
       <div className={`px-5 py-4 border-b flex items-center justify-between gap-4 ${
-        isDark ? 'border-[#1F2229]' : 'border-slate-100'
+        isDark ? 'border-[#243756]' : 'border-slate-100'
       }`}>
         <div className="flex items-center gap-3">
           {Icon && (
@@ -57,7 +57,7 @@ export const CardSection: React.FC<CardSectionProps> = ({
               )}
             </div>
             {description && (
-              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-xs mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 {description}
               </p>
             )}
@@ -97,7 +97,7 @@ export const FormInput: React.FC<FormInputProps> = ({
       <label
         htmlFor={inputId}
         className={`block text-xs font-semibold ${
-          isDark ? 'text-[#C5C8CD]' : 'text-slate-700'
+          isDark ? 'text-[#CBD5E1]' : 'text-slate-700'
         }`}
       >
         {label}
@@ -106,7 +106,7 @@ export const FormInput: React.FC<FormInputProps> = ({
       <div className="relative rounded-xl">
         {Icon && (
           <div className={`absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none ${
-            isDark ? 'text-[#8E9299]' : 'text-slate-400'
+            isDark ? 'text-[#94A3B8]' : 'text-slate-400'
           }`}>
             <Icon className="w-4 h-4" />
           </div>
@@ -118,7 +118,7 @@ export const FormInput: React.FC<FormInputProps> = ({
             Icon ? 'pl-10' : 'pl-3.5'
           } pr-3.5 py-2.5 ${
             isDark
-              ? 'bg-[#0D0F14] border-[#2A2E38] text-white placeholder-[#5A5E66] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+              ? 'bg-[#0F1B33] border-[#335075] text-white placeholder-[#5A5E66] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
               : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10'
           } ${error ? (isDark ? '!border-red-500/80 !ring-red-500/20' : '!border-red-500 !ring-red-100') : ''} ${className}`}
           {...props}
@@ -127,7 +127,7 @@ export const FormInput: React.FC<FormInputProps> = ({
       {error ? (
         <p className="text-[11px] text-red-500 font-medium">{error}</p>
       ) : helperText ? (
-        <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+        <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
           {helperText}
         </p>
       ) : null}
@@ -161,7 +161,7 @@ export const FormTextarea: React.FC<FormTextareaProps> = ({
       <label
         htmlFor={textareaId}
         className={`block text-xs font-semibold ${
-          isDark ? 'text-[#C5C8CD]' : 'text-slate-700'
+          isDark ? 'text-[#CBD5E1]' : 'text-slate-700'
         }`}
       >
         {label}
@@ -173,7 +173,7 @@ export const FormTextarea: React.FC<FormTextareaProps> = ({
         required={required}
         className={`w-full rounded-xl text-xs font-medium transition-all outline-hidden border px-3.5 py-2.5 ${
           isDark
-            ? 'bg-[#0D0F14] border-[#2A2E38] text-white placeholder-[#5A5E66] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+            ? 'bg-[#0F1B33] border-[#335075] text-white placeholder-[#5A5E66] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
             : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10'
         } ${error ? (isDark ? '!border-red-500/80' : '!border-red-500') : ''} ${className}`}
         {...props}
@@ -181,7 +181,7 @@ export const FormTextarea: React.FC<FormTextareaProps> = ({
       {error ? (
         <p className="text-[11px] text-red-500 font-medium">{error}</p>
       ) : helperText ? (
-        <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+        <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
           {helperText}
         </p>
       ) : null}
@@ -216,7 +216,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
       <label
         htmlFor={selectId}
         className={`block text-xs font-semibold ${
-          isDark ? 'text-[#C5C8CD]' : 'text-slate-700'
+          isDark ? 'text-[#CBD5E1]' : 'text-slate-700'
         }`}
       >
         {label}
@@ -227,13 +227,13 @@ export const FormSelect: React.FC<FormSelectProps> = ({
         required={required}
         className={`w-full rounded-xl text-xs font-medium transition-all outline-hidden border px-3.5 py-2.5 cursor-pointer ${
           isDark
-            ? 'bg-[#0D0F14] border-[#2A2E38] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+            ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
             : 'bg-white border-slate-200 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10'
         } ${error ? (isDark ? '!border-red-500/80' : '!border-red-500') : ''} ${className}`}
         {...props}
       >
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value} className={isDark ? 'bg-[#15171C] text-white' : 'bg-white text-slate-900'}>
+          <option key={opt.value} value={opt.value} className={isDark ? 'bg-[#16243D] text-white' : 'bg-white text-slate-900'}>
             {opt.label}
           </option>
         ))}
@@ -241,7 +241,7 @@ export const FormSelect: React.FC<FormSelectProps> = ({
       {error ? (
         <p className="text-[11px] text-red-500 font-medium">{error}</p>
       ) : helperText ? (
-        <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+        <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
           {helperText}
         </p>
       ) : null}
@@ -269,7 +269,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
   return (
     <label className={`flex items-start justify-between gap-4 p-3 rounded-xl border transition-all cursor-pointer select-none ${
       isDark
-        ? 'bg-[#0D0F14]/60 border-[#1F2229] hover:border-[#2A2E38]'
+        ? 'bg-[#0F1B33]/60 border-[#243756] hover:border-[#335075]'
         : 'bg-slate-50 border-slate-200 hover:border-slate-300'
     } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
       <div className="flex-1">
@@ -277,7 +277,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           {label}
         </span>
         {description && (
-          <span className={`text-[11px] block mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <span className={`text-[11px] block mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
             {description}
           </span>
         )}
@@ -292,7 +292,7 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
           if (!disabled) onChange(!checked);
         }}
         className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-          checked ? 'bg-blue-600' : isDark ? 'bg-[#2A2E38]' : 'bg-slate-300'
+          checked ? 'bg-blue-600' : isDark ? 'bg-[#335075]' : 'bg-slate-300'
         }`}
       >
         <span

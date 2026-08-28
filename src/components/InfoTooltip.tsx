@@ -33,7 +33,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({
       {badge ? (
         <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border transition-colors ${
           isDark 
-            ? 'bg-[#1A1D24] text-blue-300 border-[#2A2E38] hover:border-blue-500/50' 
+            ? 'bg-[#1B2D4A] text-blue-300 border-[#335075] hover:border-blue-500/50' 
             : 'bg-blue-50 text-blue-700 border-blue-200 hover:border-blue-400'
         }`}>
           <span>{badge}</span>
@@ -42,7 +42,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({
       ) : (
         <span className={`p-0.5 rounded-full transition-all inline-flex items-center justify-center ${
           isDark 
-            ? 'text-gray-400 hover:text-blue-400 hover:bg-[#1F2229]' 
+            ? 'text-gray-400 hover:text-blue-400 hover:bg-[#243756]' 
             : 'text-gray-400 hover:text-blue-600 hover:bg-gray-100'
         }`}>
           <HelpCircle className={iconSize} />
@@ -53,7 +53,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({
       <div 
         className={`absolute z-50 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 w-72 max-w-xs p-2.5 text-[11px] leading-relaxed rounded-xl shadow-xl border font-sans ${positionClasses[position]} ${
           isDark 
-            ? 'bg-[#181B22] text-[#D1D5DB] border-[#2E3340] shadow-black/80' 
+            ? 'bg-[#1B2D4A] text-[#D1D5DB] border-[#2E3340] shadow-black/80' 
             : 'bg-white text-slate-700 border-slate-200 shadow-slate-300/80'
         }`}
       >

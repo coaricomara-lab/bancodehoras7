@@ -1,6 +1,9 @@
 /**
- * Design Tokens do Sistema de Gestão SPTF / Institucional
+ * Design Tokens do Sistema de Gestão SPTF — Paleta Institucional Aeronáutica
  * Padronização de cores, tipografia, espaçamentos, elevações e componentes.
+ *
+ * Paleta: azuis aeronáuticos institucionais + neutros navy (dark) / slate (light).
+ * Estes tokens espelham as variáveis CSS definidas em index.css.
  */
 
 export const designTokens = {
@@ -8,43 +11,47 @@ export const designTokens = {
     // Superfícies e Fundos
     surface: {
       dark: {
-        base: '#0A0B0D',
-        card: '#15171C',
-        cardElevated: '#1C1F26',
-        subtle: '#1F2229',
-        border: '#1F2229',
-        borderSubtle: '#2A2E38',
+        base: '#0B1426',        // navy-black institucional
+        secondary: '#0F1B33',   // inputs / inner surfaces
+        header: '#11203A',      // header / nav
+        card: '#16243D',        // card background
+        cardElevated: '#1E3252', // elevated card
+        subtle: '#1B2D4A',      // hover / subtle surface
+        border: '#243756',      // primary border
+        borderSubtle: '#335075', // lighter border
       },
       light: {
-        base: '#F8FAFC',
+        base: '#F1F5F9',        // slate-100
+        secondary: '#F8FAFC',   // slate-50
+        header: '#FFFFFF',
         card: '#FFFFFF',
         cardElevated: '#FFFFFF',
-        subtle: '#F1F5F9',
-        border: '#E2E8F0',
-        borderSubtle: '#CBD5E1',
+        subtle: '#F8FAFC',
+        border: '#E2E8F0',      // slate-200
+        borderSubtle: '#CBD5E1', // slate-300
       },
     },
 
     // Tipografia / Neutros
     text: {
       dark: {
-        primary: '#FFFFFF',
-        secondary: '#E0E2E5',
-        muted: '#8E9299',
-        subtle: '#5C616A',
+        primary: '#E2E8F0',     // slate-200
+        secondary: '#CBD5E1',   // slate-300
+        muted: '#94A3B8',      // slate-400
+        subtle: '#64748B',     // slate-500
       },
       light: {
-        primary: '#0F172A',
-        secondary: '#334155',
-        muted: '#64748B',
-        subtle: '#94A3B8',
+        primary: '#0F172A',    // slate-900
+        secondary: '#334155',  // slate-700
+        muted: '#64748B',     // slate-500
+        subtle: '#94A3B8',    // slate-400
       },
     },
 
     // Acentos Semânticos
     brand: {
-      primary: '#3B82F6', // Azul Aeronáutica
-      primaryHover: '#2563EB',
+      primary: '#3B82F6',       // Azul Aeronáutico (blue-500)
+      primaryHover: '#2563EB',  // blue-600
       primaryDarkBg: 'rgba(59, 130, 246, 0.15)',
       primaryDarkBorder: 'rgba(59, 130, 246, 0.3)',
       primaryLightBg: '#EFF6FF',

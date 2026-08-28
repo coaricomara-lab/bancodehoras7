@@ -142,7 +142,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
 
       {/* Cards de Métricas da Folha */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className={`p-4 rounded-2xl border transition-colors ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+        <div className={`p-4 rounded-2xl border transition-colors ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Fichas Cadastradas</span>
             <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
@@ -155,7 +155,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
           </span>
         </div>
 
-        <div className={`p-4 rounded-2xl border transition-colors ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+        <div className={`p-4 rounded-2xl border transition-colors ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Bruto</span>
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
@@ -170,7 +170,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
           </span>
         </div>
 
-        <div className={`p-4 rounded-2xl border transition-colors ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+        <div className={`p-4 rounded-2xl border transition-colors ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Descontos</span>
             <div className="w-8 h-8 rounded-lg bg-red-500/10 text-red-500 flex items-center justify-center">
@@ -185,7 +185,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
           </span>
         </div>
 
-        <div className={`p-4 rounded-2xl border transition-colors ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
+        <div className={`p-4 rounded-2xl border transition-colors ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Líquido</span>
             <div className="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center">
@@ -203,7 +203,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
 
       {/* Barra de Filtros e Busca */}
       <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-center justify-between gap-3 ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="relative w-full sm:w-72">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -257,7 +257,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
 
       {/* Tabela de Contracheques */}
       <div className={`rounded-2xl border overflow-hidden shadow-sm ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">

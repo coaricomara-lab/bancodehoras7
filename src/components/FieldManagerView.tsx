@@ -120,7 +120,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
       {/* 1. CABEÇALHO DO PERFIL GERENTE DE CAMPO                   */}
       {/* ========================================================= */}
       <div className={`p-4 sm:p-6 rounded-2xl sm:rounded-3xl border transition-all ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
       }`}>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
@@ -136,17 +136,17 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                   COMARA • Leitura
                 </span>
               </div>
-              <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Visualização rápida de saldos da equipe em tempo real para tomada de decisões operacionais no canteiro.
               </p>
             </div>
           </div>
 
           <div className={`px-3.5 py-2 rounded-xl border flex items-center gap-3 self-start sm:self-auto ${
-            isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+            isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
           }`}>
             <div className="text-right">
-              <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Saldo Geral Equipe
               </span>
               <div className="flex items-baseline justify-end gap-1.5">
@@ -169,8 +169,8 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
 
         {/* Mini Cards de Métricas */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mt-4 pt-4 border-t border-inherit">
-          <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
-            <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Total Equipe</span>
+          <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
+            <span className={`text-[10px] font-bold uppercase block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Total Equipe</span>
             <span className="text-lg font-extrabold font-mono">{stats.total} colaboradores</span>
           </div>
 
@@ -184,7 +184,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
             <span className="text-lg font-extrabold font-mono">{stats.negativos}</span>
           </div>
 
-          <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-400' : 'bg-slate-50 border-slate-200 text-slate-700'}`}>
+          <div className={`p-3 rounded-xl border ${isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-400' : 'bg-slate-50 border-slate-200 text-slate-700'}`}>
             <span className="text-[10px] font-bold uppercase block opacity-80">Saldo Zerado</span>
             <span className="text-lg font-extrabold font-mono">{stats.zerados}</span>
           </div>
@@ -195,7 +195,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
       {/* 2. BUSCA INSTANTÂNEA & FILTROS POR SITUAÇÃO               */}
       {/* ========================================================= */}
       <div className={`p-4 rounded-2xl border space-y-3 ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
       }`}>
         {/* Campo de Busca */}
         <div className="relative w-full">
@@ -207,7 +207,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
             placeholder="Pesquisa rápida por nome, matrícula ou função..."
             className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm font-sans transition-all outline-none border ${
               isDark 
-                ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' 
+                ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' 
                 : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
             }`}
           />
@@ -234,7 +234,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                 balanceFilter === 'TODOS'
                   ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
                   : isDark
-                  ? 'bg-[#0D0F14] text-[#8E9299] border-[#1F2229] hover:text-white'
+                  ? 'bg-[#0F1B33] text-[#94A3B8] border-[#243756] hover:text-white'
                   : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
               }`}
             >
@@ -248,7 +248,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                 balanceFilter === 'POSITIVOS'
                   ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
                   : isDark
-                  ? 'bg-[#0D0F14] text-emerald-400 border-[#1F2229] hover:bg-emerald-950/40'
+                  ? 'bg-[#0F1B33] text-emerald-400 border-[#243756] hover:bg-emerald-950/40'
                   : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
               }`}
             >
@@ -262,7 +262,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                 balanceFilter === 'NEGATIVOS'
                   ? 'bg-red-600 text-white border-red-600 shadow-sm'
                   : isDark
-                  ? 'bg-[#0D0F14] text-red-400 border-[#1F2229] hover:bg-red-950/40'
+                  ? 'bg-[#0F1B33] text-red-400 border-[#243756] hover:bg-red-950/40'
                   : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
               }`}
             >
@@ -272,12 +272,12 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
 
           {/* Filtro por Sede */}
           <div className="flex items-center gap-1.5">
-            <span className={`text-[11px] font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Sede:</span>
+            <span className={`text-[11px] font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Sede:</span>
             <select
               value={sedeFilter}
               onChange={(e) => setSedeFilter(e.target.value)}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold border outline-none ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
               }`}
             >
               <option value="TODAS">Todas</option>
@@ -294,7 +294,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
       {/* ========================================================= */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between px-1 text-xs">
-          <span className={`font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <span className={`font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
             Exibindo {filteredEmployees.length} colaboradores
           </span>
           <span className="text-[11px] text-blue-500 font-medium">
@@ -304,7 +304,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
 
         {filteredEmployees.length === 0 ? (
           <div className={`p-8 rounded-2xl border text-center ${
-            isDark ? 'bg-[#15171C] border-[#1F2229] text-gray-400' : 'bg-white border-slate-200 text-slate-500'
+            isDark ? 'bg-[#16243D] border-[#243756] text-gray-400' : 'bg-white border-slate-200 text-slate-500'
           }`}>
             <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="font-bold text-sm">Nenhum colaborador encontrado com os filtros atuais.</p>
@@ -322,14 +322,14 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                 className={`rounded-2xl border transition-all overflow-hidden ${
                   emp.isPositivo
                     ? isDark 
-                      ? 'bg-[#15171C] border-emerald-800/40 hover:border-emerald-500/60' 
+                      ? 'bg-[#16243D] border-emerald-800/40 hover:border-emerald-500/60' 
                       : 'bg-white border-emerald-300 hover:border-emerald-500 shadow-xs'
                     : emp.isNegativo
                     ? isDark 
-                      ? 'bg-[#15171C] border-red-800/40 hover:border-red-500/60' 
+                      ? 'bg-[#16243D] border-red-800/40 hover:border-red-500/60' 
                       : 'bg-white border-red-300 hover:border-red-500 shadow-xs'
                     : isDark 
-                      ? 'bg-[#15171C] border-[#1F2229] hover:border-blue-500/40' 
+                      ? 'bg-[#16243D] border-[#243756] hover:border-blue-500/40' 
                       : 'bg-white border-slate-200 hover:border-blue-400 shadow-xs'
                 }`}
               >
@@ -369,12 +369,12 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                           {emp.nome}
                         </span>
                         <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold uppercase border ${
-                          isDark ? 'bg-[#0D0F14] text-gray-400 border-[#1F2229]' : 'bg-slate-100 text-slate-600 border-slate-200'
+                          isDark ? 'bg-[#0F1B33] text-gray-400 border-[#243756]' : 'bg-slate-100 text-slate-600 border-slate-200'
                         }`}>
                           {emp.matricula}
                         </span>
                       </div>
-                      <div className={`text-xs truncate flex items-center gap-2 mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                      <div className={`text-xs truncate flex items-center gap-2 mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                         <span>{emp.funcao || emp.cargo || 'Operador'}</span>
                         <span>•</span>
                         <span>Sede {emp.sede_atual || emp.sede}</span>
@@ -428,24 +428,24 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                 {/* ------------------------------------------------- */}
                 {isExpanded && (
                   <div className={`p-4 border-t space-y-3 animate-in fade-in duration-150 ${
-                    isDark ? 'border-[#1F2229] bg-[#0E1015]' : 'border-slate-100 bg-slate-50/80'
+                    isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-100 bg-slate-50/80'
                   }`}>
                     {/* Mini Resumo */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                      <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Créditos Extras</span>
+                      <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Créditos Extras</span>
                         <span className="font-bold text-emerald-500">+{emp.bal.totalCreditos.toFixed(1)}h</span>
                       </div>
-                      <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Débitos / Faltas</span>
+                      <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Débitos / Faltas</span>
                         <span className="font-bold text-red-500">-{emp.bal.totalDebitos.toFixed(1)}h</span>
                       </div>
-                      <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Saldo em Dias</span>
+                      <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Saldo em Dias</span>
                         <span className="font-bold">{saldoDias} dias (8h)</span>
                       </div>
-                      <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'}`}>
-                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Total Lançamentos</span>
+                      <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>Total Lançamentos</span>
                         <span className="font-bold">{emp.empRecords.length} registros</span>
                       </div>
                     </div>
@@ -453,7 +453,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                     {/* Lista dos Lançamentos Recentes */}
                     <div className="space-y-1.5 pt-1">
                       <div className="flex items-center justify-between text-[11px] font-bold">
-                        <span className={isDark ? 'text-[#8E9299]' : 'text-slate-600'}>Últimos Lançamentos Diários:</span>
+                        <span className={isDark ? 'text-[#94A3B8]' : 'text-slate-600'}>Últimos Lançamentos Diários:</span>
                         {onViewStatement && (
                           <button
                             type="button"
@@ -476,7 +476,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                             <div
                               key={rec.id}
                               className={`p-2 rounded-lg border flex items-center justify-between gap-2 ${
-                                isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+                                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
                               }`}
                             >
                               <div className="flex items-center gap-2">

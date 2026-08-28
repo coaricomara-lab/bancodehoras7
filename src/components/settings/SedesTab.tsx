@@ -99,7 +99,7 @@ export const SedesTab: React.FC<SedesTabProps> = ({
         {/* Formulário de Nova Sede */}
         {isAddingNew && (
           <div className={`p-4 mb-5 rounded-2xl border ${
-            isDark ? 'bg-[#0D0F14] border-blue-500/30' : 'bg-blue-50/50 border-blue-200'
+            isDark ? 'bg-[#0F1B33] border-blue-500/30' : 'bg-blue-50/50 border-blue-200'
           } animate-in fade-in duration-150`}>
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-bold text-blue-500 uppercase tracking-wider flex items-center gap-1.5">
@@ -180,7 +180,7 @@ export const SedesTab: React.FC<SedesTabProps> = ({
                 type="button"
                 onClick={() => setIsAddingNew(false)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold border ${
-                  isDark ? 'border-[#2A2E38] text-gray-400 hover:text-white' : 'border-slate-300 text-slate-600 hover:bg-slate-100'
+                  isDark ? 'border-[#335075] text-gray-400 hover:text-white' : 'border-slate-300 text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 Cancelar
@@ -201,7 +201,7 @@ export const SedesTab: React.FC<SedesTabProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
           {sedes.length === 0 ? (
             <div className={`col-span-2 p-8 text-center rounded-xl border border-dashed ${
-              isDark ? 'border-[#2A2E38] text-[#8E9299]' : 'border-slate-200 text-slate-400'
+              isDark ? 'border-[#335075] text-[#94A3B8]' : 'border-slate-200 text-slate-400'
             }`}>
               <Building className="w-8 h-8 mx-auto mb-2 opacity-50" />
               <p className="text-xs">Nenhuma sede ou canteiro configurado.</p>
@@ -215,7 +215,7 @@ export const SedesTab: React.FC<SedesTabProps> = ({
                   key={sede.id}
                   className={`p-4 rounded-xl border transition-all flex flex-col justify-between gap-3 ${
                     isDark
-                      ? 'bg-[#0D0F14]/70 border-[#1F2229] hover:border-[#2A2E38]'
+                      ? 'bg-[#0F1B33]/70 border-[#243756] hover:border-[#335075]'
                       : 'bg-slate-50/80 border-slate-200 hover:border-slate-300'
                   }`}
                 >
@@ -260,7 +260,7 @@ export const SedesTab: React.FC<SedesTabProps> = ({
                           value={sede.nome}
                           onChange={(e) => handleUpdateSede(sede.id, { nome: e.target.value })}
                           className={`w-full text-xs px-2.5 py-1.5 rounded-lg border ${
-                            isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-300'
+                            isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-300'
                           }`}
                           placeholder="Nome da unidade"
                         />
@@ -269,7 +269,7 @@ export const SedesTab: React.FC<SedesTabProps> = ({
                           value={sede.endereco}
                           onChange={(e) => handleUpdateSede(sede.id, { endereco: e.target.value })}
                           className={`w-full text-xs px-2.5 py-1.5 rounded-lg border ${
-                            isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-300'
+                            isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-300'
                           }`}
                           placeholder="Endereço"
                         />
@@ -279,7 +279,7 @@ export const SedesTab: React.FC<SedesTabProps> = ({
                             value={sede.telefone || ''}
                             onChange={(e) => handleUpdateSede(sede.id, { telefone: e.target.value })}
                             className={`text-xs px-2.5 py-1.5 rounded-lg border ${
-                              isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-300'
+                              isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-300'
                             }`}
                             placeholder="Telefone"
                           />
@@ -288,14 +288,14 @@ export const SedesTab: React.FC<SedesTabProps> = ({
                             value={sede.responsavel || ''}
                             onChange={(e) => handleUpdateSede(sede.id, { responsavel: e.target.value })}
                             className={`text-xs px-2.5 py-1.5 rounded-lg border ${
-                              isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-300'
+                              isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-300'
                             }`}
                             placeholder="Responsável"
                           />
                         </div>
                       </div>
                     ) : (
-                      <div className={`text-[11px] space-y-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                      <div className={`text-[11px] space-y-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                         {sede.endereco && (
                           <div className="flex items-start gap-1.5">
                             <MapPin className="w-3 h-3 shrink-0 mt-0.5 opacity-70" />
@@ -320,7 +320,7 @@ export const SedesTab: React.FC<SedesTabProps> = ({
 
                   {/* Ações */}
                   <div className={`pt-2 border-t flex items-center justify-end gap-1.5 ${
-                    isDark ? 'border-[#1F2229]' : 'border-slate-200'
+                    isDark ? 'border-[#243756]' : 'border-slate-200'
                   }`}>
                     {isEditing ? (
                       <button

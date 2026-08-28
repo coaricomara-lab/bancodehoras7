@@ -636,7 +636,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
       {/* 1. BARRA SUPERIOR DE COMANDOS & SELEÇÃO DE RELATÓRIO          */}
       {/* ------------------------------------------------------------- */}
       <div className={`p-6 rounded-2xl border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm print:hidden ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="flex items-start sm:items-center gap-3.5">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
@@ -651,7 +651,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                 {institutionSettings?.siglaInstituicao || 'COMARA'} • SPTF
               </span>
             </div>
-            <p className={`text-xs mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <p className={`text-xs mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Emissão analítica e sintética de Banco de Horas e Insalubridade (Modo Simples de Atividades e Modo Avançado NR-15)
             </p>
           </div>
@@ -707,12 +707,12 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
       {/* 2. PAINEL DE FILTROS & SELEÇÃO DE PERÍODO & SUB-MODOS         */}
       {/* ------------------------------------------------------------- */}
       <div className={`p-5 rounded-2xl border space-y-4 print:hidden ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
       }`}>
         {/* Tipo de Relatório Toggle */}
         <div className="flex items-center justify-between gap-3 border-b pb-4 flex-wrap">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className={`text-xs font-bold mr-2 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+            <span className={`text-xs font-bold mr-2 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
               TIPO DE RELATÓRIO:
             </span>
             
@@ -724,7 +724,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                     ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30 shadow-xs' 
                     : 'bg-blue-50 text-blue-700 border border-blue-200 shadow-xs'
                   : isDark 
-                    ? 'text-[#8E9299] hover:bg-[#1F2229]' 
+                    ? 'text-[#94A3B8] hover:bg-[#243756]' 
                     : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -740,7 +740,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                     ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-xs' 
                     : 'bg-amber-50 text-amber-700 border border-amber-200 shadow-xs'
                   : isDark 
-                    ? 'text-[#8E9299] hover:bg-[#1F2229]' 
+                    ? 'text-[#94A3B8] hover:bg-[#243756]' 
                     : 'text-slate-600 hover:bg-slate-100'
               }`}
             >
@@ -785,7 +785,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
           {/* Data Início & Fim */}
           <div>
-            <label className={`block text-[11px] font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+            <label className={`block text-[11px] font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
               DATA INICIAL DO PERÍODO
             </label>
             <input
@@ -793,13 +793,13 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
               className={`w-full px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
               }`}
             />
           </div>
 
           <div>
-            <label className={`block text-[11px] font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+            <label className={`block text-[11px] font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
               DATA FINAL DO PERÍODO
             </label>
             <input
@@ -807,21 +807,21 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               className={`w-full px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
               }`}
             />
           </div>
 
           {/* Sede */}
           <div>
-            <label className={`block text-[11px] font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+            <label className={`block text-[11px] font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
               SEDE OPERACIONAL / CANTEIRO
             </label>
             <select
               value={selectedBranch}
               onChange={(e) => setSelectedBranch(e.target.value)}
               className={`w-full px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
               }`}
             >
               <option value="TODAS">Todas as Sedes / Canteiros</option>
@@ -853,7 +853,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
 
           {/* Busca por Colaborador */}
           <div>
-            <label className={`block text-[11px] font-bold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+            <label className={`block text-[11px] font-bold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
               BUSCA POR NOME / MATRÍCULA
             </label>
             <div className="relative">
@@ -864,7 +864,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`w-full pl-8.5 pr-3 py-2 rounded-xl border text-xs outline-hidden ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500'
                 }`}
               />
             </div>
@@ -874,13 +874,13 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
         {/* Presets Rápidos de Data */}
         <div className="flex items-center justify-between gap-2 pt-1 flex-wrap text-xs">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className={`text-[11px] font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-[11px] font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Períodos Rápidos:
             </span>
             <button
               onClick={() => applyDatePreset('THIS_MONTH')}
               className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors cursor-pointer ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
               }`}
             >
               Mês Atual
@@ -888,7 +888,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             <button
               onClick={() => applyDatePreset('LAST_MONTH')}
               className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors cursor-pointer ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
               }`}
             >
               Mês Anterior
@@ -896,7 +896,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             <button
               onClick={() => applyDatePreset('YEAR_TO_DATE')}
               className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors cursor-pointer ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
               }`}
             >
               Ano Atual (YTD)
@@ -904,7 +904,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
             <button
               onClick={() => applyDatePreset('ALL_TIME')}
               className={`px-2.5 py-1 rounded-lg border text-[11px] transition-colors cursor-pointer ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300 hover:text-white' : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
               }`}
             >
               Histórico Completo
@@ -946,7 +946,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
       <div 
         ref={printRef}
         className={`p-6 sm:p-8 rounded-2xl border shadow-sm print:border-none print:shadow-none print:p-0 font-mono ${
-          isDark ? 'bg-[#15171C] border-[#1F2229] text-white' : 'bg-white border-slate-200 text-slate-900'
+          isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
         {/* Cabeçalho Oficial do Relatório Dinâmico */}
@@ -988,21 +988,21 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
           <div className="space-y-6">
             {/* Resumo Sintético do Período */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 print:grid-cols-4">
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">TOTAL CRÉDITOS PERÍODO</span>
                 <span className="text-lg font-black text-emerald-400 print:text-emerald-700">+{totalBancoHoras.creditosPeriodo.toFixed(1)}h</span>
               </div>
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">TOTAL DÉBITOS / FOLGAS</span>
                 <span className="text-lg font-black text-amber-400 print:text-amber-700">-{totalBancoHoras.debitosPeriodo.toFixed(1)}h</span>
               </div>
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">RESULTADO LÍQUIDO PERÍODO</span>
                 <span className={`text-lg font-black ${totalBancoHoras.saldoPeriodo >= 0 ? 'text-emerald-400 print:text-emerald-700' : 'text-red-400 print:text-red-700'}`}>
                   {totalBancoHoras.saldoPeriodo >= 0 ? `+${totalBancoHoras.saldoPeriodo.toFixed(1)}h` : `${totalBancoHoras.saldoPeriodo.toFixed(1)}h`}
                 </span>
               </div>
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">SALDO FINAL CONSOLIDADO</span>
                 <span className={`text-lg font-black ${totalBancoHoras.saldoFinalHoras >= 0 ? 'text-blue-400 print:text-blue-700' : 'text-red-400 print:text-red-700'}`}>
                   {totalBancoHoras.saldoFinalHoras >= 0 ? `+${totalBancoHoras.saldoFinalHoras.toFixed(1)}h` : `${totalBancoHoras.saldoFinalHoras.toFixed(1)}h`}
@@ -1106,22 +1106,22 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
           <div className="space-y-6">
             {/* KPI Cards do Modo Simples */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 print:grid-cols-4">
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">COLABORADORES EM CAMPO</span>
                 <span className="text-lg font-black text-amber-400 print:text-amber-700">{totalInsalubridadeSimple.colaboradoresAtivos}</span>
               </div>
 
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">TOTAL DIAS TRABALHADOS</span>
                 <span className="text-lg font-black text-blue-400 print:text-blue-700">{totalInsalubridadeSimple.totalDiasCampo}d</span>
               </div>
 
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">TOTAL DE APONTAMENTOS</span>
                 <span className="text-lg font-black text-emerald-400 print:text-emerald-700">{totalInsalubridadeSimple.totalApontamentos}</span>
               </div>
 
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">PRINCIPAL ATIVIDADE</span>
                 <span className="text-sm font-black text-purple-400 print:text-purple-700 truncate block">
                   {totalInsalubridadeSimple.topActivities.length > 0
@@ -1291,19 +1291,19 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
           <div className="space-y-6">
             {/* Resumo Sintético do Período */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 print:grid-cols-4">
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">COLABORADORES COM FIXO</span>
                 <span className="text-lg font-black text-amber-400 print:text-amber-700">{totalInsalubridadeAdvanced.totalFixoComAdicional}</span>
               </div>
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">HORAS EXPOSTAS 40% (MÁXIMO)</span>
                 <span className="text-lg font-black text-red-400 print:text-red-700">{totalInsalubridadeAdvanced.totalHoras40.toFixed(1)}h</span>
               </div>
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">HORAS EXPOSTAS 20% (MÉDIO)</span>
                 <span className="text-lg font-black text-amber-400 print:text-amber-700">{totalInsalubridadeAdvanced.totalHoras20.toFixed(1)}h</span>
               </div>
-              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'}`}>
+              <div className={`p-3 rounded-xl border text-center ${isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'}`}>
                 <span className="text-[10px] text-slate-400 block font-bold">TOTAL APONTAMENTOS CANTEIRO</span>
                 <span className="text-lg font-black text-purple-400 print:text-purple-700">{totalInsalubridadeAdvanced.totalApontamentos}</span>
               </div>

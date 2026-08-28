@@ -128,7 +128,7 @@ export const IdentificacaoTab: React.FC<IdentificacaoTabProps> = ({
           <div className="relative group shrink-0">
             <div className={`w-32 h-32 rounded-2xl border-2 flex items-center justify-center p-3 transition-all ${
               isDark
-                ? 'bg-[#0D0F14] border-[#2A2E38] shadow-inner'
+                ? 'bg-[#0F1B33] border-[#335075] shadow-inner'
                 : 'bg-slate-50 border-slate-200 shadow-xs'
             }`}>
               {settings.logoUrl ? (
@@ -141,7 +141,7 @@ export const IdentificacaoTab: React.FC<IdentificacaoTabProps> = ({
                   }}
                 />
               ) : (
-                <div className={`text-center p-2 ${isDark ? 'text-[#8E9299]' : 'text-slate-400'}`}>
+                <div className={`text-center p-2 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`}>
                   <ImageIcon className="w-8 h-8 mx-auto mb-1 opacity-50" />
                   <span className="text-[10px] block font-mono">Sem Logo</span>
                 </div>
@@ -149,7 +149,7 @@ export const IdentificacaoTab: React.FC<IdentificacaoTabProps> = ({
             </div>
             {settings.logoUrl && (
               <span className={`absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-white bg-blue-600 shadow-md ${
-                isDark ? 'border-[#15171C]' : 'border-white'
+                isDark ? 'border-[#16243D]' : 'border-white'
               } border-2`}>
                 <FileCheck className="w-3.5 h-3.5" />
               </span>
@@ -191,7 +191,7 @@ export const IdentificacaoTab: React.FC<IdentificacaoTabProps> = ({
               )}
             </div>
 
-            <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Formatos aceitos: PNG, JPG, SVG ou WEBP (Max 2MB). A imagem é processada localmente em base64 e sincronizada com o banco central.
             </p>
 

@@ -299,7 +299,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
       {/* CABEÇALHO OPERACIONAL & BARRA DE AÇÕES                        */}
       {/* ------------------------------------------------------------- */}
       <div className={`p-4 sm:p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
-        isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-white border-gray-200 shadow-xs'
+        isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-white border-gray-200 shadow-xs'
       }`}>
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
@@ -310,7 +310,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
               <h2 className="text-base sm:text-lg font-black tracking-tight flex items-center gap-2">
                 <span>Gestão Operacional de Canteiros de Obras</span>
                 <span className={`text-xs px-2 py-0.5 rounded-md font-mono ${
-                  isDark ? 'bg-[#1A1D24] text-gray-400 border border-[#262A35]' : 'bg-gray-100 text-gray-700 border border-gray-300'
+                  isDark ? 'bg-[#1B2D4A] text-gray-400 border border-[#2E4566]' : 'bg-gray-100 text-gray-700 border border-gray-300'
                 }`}>
                   {filteredSites.length} {filteredSites.length === 1 ? 'frente' : 'frentes'}
                 </span>
@@ -326,7 +326,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
           <button
             onClick={handleExportCSV}
             className={`px-3 py-2 rounded-xl text-xs font-bold border transition-colors cursor-pointer flex items-center gap-1.5 ${
-              isDark ? 'bg-[#15171C] border-[#2A2E38] hover:bg-[#1F2229] text-gray-300' : 'bg-white border-gray-300 hover:bg-gray-100 text-gray-700'
+              isDark ? 'bg-[#16243D] border-[#335075] hover:bg-[#243756] text-gray-300' : 'bg-white border-gray-300 hover:bg-gray-100 text-gray-700'
             }`}
             title="Exportar dados em formato CSV"
           >
@@ -348,7 +348,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
       {/* FILTROS RÁPIDOS (BUSCA, SEDE, STATUS)                         */}
       {/* ------------------------------------------------------------- */}
       <div className={`p-3 sm:p-4 rounded-2xl border flex flex-col md:flex-row items-center justify-between gap-3 ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-gray-200 shadow-xs'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-gray-200 shadow-xs'
       }`}>
         <div className="relative w-full md:w-80">
           <Search className={`w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-500' : 'text-gray-400'}`} />
@@ -358,7 +358,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nome, código, encarregado ou endereço..."
             className={`w-full pl-9 pr-3 py-2 rounded-xl text-xs border outline-none transition-colors ${
-              isDark ? 'bg-[#0D0F14] border-[#262A35] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
+              isDark ? 'bg-[#0F1B33] border-[#2E4566] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
             }`}
           />
         </div>
@@ -368,7 +368,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
             value={selectedBranch}
             onChange={(e) => setSelectedBranch(e.target.value)}
             className={`px-3 py-2 rounded-xl text-xs border font-semibold outline-none ${
-              isDark ? 'bg-[#0D0F14] border-[#262A35] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+              isDark ? 'bg-[#0F1B33] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
             }`}
           >
             <option value="TODAS">Todas as Sedes</option>
@@ -383,7 +383,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
             className={`px-3 py-2 rounded-xl text-xs border font-semibold outline-none ${
-              isDark ? 'bg-[#0D0F14] border-[#262A35] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+              isDark ? 'bg-[#0F1B33] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
             }`}
           >
             <option value="TODOS">Todos os Status</option>
@@ -399,12 +399,12 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
       {/* TABELA OPERACIONAL DE CANTEIROS                               */}
       {/* ------------------------------------------------------------- */}
       <div className={`rounded-2xl border overflow-x-auto shadow-inner ${
-        isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-gray-200'
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-gray-200'
       }`}>
         <table className="w-full text-left border-collapse min-w-[950px]">
           <thead>
             <tr className={`text-xs uppercase font-mono font-bold border-b ${
-              isDark ? 'bg-[#0D0F14] text-[#8E9299] border-[#1F2229]' : 'bg-gray-100 text-gray-600 border-gray-200'
+              isDark ? 'bg-[#0F1B33] text-[#94A3B8] border-[#243756]' : 'bg-gray-100 text-gray-600 border-gray-200'
             }`}>
               <th className="py-3.5 px-4 min-w-[260px]">NOME DO CANTEIRO / SEDE</th>
               <th className="py-3.5 px-4 min-w-[200px]">ENCARREGADO / CHEFE</th>
@@ -415,7 +415,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
             </tr>
           </thead>
           <tbody className={`text-xs divide-y ${
-            isDark ? 'divide-[#1F2229] text-[#E0E2E5]' : 'divide-gray-200 text-gray-800'
+            isDark ? 'divide-[#243756] text-[#E2E8F0]' : 'divide-gray-200 text-gray-800'
           }`}>
             {filteredSites.length === 0 ? (
               <tr>
@@ -438,7 +438,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                 return (
                   <tr
                     key={site.id}
-                    className={`transition-colors ${isDark ? 'hover:bg-[#1C1F26]' : 'hover:bg-amber-50/30'}`}
+                    className={`transition-colors ${isDark ? 'hover:bg-[#1E3252]' : 'hover:bg-amber-50/30'}`}
                   >
                     {/* 1. Nome do Canteiro / Sede */}
                     <td className="py-3.5 px-4">
@@ -450,7 +450,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                             {siteCode}
                           </span>
                           <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
-                            isDark ? 'bg-[#0D0F14] border-[#2A2E38] text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-700'
+                            isDark ? 'bg-[#0F1B33] border-[#335075] text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-700'
                           }`}>
                             Sede {siteBranch}
                           </span>
@@ -527,7 +527,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                           onClick={() => handleOpenEditModal(site)}
                           className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
                             isDark 
-                              ? 'bg-[#1C202B] border-[#2A3040] hover:bg-[#252B3A] text-blue-400' 
+                              ? 'bg-[#1E3252] border-[#335075] hover:bg-[#2E4566] text-blue-400' 
                               : 'bg-blue-50 border-blue-200 hover:bg-blue-100 text-blue-700'
                           }`}
                           title="Editar dados do Canteiro"
@@ -564,10 +564,10 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in">
           <div className={`w-full max-w-xl p-6 rounded-3xl border shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto ${
-            isDark ? 'bg-[#14171F] border-[#252B38] text-white' : 'bg-white border-gray-200 text-gray-900'
+            isDark ? 'bg-[#14171F] border-[#2E4566] text-white' : 'bg-white border-gray-200 text-gray-900'
           }`}>
             
-            <div className={`flex items-center justify-between border-b pb-3 ${isDark ? 'border-[#252B38]' : 'border-gray-200'}`}>
+            <div className={`flex items-center justify-between border-b pb-3 ${isDark ? 'border-[#2E4566]' : 'border-gray-200'}`}>
               <div className="flex items-center gap-2">
                 <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
                   <Building2 className="w-5 h-5" />
@@ -610,7 +610,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     placeholder="Ex: KO-01, BE-02"
                     required
                     className={`w-full px-3 py-2 rounded-xl text-xs font-mono font-bold border outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
                     }`}
                   />
                 </div>
@@ -621,7 +621,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     value={formBranch}
                     onChange={(e) => setFormBranch(e.target.value as Branch)}
                     className={`w-full px-3 py-2 rounded-xl text-xs border font-medium outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                     }`}
                   >
                     <option value="KO">Coari (KO)</option>
@@ -642,7 +642,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                   placeholder="Ex: Obra Aeródromo Coari - Pista e Pátio"
                   required
                   className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                    isDark ? 'bg-[#0B0D11] border-[#252A36] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
+                    isDark ? 'bg-[#0B1426] border-[#2E4566] text-white focus:border-amber-500' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500'
                   }`}
                 />
               </div>
@@ -656,7 +656,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     onChange={(e) => setFormChief(e.target.value)}
                     placeholder="Ex: 1º Sgt Silva"
                     className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                     }`}
                   />
                 </div>
@@ -669,7 +669,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     onChange={(e) => setFormChiefContact(e.target.value)}
                     placeholder="Ex: (97) 98123-4567 / Rádio Ch-04"
                     className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                     }`}
                   />
                 </div>
@@ -684,7 +684,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     onChange={(e) => setFormManager(e.target.value)}
                     placeholder="Ex: Cap Eng Oliveira"
                     className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                     }`}
                   />
                 </div>
@@ -695,7 +695,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     value={formStatus}
                     onChange={(e) => setFormStatus(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs border font-medium outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                     }`}
                   >
                     <option value="Ativo">Ativo (Em Operação)</option>
@@ -714,7 +714,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                   onChange={(e) => setFormAddress(e.target.value)}
                   placeholder="Ex: Estrada do Aeroporto, s/n - Coari/AM"
                   className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                    isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                    isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                   }`}
                 />
               </div>
@@ -726,7 +726,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     value={formInsalubrityLevel}
                     onChange={(e) => setFormInsalubrityLevel(e.target.value as GrauInsalubridade)}
                     className={`w-full px-3 py-2 rounded-xl text-xs border font-bold outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-amber-400' : 'bg-gray-50 border-gray-300 text-amber-600'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-amber-400' : 'bg-gray-50 border-gray-300 text-amber-600'
                     }`}
                   >
                     <option value="ISENTO">Isento (0%)</option>
@@ -743,7 +743,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     value={formStartDate}
                     onChange={(e) => setFormStartDate(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                     }`}
                   />
                 </div>
@@ -755,7 +755,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     value={formExpectedEndDate}
                     onChange={(e) => setFormExpectedEndDate(e.target.value)}
                     className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                      isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                      isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                     }`}
                   />
                 </div>
@@ -769,12 +769,12 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                   rows={2}
                   placeholder="Informações adicionais sobre escopo, britagem, terraplenagem..."
                   className={`w-full px-3 py-2 rounded-xl text-xs border outline-none ${
-                    isDark ? 'bg-[#0B0D11] border-[#252A36] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
+                    isDark ? 'bg-[#0B1426] border-[#2E4566] text-white' : 'bg-gray-50 border-gray-300 text-gray-900'
                   }`}
                 />
               </div>
 
-              <div className={`flex items-center justify-end gap-2 pt-3 border-t ${isDark ? 'border-[#252B38]' : 'border-gray-200'}`}>
+              <div className={`flex items-center justify-end gap-2 pt-3 border-t ${isDark ? 'border-[#2E4566]' : 'border-gray-200'}`}>
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}

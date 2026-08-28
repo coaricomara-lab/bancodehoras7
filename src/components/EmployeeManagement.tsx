@@ -549,7 +549,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 onChange={(e) => setSearchTerm(e.target.value)} 
                 className={`p-3 pr-9 border rounded-lg w-full text-base focus:outline-hidden ${
                   isDark 
-                    ? 'bg-[#15171C] border-[#1F2229] text-white placeholder-[#8E9299] focus:border-blue-500' 
+                    ? 'bg-[#16243D] border-[#243756] text-white placeholder-[#94A3B8] focus:border-blue-500' 
                     : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500'
                 }`}
               />
@@ -557,7 +557,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <button
                   type="button"
                   onClick={() => setSearchTerm('')}
-                  className={`absolute right-3 top-3.5 text-xs p-1 cursor-pointer ${isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-400 hover:text-slate-700'}`}
+                  className={`absolute right-3 top-3.5 text-xs p-1 cursor-pointer ${isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-400 hover:text-slate-700'}`}
                   title="Limpar pesquisa"
                 >
                   <X className="w-4 h-4" />
@@ -571,7 +571,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               onChange={(e) => handleSortOptionChange(e.target.value as MobileSortOption)}
               className={`p-3 border rounded-lg w-full bg-white font-medium text-base focus:outline-hidden cursor-pointer ${
                 isDark 
-                  ? '!bg-[#15171C] border-[#1F2229] text-white focus:border-blue-500' 
+                  ? '!bg-[#16243D] border-[#243756] text-white focus:border-blue-500' 
                   : 'bg-white border-slate-300 text-slate-800 focus:border-blue-500'
               }`}
             >
@@ -592,7 +592,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       ? 'bg-blue-600/30 text-blue-400 border-blue-500/50 shadow-xs' 
                       : 'bg-blue-100 text-blue-800 border-blue-300 shadow-xs font-black'
                     : isDark 
-                      ? 'bg-[#15171C] text-[#8E9299] border-[#1F2229]' 
+                      ? 'bg-[#16243D] text-[#94A3B8] border-[#243756]' 
                       : 'bg-white text-slate-600 border-slate-200'
                 }`}
               >
@@ -608,7 +608,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/50 shadow-xs' 
                       : 'bg-green-100 text-green-800 border-green-300 shadow-xs font-black'
                     : isDark 
-                      ? 'bg-[#15171C] text-[#8E9299] border-[#1F2229]' 
+                      ? 'bg-[#16243D] text-[#94A3B8] border-[#243756]' 
                       : 'bg-white text-slate-600 border-slate-200'
                 }`}
               >
@@ -624,7 +624,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       ? 'bg-red-950/80 text-red-400 border-red-500/50 shadow-xs' 
                       : 'bg-red-100 text-red-800 border-red-300 shadow-xs font-black'
                     : isDark 
-                      ? 'bg-[#15171C] text-[#8E9299] border-[#1F2229]' 
+                      ? 'bg-[#16243D] text-[#94A3B8] border-[#243756]' 
                       : 'bg-white text-slate-600 border-slate-200'
                 }`}
               >
@@ -637,7 +637,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
           <div className="flex flex-col gap-2">
             {filteredAndSortedEmployees.length === 0 ? (
               <div className={`p-6 rounded-lg border text-center ${
-                isDark ? 'bg-[#15171C] border-[#1F2229] text-gray-400' : 'bg-white border-slate-200 text-slate-500'
+                isDark ? 'bg-[#16243D] border-[#243756] text-gray-400' : 'bg-white border-slate-200 text-slate-500'
               }`}>
                 <p className="text-xs font-semibold">Nenhum colaborador encontrado com os filtros atuais.</p>
               </div>
@@ -654,7 +654,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onClick={() => onViewStatement(emp.matricula)}
                     className={`p-3 rounded-lg border flex justify-between items-center shadow-xs cursor-pointer active:scale-[0.99] transition-all ${
                       isDark 
-                        ? 'bg-[#15171C] border-[#1F2229] hover:border-blue-500/50' 
+                        ? 'bg-[#16243D] border-[#243756] hover:border-blue-500/50' 
                         : 'bg-white border-slate-200 hover:border-blue-300'
                     }`}
                   >
@@ -662,7 +662,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       <p className={`font-bold text-sm truncate ${isDark ? 'text-white' : 'text-gray-800'}`}>
                         {emp.nome}
                       </p>
-                      <p className={`text-xs mt-0.5 font-mono ${isDark ? 'text-[#8E9299]' : 'text-gray-500'}`}>
+                      <p className={`text-xs mt-0.5 font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
                         Matrícula: {emp.matricula}
                       </p>
                     </div>
@@ -690,24 +690,24 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         <div className="space-y-6" id="desktop-employee-management">
           {/* Header Banner */}
           <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl border shadow-xs transition-all ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <div>
               <div className="flex items-center space-x-2">
                 <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-full font-mono border ${
-                  isDark ? 'bg-[#1F2229] text-blue-400 border-[#2A2E38]' : 'bg-blue-50 text-blue-700 border-blue-200'
+                  isDark ? 'bg-[#243756] text-blue-400 border-[#335075]' : 'bg-blue-50 text-blue-700 border-blue-200'
                 }`}>
                   Módulo A • Pessoas
                 </span>
-                <span className={`text-xs font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <span className={`text-xs font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   Gestão de Pessoas & Lotação
                 </span>
               </div>
               <h2 className={`text-xl font-bold mt-2 tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
                 Gestão e Importação de Colaboradores
               </h2>
-              <p className={`text-xs max-w-2xl mt-0.5 font-mono ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
-                Cadastre novos colaboradores manualmente ou realize a carga massiva via arquivo <strong className={isDark ? 'text-[#E0E2E5]' : 'text-slate-800'}>.CSV</strong> com suporte a tratamento automático de duplicidades pela <strong className={isDark ? 'text-[#E0E2E5]' : 'text-slate-800'}>Matrícula</strong>.
+              <p className={`text-xs max-w-2xl mt-0.5 font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
+                Cadastre novos colaboradores manualmente ou realize a carga massiva via arquivo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-slate-800'}>.CSV</strong> com suporte a tratamento automático de duplicidades pela <strong className={isDark ? 'text-[#E2E8F0]' : 'text-slate-800'}>Matrícula</strong>.
               </p>
             </div>
 
@@ -742,7 +742,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 </label>
                 <div
                   role="tooltip"
-                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none whitespace-nowrap px-2.5 py-1.5 text-xs font-medium rounded-lg shadow-xl border bg-[#111317] dark:bg-[#1C1F26] text-white border-[#2A2E38] dark:border-[#383D4A]"
+                  className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none whitespace-nowrap px-2.5 py-1.5 text-xs font-medium rounded-lg shadow-xl border bg-[#111317] dark:bg-[#1E3252] text-white border-[#335075] dark:border-[#383D4A]"
                 >
                   Importar Arquivo CSV de Colaboradores
                 </div>
@@ -775,7 +775,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <div>
                   <p className="font-bold text-sm">{importFeedback.message}</p>
                   {importFeedback.errors && importFeedback.errors.length > 0 && (
-                    <ul className={`mt-1.5 list-disc list-inside space-y-0.5 text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                    <ul className={`mt-1.5 list-disc list-inside space-y-0.5 text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                       {importFeedback.errors.slice(0, 3).map((err, i) => (
                         <li key={i}>{err}</li>
                       ))}
@@ -786,7 +786,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               <button 
                 type="button"
                 onClick={() => setImportFeedback(null)}
-                className={`font-bold text-xs cursor-pointer ${isDark ? 'text-[#8E9299] hover:text-[#E0E2E5]' : 'text-slate-500 hover:text-slate-800'}`}
+                className={`font-bold text-xs cursor-pointer ${isDark ? 'text-[#94A3B8] hover:text-[#E2E8F0]' : 'text-slate-500 hover:text-slate-800'}`}
               >
                 Fechar
               </button>
@@ -795,7 +795,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
           {/* Filter, Search & Balance Pills Bar */}
           <div className={`p-4 rounded-2xl border shadow-xs space-y-3.5 ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             {/* Linha Superior: Campo de Busca + Selects de Sede e Status */}
             <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
@@ -808,7 +808,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={`w-full pl-9 pr-8 py-1.5 rounded-lg text-xs font-mono focus:outline-hidden border ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] placeholder-[#5C616A] focus:border-[#3B82F6]' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] placeholder-[#64748B] focus:border-[#3B82F6]' 
                       : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                   }`}
                 />
@@ -830,7 +830,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   onChange={(e) => setFilterSede(e.target.value)}
                   className={`px-2.5 py-1.5 rounded-lg font-medium border focus:outline-hidden cursor-pointer ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-[#3B82F6]' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6]' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                   }`}
                 >
@@ -859,7 +859,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className={`px-2.5 py-1.5 rounded-lg font-medium border focus:outline-hidden cursor-pointer ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-[#3B82F6]' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-[#3B82F6]' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                   }`}
                 >
@@ -874,11 +874,11 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
             {/* Linha Inferior: Pílulas de Filtro Rápido de Saldo (Filter Pills) */}
             <div className={`pt-3 border-t flex flex-wrap items-center justify-between gap-2.5 text-xs font-mono ${
-              isDark ? 'border-[#1F2229]' : 'border-slate-100'
+              isDark ? 'border-[#243756]' : 'border-slate-100'
             }`}>
               <div className="flex flex-wrap items-center gap-1.5">
                 <span className={`text-[11px] font-bold uppercase tracking-wider mr-1 ${
-                  isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                  isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                 }`}>
                   Saldo SPTF:
                 </span>
@@ -893,7 +893,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         ? 'bg-blue-600/20 text-blue-400 border-blue-500/50 shadow-xs' 
                         : 'bg-blue-50 text-blue-700 border-blue-300 shadow-xs font-black'
                       : isDark 
-                        ? 'bg-[#0D0F14] text-[#8E9299] hover:text-[#E0E2E5] border-[#1F2229]' 
+                        ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-[#E2E8F0] border-[#243756]' 
                         : 'bg-white text-slate-600 hover:text-slate-900 border-slate-200'
                   }`}
                 >
@@ -901,7 +901,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
                     balanceFilter === 'TODOS' 
                       ? isDark ? 'bg-blue-500/30 text-blue-200' : 'bg-blue-200 text-blue-800' 
-                      : isDark ? 'bg-[#1F2229] text-gray-400' : 'bg-slate-100 text-slate-600'
+                      : isDark ? 'bg-[#243756] text-gray-400' : 'bg-slate-100 text-slate-600'
                   }`}>
                     {balanceCounts.todos}
                   </span>
@@ -917,7 +917,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         ? 'bg-emerald-950/80 text-emerald-400 border-emerald-500/50 shadow-xs' 
                         : 'bg-emerald-50 text-emerald-800 border-emerald-400 shadow-xs font-black'
                       : isDark 
-                        ? 'bg-[#0D0F14] text-[#8E9299] hover:text-emerald-400 border-[#1F2229]' 
+                        ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-emerald-400 border-[#243756]' 
                         : 'bg-white text-slate-600 hover:text-emerald-700 border-slate-200'
                   }`}
                 >
@@ -926,7 +926,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
                     balanceFilter === 'CREDOR' 
                       ? isDark ? 'bg-emerald-800/40 text-emerald-200' : 'bg-emerald-200 text-emerald-900' 
-                      : isDark ? 'bg-[#1F2229] text-gray-400' : 'bg-slate-100 text-slate-600'
+                      : isDark ? 'bg-[#243756] text-gray-400' : 'bg-slate-100 text-slate-600'
                   }`}>
                     {balanceCounts.credor}
                   </span>
@@ -942,7 +942,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         ? 'bg-red-950/80 text-red-400 border-red-500/50 shadow-xs' 
                         : 'bg-red-50 text-red-800 border-red-400 shadow-xs font-black'
                       : isDark 
-                        ? 'bg-[#0D0F14] text-[#8E9299] hover:text-red-400 border-[#1F2229]' 
+                        ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-red-400 border-[#243756]' 
                         : 'bg-white text-slate-600 hover:text-red-700 border-slate-200'
                   }`}
                 >
@@ -951,7 +951,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
                     balanceFilter === 'DEVEDOR' 
                       ? isDark ? 'bg-red-800/40 text-red-200' : 'bg-red-200 text-red-900' 
-                      : isDark ? 'bg-[#1F2229] text-gray-400' : 'bg-slate-100 text-slate-600'
+                      : isDark ? 'bg-[#243756] text-gray-400' : 'bg-slate-100 text-slate-600'
                   }`}>
                     {balanceCounts.devedor}
                   </span>
@@ -967,7 +967,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         ? 'bg-slate-800 text-slate-200 border-slate-600 shadow-xs' 
                         : 'bg-slate-200 text-slate-900 border-slate-400 shadow-xs font-black'
                       : isDark 
-                        ? 'bg-[#0D0F14] text-[#8E9299] hover:text-slate-200 border-[#1F2229]' 
+                        ? 'bg-[#0F1B33] text-[#94A3B8] hover:text-slate-200 border-[#243756]' 
                         : 'bg-white text-slate-600 hover:text-slate-900 border-slate-200'
                   }`}
                 >
@@ -976,7 +976,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   <span className={`px-1.5 py-0.5 rounded-md text-[10px] font-mono font-bold ${
                     balanceFilter === 'ZERADO' 
                       ? isDark ? 'bg-slate-700 text-slate-200' : 'bg-slate-300 text-slate-900' 
-                      : isDark ? 'bg-[#1F2229] text-gray-400' : 'bg-slate-100 text-slate-600'
+                      : isDark ? 'bg-[#243756] text-gray-400' : 'bg-slate-100 text-slate-600'
                   }`}>
                     {balanceCounts.zerado}
                   </span>
@@ -985,7 +985,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
               {/* Indicador de Ordenação Ativa e Contador de Resultados */}
               <div className="flex items-center gap-2">
-                <span className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <span className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   Exibindo <strong>{filteredAndSortedEmployees.length}</strong> de {employees.length}
                 </span>
                 {(searchTerm || filterSede !== 'TODAS' || filterStatus !== 'TODOS' || balanceFilter !== 'TODOS') && (
@@ -1008,13 +1008,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
           {/* TABELA DESKTOP COMPLETA COM ROLAGEM & SORTING */}
           <div className={`rounded-2xl border shadow-xs overflow-hidden ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse font-mono">
-                <thead className={isDark ? 'bg-[#0D0F14]' : 'bg-slate-50'}>
+                <thead className={isDark ? 'bg-[#0F1B33]' : 'bg-slate-50'}>
                   <tr className={`text-[10px] uppercase font-bold border-b tracking-wider select-none ${
-                    isDark ? 'text-[#8E9299] border-[#1F2229]' : 'text-slate-600 border-slate-200'
+                    isDark ? 'text-[#94A3B8] border-[#243756]' : 'text-slate-600 border-slate-200'
                   }`}>
                     {/* 1. Matrícula */}
                     <th 
@@ -1116,7 +1116,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   </tr>
                 </thead>
                 <tbody className={`divide-y ${
-                  isDark ? 'divide-[#1F2229] text-[#E0E2E5]' : 'divide-slate-200 text-slate-800'
+                  isDark ? 'divide-[#243756] text-[#E2E8F0]' : 'divide-slate-200 text-slate-800'
                 }`}>
                   {filteredAndSortedEmployees.length === 0 ? (
                     <tr>
@@ -1145,9 +1145,9 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   ) : (
                     filteredAndSortedEmployees.map(({ emp, bal }) => {
                       return (
-                        <tr key={emp.id} className={`transition-colors ${isDark ? 'hover:bg-[#1C1F26]' : 'hover:bg-slate-50/80'}`}>
+                        <tr key={emp.id} className={`transition-colors ${isDark ? 'hover:bg-[#1E3252]' : 'hover:bg-slate-50/80'}`}>
                           <td className={`py-3.5 px-4 font-mono font-semibold whitespace-nowrap ${
-                            isDark ? 'text-[#8E9299]' : 'text-slate-600'
+                            isDark ? 'text-[#94A3B8]' : 'text-slate-600'
                           }`}>
                             #{emp.matricula}
                           </td>
@@ -1158,39 +1158,39 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                   src={emp.avatarUrl || emp.url_foto_perfil}
                                   alt={emp.nome}
                                   className={`w-8 h-8 rounded-full object-cover border shrink-0 ${
-                                    isDark ? 'border-[#2A2E38]' : 'border-slate-200'
+                                    isDark ? 'border-[#335075]' : 'border-slate-200'
                                   }`}
                                   referrerPolicy="no-referrer"
                                 />
                               ) : (
                                 <div className={`w-8 h-8 rounded-full border flex items-center justify-center font-bold text-[11px] shrink-0 ${
                                   isDark 
-                                    ? 'bg-[#1F2229] border-[#2A2E38] text-blue-400' 
+                                    ? 'bg-[#243756] border-[#335075] text-blue-400' 
                                     : 'bg-blue-50 border-blue-200 text-blue-700'
                                 }`}>
                                   {emp.nome.split(' ').map((n) => n[0]).slice(0, 2).join('')}
                                 </div>
                               )}
                               <div>
-                                <div className={`font-semibold text-xs ${isDark ? 'text-[#E0E2E5]' : 'text-slate-900'}`}>
+                                <div className={`font-semibold text-xs ${isDark ? 'text-[#E2E8F0]' : 'text-slate-900'}`}>
                                   {emp.nome}
                                 </div>
                                 {emp.email && (
-                                  <div className={`text-[11px] font-mono ${isDark ? 'text-[#5C616A]' : 'text-slate-500'}`}>
+                                  <div className={`text-[11px] font-mono ${isDark ? 'text-[#64748B]' : 'text-slate-500'}`}>
                                     {emp.email}
                                   </div>
                                 )}
                               </div>
                             </div>
                           </td>
-                          <td className={`py-3.5 px-4 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                          <td className={`py-3.5 px-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                             {emp.funcao}
                           </td>
                           <td className="py-3.5 px-4 whitespace-nowrap">
                             <div className="flex flex-col gap-1 items-start">
                               <span className={`px-2 py-0.5 font-bold rounded text-[10px] border ${
                                 isDark 
-                                  ? 'bg-[#1F2229] text-blue-400 border-[#2A2E38]' 
+                                  ? 'bg-[#243756] text-blue-400 border-[#335075]' 
                                   : 'bg-blue-50 text-blue-700 border-blue-200'
                               }`}>
                                 {emp.sede}
@@ -1206,7 +1206,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                               )}
                             </div>
                           </td>
-                          <td className={`py-3.5 px-4 whitespace-nowrap ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                          <td className={`py-3.5 px-4 whitespace-nowrap ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                             {emp.dataAdmissao}
                           </td>
                           <td className="py-3.5 px-4 whitespace-nowrap">
@@ -1221,7 +1221,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                 {emp.status}
                               </span>
                               {emp.dataInicioStatus && emp.dataFimStatus && (
-                                <span className={`text-[9px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                                <span className={`text-[9px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                                   {emp.dataInicioStatus} a {emp.dataFimStatus}
                                 </span>
                               )}
@@ -1233,11 +1233,11 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                 ? isDark ? 'text-green-400' : 'text-emerald-600'
                                 : bal.saldoTotalHoras < 0 
                                 ? isDark ? 'text-red-400' : 'text-red-600'
-                                : isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                                : isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                             }`}>
                               {formatHoursDecimal(bal.saldoTotalHoras)}
                             </div>
-                            <div className={`text-[10px] ${isDark ? 'text-[#5C616A]' : 'text-slate-400'}`}>
+                            <div className={`text-[10px] ${isDark ? 'text-[#64748B]' : 'text-slate-400'}`}>
                               {formatHoursToDays(bal.saldoTotalHoras)}
                             </div>
                           </td>
@@ -1247,7 +1247,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                 ? isDark ? 'bg-emerald-950/40 text-green-400 border-emerald-800/40' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                                 : bal.status === 'DEVEDOR'
                                 ? isDark ? 'bg-red-950/40 text-red-400 border-red-800/40' : 'bg-red-50 text-red-700 border-red-200'
-                                : isDark ? 'bg-[#1F2229] text-[#8E9299] border-[#2A2E38]' : 'bg-slate-100 text-slate-600 border-slate-200'
+                                : isDark ? 'bg-[#243756] text-[#94A3B8] border-[#335075]' : 'bg-slate-100 text-slate-600 border-slate-200'
                             }`}>
                               {bal.status}
                             </span>
@@ -1296,12 +1296,12 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
           <div 
             className={`w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border animate-in fade-in zoom-in-95 ${
-              isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+              isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
             }`}
             id="employee-form-modal"
           >
             <div className={`flex items-center justify-between px-6 py-4 border-b ${
-              isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+              isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
             }`}>
               <div className="flex items-center space-x-2">
                 <UserPlus className="w-5 h-5 text-blue-500" />
@@ -1312,7 +1312,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className={`cursor-pointer ${isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-400 hover:text-slate-800'}`}
+                className={`cursor-pointer ${isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-400 hover:text-slate-800'}`}
               >
                 ✕
               </button>
@@ -1328,7 +1328,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
             <form onSubmit={handleSaveEmployee} className="p-6 space-y-4 text-xs font-mono">
               {/* Foto de Perfil / Upload Google Drive */}
               <div className={`p-3.5 rounded-xl border flex items-center gap-4 ${
-                isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
               }`}>
                 <div className="relative group shrink-0">
                   {avatarUrl ? (
@@ -1341,7 +1341,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   ) : (
                     <div className={`w-14 h-14 rounded-full border flex items-center justify-center font-bold text-base ${
                       isDark 
-                        ? 'bg-[#1F2229] border-[#2A2E38] text-blue-400' 
+                        ? 'bg-[#243756] border-[#335075] text-blue-400' 
                         : 'bg-blue-50 border-blue-200 text-blue-600'
                     }`}>
                       {nome ? nome.split(' ').map((n) => n[0]).slice(0, 2).join('') : <Camera className="w-6 h-6 text-slate-400" />}
@@ -1357,7 +1357,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <div className="flex-1 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label className={`font-bold text-[11px] block font-sans ${
-                      isDark ? 'text-[#E0E2E5]' : 'text-slate-800'
+                      isDark ? 'text-[#E2E8F0]' : 'text-slate-800'
                     }`}>
                       Foto de Perfil (Google Drive)
                     </label>
@@ -1371,7 +1371,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       </button>
                     )}
                   </div>
-                  <p className={`text-[10px] font-sans ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                  <p className={`text-[10px] font-sans ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                     Salva em <code className="text-blue-500">/Banco_de_Horas/Fotos_Colaboradores/FOTO_{matricula || 'MAT'}.jpg</code>
                   </p>
                   <div className="flex items-center gap-2 pt-0.5">
@@ -1387,7 +1387,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       onClick={() => photoInputRef.current?.click()}
                       className={`px-2.5 py-1 border rounded-md font-medium text-[10px] inline-flex items-center gap-1.5 transition-colors font-sans cursor-pointer ${
                         isDark 
-                          ? 'bg-[#1F2229] hover:bg-[#2A2E38] text-[#E0E2E5] border-[#2A2E38]' 
+                          ? 'bg-[#243756] hover:bg-[#335075] text-[#E2E8F0] border-[#335075]' 
                           : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'
                       }`}
                     >
@@ -1405,7 +1405,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     Matrícula <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -1415,7 +1415,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="Ex: MAT-1090"
                     className={`w-full px-3 py-2 rounded-lg font-mono font-bold border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                     required
@@ -1423,7 +1423,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 </div>
 
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     Sede / Canteiro <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -1431,7 +1431,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onChange={(e) => setSede(e.target.value as Branch)}
                     className={`w-full px-3 py-2 rounded-lg font-semibold border focus:outline-hidden cursor-pointer ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   >
@@ -1457,7 +1457,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               </div>
 
               <div>
-                <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   Nome Completo <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -1467,7 +1467,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   placeholder="Nome do colaborador"
                   className={`w-full px-3 py-2 rounded-lg border font-sans text-xs focus:outline-hidden ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                   }`}
                   required
@@ -1476,7 +1476,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     Função / Cargo <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -1486,7 +1486,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="Ex: Técnico de Campo"
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                     required
@@ -1494,7 +1494,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 </div>
 
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     Data de Admissão
                   </label>
                   <input
@@ -1503,7 +1503,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onChange={(e) => setDataAdmissao(e.target.value)}
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                   />
@@ -1512,7 +1512,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     Status
                   </label>
                   <select
@@ -1520,7 +1520,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onChange={(e) => setStatus(e.target.value as EmployeeStatus)}
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden cursor-pointer ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   >
@@ -1533,7 +1533,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
-                    <label className={`block font-semibold ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                    <label className={`block font-semibold ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                       Insalubridade Fixa (NR-15)
                     </label>
                     <InfoTooltip 
@@ -1546,7 +1546,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     onChange={(e) => setGrauInsalubridadeFixa(e.target.value)}
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden cursor-pointer font-bold ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-amber-400 focus:border-amber-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-amber-400 focus:border-amber-500' 
                         : 'bg-white border-slate-300 text-amber-700 focus:border-amber-500'
                     }`}
                   >
@@ -1559,7 +1559,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
-                    <label className={`block font-semibold ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                    <label className={`block font-semibold ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                       Saldo Inicial (Horas)
                     </label>
                     <InfoTooltip 
@@ -1575,7 +1575,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="0.0"
                     className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                   />
@@ -1596,7 +1596,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                      <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                         Data Início do Período *
                       </label>
                       <input
@@ -1606,13 +1606,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         onChange={(e) => setDataInicioStatus(e.target.value)}
                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                           isDark 
-                            ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-amber-400' 
+                            ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400' 
                             : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500'
                         }`}
                       />
                     </div>
                     <div>
-                      <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                      <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                         Data Término do Período *
                       </label>
                       <input
@@ -1622,7 +1622,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         onChange={(e) => setDataFimStatus(e.target.value)}
                         className={`w-full px-2.5 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                           isDark 
-                            ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-amber-400' 
+                            ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400' 
                             : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500'
                         }`}
                       />
@@ -1630,7 +1630,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   </div>
 
                   <div>
-                    <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                    <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                       Motivo / Justificativa (Ex: Período Aquisitivo, Licença INSS)
                     </label>
                     <input
@@ -1640,7 +1640,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       onChange={(e) => setMotivoStatus(e.target.value)}
                       className={`w-full px-2.5 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                         isDark 
-                          ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-amber-400' 
+                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-amber-400' 
                             : 'bg-white border-slate-300 text-slate-900 focus:border-amber-500'
                       }`}
                     />
@@ -1676,7 +1676,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   <div className="space-y-2.5 pt-1 animate-in fade-in">
                     <div className="grid grid-cols-3 gap-2.5">
                       <div>
-                        <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                        <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                           Canteiro Alocado
                         </label>
                         <select
@@ -1684,7 +1684,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           onChange={(e) => setSedeAtual(e.target.value as Branch)}
                           className={`w-full px-2 py-1.5 rounded-lg text-xs font-bold border focus:outline-hidden cursor-pointer ${
                             isDark 
-                              ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-400' 
+                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400' 
                               : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                           }`}
                         >
@@ -1694,7 +1694,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                         </select>
                       </div>
                       <div>
-                        <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                        <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                           Início da Missão
                         </label>
                         <input
@@ -1703,13 +1703,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           onChange={(e) => setDataInicioAlocacao(e.target.value)}
                           className={`w-full px-2 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                             isDark 
-                              ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-400' 
+                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400' 
                               : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                           }`}
                         />
                       </div>
                       <div>
-                        <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-600'}`}>
+                        <label className={`block font-semibold text-[10px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                           Término Previsto
                         </label>
                         <input
@@ -1718,7 +1718,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           onChange={(e) => setDataFimAlocacao(e.target.value)}
                           className={`w-full px-2 py-1.5 rounded-lg text-xs border focus:outline-hidden ${
                             isDark 
-                              ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-400' 
+                              ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-400' 
                               : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                           }`}
                         />
@@ -1730,7 +1730,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>E-mail</label>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>E-mail</label>
                   <input
                     type="email"
                     value={email}
@@ -1738,13 +1738,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="email@empresa.com.br"
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                   />
                 </div>
                 <div>
-                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>Telefone</label>
+                  <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>Telefone</label>
                   <input
                     type="text"
                     value={telefone}
@@ -1752,7 +1752,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder="(92) 99999-9999"
                     className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
                     }`}
                   />
@@ -1761,12 +1761,12 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
               {/* DEFINIÇÃO DE SENHA INICIAL PELO RH (OPCIONAL COM GERADOR DE 6 DÍGITOS) */}
               <div className={`p-3.5 rounded-xl border space-y-2 ${
-                isDark ? 'bg-[#0D0F14] border-[#2A2E38]' : 'bg-slate-50 border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#335075]' : 'bg-slate-50 border-slate-200'
               }`}>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     <label className={`flex items-center gap-1.5 font-bold text-xs ${
-                      isDark ? 'text-[#E0E2E5]' : 'text-slate-800'
+                      isDark ? 'text-[#E2E8F0]' : 'text-slate-800'
                     }`}>
                       <Lock className="w-3.5 h-3.5 text-blue-500" />
                       <span>Senha Inicial do Colaborador (Opcional - RH)</span>
@@ -1809,7 +1809,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                     placeholder={editingEmployee ? "Deixe em branco para manter a senha atual ou use o gerador acima" : "Digite ou clique em 'Gerar 6 Dígitos' (mín. 4 caracteres)"}
                     className={`w-full px-3 py-2 pr-10 rounded-lg text-xs font-mono border focus:outline-hidden ${
                       isDark 
-                        ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                        ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                     }`}
                   />
@@ -1824,13 +1824,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               </div>
 
               <div className={`pt-4 border-t flex items-center justify-end space-x-2 font-sans ${
-                isDark ? 'border-[#1F2229]' : 'border-slate-200'
+                isDark ? 'border-[#243756]' : 'border-slate-200'
               }`}>
                 <button
                   type="button"
                   disabled={isSaving}
                   onClick={() => setIsModalOpen(false)}
-                  className={`px-4 py-2 font-semibold cursor-pointer disabled:opacity-50 ${isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
+                  className={`px-4 py-2 font-semibold cursor-pointer disabled:opacity-50 ${isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
                 >
                   Cancelar
                 </button>

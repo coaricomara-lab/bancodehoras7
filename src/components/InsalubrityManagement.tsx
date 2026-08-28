@@ -333,7 +333,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
       {/* ------------------------------------------------------------- */}
       {!isAuxDA && (
         <div className={`p-2.5 rounded-2xl border flex items-center justify-between gap-3 flex-wrap ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
         }`}>
           <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/10 dark:bg-black/40 border border-black/5 dark:border-white/5">
             <button
@@ -403,7 +403,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
           {/* 1. CABEÇALHO DO MÓDULO */}
           {/* ------------------------------------------------------------- */}
           <div className={`p-6 rounded-2xl border flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <div className="flex items-start sm:items-center gap-3.5">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-red-600 text-white flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
@@ -425,7 +425,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                     Fixa vs Por Atividade
                   </span>
                 </div>
-                <p className={`text-xs mt-0.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <p className={`text-xs mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   Controle de adicionais fixos contratuais e apontamentos de atividades insalubres em canteiros de obras
                 </p>
               </div>
@@ -436,7 +436,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 <button
                   onClick={onNavigateToReports}
                   className={`px-3.5 py-2 rounded-xl border text-xs font-bold flex items-center gap-2 transition-all cursor-pointer ${
-                    isDark ? 'border-[#2A2E38] hover:bg-[#1F2229] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
+                    isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   <FileSpreadsheet className="w-4 h-4 text-emerald-400" />
@@ -460,17 +460,17 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Total com Adicional Fixo */}
         <div className={`p-5 rounded-2xl border ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
         }`}>
           <div className="flex items-center justify-between text-xs mb-2">
-            <span className={`font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>INSALUBRIDADE FIXA</span>
+            <span className={`font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>INSALUBRIDADE FIXA</span>
             <ShieldAlert className="w-4 h-4 text-amber-400" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-900'}`}>
               {stats.fixedCount.totalComAdicional}
             </span>
-            <span className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               colaboradores
             </span>
           </div>
@@ -483,63 +483,63 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
         {/* Card 2: Colaboradores Isentos */}
         <div className={`p-5 rounded-2xl border ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
         }`}>
           <div className="flex items-center justify-between text-xs mb-2">
-            <span className={`font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>ISENTOS DE ADICIONAL FIXO</span>
+            <span className={`font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>ISENTOS DE ADICIONAL FIXO</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className={`text-2xl font-black ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>
               {stats.fixedCount.isento}
             </span>
-            <span className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               de {employees.length} efetivo total
             </span>
           </div>
-          <p className={`text-[11px] mt-3 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <p className={`text-[11px] mt-3 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
             Apenas recebem quando houver lançamento por atividade
           </p>
         </div>
 
         {/* Card 3: Eventos Pontuais Lançados */}
         <div className={`p-5 rounded-2xl border ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
         }`}>
           <div className="flex items-center justify-between text-xs mb-2">
-            <span className={`font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>EVENTOS DE ATIVIDADE</span>
+            <span className={`font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>EVENTOS DE ATIVIDADE</span>
             <Activity className="w-4 h-4 text-blue-400" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className={`text-2xl font-black ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
               {stats.totalAtividadesLancadas}
             </span>
-            <span className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               apontamentos
             </span>
           </div>
-          <p className={`text-[11px] mt-3 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <p className={`text-[11px] mt-3 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
             Registros pontuais de serviços com agentes nocivos
           </p>
         </div>
 
         {/* Card 4: Volume Exposto em Horas/Dias */}
         <div className={`p-5 rounded-2xl border ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200 shadow-xs'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
         }`}>
           <div className="flex items-center justify-between text-xs mb-2">
-            <span className={`font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>TEMPO EXPOSTO APONTADO</span>
+            <span className={`font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>TEMPO EXPOSTO APONTADO</span>
             <Clock className="w-4 h-4 text-purple-400" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className={`text-2xl font-black ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>
               {stats.totalHorasAtividade}h
             </span>
-            <span className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <span className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               + {stats.totalDiasAtividade} dias
             </span>
           </div>
-          <p className={`text-[11px] mt-3 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <p className={`text-[11px] mt-3 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
             Cálculo proporcional para folha de pagamento
           </p>
         </div>
@@ -557,7 +557,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30' 
                 : 'bg-amber-50 text-amber-700 border border-amber-200'
               : isDark 
-                ? 'text-[#8E9299] hover:bg-[#15171C]' 
+                ? 'text-[#94A3B8] hover:bg-[#16243D]' 
                 : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -573,7 +573,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30' 
                 : 'bg-blue-50 text-blue-700 border border-blue-200'
               : isDark 
-                ? 'text-[#8E9299] hover:bg-[#15171C]' 
+                ? 'text-[#94A3B8] hover:bg-[#16243D]' 
                 : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -589,7 +589,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30' 
                 : 'bg-purple-50 text-purple-700 border border-purple-200'
               : isDark 
-                ? 'text-[#8E9299] hover:bg-[#15171C]' 
+                ? 'text-[#94A3B8] hover:bg-[#16243D]' 
                 : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
@@ -605,7 +605,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
         <div className="space-y-4">
           {/* Filtros Bar */}
           <div className={`p-4 rounded-2xl border flex flex-col md:flex-row gap-3 items-center justify-between ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <div className="relative w-full md:w-80">
               <Search className={`w-4 h-4 absolute left-3 top-3 ${isDark ? 'text-gray-500' : 'text-slate-400'}`} />
@@ -615,7 +615,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={`w-full pl-9 pr-3 py-2 rounded-xl border text-xs outline-hidden transition-colors ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-amber-500'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-amber-500'
                 }`}
               />
             </div>
@@ -626,7 +626,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 value={selectedBranch}
                 onChange={(e) => setSelectedBranch(e.target.value)}
                 className={`px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
                 }`}
               >
                 <option value="TODAS">Sede / Canteiro: Todas</option>
@@ -656,7 +656,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 value={selectedGrau}
                 onChange={(e) => setSelectedGrau(e.target.value)}
                 className={`px-3 py-2 rounded-xl border text-xs outline-hidden ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
                 }`}
               >
                 <option value="TODOS">Grau: Todos</option>
@@ -672,7 +672,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 onChange={(e) => setStartDate(e.target.value)}
                 title="Data Inicial"
                 className={`px-2.5 py-2 rounded-xl border text-xs outline-hidden ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
                 }`}
               />
 
@@ -683,7 +683,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 onChange={(e) => setEndDate(e.target.value)}
                 title="Data Final"
                 className={`px-2.5 py-2 rounded-xl border text-xs outline-hidden ${
-                  isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                  isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
                 }`}
               />
 
@@ -708,13 +708,13 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
           {/* Tabela de Lançamentos */}
           <div className={`rounded-2xl border overflow-hidden shadow-xs ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className={`border-b font-bold uppercase tracking-wider text-[11px] ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299]' : 'bg-slate-50 border-slate-200 text-slate-500'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-500'
                   }`}>
                     <th className="p-3.5">Data Evento</th>
                     <th className="p-3.5">Colaborador / Matrícula</th>
@@ -726,7 +726,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                     <th className="p-3.5 text-center">Ações</th>
                   </tr>
                 </thead>
-                <tbody className={`divide-y ${isDark ? 'divide-[#1F2229]' : 'divide-slate-200'}`}>
+                <tbody className={`divide-y ${isDark ? 'divide-[#243756]' : 'divide-slate-200'}`}>
                   {filteredRecords.length === 0 ? (
                     <tr>
                       <td colSpan={8} className="p-8 text-center">
@@ -735,7 +735,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                           <p className={`font-bold ${isDark ? 'text-gray-300' : 'text-slate-700'}`}>
                             Nenhum apontamento encontrado
                           </p>
-                          <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                          <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                             Use o botão "Lançar Atividade Insalubre" para registrar novos serviços de canteiro.
                           </p>
                         </div>
@@ -746,7 +746,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                       <tr 
                         key={rec.id} 
                         className={`transition-colors ${
-                          isDark ? 'hover:bg-[#1A1D24]' : 'hover:bg-slate-50/80'
+                          isDark ? 'hover:bg-[#1B2D4A]' : 'hover:bg-slate-50/80'
                         }`}
                       >
                         <td className="p-3.5 font-mono whitespace-nowrap">
@@ -754,7 +754,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                         </td>
                         <td className="p-3.5">
                           <div className="font-bold">{rec.nomeColaborador}</div>
-                          <div className={`font-mono text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                          <div className={`font-mono text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                             Mat: {rec.matricula}
                           </div>
                         </td>
@@ -775,7 +775,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                             {rec.atividadeDesempenhada}
                           </div>
                           {rec.observacoes && (
-                            <div className={`text-[11px] mt-0.5 truncate max-w-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`} title={rec.observacoes}>
+                            <div className={`text-[11px] mt-0.5 truncate max-w-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`} title={rec.observacoes}>
                               Obs: {rec.observacoes}
                             </div>
                           )}
@@ -788,7 +788,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                         <td className="p-3.5 text-center font-mono font-bold whitespace-nowrap">
                           {rec.quantidadeHorasDias} {rec.unidade === 'HORAS' ? 'h' : 'dias'}
                         </td>
-                        <td className="p-3.5 text-[11px] text-[#8E9299]">
+                        <td className="p-3.5 text-[11px] text-[#94A3B8]">
                           {rec.responsavelLancamento}
                         </td>
                         <td className="p-3.5 text-center">
@@ -829,11 +829,11 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
       {activeSubTab === 'FIXA' && (
         <div className="space-y-4">
           <div className={`p-4 rounded-2xl border flex items-center justify-between ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <div>
               <h3 className="font-bold text-sm">Quadro de Insalubridade Fixa (Em Ficha Funcional)</h3>
-              <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Colaboradores com percentual fixo contratual garantido em folha de pagamento
               </p>
             </div>
@@ -845,13 +845,13 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
           </div>
 
           <div className={`rounded-2xl border overflow-hidden shadow-xs ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className={`border-b font-bold uppercase tracking-wider text-[11px] ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299]' : 'bg-slate-50 border-slate-200 text-slate-500'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-500'
                   }`}>
                     <th className="p-3.5">Matrícula</th>
                     <th className="p-3.5">Colaborador</th>
@@ -862,11 +862,11 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                     {onUpdateEmployeeGrauFixa && <th className="p-3.5 text-center">Ação Rápida</th>}
                   </tr>
                 </thead>
-                <tbody className={`divide-y ${isDark ? 'divide-[#1F2229]' : 'divide-slate-200'}`}>
+                <tbody className={`divide-y ${isDark ? 'divide-[#243756]' : 'divide-slate-200'}`}>
                   {employees
                     .filter(e => e.grauInsalubridadeFixa && e.grauInsalubridadeFixa !== 'ISENTO')
                     .map((emp) => (
-                      <tr key={emp.id} className={isDark ? 'hover:bg-[#1A1D24]' : 'hover:bg-slate-50'}>
+                      <tr key={emp.id} className={isDark ? 'hover:bg-[#1B2D4A]' : 'hover:bg-slate-50'}>
                         <td className="p-3.5 font-mono font-bold">{emp.matricula}</td>
                         <td className="p-3.5 font-bold">{emp.nome}</td>
                         <td className="p-3.5 font-mono">{emp.sede_atual || emp.sede}</td>
@@ -889,7 +889,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                               value={emp.grauInsalubridadeFixa || 'ISENTO'}
                               onChange={(e) => onUpdateEmployeeGrauFixa(emp.id, e.target.value as GrauInsalubridade)}
                               className={`px-2 py-1 rounded-lg border text-[11px] outline-hidden ${
-                                isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
+                                isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-200 text-slate-900'
                               }`}
                             >
                               <option value="ISENTO">ISENTO</option>
@@ -914,13 +914,13 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
       {activeSubTab === 'GUIA_NR15' && (
         <div className="space-y-4">
           <div className={`p-5 rounded-2xl border ${
-            isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+            isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
             <h3 className="font-bold text-sm mb-1 flex items-center gap-2">
               <Flame className="w-4 h-4 text-amber-400" />
               <span>Matriz de Atividades Típicas em Canteiros da COMARA (NR-15)</span>
             </h3>
-            <p className={`text-xs mb-4 ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+            <p className={`text-xs mb-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Referência operacional para encarregados, chefes de canteiro e equipe de segurança do trabalho
             </p>
 
@@ -929,7 +929,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 <div 
                   key={idx} 
                   className={`p-4 rounded-xl border flex flex-col justify-between gap-2.5 ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+                    isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
                   }`}
                 >
                   <div>
@@ -939,7 +939,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                         {ativ.grau}
                       </span>
                     </div>
-                    <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                    <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                       {ativ.desc}
                     </p>
                   </div>
@@ -952,7 +952,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                       setIsModalOpen(true);
                     }}
                     className={`text-[11px] font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 cursor-pointer pt-1 border-t ${
-                      isDark ? 'border-[#1F2229]' : 'border-slate-200'
+                      isDark ? 'border-[#243756]' : 'border-slate-200'
                     }`}
                   >
                     <span>Lançar esta atividade agora</span>
@@ -971,11 +971,11 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs font-mono">
           <div className={`w-full max-w-xl rounded-2xl border shadow-2xl overflow-hidden relative max-h-[90vh] flex flex-col ${
-            isDark ? 'bg-[#15171C] border-[#1F2229] text-[#E0E2E5]' : 'bg-white border-slate-200 text-slate-900'
+            isDark ? 'bg-[#16243D] border-[#243756] text-[#E2E8F0]' : 'bg-white border-slate-200 text-slate-900'
           }`}>
             {/* Header */}
             <div className={`p-5 border-b flex items-center justify-between shrink-0 ${
-              isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+              isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
             }`}>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center shadow-xs">
@@ -985,7 +985,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   <h3 className="font-bold text-sm">
                     {editingRecord ? 'Editar Apontamento de Atividade Insalubre' : 'Apontamento de Atividade Insalubre'}
                   </h3>
-                  <p className={`text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                  <p className={`text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                     {editingRecord ? `Correção do registro ID #${editingRecord.id}` : 'Lançamento pontual por demanda / serviço especial'}
                   </p>
                 </div>
@@ -994,7 +994,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 type="button"
                 onClick={() => setIsModalOpen(false)}
                 className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                  isDark ? 'hover:bg-[#1F2229] text-gray-400' : 'hover:bg-slate-200 text-slate-500'
+                  isDark ? 'hover:bg-[#243756] text-gray-400' : 'hover:bg-slate-200 text-slate-500'
                 }`}
               >
                 <X className="w-4 h-4" />
@@ -1021,7 +1021,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
               {/* 1. Seleção do Colaborador */}
               <div>
-                <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   1. COLABORADOR EXECUTOR *
                 </label>
                 <select
@@ -1029,7 +1029,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   onChange={(e) => setFormMatricula(e.target.value)}
                   required
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-hidden ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-500'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-500'
                   }`}
                 >
                   <option value="">-- Selecione o Colaborador por Matrícula / Nome --</option>
@@ -1042,7 +1042,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
                 {selectedEmployeeInForm && (
                   <div className={`mt-2 p-2.5 rounded-xl border text-[11px] flex items-center justify-between ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-gray-300' : 'bg-slate-50 border-slate-200 text-slate-700'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-gray-300' : 'bg-slate-50 border-slate-200 text-slate-700'
                   }`}>
                     <span>Sede: <strong>{selectedEmployeeInForm.sede_atual || selectedEmployeeInForm.sede}</strong></span>
                     <span>Função: <strong>{selectedEmployeeInForm.funcao || selectedEmployeeInForm.cargo}</strong></span>
@@ -1053,7 +1053,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
               {/* 2. Data do Evento */}
               <div>
-                <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   2. DATA DA EXECUÇÃO DO SERVIÇO *
                 </label>
                 <input
@@ -1062,7 +1062,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   onChange={(e) => setFormDataEvento(e.target.value)}
                   required
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-hidden ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                   }`}
                 />
               </div>
@@ -1070,10 +1070,10 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
               {/* 3. Atividade Desempenhada com Presets */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className={`font-bold ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`font-bold ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     3. ATIVIDADE / AGENTE NOCIVO DESEMPENHADO *
                   </label>
-                  <span className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-400'}`}>
+                  <span className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`}>
                     Sugestões rápidas abaixo
                   </span>
                 </div>
@@ -1085,7 +1085,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   onChange={(e) => setFormAtividade(e.target.value)}
                   required
                   className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-hidden ${
-                    isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-500'
+                    isDark ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-amber-500' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-amber-500'
                   }`}
                 />
 
@@ -1100,7 +1100,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                         formAtividade === p.nome
                           ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
                           : isDark 
-                            ? 'bg-[#0D0F14] text-gray-400 border-[#1F2229] hover:text-white' 
+                            ? 'bg-[#0F1B33] text-gray-400 border-[#243756] hover:text-white' 
                             : 'bg-slate-100 text-slate-600 border-slate-200 hover:text-slate-900'
                       }`}
                     >
@@ -1113,14 +1113,14 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
               {/* 4. Grau e Quantidade */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     4. GRAU NR-15 *
                   </label>
                   <select
                     value={formGrau}
                     onChange={(e) => setFormGrau(e.target.value as any)}
                     className={`w-full px-3 py-2.5 rounded-xl border text-xs outline-hidden font-bold ${
-                      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   >
                     <option value="10%">10% (Mínimo)</option>
@@ -1130,7 +1130,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                 </div>
 
                 <div>
-                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     5. QUANTIDADE *
                   </label>
                   <input
@@ -1141,20 +1141,20 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                     onChange={(e) => setFormQuantidade(parseFloat(e.target.value) || 0)}
                     required
                     className={`w-full px-3 py-2.5 rounded-xl border text-xs outline-hidden font-bold ${
-                      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     6. UNIDADE *
                   </label>
                   <select
                     value={formUnidade}
                     onChange={(e) => setFormUnidade(e.target.value as any)}
                     className={`w-full px-3 py-2.5 rounded-xl border text-xs outline-hidden font-bold ${
-                      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   >
                     <option value="HORAS">HORAS (h)</option>
@@ -1166,7 +1166,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
               {/* 5. Responsável e Observações */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     7. RESPONSÁVEL PELO APONTAMENTO
                   </label>
                   <input
@@ -1175,13 +1175,13 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                     onChange={(e) => setFormResponsavel(e.target.value)}
                     placeholder="Encarregado de Campo / Técnico Seg."
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-hidden ${
-                      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
 
                 <div>
-                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+                  <label className={`block font-bold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                     8. OBSERVAÇÕES (OPCIONAL)
                   </label>
                   <input
@@ -1190,7 +1190,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                     onChange={(e) => setFormObservacoes(e.target.value)}
                     placeholder="Ex: Trecho Pista Cabeceira 08"
                     className={`w-full px-3.5 py-2.5 rounded-xl border text-xs outline-hidden ${
-                      isDark ? 'bg-[#0D0F14] border-[#1F2229] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
+                      isDark ? 'bg-[#0F1B33] border-[#243756] text-white' : 'bg-slate-50 border-slate-300 text-slate-900'
                     }`}
                   />
                 </div>
@@ -1202,7 +1202,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   type="button"
                   onClick={() => setIsModalOpen(false)}
                   className={`px-4 py-2.5 rounded-xl border font-bold transition-colors cursor-pointer ${
-                    isDark ? 'border-[#2A2E38] hover:bg-[#1F2229] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
+                    isDark ? 'border-[#335075] hover:bg-[#243756] text-gray-300' : 'border-slate-300 hover:bg-slate-100 text-slate-700'
                   }`}
                 >
                   Cancelar

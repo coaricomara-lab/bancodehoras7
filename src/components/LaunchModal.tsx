@@ -165,13 +165,13 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs font-mono">
       <div 
         className={`relative w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border animate-in fade-in zoom-in-95 ${
-          isDark ? 'bg-[#15171C] border-[#1F2229]' : 'bg-white border-slate-200'
+          isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
         }`}
         id={`launch-modal-${modalId}`}
       >
         {/* Modal Header */}
         <div className={`flex items-center justify-between px-6 py-4 border-b ${
-          isDark ? 'border-[#1F2229] bg-[#0D0F14]' : 'border-slate-200 bg-slate-50'
+          isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
         }`}>
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-lg bg-[#3B82F6] flex items-center justify-center text-white shadow-sm">
@@ -181,7 +181,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               <h3 className={`font-bold text-sm font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
                 Novo Lançamento Diário • SPTF / CLT
               </h3>
-              <p className={`text-[10px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-[10px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Parametrização de Regras: Desconto em Folha vs Banco de Horas
               </p>
             </div>
@@ -189,7 +189,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
           <button
             onClick={onClose}
             className={`p-1.5 rounded-lg transition-colors ${
-              isDark ? 'text-[#8E9299] hover:text-white hover:bg-[#1F2229]' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
+              isDark ? 'text-[#94A3B8] hover:text-white hover:bg-[#243756]' : 'text-slate-400 hover:text-slate-800 hover:bg-slate-100'
             }`}
           >
             <X className="w-5 h-5" />
@@ -207,7 +207,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           {/* Colaborador */}
           <div>
-            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
               Colaborador *
             </label>
             <select
@@ -215,7 +215,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               onChange={(e) => setMatricula(e.target.value)}
               className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               }`}
               required
@@ -230,7 +230,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+              <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                 Data da Ocorrência *
               </label>
               <input
@@ -239,7 +239,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
                 onChange={(e) => setDataRegistro(e.target.value)}
                 className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden ${
                   isDark 
-                    ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                     : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
                 }`}
                 required
@@ -247,7 +247,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
             </div>
 
             <div>
-              <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+              <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                 Horas da Ocorrência *
               </label>
               <input
@@ -260,7 +260,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
                 onChange={(e) => setHorasBrutas(parseFloat(e.target.value) || 0)}
                 className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                   isDark 
-                    ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500 disabled:opacity-50' 
+                    ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 disabled:opacity-50' 
                     : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 disabled:opacity-50'
                 }`}
                 required
@@ -270,7 +270,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
 
           {/* Tipo de Ocorrência com parametrização explícita */}
           <div>
-            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
               Tipo de Ocorrência (Regra Operacional) *
             </label>
             <select
@@ -278,7 +278,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               onChange={(e) => setTipoOcorrencia(e.target.value as OccurrenceType)}
               className={`w-full px-3 py-2 rounded-lg font-bold border focus:outline-hidden ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500'
               }`}
             >
@@ -308,11 +308,11 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
 
           {/* Card de Visualização do Impacto em Tempo Real */}
           <div className={`p-4 rounded-xl border space-y-2.5 ${
-            isDark ? 'bg-[#0D0F14] border-[#1F2229]' : 'bg-slate-50 border-slate-200'
+            isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
           }`}>
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   Destino do Lançamento
                 </span>
                 <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase ${
@@ -331,7 +331,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               </div>
 
               <div className="text-right">
-                <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+                <span className={`text-[10px] uppercase font-bold block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                   Impacto no Banco
                 </span>
                 <div className={`text-base font-black font-mono ${
@@ -339,7 +339,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
                     ? isDark ? 'text-emerald-400' : 'text-emerald-600'
                     : calc.saldoCalculado < 0
                     ? isDark ? 'text-red-400' : 'text-red-600'
-                    : isDark ? 'text-[#8E9299]' : 'text-slate-500'
+                    : isDark ? 'text-[#94A3B8]' : 'text-slate-500'
                 }`}>
                   {calc.saldoCalculado > 0 ? `+${calc.saldoCalculado.toFixed(1)}h` : calc.saldoCalculado < 0 ? `${calc.saldoCalculado.toFixed(1)}h` : '0.0h'}
                 </div>
@@ -347,7 +347,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
             </div>
 
             <p className={`text-[11px] pt-1.5 border-t ${
-              isDark ? 'border-[#1F2229] text-blue-300/80' : 'border-slate-200 text-blue-700'
+              isDark ? 'border-[#243756] text-blue-300/80' : 'border-slate-200 text-blue-700'
             }`}>
               💡 <strong>Regra:</strong> {calc.descricaoRegra}
             </p>
@@ -355,13 +355,13 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
 
           {/* Anexo de Comprovante */}
           <div>
-            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
               Comprovante / Atestado (Google Drive) {(tipoOcorrencia === 'ATESTADO_MEDICO' || tipoOcorrencia === 'LICENCA') && <span className="text-red-500">*</span>}
             </label>
             <div className="flex items-center gap-2">
               <label className={`flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border cursor-pointer transition-colors ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#8E9299] hover:text-[#E0E2E5] hover:bg-[#15171C]' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8] hover:text-[#E2E8F0] hover:bg-[#16243D]' 
                   : 'bg-white border-slate-300 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}>
                 <UploadCloud className="w-4 h-4 text-blue-500" />
@@ -388,7 +388,7 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
 
           {/* Observação */}
           <div>
-            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#8E9299]' : 'text-slate-700'}`}>
+            <label className={`block font-semibold mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
               Observação / Justificativa
             </label>
             <input
@@ -398,19 +398,19 @@ export const LaunchModal: React.FC<LaunchModalProps> = ({
               placeholder="Ex: Saída antecipada autorizada pela gerência ou motivo da falta"
               className={`w-full px-3 py-2 rounded-lg border focus:outline-hidden font-sans ${
                 isDark 
-                  ? 'bg-[#0D0F14] border-[#1F2229] text-[#E0E2E5] focus:border-blue-500' 
+                  ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500' 
                   : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500'
               }`}
             />
           </div>
 
           <div className={`pt-4 border-t flex justify-end gap-2 font-sans ${
-            isDark ? 'border-[#1F2229]' : 'border-slate-200'
+            isDark ? 'border-[#243756]' : 'border-slate-200'
           }`}>
             <button
               type="button"
               onClick={onClose}
-              className={`px-4 py-2 font-semibold ${isDark ? 'text-[#8E9299] hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`px-4 py-2 font-semibold ${isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-600 hover:text-slate-900'}`}
             >
               Cancelar
             </button>

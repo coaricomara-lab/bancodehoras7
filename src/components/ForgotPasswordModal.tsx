@@ -160,7 +160,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
       <div 
         id="forgot-password-modal"
         className={`w-full max-w-md p-6 sm:p-8 rounded-3xl border shadow-2xl space-y-6 relative animate-in zoom-in-95 ${
-          isDark ? 'bg-[#15171C] border-[#2A2E38] text-white' : 'bg-white border-slate-200 text-slate-900'
+          isDark ? 'bg-[#16243D] border-[#335075] text-white' : 'bg-white border-slate-200 text-slate-900'
         }`}
       >
         {/* Close Button */}
@@ -169,7 +169,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
           onClick={handleResetModal}
           className={`absolute top-5 right-5 p-1.5 rounded-xl border transition-colors cursor-pointer ${
             isDark 
-              ? 'bg-[#1F2229] border-[#2E333F] text-gray-400 hover:text-white' 
+              ? 'bg-[#243756] border-[#335075] text-gray-400 hover:text-white' 
               : 'bg-slate-100 border-slate-200 text-slate-500 hover:text-slate-800'
           }`}
         >
@@ -186,7 +186,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             {step === 'NEW_PASSWORD' && 'Definir Nova Senha'}
             {step === 'SUCCESS' && 'Acesso Liberado'}
           </h2>
-          <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+          <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
             {step === 'VALIDATE' && 'Validação cadastral para primeiro acesso ou redefinição'}
             {step === 'NEW_PASSWORD' && 'Crie sua nova senha de acesso ao Portal do Colaborador'}
             {step === 'SUCCESS' && 'Credencial atualizada e pronta para uso'}
@@ -228,7 +228,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                   onChange={(e) => setMatricula(e.target.value)}
                   className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm font-mono border outline-none transition-colors ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#2A2E38] text-white focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500' 
                       : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
                   }`}
                 />
@@ -250,7 +250,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                   onChange={(e) => setEmail(e.target.value)}
                   className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none transition-colors ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#2A2E38] text-white focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500' 
                       : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
                   }`}
                 />
@@ -285,7 +285,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             {/* Card de confirmação do colaborador */}
             {verifiedEmployee && (
               <div className={`p-3.5 rounded-2xl border flex items-center gap-3 ${
-                isDark ? 'bg-[#0D0F14] border-[#2A2E38]' : 'bg-slate-50 border-slate-200'
+                isDark ? 'bg-[#0F1B33] border-[#335075]' : 'bg-slate-50 border-slate-200'
               }`}>
                 <div className="w-9 h-9 rounded-xl bg-blue-600/10 text-blue-500 flex items-center justify-center font-bold text-sm shrink-0">
                   {verifiedEmployee.nome.charAt(0)}
@@ -316,7 +316,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                   onChange={(e) => setNewPassword(e.target.value)}
                   className={`w-full pl-10 pr-10 py-2.5 rounded-xl text-xs sm:text-sm border outline-none ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#2A2E38] text-white focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500' 
                       : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
                   }`}
                 />
@@ -346,7 +346,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none ${
                     isDark 
-                      ? 'bg-[#0D0F14] border-[#2A2E38] text-white focus:border-blue-500' 
+                      ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500' 
                       : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600'
                   }`}
                 />
@@ -358,7 +358,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
                 type="button"
                 onClick={() => setStep('VALIDATE')}
                 className={`py-2.5 px-4 rounded-xl text-xs font-bold border transition-colors cursor-pointer ${
-                  isDark ? 'bg-[#1F2229] border-[#2E333F] text-gray-300 hover:bg-[#2A2E38]' : 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
+                  isDark ? 'bg-[#243756] border-[#335075] text-gray-300 hover:bg-[#335075]' : 'bg-slate-100 border-slate-300 text-slate-700 hover:bg-slate-200'
                 }`}
               >
                 Voltar
@@ -386,7 +386,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             
             <div className="space-y-1">
               <h3 className="text-base font-bold">Senha Redefinida!</h3>
-              <p className={`text-xs ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+              <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 Senha redefinida com sucesso! Você já pode fazer login.
               </p>
             </div>
@@ -402,7 +402,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
         )}
 
         {/* Footer info */}
-        <div className={`pt-2 text-center text-[11px] ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
+        <div className={`pt-2 text-center text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
           <span>Em caso de dúvidas cadastrais, consulte a Divisão de Administração (DA / RH).</span>
         </div>
       </div>

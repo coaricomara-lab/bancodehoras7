@@ -116,8 +116,8 @@ const DispensaLogo: React.FC<{ logoUrl?: string; institutionSigla?: string }> = 
   return (
     <div className="h-[52px] sm:h-[58px] w-auto flex items-center justify-center shrink-0">
       <svg viewBox="0 0 100 120" className="h-full w-auto max-h-[58px]" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 6 6 L 94 6 L 94 65 C 94 95 74 114 50 114 C 26 114 6 95 6 65 Z" fill="#0B2545" stroke="#134074" strokeWidth="3" />
-        <path d="M 9 9 L 91 9 L 91 65 C 91 92 72 111 50 111 C 28 111 9 92 9 65 Z" fill="#134074" />
+        <path d="M 6 6 L 94 6 L 94 65 C 94 95 74 114 50 114 C 26 114 6 95 6 65 Z" fill="#0F1B33" stroke="#11203A" strokeWidth="3" />
+        <path d="M 9 9 L 91 9 L 91 65 C 91 92 72 111 50 111 C 28 111 9 92 9 65 Z" fill="#11203A" />
         {/* Banner Superior */}
         <rect x="12" y="14" width="76" height="18" rx="3" fill="#1E40AF" stroke="#60A5FA" strokeWidth="1" />
         <text x="50" y="27" fill="#FFFFFF" fontSize="10" fontWeight="900" textAnchor="middle" fontFamily="Arial, sans-serif">{sigla}</text>
@@ -358,8 +358,8 @@ export function generateSptfPrintHtml(
   // Brasão e Gládio Alado Vetorial Oficial
   const svgLogoHtml = `
     <svg viewBox="0 0 100 120" style="height:55px; width:auto; max-height:55px; display:inline-block;" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M 6 6 L 94 6 L 94 65 C 94 95 74 114 50 114 C 26 114 6 95 6 65 Z" fill="#0B2545" stroke="#134074" stroke-width="3" />
-      <path d="M 9 9 L 91 9 L 91 65 C 91 92 72 111 50 111 C 28 111 9 92 9 65 Z" fill="#134074" />
+      <path d="M 6 6 L 94 6 L 94 65 C 94 95 74 114 50 114 C 26 114 6 95 6 65 Z" fill="#0F1B33" stroke="#11203A" stroke-width="3" />
+      <path d="M 9 9 L 91 9 L 91 65 C 91 92 72 111 50 111 C 28 111 9 92 9 65 Z" fill="#11203A" />
       <rect x="12" y="14" width="76" height="18" rx="3" fill="#1E40AF" stroke="#60A5FA" stroke-width="1" />
       <text x="50" y="27" fill="#FFFFFF" font-size="10" font-weight="900" text-anchor="middle" font-family="sans-serif">${siglaInst}</text>
       <path d="M 49 38 L 51 38 L 51 96 L 49 96 Z" fill="#F59E0B" />
@@ -442,21 +442,21 @@ export function generateSptfPrintHtml(
           <td style="width:25%; border-right:2px solid #000; padding:6px 4px; text-align:center; vertical-align:bottom; height:84px; background:#fff;">
             <div style="width:85%; margin:0 auto 4px auto; border-bottom:1px solid #000;"></div>
             <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">${cargo1}</strong>
-            <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#1e293b; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${chefeCanteiroNome}</span>
+            <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#16243D; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${chefeCanteiroNome}</span>
           </td>
 
           <!-- BLOCO 3: SERVIDOR -->
           <td style="width:25%; border-right:2px solid #000; padding:6px 4px; text-align:center; vertical-align:bottom; height:84px; background:#fff;">
             <div style="width:85%; margin:0 auto 4px auto; border-bottom:1px solid #000;"></div>
             <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">${cargoServidor}</strong>
-            <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#1e293b; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${dispensa.nome}</span>
+            <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#16243D; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${dispensa.nome}</span>
           </td>
 
           <!-- BLOCO 4: CH/ENC DA DA -->
           <td style="width:25%; padding:6px 4px; text-align:center; vertical-align:bottom; height:84px; background:#fff;">
             <div style="width:85%; margin:0 auto 4px auto; border-bottom:1px solid #000;"></div>
             <strong style="text-transform:uppercase; font-size:11px; display:block; line-height:1.1;">${cargo2}</strong>
-            <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#1e293b; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${chefeDaNome}</span>
+            <span style="font-size:9px; text-transform:uppercase; font-weight:700; color:#16243D; display:block; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${chefeDaNome}</span>
           </td>
         </tr>
       </table>
@@ -491,7 +491,7 @@ export function generateSptfPrintHtml(
       justify-content: space-between;
       gap: 12px;
       padding: 12px 24px;
-      background: #0f172a;
+      background: #0F172A;
       color: #fff;
       margin-bottom: 20px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
