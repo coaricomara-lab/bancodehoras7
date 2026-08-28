@@ -18,6 +18,7 @@ import { EmployeeStatement } from './components/EmployeeStatement';
 import { EmployeeSelfServicePortal } from './components/EmployeeSelfServicePortal';
 import { AdminPermissionsManagement } from './components/AdminPermissionsManagement';
 import { SettingsPage } from './components/SettingsPage';
+import { BackupRestorePanel } from './components/BackupRestorePanel';
 import { GoogleArchitectureSpec } from './components/GoogleArchitectureSpec';
 import { AdminLockScreen } from './components/AdminLockScreen';
 import { CollaboratorLandingView } from './components/CollaboratorLandingView';
@@ -1701,6 +1702,19 @@ export default function App() {
                 userRole={userRole}
                 onShowToast={(msg, type) => showToast(msg, type)}
               />
+            </ProtectedRoute>
+          )}
+
+          {activeTab === 'backup_restauracao' && (
+            <ProtectedRoute
+              allowedRoles={['SUPER_ADMIN']}
+              currentUserRole={userRole}
+              currentUser={currentUser}
+              onRedirectToDashboard={() => setActiveTab('dashboard')}
+              fallbackTitle="Backup e Restauração Restritos"
+              fallbackMessage="A exportação e restauração completa do Firestore são operações exclusivas do Super Administrador (TI)."
+            >
+              <BackupRestorePanel theme={theme} userRole={userRole} />
             </ProtectedRoute>
           )}
 

@@ -33,10 +33,11 @@ import {
   Clock,
   CalendarCheck2,
   Receipt,
-  FileText
+  FileText,
+  DatabaseBackup
 } from 'lucide-react';
 
-export type ActiveTab = 'dashboard' | 'colaboradores' | 'canteiros' | 'insalubridade' | 'contracheques' | 'relatorios' | 'extrato' | 'portal_colaborador' | 'permissoes_admin' | 'auditoria' | 'arquitetura' | 'configuracoes_instituicao';
+export type ActiveTab = 'dashboard' | 'colaboradores' | 'canteiros' | 'insalubridade' | 'contracheques' | 'relatorios' | 'extrato' | 'portal_colaborador' | 'permissoes_admin' | 'auditoria' | 'arquitetura' | 'configuracoes_instituicao' | 'backup_restauracao';
 export type UserMode = 'ADMIN' | 'COLABORADOR';
 
 interface NavbarProps {
@@ -90,6 +91,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const canManageAdmins = rbacService.canManageAdmins(currentRole);
   const canManageSystem = rbacService.canManageSystemConfig(currentRole);
+  const canManageBackups = currentRole === 'SUPER_ADMIN';
   const canImportFolha = rbacService.canImportFolha(currentRole);
   const canManageCanteiros = rbacService.canManageCanteiros(currentRole);
   const canViewAuditLogs = rbacService.canViewAuditLogs(currentRole);
@@ -530,6 +532,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>
                           OM, cargos, sedes, almoço e modelos
                         </span>
+                      </div>
+                    </button>
+                  )}
+
+                  {canManageBackups && (
+                    <button
+                      onClick={() => {
+                        onSelectTab('backup_restauracao');
+                        setIsSettingsOpen(false);
+                      }}
+                      className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors cursor-pointer ${
+                        activeTab === 'backup_restauracao'
+                          ? isDark ? 'bg-cyan-950/30 text-cyan-300' : 'bg-cyan-50 text-cyan-800'
+                          : isDark ? 'hover:bg-[#1F2229] text-[#E0E2E5]' : 'hover:bg-slate-50 text-slate-700'
+                      }`}
+                    >
+                      <div className="w-6 h-6 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center shrink-0 border border-cyan-500/20">
+                        <DatabaseBackup className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-semibold flex items-center justify-between"><span>Backup e Restauração</span><span className="text-[9px] px-1.5 py-0.2 rounded font-bold bg-cyan-500/20 text-cyan-300">SUPER ADMIN</span></div>
+                        <span className={`text-[10px] block ${isDark ? 'text-[#8E9299]' : 'text-slate-500'}`}>Exportar e restaurar a base Firestore</span>
                       </div>
                     </button>
                   )}
