@@ -157,7 +157,7 @@
   }
 
   /* Quebras de página controladas e prevenção de corte em tabelas/assinaturas */
-  table, tr, td, th {
+  tr, td, th {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }

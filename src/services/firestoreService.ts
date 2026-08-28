@@ -1162,12 +1162,10 @@ export const firestoreService = {
       const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
       let q;
       if (normalizedCanteiro) {
-        q = query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(200));
+        q = query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(500));
       } else {
-        // 1.2: Global users — filter by current month/year to reduce Firestore reads
-        const now = new Date();
-        const currentMesAno = `${String(now.getMonth() + 1).padStart(2, '0')}-${now.getFullYear()}`;
-        q = query(collection(db, path), where('mesAno', '==', currentMesAno), limit(200));
+        // Carrega os contracheques de todas as competências para visualização unificada na gestão e portal
+        q = query(collection(db, path), limit(1000));
       }
 
       return onSnapshot(

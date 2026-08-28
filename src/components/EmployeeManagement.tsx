@@ -41,18 +41,24 @@ import {
   EyeOff,
   KeyRound,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  Printer,
+  FileText
 } from 'lucide-react';
 import { InfoTooltip } from './InfoTooltip';
 import { IconButton } from './IconButton';
+import { PortariaAttendanceSheetModal } from './PortariaAttendanceSheetModal';
+import { DispensaSptfRecord } from '../types';
 
 interface EmployeeManagementProps {
   employees: Employee[];
   records: TimeRecord[];
   constructionSites?: ConstructionSite[];
+  dispensas?: DispensaSptfRecord[];
   onUpdateEmployees: (employees: Employee[]) => void;
   onViewStatement: (matricula: string) => void;
   onQuickNewEntry: (matricula: string) => void;
+  onOpenSptfDispensa?: (matricula?: string) => void;
   theme?: 'dark' | 'light';
 }
 
@@ -69,9 +75,11 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   employees,
   records,
   constructionSites = [],
+  dispensas = [],
   onUpdateEmployees,
   onViewStatement,
   onQuickNewEntry,
+  onOpenSptfDispensa,
   theme = 'dark',
 }) => {
   const isDark = theme === 'dark';
@@ -120,6 +128,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   // Manual Employee Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [isPortariaModalOpen, setIsPortariaModalOpen] = useState(false);
 
   // Form State
   const [matricula, setMatricula] = useState('');
@@ -532,8 +541,9 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      {isMobile ? (
+    <>
+      <div className="no-print space-y-6">
+        {isMobile ? (
         /* ========================================================= */
         /* 1. VISÃO EXCLUSIVA MOBILE (< 768px)                       */
         /* ========================================================= */
@@ -703,16 +713,40 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   Gestão de Pessoas & Lotação
                 </span>
               </div>
-              <h2 className={`text-xl font-bold mt-2 tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                Gestão e Importação de Colaboradores
+              <h2 className={`text-xl font-bold mt-2 tracking-tight flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                <span>Gestão e Importação de Colaboradores</span>
+                <InfoTooltip 
+                  theme={isDark ? 'dark' : 'light'} 
+                  content="Cadastre novos colaboradores manualmente ou realize a carga massiva via arquivo .CSV com suporte a tratamento automático de duplicidades pela Matrícula." 
+                />
               </h2>
-              <p className={`text-xs max-w-2xl mt-0.5 font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
-                Cadastre novos colaboradores manualmente ou realize a carga massiva via arquivo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-slate-800'}>.CSV</strong> com suporte a tratamento automático de duplicidades pela <strong className={isDark ? 'text-[#E2E8F0]' : 'text-slate-800'}>Matrícula</strong>.
-              </p>
             </div>
 
             <div className="flex items-center gap-2">
               <IconButton
+                id="btn-colaboradores-relacao-portaria"
+                icon={Printer}
+                variant="secondary"
+                size="md"
+                tooltip="Imprimir Relação de Entrada e Saída de Servidores (Portaria)"
+                aria-label="Relação de Entrada e Saída de Portaria"
+                onClick={() => setIsPortariaModalOpen(true)}
+              />
+
+              {onOpenSptfDispensa && (
+                <IconButton
+                  id="btn-colaboradores-dispensa-expediente"
+                  icon={FileText}
+                  variant="secondary"
+                  size="md"
+                  tooltip="Emitir Guia Oficial de Dispensa de Expediente (SPTF)"
+                  aria-label="Dispensa de Expediente"
+                  onClick={() => onOpenSptfDispensa()}
+                />
+              )}
+
+              <IconButton
+                id="btn-colaboradores-baixar-template"
                 icon={FileSpreadsheet}
                 variant="secondary"
                 size="md"
@@ -1254,6 +1288,16 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                           </td>
                           <td className="py-3.5 px-4 text-right whitespace-nowrap font-sans">
                             <div className="flex items-center justify-end gap-1.5">
+                              {onOpenSptfDispensa && (
+                                <IconButton
+                                  icon={FileText}
+                                  variant="ghost"
+                                  size="xs"
+                                  tooltip={`Emitir Dispensa de Expediente para ${emp.nome}`}
+                                  aria-label={`Dispensa de ${emp.nome}`}
+                                  onClick={() => onOpenSptfDispensa(emp.matricula)}
+                                />
+                              )}
                               <IconButton
                                 icon={PlusCircle}
                                 variant="subtle"
@@ -1847,6 +1891,19 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
           </div>
         </div>
       )}
-    </div>
+      </div>
+
+      {/* Modal de Impressão da Relação de Portaria (Entrada e Saída) */}
+      <PortariaAttendanceSheetModal
+        isOpen={isPortariaModalOpen}
+        onClose={() => setIsPortariaModalOpen(false)}
+        employees={employees}
+        records={records}
+        dispensas={dispensas}
+        constructionSites={constructionSites}
+        defaultSede={filterSede !== 'TODAS' ? filterSede : 'KO'}
+        theme={theme}
+      />
+    </>
   );
 };

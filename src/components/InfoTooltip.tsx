@@ -28,7 +28,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({
   const isDark = theme === 'dark';
   const iconSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4';
   const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLSpanElement>(null);
 
   // Close on outside click (mobile tap-away)
   useEffect(() => {
@@ -59,7 +59,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({
   };
 
   return (
-    <div
+    <span
       ref={containerRef}
       className={`relative inline-flex items-center group cursor-help ${className}`}
       onMouseEnter={() => setIsOpen(true)}
@@ -95,20 +95,20 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({
 
       {/* Popover Tooltip — visible on hover (desktop) or tap (mobile) */}
       {isOpen && (
-        <div
+        <span
           role="tooltip"
-          className={`absolute z-50 w-72 max-w-xs p-2.5 text-[11px] leading-relaxed rounded-xl shadow-xl border font-sans animate-in fade-in zoom-in-95 duration-150 ${positionClasses[position]} ${
+          className={`absolute z-50 block w-72 max-w-xs p-2.5 text-[11px] leading-relaxed rounded-xl shadow-xl border font-sans animate-in fade-in zoom-in-95 duration-150 ${positionClasses[position]} ${
             isDark
               ? 'bg-[#1B2D4A] text-[#D1D5DB] border-[#335075] shadow-black/80'
               : 'bg-white text-slate-700 border-slate-200 shadow-slate-300/80'
           }`}
         >
-          <div className="flex items-start gap-2">
+          <span className="flex items-start gap-2">
             <Info className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
-            <div className="text-left font-normal break-words">{content}</div>
-          </div>
-        </div>
+            <span className="text-left font-normal break-words block">{content}</span>
+          </span>
+        </span>
       )}
-    </div>
+    </span>
   );
 };

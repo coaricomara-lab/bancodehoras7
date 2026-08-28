@@ -282,9 +282,14 @@ export default function App() {
     const unsubPaystubs = firestoreService.subscribePaystubs(
       (items) => {
         setPaystubs(items);
+        if (items.length > 0) {
+          storageService.savePaystubs(items);
+        }
       },
       (err) => {
         console.warn('Fallback para contracheques:', err);
+        const local = storageService.getPaystubs();
+        setPaystubs(local);
       },
       activeCanteiro
     );
@@ -1537,9 +1542,11 @@ export default function App() {
               employees={employees}
               records={records}
               constructionSites={constructionSites}
+              dispensas={dispensasSptf}
               onUpdateEmployees={handleUpdateEmployees}
               onViewStatement={(mat) => handleViewStatement(mat)}
               onQuickNewEntry={(mat) => handleOpenNewEntry(mat)}
+              onOpenSptfDispensa={(mat) => handleOpenSptfDispensa(mat)}
               theme={theme}
             />
           )}
@@ -1614,6 +1621,7 @@ export default function App() {
               records={records}
               insalubrityRecords={insalubrityRecords}
               constructionSites={constructionSites}
+              paystubs={paystubs}
               selectedMatricula={selectedMatricula}
               onSelectMatricula={setSelectedMatricula}
               onBack={() => setActiveTab('dashboard')}

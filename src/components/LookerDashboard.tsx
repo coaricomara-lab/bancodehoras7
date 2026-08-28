@@ -8,6 +8,7 @@ import {
 } from '../utils/calculations';
 import { exportTimeRecordsToLookerCSV, exportFilteredBalancesCSV, triggerFileDownload } from '../utils/csvHandler';
 import { DashboardCalendarView } from './DashboardCalendarView';
+import { CollaboratorBalancesPrintModal } from './CollaboratorBalancesPrintModal';
 import { InfoTooltip } from './InfoTooltip';
 import { IconButton } from './IconButton';
 import { ErrorBoundary } from './ErrorBoundary';
@@ -43,7 +44,8 @@ import {
   ArrowUp,
   ArrowDown,
   Eye,
-  Zap
+  Zap,
+  Printer
 } from 'lucide-react';
 
 interface LookerDashboardProps {
@@ -120,6 +122,9 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
   // Estados de Paginação para Lançamentos Individuais
   const [recordsCurrentPage, setRecordsCurrentPage] = useState<number>(1);
   const [recordsPageSize, setRecordsPageSize] = useState<number>(50);
+
+  // Estado para Modal de Impressão da Relação Ordenada de Colaboradores
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState<boolean>(false);
 
   // Estados de Ordenação da Tabela de Colaboradores
   const [sortField, setSortField] = useState<SortField>('saldo');
@@ -903,20 +908,41 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
             )}
           </div>
 
-          <span className={`text-[10px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
-            {activeTab === 'colaboradores' && (
-              <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{filteredEmployeesWithBalance.length}</strong> colaboradores</>
-            )}
-            {activeTab === 'calendario' && (
-              <>Visão Matricial de Apontamentos por Dia</>
-            )}
-            {activeTab === 'extrato' && (
-              <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{filteredRecords.length}</strong> lançamentos</>
-            )}
-            {activeTab === 'por_sede' && (
-              <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{branchSummary.length}</strong> sedes operacionais</>
-            )}
-          </span>
+          <div className="flex items-center gap-3">
+            {/* Botão de Impressão da Relação Ordenada */}
+            <button
+              id="btn-print-dashboard-table"
+              onClick={() => setIsPrintModalOpen(true)}
+              className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer shadow-xs ${
+                isDark
+                  ? 'bg-[#1E2E4A] hover:bg-[#2A4068] text-blue-300 border-[#335075] hover:border-blue-400'
+                  : 'bg-white hover:bg-blue-50/80 text-blue-700 border-slate-300 hover:border-blue-400'
+              }`}
+              title={`Imprimir relação na ordem atual (${
+                sortField === 'saldo' 
+                  ? (sortDirection === 'asc' ? 'Mais Devedores primeiro' : 'Mais Credores primeiro') 
+                  : `Ordenado por ${sortField.toUpperCase()}`
+              })`}
+            >
+              <Printer className="w-3.5 h-3.5 text-blue-500" />
+              <span>Imprimir</span>
+            </button>
+
+            <span className={`text-[10px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-gray-500'}`}>
+              {activeTab === 'colaboradores' && (
+                <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{filteredEmployeesWithBalance.length}</strong> colaboradores</>
+              )}
+              {activeTab === 'calendario' && (
+                <>Visão Matricial de Apontamentos por Dia</>
+              )}
+              {activeTab === 'extrato' && (
+                <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{filteredRecords.length}</strong> lançamentos</>
+              )}
+              {activeTab === 'por_sede' && (
+                <>Exibindo <strong className={isDark ? 'text-[#E2E8F0]' : 'text-gray-900'}>{branchSummary.length}</strong> sedes operacionais</>
+              )}
+            </span>
+          </div>
         </div>
 
         {/* ========================================================================= */}
@@ -1623,6 +1649,17 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           </span>
         </div>
       </div>
+
+      {/* MODAL DE IMPRESSÃO DA RELAÇÃO ORDENADA DE COLABORADORES */}
+      <CollaboratorBalancesPrintModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        employees={sortedEmployees}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        filters={filters}
+        theme={theme}
+      />
     </div>
   );
 };
