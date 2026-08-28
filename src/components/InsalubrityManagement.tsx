@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Employee, Branch, InsalubrityRecord, GrauInsalubridade, SystemConfig, ConstructionSite, AdminRole } from '../types';
 import { InsalubritySimpleMatrixView } from './InsalubritySimpleMatrixView';
 import { InsalubrityConversionModal } from './InsalubrityConversionModal';
+import { InfoTooltip } from './InfoTooltip';
 import { 
   AlertTriangle, 
   ShieldAlert, 
@@ -426,8 +427,8 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
                   </span>
                 </div>
                 <p className={`text-xs mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-                  Controle de adicionais fixos contratuais e apontamentos de atividades insalubres em canteiros de obras
-                </p>
+                Adicionais fixos e apontamentos <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Controle de adicionais fixos contratuais e apontamentos de atividades insalubres em canteiros de obras" />
+              </p>
               </div>
             </div>
 

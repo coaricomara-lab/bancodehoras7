@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { AuditLog, AuditActionType, ConstructionSite, Branch } from '../types';
 import { auditService } from '../services/auditService';
 import { ComaraLogo } from './ComaraLogo';
+import { InfoTooltip } from './InfoTooltip';
 import { 
   ShieldCheck, 
   Search, 
@@ -323,7 +324,7 @@ export const AuditTrailView: React.FC<AuditTrailViewProps> = ({
                 Trilha de Auditoria & Logs de Segurança
               </h1>
               <p className={`text-xs mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-                Rastreamento e auditoria em tempo real de emissões de dispensas, lançamentos de horas, trocas de chefias e importações de folha.
+                Logs imutáveis e rastreáveis (LGPD) <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Rastreamento e auditoria em tempo real de emissões de dispensas, lançamentos de horas, trocas de chefias e importações de folha." />
               </p>
             </div>
           </div>

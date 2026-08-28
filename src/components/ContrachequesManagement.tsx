@@ -3,6 +3,7 @@ import { Employee, PaystubRecord, AdminRole } from '../types';
 import { ContrachequeMirrorView } from './ContrachequeMirrorView';
 import { ImportContrachequeModal } from './ImportContrachequeModal';
 import { normalizeMatricula } from '../utils/pdfParser';
+import { InfoTooltip } from './InfoTooltip';
 import { 
   FileText, 
   UploadCloud, 
@@ -125,8 +126,8 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
             <span>Contracheques Digitais da COMARA</span>
           </h2>
           <p className={`text-xs mt-1 ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
-            Gestão de Folha de Pagamento, importação de PDF concatenado e emissão de espelhos digitais
-          </p>
+                Folha de pagamento e espelhos <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Gestão de Folha de Pagamento, importação de PDF concatenado e emissão de espelhos digitais" />
+              </p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -351,7 +352,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
                     <div className="flex flex-col items-center justify-center gap-2">
                       <FileText className="w-8 h-8 text-slate-500 stroke-1" />
                       <p className="font-semibold text-sm">Nenhum contracheque encontrado com os filtros atuais.</p>
-                      <p className="text-xs text-slate-500">Clique em "Importar Folha (PDF)" para carregar o arquivo oficial ou dados de teste.</p>
+                      <p className="text-xs text-slate-500">Importe a folha oficial (PDF) para visualizar.</p>
                     </div>
                   </td>
                 </tr>

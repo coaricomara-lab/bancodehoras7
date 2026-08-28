@@ -23,6 +23,7 @@ import {
   Sparkles,
   Info
 } from 'lucide-react';
+import { InfoTooltip } from './InfoTooltip';
 
 export type SettingsTabKey = 'identificacao' | 'cargos' | 'sedes' | 'horarios_regras' | 'documentos';
 
@@ -200,8 +201,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               </span>
             </div>
             <p className={`text-xs mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-              Personalize a identidade da Organização Militar, cargos de chefia, canteiros ativos, regras de almoço e modelos de documentos impressos.
-            </p>
+                Parâmetros e identidade da instituição <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Personalize a identidade da Organização Militar, cargos de chefia, canteiros ativos, regras de almoço e modelos de documentos impressos." />
+              </p>
             {formData.atualizadoEm && (
               <p className={`text-[11px] mt-1 font-mono ${isDark ? 'text-gray-400' : 'text-slate-400'}`}>
                 Última alteração: {new Date(formData.atualizadoEm).toLocaleString('pt-BR')} por {formData.atualizadoPor || 'Super Administrador'}

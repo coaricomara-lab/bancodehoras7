@@ -26,6 +26,7 @@ import {
   Square,
   FileCheck
 } from 'lucide-react';
+import { InfoTooltip } from './InfoTooltip';
 
 interface ImportContrachequeModalProps {
   isOpen: boolean;
@@ -293,7 +294,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
                 </span>
               </h3>
               <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
-                Selecione múltiplos arquivos PDF de uma só vez (5 a 15 arquivos) • Processamento otimizado sem travamento
+                Importação de múltiplos PDFs <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Selecione múltiplos arquivos PDF de uma só vez (5 a 15 arquivos) • Processamento otimizado sem travamento" />
               </p>
             </div>
           </div>

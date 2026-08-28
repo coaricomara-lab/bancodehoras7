@@ -3,6 +3,7 @@ import { Employee, TimeRecord, OccurrenceType, Branch } from '../types';
 import { calculateSPTFBalance, formatHoursDecimal } from '../utils/calculations';
 import { firestoreService } from '../services/firestoreService';
 import { storageService } from '../services/storageService';
+import { InfoTooltip } from './InfoTooltip';
 import { 
   Zap, 
   Search, 
@@ -551,7 +552,7 @@ export const QuickBatchEntryModal: React.FC<QuickBatchEntryModalProps> = ({
                 </span>
               </div>
               <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-                Cadastre horas para múltiplos colaboradores ou equipes de canteiro simultaneamente com cálculo CLT automático.
+                Lançamento em lote com cálculo CLT <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Cadastre horas para múltiplos colaboradores ou equipes de canteiro simultaneamente com cálculo CLT automático." />
               </p>
             </div>
           </div>

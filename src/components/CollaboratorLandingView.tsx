@@ -3,6 +3,7 @@ import { Employee, TimeRecord, Attachment, InsalubrityRecord, PaystubRecord } fr
 import { authService } from '../services/authService';
 import { ComaraLogo } from './ComaraLogo';
 import { ForgotPasswordModal } from './ForgotPasswordModal';
+import { InfoTooltip } from './InfoTooltip';
 import { ContrachequeMirrorView } from './ContrachequeMirrorView';
 import { SessionTimeoutModal } from './SessionTimeoutModal';
 import { useIdleTimer } from '../hooks/useIdleTimer';
@@ -363,7 +364,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                           onClick={handleOpenFirstAccess}
                           className="block mt-1.5 font-bold underline hover:text-red-300 cursor-pointer"
                         >
-                          ➔ Clique aqui para criar sua senha agora
+                          Criar senha agora →
                         </button>
                       )}
                     </div>

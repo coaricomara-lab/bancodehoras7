@@ -673,7 +673,7 @@ export const LookerDashboard: React.FC<LookerDashboardProps> = ({
           <div className="max-w-md mx-auto">
             <h3 className="text-lg font-bold">Base Pronta para Importação</h3>
             <p className={`text-xs mt-1.5 leading-relaxed ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-              A base de dados foi limpa com sucesso. Não há registros fictícios ativos. Importe agora seus colaboradores reais e histórico de banco de horas via arquivos CSV para iniciar a gestão.
+              Base limpa. Importe seus colaboradores e histórico via CSV para iniciar a gestão.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">

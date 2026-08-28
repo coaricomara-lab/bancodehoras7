@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AlertCircle, CheckCircle2, Download, FileJson, Loader2, ShieldCheck, UploadCloud } from 'lucide-react';
+import { InfoTooltip } from './InfoTooltip';
 import {
   BackupProgress,
   downloadBackup,
@@ -76,7 +77,9 @@ export const BackupRestorePanel: React.FC<BackupRestorePanelProps> = ({ theme, u
           </div>
           <div>
             <h1 className="text-lg font-bold">Backup e Restauração</h1>
-            <p className={`text-xs mt-1 ${muted}`}>Exportação completa das coleções configuradas e restauração controlada da base Firestore.</p>
+            <p className={`text-xs mt-1 ${muted}`}>
+                Backup e restauração da base <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Exportação completa das coleções configuradas e restauração controlada da base Firestore." />
+              </p>
           </div>
         </div>
       </div>

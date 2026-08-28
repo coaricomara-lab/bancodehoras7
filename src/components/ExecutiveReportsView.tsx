@@ -5,6 +5,7 @@ import { InsalubrityConversionModal } from './InsalubrityConversionModal';
 import { getSignaturesForCanteiro } from '../services/canteiroService';
 import { useInstitution } from '../contexts/InstitutionContext';
 import { IconButton } from './IconButton';
+import { InfoTooltip } from './InfoTooltip';
 import { 
   FileSpreadsheet, 
   Printer, 
@@ -652,8 +653,8 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
               </span>
             </div>
             <p className={`text-xs mt-0.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-              Emissão analítica e sintética de Banco de Horas e Insalubridade (Modo Simples de Atividades e Modo Avançado NR-15)
-            </p>
+                Relatórios analíticos e sintéticos <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Emissão analítica e sintética de Banco de Horas e Insalubridade (Modo Simples de Atividades e Modo Avançado NR-15)" />
+              </p>
           </div>
         </div>
 

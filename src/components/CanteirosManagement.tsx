@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { ConstructionSite, Employee, InsalubrityRecord, Branch, GrauInsalubridade } from '../types';
+import { InfoTooltip } from './InfoTooltip';
 import { 
   Building2, 
   Plus, 
@@ -316,7 +317,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                 </span>
               </h2>
               <p className={`text-xs ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                Cadastro, acompanhamento de encarregados e controle das frentes de serviço da COMARA.
+                Gestão de frentes e encarregados <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Cadastro, acompanhamento de encarregados e controle das frentes de serviço da COMARA." />
               </p>
             </div>
           </div>

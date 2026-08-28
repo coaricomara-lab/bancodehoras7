@@ -26,6 +26,7 @@ import {
   ExternalLink,
   FileDown
 } from 'lucide-react';
+import { InfoTooltip } from './InfoTooltip';
 
 export interface SptfDispensaModalProps {
   isOpen: boolean;
@@ -1439,8 +1440,8 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
                   <FileText className="w-10 h-10 text-slate-600 mx-auto mb-2" />
                   <h4 className="text-sm font-bold text-slate-400">Nenhuma dispensa encontrada</h4>
                   <p className="text-xs text-slate-500 mt-1">
-                    Emita novas guias de dispensa na aba "Nova Guia" para registrar abatimentos no Banco de Horas.
-                  </p>
+                Guia oficial de dispensa SPTF <InfoTooltip theme={isDark ? 'dark' : 'light'} content={'Emita novas guias de dispensa na aba "Nova Guia" para registrar abatimentos no Banco de Horas.'} />
+              </p>
                 </div>
               ) : (
                 <div className="border border-slate-800 rounded-xl overflow-hidden divide-y divide-slate-800">

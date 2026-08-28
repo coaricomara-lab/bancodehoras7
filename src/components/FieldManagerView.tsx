@@ -22,6 +22,7 @@ import {
   Sparkles,
   Filter
 } from 'lucide-react';
+import { InfoTooltip } from './InfoTooltip';
 
 interface FieldManagerViewProps {
   employees: Employee[];
@@ -137,7 +138,7 @@ export const FieldManagerView: React.FC<FieldManagerViewProps> = ({
                 </span>
               </div>
               <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-                Visualização rápida de saldos da equipe em tempo real para tomada de decisões operacionais no canteiro.
+                Saldos da equipe em tempo real <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Visualização rápida de saldos da equipe em tempo real para tomada de decisões operacionais no canteiro." />
               </p>
             </div>
           </div>

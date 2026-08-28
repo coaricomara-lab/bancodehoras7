@@ -334,8 +334,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
             </span>
           </div>
           <p className={`text-xs mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-            Controle estrito de perfis de acesso: Apenas e-mails autorizados têm permissão para acessar o painel de gestão.
-          </p>
+                Perfis de acesso e permissões RBAC <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Controle estrito de perfis de acesso: Apenas e-mails autorizados têm permissão para acessar o painel de gestão." />
+              </p>
         </div>
 
         {isCurrentSuperAdmin && (
