@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, orderBy, limit, onSnapshot, Unsubscribe } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from './firebase';
+import { auth, db, ensureFirebaseAdminSession, handleFirestoreError, OperationType } from './firebase';
 import { Employee, EmployeeAuth, AccessLog, AccessLogType, AdminUser, AuthSession } from '../types';
 
 const COLLECTIONS = {
@@ -778,6 +778,23 @@ export const authService = {
     }
 
     // Login autorizado com sucesso!
+    try {
+      const firebaseUser = await ensureFirebaseAdminSession(cleanEmail, passwordAttempt.trim());
+      if (!firebaseUser) {
+        console.warn('Firebase Auth não retornou usuário após login administrativo para:', cleanEmail);
+      }
+    } catch (firebaseError: any) {
+      console.warn('Falha ao estabelecer o login oficial do Firebase Auth para gestor:', firebaseError);
+      await this.logAccess(
+        cleanEmail,
+        adminDoc.nome,
+        'TENTATIVA_INVALIDA',
+        false,
+        `Sessão de autenticação oficial falhou para ${cleanEmail}: ${firebaseError?.message || 'Erro desconhecido'}`
+      );
+      return { success: false, message: 'Falha na autenticação oficial do Firebase Auth. Tente novamente.' };
+    }
+
     const session: AuthSession = {
       email: adminDoc.email,
       nome: adminDoc.nome,

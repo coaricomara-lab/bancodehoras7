@@ -14,7 +14,7 @@ import {
   limit,
   Unsubscribe 
 } from 'firebase/firestore';
-import { db, logFirestoreError, handleFirestoreError, OperationType, isPermissionError } from './firebase';
+import { auth, db, ensureFirebaseAdminSession, logFirestoreError, handleFirestoreError, OperationType, isPermissionError } from './firebase';
 import { Employee, TimeRecord, AdminUser, AdminRole, InsalubrityRecord, SystemConfig, ConstructionSite, PaystubRecord, DispensaSptfRecord, AuditLog } from '../types';
 import { hashPassword } from './authService';
 import { canteiroService } from './canteiroService';
@@ -175,6 +175,13 @@ export function prepareDispensaSptfForFirestore(d: Partial<DispensaSptfRecord>):
 }
 
 export const firestoreService = {
+  async ensureAuthenticatedWriteSession(): Promise<void> {
+    const user = await ensureFirebaseAdminSession();
+    if (!user) {
+      throw new Error('Sessão do Firebase Auth indisponível. Não foi possível revalidar a autenticação administrativa.');
+    }
+  },
+
   // -------------------------------------------------------------
   // REAL-TIME LISTENERS (COM TRATAMENTO DEFENSIVO DE ERROS)
   // -------------------------------------------------------------
@@ -441,6 +448,10 @@ export const firestoreService = {
   // GET DOCS / POLLED QUERIES
   // -------------------------------------------------------------
 
+  async getAllEmployees(): Promise<Employee[]> {
+    return this.getEmployees();
+  },
+
   async getEmployees(): Promise<Employee[]> {
     const path = COLLECTIONS.COLABORADORES;
     try {
@@ -532,6 +543,7 @@ export const firestoreService = {
     const docId = (employee.matricula || employee.id || '').trim().toUpperCase();
     const path = `${COLLECTIONS.COLABORADORES}/${docId}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       const cleanData = prepareEmployeeForFirestore(employee);
       await setDoc(doc(db, COLLECTIONS.COLABORADORES, docId), cleanData, { merge: true });
 
@@ -559,6 +571,7 @@ export const firestoreService = {
   async deleteEmployee(docId: string): Promise<void> {
     const path = `${COLLECTIONS.COLABORADORES}/${docId}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       await Promise.all([
         deleteDoc(doc(db, COLLECTIONS.COLABORADORES, docId)),
         deleteDoc(doc(db, COLLECTIONS.COLABORADORES_AUTH, docId)).catch(() => {}),
@@ -577,6 +590,7 @@ export const firestoreService = {
     const docId = record.id;
     const path = `${COLLECTIONS.LANCAMENTOS}/${docId}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       const cleanData = sanitizeFirestoreData({
         id: record.id,
         matricula: (record.matricula || '').trim().toUpperCase(),
@@ -616,6 +630,7 @@ export const firestoreService = {
   async deleteTimeRecord(docId: string): Promise<void> {
     const path = `${COLLECTIONS.LANCAMENTOS}/${docId}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       await deleteDoc(doc(db, COLLECTIONS.LANCAMENTOS, docId));
     } catch (error) {
       logFirestoreError(error, OperationType.DELETE, path);
@@ -836,6 +851,7 @@ export const firestoreService = {
     const docId = record.id || `insalubre-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const path = `${COLLECTIONS.INSALUBRIDADE}/${docId}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       const dataToSave = sanitizeFirestoreData({
         id: docId,
         matricula: record.matricula.trim().toUpperCase(),
@@ -864,6 +880,7 @@ export const firestoreService = {
 
   async saveInsalubrityBatch(records: InsalubrityRecord[]): Promise<number> {
     if (records.length === 0) return 0;
+    await this.ensureAuthenticatedWriteSession();
     const CHUNK_SIZE = 400;
     let savedCount = 0;
 
@@ -903,6 +920,7 @@ export const firestoreService = {
   async deleteInsalubrityRecord(docId: string): Promise<void> {
     const path = `${COLLECTIONS.INSALUBRIDADE}/${docId}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       await deleteDoc(doc(db, COLLECTIONS.INSALUBRIDADE, docId));
     } catch (error) {
       logFirestoreError(error, OperationType.DELETE, path);
@@ -984,6 +1002,7 @@ export const firestoreService = {
   async saveSystemConfig(config: SystemConfig): Promise<void> {
     const path = `${COLLECTIONS.SYSTEM_CONFIG}/global`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       const dataToSave = sanitizeFirestoreData({
         logoUrl: config.logoUrl || '',
         companyName: config.companyName || 'COMARA',
@@ -1007,6 +1026,7 @@ export const firestoreService = {
     const docId = adminUser.email.trim().toLowerCase();
     const path = `${COLLECTIONS.ADMIN_USERS}/${docId}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       const dataToSave: Record<string, any> = {
         id: docId,
         email: docId,
@@ -1042,6 +1062,7 @@ export const firestoreService = {
     const cleanId = docId.trim().toLowerCase();
     const path = `${COLLECTIONS.ADMIN_USERS}/${cleanId}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       await Promise.all([
         deleteDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanId)),
         deleteDoc(doc(db, COLLECTIONS.USUARIOS_SISTEMA, cleanId))
@@ -1080,6 +1101,7 @@ export const firestoreService = {
     detalhes?: Record<string, any>;
   }): Promise<void> {
     try {
+      await this.ensureAuthenticatedWriteSession();
       const logId = `log-${Date.now()}-${Math.floor(Math.random() * 100000)}`;
       const logData = sanitizeFirestoreData({
         id: logId,
@@ -1233,6 +1255,7 @@ export const firestoreService = {
     const path = `${COLLECTIONS.CONTRACHEQUES}/${docId}`;
 
     try {
+      await this.ensureAuthenticatedWriteSession();
       const sanitized = preparePaystubForFirestore(paystub);
       await setDoc(doc(db, COLLECTIONS.CONTRACHEQUES, docId), sanitized, { merge: true });
     } catch (error) {
@@ -1244,6 +1267,7 @@ export const firestoreService = {
     paystubs: PaystubRecord[],
     onProgress?: (info: BatchProgressInfo) => void
   ): Promise<void> {
+    await this.ensureAuthenticatedWriteSession();
     const CHUNK_SIZE = 300;
     const total = paystubs.length;
     const totalChunks = Math.ceil(total / CHUNK_SIZE);
@@ -1291,6 +1315,7 @@ export const firestoreService = {
   async deletePaystub(id: string): Promise<void> {
     const path = `${COLLECTIONS.CONTRACHEQUES}/${id}`;
     try {
+      await this.ensureAuthenticatedWriteSession();
       await deleteDoc(doc(db, COLLECTIONS.CONTRACHEQUES, id));
     } catch (error) {
       handleFirestoreError(error, OperationType.DELETE, path);
@@ -1376,6 +1401,7 @@ export const firestoreService = {
     record: TimeRecord,
     userEmail?: string
   ): Promise<void> {
+    await this.ensureAuthenticatedWriteSession();
     const batch = writeBatch(db);
 
     // 1. Sanitizar dados do lançamento de débito no Banco de Horas
@@ -1424,6 +1450,7 @@ export const firestoreService = {
   },
 
   async deleteDispensaSptf(dispensaId: string, lancamentoId?: string): Promise<void> {
+    await this.ensureAuthenticatedWriteSession();
     const batch = writeBatch(db);
     batch.delete(doc(db, COLLECTIONS.DISPENSAS_SPTF, dispensaId));
     if (lancamentoId) {
@@ -1438,6 +1465,7 @@ export const firestoreService = {
   },
 
   async clearAllData(userRole?: AdminRole | string): Promise<void> {
+    await this.ensureAuthenticatedWriteSession();
     // S-006: Strict validation — only SUPER_ADMIN can execute clearAllData
     if (!userRole || userRole !== 'SUPER_ADMIN') {
       throw new Error('Acesso negado: Limpeza da base central restrita estritamente a Super Administradores (SUPER_ADMIN).');

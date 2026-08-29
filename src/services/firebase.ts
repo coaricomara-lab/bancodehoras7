@@ -5,7 +5,12 @@ import {
   signInWithPopup, 
   signOut as firebaseSignOut,
   onAuthStateChanged,
-  User as FirebaseUser
+  User as FirebaseUser,
+  setPersistence,
+  browserLocalPersistence,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInAnonymously,
 } from 'firebase/auth';
 import { 
   getFirestore, 
@@ -31,10 +36,52 @@ export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 
 // Initialize Auth
 export const auth = getAuth(app);
+setPersistence(auth, browserLocalPersistence).catch((error) => {
+  console.warn('Não foi possível configurar a persistência local do Firebase Auth:', error);
+});
+
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account'
 });
+
+export async function ensureFirebaseAdminSession(email?: string, password?: string): Promise<FirebaseUser | null> {
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+  } catch (error) {
+    console.warn('Persistência do Firebase Auth já estava ativa ou indisponível:', error);
+  }
+
+  if (auth.currentUser) {
+    return auth.currentUser;
+  }
+
+  if (email && password) {
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      return result.user;
+    } catch (error: any) {
+      if (error?.code === 'auth/user-not-found') {
+        try {
+          const result = await createUserWithEmailAndPassword(auth, email, password);
+          return result.user;
+        } catch (createError: any) {
+          console.warn('Falha ao provisionar conta administrativa no Firebase Auth:', createError);
+          throw createError;
+        }
+      }
+      throw error;
+    }
+  }
+
+  try {
+    const result = await signInAnonymously(auth);
+    return result.user;
+  } catch (error) {
+    console.warn('Não foi possível restaurar uma sessão anônima do Firebase Auth:', error);
+    return null;
+  }
+}
 
 export enum OperationType {
   CREATE = 'create',

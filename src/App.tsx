@@ -427,10 +427,11 @@ export default function App() {
           setIsVerifyingPermissions(true);
         }
       } else {
-        // Sem Firebase Auth Google - verificar se há sessão salva de login Firestore
+        // S-008: a sessão local não pode substituir a autenticação oficial do Firebase Auth.
+        // Se o token do Firebase não estiver ativo, a sessão deve ser rejeitada e o usuário deve fazer login novamente.
         setIsVerifyingPermissions(false);
         const savedSession = authService.getCurrentSession();
-        if (savedSession && savedSession.role) {
+        if (savedSession && savedSession.role && auth.currentUser) {
           const appUser: AppUser = {
             email: savedSession.email,
             nome: savedSession.nome,
@@ -442,7 +443,7 @@ export default function App() {
           setUserRole(savedSession.role as AdminRole);
           setUserMode(savedSession.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
         } else {
-          if (savedSession && !savedSession.role) authService.clearSession();
+          if (savedSession) authService.clearSession();
           setCurrentUser(null);
           setUserRole(null);
         }
