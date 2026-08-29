@@ -234,5 +234,3 @@ Este projeto não declara uma licença explícita no repositório. Consulte a or
 - `firestore.rules`: regras do banco para segurança.
 
 ---
-
-Se você quiser, posso gerar uma segunda versão deste README em inglês, ou adaptar uma versão mais enxuta para GitHub com badges, seções de screenshots e CLI mais curta.
