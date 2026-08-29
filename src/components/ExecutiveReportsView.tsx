@@ -302,7 +302,13 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
   
   // Registros de insalubridade dentro da janela do período
   const periodInsalubrityRecords = useMemo(() => {
+    if (!employees || employees.length === 0) return [];
+    const registeredMatriculas = new Set(employees.map(e => e.matricula.trim().toUpperCase()));
+
     return insalubrityRecords.filter((r) => {
+      const cleanMat = (r.matricula || '').trim().toUpperCase();
+      if (!registeredMatriculas.has(cleanMat)) return false;
+
       const rDate = normalizeDateStr(r.dataEvento);
       if (rDate < startDate || rDate > endDate) return false;
       if (selectedBranch !== 'TODAS' && r.sede !== selectedBranch) return false;
@@ -315,10 +321,12 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
       }
       return true;
     }).sort((a, b) => b.dataEvento.localeCompare(a.dataEvento));
-  }, [insalubrityRecords, startDate, endDate, selectedBranch, searchQuery]);
+  }, [employees, insalubrityRecords, startDate, endDate, selectedBranch, searchQuery]);
 
   // Modo Simples: Resumo por Colaborador focado em ATIVIDADES REALIZADAS (sem porcentagens)
   const insalubridadeSimpleData = useMemo(() => {
+    if (!employees || employees.length === 0) return [];
+
     return employees
       .filter((emp) => {
         if (selectedBranch !== 'TODAS' && (emp.sede_atual || emp.sede) !== selectedBranch) return false;
@@ -388,6 +396,8 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
 
   // Modo Avançado: Com porcentagens NR-15 (10%, 20%, 40%) e Adicional Fixo
   const insalubridadeAdvancedData = useMemo(() => {
+    if (!employees || employees.length === 0) return [];
+
     return employees
       .filter((emp) => {
         if (selectedBranch !== 'TODAS' && (emp.sede_atual || emp.sede) !== selectedBranch) return false;
@@ -449,6 +459,15 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
 
   // Totais de Insalubridade Simples
   const totalInsalubridadeSimple = useMemo(() => {
+    if (!employees || employees.length === 0 || insalubridadeSimpleData.length === 0) {
+      return {
+        colaboradoresAtivos: 0,
+        totalDiasCampo: 0,
+        totalApontamentos: 0,
+        topActivities: [] as [string, number][],
+      };
+    }
+
     let colaboradoresAtivos = 0;
     let totalDiasCampo = 0;
     let totalApontamentos = 0;
@@ -476,10 +495,22 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
       totalApontamentos,
       topActivities,
     };
-  }, [insalubridadeSimpleData]);
+  }, [employees, insalubridadeSimpleData]);
 
   // Totais de Insalubridade Avançada
   const totalInsalubridadeAdvanced = useMemo(() => {
+    if (!employees || employees.length === 0 || insalubridadeAdvancedData.length === 0) {
+      return {
+        totalFixoComAdicional: 0,
+        totalHoras40: 0,
+        totalHoras20: 0,
+        totalHoras10: 0,
+        totalHorasGeral: 0,
+        totalDiasGeral: 0,
+        totalApontamentos: 0,
+      };
+    }
+
     return insalubridadeAdvancedData.reduce(
       (acc, curr) => ({
         totalFixoComAdicional: acc.totalFixoComAdicional + (curr.grauFixo !== 'ISENTO' ? 1 : 0),
@@ -500,7 +531,7 @@ export const ExecutiveReportsView: React.FC<ExecutiveReportsViewProps> = ({
         totalApontamentos: 0,
       }
     );
-  }, [insalubridadeAdvancedData]);
+  }, [employees, insalubridadeAdvancedData]);
 
   // -------------------------------------------------------------
   // EXPORTAÇÃO EXCEL (CSV FORMATADO BR)

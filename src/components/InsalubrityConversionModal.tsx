@@ -177,7 +177,13 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
 
   // 1. Identificar registros do período/sede selecionado
   const candidateRecords = useMemo(() => {
+    if (!employees || employees.length === 0) return [];
+    const registeredMatriculas = new Set(employees.map(e => e.matricula.trim().toUpperCase()));
+
     return insalubrityRecords.filter((rec) => {
+      const cleanMat = (rec.matricula || '').trim().toUpperCase();
+      if (!registeredMatriculas.has(cleanMat)) return false;
+
       // Filtrar por Mês (YYYY-MM) se selecionado
       if (filterMonth && !rec.dataEvento.startsWith(filterMonth)) {
         return false;
@@ -188,7 +194,7 @@ export const InsalubrityConversionModal: React.FC<InsalubrityConversionModalProp
       }
       return true;
     });
-  }, [insalubrityRecords, filterMonth, filterSede]);
+  }, [employees, insalubrityRecords, filterMonth, filterSede]);
 
   // 2. Agrupar por Atividade
   const activitiesSummary = useMemo(() => {

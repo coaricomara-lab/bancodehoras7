@@ -705,30 +705,30 @@ export const Navbar: React.FC<NavbarProps> = ({
                           <Trash2 className="w-3.5 h-3.5" />
                         </div>
                         <div className="flex-1">
-                          <div className="font-semibold text-rose-500 dark:text-rose-400">Limpar Base Central</div>
+                          <div className="font-semibold text-rose-500 dark:text-rose-400">Zerar Base para Produção</div>
                           <span className={`text-[10px] block opacity-80`}>
-                            Zerar dados para importar seus arquivos reais
+                            Limpar dados operacionais para iniciar produção real
                           </span>
                         </div>
                       </button>
 
-                      {/* 8. Restaurar Base de Demonstração */}
+                      {/* 8. Modo Treinamento (Seed Oficial) */}
                       <button
                         onClick={() => {
                           onResetData();
                           setIsSettingsOpen(false);
                         }}
                         className={`w-full px-3.5 py-2.5 text-xs text-left flex items-center gap-2.5 transition-colors active:scale-[0.98] cursor-pointer ${
-                          isDark ? 'hover:bg-[#243756] text-[#94A3B8]' : 'hover:bg-slate-50 text-slate-600'
+                          isDark ? 'hover:bg-[#243756] text-indigo-300' : 'hover:bg-indigo-50 text-indigo-700'
                         }`}
                       >
-                        <div className="w-6 h-6 rounded-lg bg-slate-500/10 text-slate-400 flex items-center justify-center shrink-0 border border-slate-500/20">
+                        <div className="w-6 h-6 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center shrink-0 border border-indigo-500/20">
                           <RotateCcw className="w-3.5 h-3.5" />
                         </div>
                         <div className="flex-1">
-                          <div className="font-medium">Carregar Exemplos Mocks</div>
-                          <span className={`text-[10px] block opacity-70`}>
-                            Recarregar dados de teste
+                          <div className="font-medium text-indigo-400">Modo Treinamento (Seed)</div>
+                          <span className={`text-[10px] block opacity-80`}>
+                            Carregar canteiros, colaboradores e simulação oficial
                           </span>
                         </div>
                       </button>

@@ -1,4 +1,4 @@
-import { Employee, TimeRecord, AdminUser, InsalubrityRecord, SystemConfig, PaystubRecord, DispensaSptfRecord } from '../types';
+import { Employee, TimeRecord, AdminUser, InsalubrityRecord, SystemConfig, PaystubRecord, DispensaSptfRecord, ConstructionSite } from '../types';
 import { INITIAL_EMPLOYEES, INITIAL_TIME_RECORDS, INITIAL_ADMINS } from '../constants/defaultData';
 
 const EMPLOYEES_KEY = 'banco_horas_employees_v1';
@@ -10,6 +10,7 @@ const CURRENT_USER_EMAIL_KEY = 'banco_horas_current_email_v1';
 const THEME_KEY = 'banco_horas_theme_v1';
 const PAYSTUBS_KEY = 'comara_paystubs_v1';
 const DISPENSAS_KEY = 'comara_dispensas_sptf_v1';
+const CANTEIROS_KEY = 'comara_canteiros_v1';
 
 export const storageService = {
   getEmployees(): Employee[] {
@@ -301,15 +302,40 @@ export const storageService = {
     return list;
   },
 
+  // Canteiros de Obras
+  getConstructionSites(): ConstructionSite[] {
+    try {
+      const stored = localStorage.getItem(CANTEIROS_KEY);
+      if (stored !== null) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {
+      console.error('Erro ao ler canteiros do localStorage', e);
+    }
+    return [];
+  },
+
+  saveConstructionSites(sites: ConstructionSite[]) {
+    try {
+      localStorage.setItem(CANTEIROS_KEY, JSON.stringify(sites));
+    } catch (e) {
+      console.error('Erro ao salvar canteiros no localStorage', e);
+    }
+  },
+
   // Zerar completamente a base para importação limpa
   clearAllData() {
     this.saveEmployees([]);
     this.saveTimeRecords([]);
+    this.saveInsalubrityRecords([]);
     this.savePaystubs([]);
     this.saveDispensasSptf([]);
+    this.saveConstructionSites([]);
     return {
       employees: [] as Employee[],
       records: [] as TimeRecord[],
+      insalubrityRecords: [] as InsalubrityRecord[],
+      constructionSites: [] as ConstructionSite[],
     };
   },
 
@@ -317,6 +343,7 @@ export const storageService = {
   resetToDefaults() {
     this.saveEmployees(INITIAL_EMPLOYEES);
     this.saveTimeRecords(INITIAL_TIME_RECORDS);
+    this.saveInsalubrityRecords([]);
     this.saveAdmins(INITIAL_ADMINS);
     this.setCurrentUserEmail('coari.comara@gmail.com');
     return {

@@ -2,8 +2,9 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Employee, TimeRecord, Attachment, AdminUser, AdminRole, AuthSession, InsalubrityRecord, SystemConfig, GrauInsalubridade, ConstructionSite, PaystubRecord, DispensaSptfRecord } from './types';
 import { storageService } from './services/storageService';
 import { firestoreService, BatchProgressInfo } from './services/firestoreService';
+import { seedService } from './services/seedService';
 import { auth, googleProvider, testFirestoreConnection, isPermissionError, isQuotaError } from './services/firebase';
-import { authService } from './services/authService';
+import { authService, isMasterAdminEmail, autoSeedDefaultAdminMaster } from './services/authService';
 import { 
   onAuthStateChanged, 
   signInWithPopup, 
@@ -353,6 +354,15 @@ export default function App() {
   }, [initFirestoreSubscriptions, currentUser, userRole, isAuthLoading]);
 
   // -------------------------------------------------------------
+  // 1.5 Auto-Seed do Admin Master no boot da aplicação
+  // -------------------------------------------------------------
+  useEffect(() => {
+    autoSeedDefaultAdminMaster().catch((err) => {
+      console.warn('Auto-seed em segundo plano:', err);
+    });
+  }, []);
+
+  // -------------------------------------------------------------
   // 2. Monitor and Enforce Strict RBAC on Authentication State
   // -------------------------------------------------------------
   useEffect(() => {
@@ -363,7 +373,7 @@ export default function App() {
         const email = user.email?.toLowerCase().trim() || '';
 
         // Master super admin bypass
-        const isMaster = email === 'coari.comara@gmail.com' || email === 'comarafab@gmail.com' || email.endsWith('@comara.aer.mil.br');
+        const isMaster = isMasterAdminEmail(email);
         
         // Find user in Firestore admin_users collection
         const matchAdmin = adminUsers.find(a => a.email.toLowerCase().trim() === email);
@@ -428,8 +438,30 @@ export default function App() {
           setIsVerifyingPermissions(true);
         }
       } else {
-        // S-008: a sessão local não pode substituir a autenticação oficial do Firebase Auth.
-        // Se o token do Firebase não estiver ativo, a sessão deve ser rejeitada e o usuário deve fazer login novamente.
+        // Se o Firebase Auth estiver nulo, verifica se existe sessão corporativa ativa verificada
+        const savedSession = authService.getCurrentSession();
+        if (savedSession && savedSession.email) {
+          const cleanEmail = savedSession.email.toLowerCase().trim();
+          const isMaster = isMasterAdminEmail(cleanEmail);
+          const matchAdmin = adminUsers.find(a => a.email.toLowerCase().trim() === cleanEmail);
+
+          if (isMaster || (matchAdmin && matchAdmin.ativo)) {
+            const role: AdminRole = isMaster ? 'SUPER_ADMIN' : (matchAdmin?.nivelAcesso || (savedSession.role as AdminRole) || 'RH_ADMIN');
+            const appUser: AppUser = {
+              email: savedSession.email,
+              nome: savedSession.nome,
+              role,
+              cargo: savedSession.cargo || 'Gestor de RH',
+              loginTime: savedSession.loginTime,
+            };
+            setCurrentUser(appUser);
+            setUserRole(role);
+            setUserMode(role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
+            setIsVerifyingPermissions(false);
+            return;
+          }
+        }
+
         setIsVerifyingPermissions(false);
         authService.clearSession();
         setCurrentUser(null);
@@ -448,7 +480,7 @@ export default function App() {
       const res = await signInWithPopup(auth, googleProvider);
       const email = res.user?.email?.toLowerCase().trim() || '';
       
-      const isMaster = email === 'coari.comara@gmail.com' || email === 'comarafab@gmail.com' || email.endsWith('@comara.aer.mil.br');
+      const isMaster = isMasterAdminEmail(email);
       const matchAdmin = adminUsers.find(a => a.email.toLowerCase().trim() === email && a.ativo);
 
       if (!isMaster && !matchAdmin && adminUsers.length > 0) {
@@ -762,13 +794,16 @@ export default function App() {
 
   const handleExecuteClearDatabase = async () => {
     try {
-      await firestoreService.clearAllData(userRole || undefined);
+      const result = await seedService.clearAllOperationalData();
       storageService.clearAllData();
       setEmployees([]);
       setRecords([]);
       setInsalubrityRecords([]);
+      setConstructionSites([]);
+      setPaystubs([]);
+      setDispensasSptf([]);
       setSelectedMatricula('');
-      showToast('Base Central limpa com sucesso! Pronto para importar nova base.', 'success');
+      showToast(result.message || 'Base Operacional zerada com sucesso para produção!', 'success');
     } catch (error: any) {
       console.error('Erro ao limpar Firestore:', error);
       if (isPermissionError(error)) {
@@ -778,43 +813,42 @@ export default function App() {
       setEmployees([]);
       setRecords([]);
       setInsalubrityRecords([]);
+      setConstructionSites([]);
+      setPaystubs([]);
+      setDispensasSptf([]);
       setSelectedMatricula('');
-      showToast('Base limpa localmente.', 'info');
+      showToast('Base operacional zerada localmente.', 'info');
     }
   };
 
   const handleExecuteLoadMocks = async () => {
     try {
-      storageService.resetToDefaults();
-      const mockEmps = storageService.getEmployees();
-      const mockRecs = storageService.getTimeRecords();
-      const mockInsalubrity = storageService.getInsalubrityRecords();
-      
-      // Sincronizar com Firestore se ativo
-      try {
-        await firestoreService.importEmployeesBatch(mockEmps);
-        await firestoreService.importTimeRecordsBatch(mockRecs);
-        if (mockInsalubrity.length > 0) {
-          await firestoreService.saveInsalubrityBatch(mockInsalubrity);
-        }
-      } catch (fErr) {
-        console.warn('Fallback para Firestore ao gravar mocks:', fErr);
-      }
+      const result = await seedService.seedTrainingData();
+      const emps = storageService.getEmployees();
+      const recs = storageService.getTimeRecords();
+      const insalubrity = storageService.getInsalubrityRecords();
+      const sites = storageService.getConstructionSites ? storageService.getConstructionSites() : [];
+      const stubs = storageService.getPaystubs();
+      const disp = storageService.getDispensasSptf();
 
-      setEmployees(mockEmps);
-      setRecords(mockRecs);
-      setInsalubrityRecords(mockInsalubrity);
-      if (mockEmps.length > 0) {
-        setSelectedMatricula(mockEmps[0].matricula);
+      setEmployees(emps);
+      setRecords(recs);
+      setInsalubrityRecords(insalubrity);
+      if (sites.length > 0) setConstructionSites(sites);
+      setPaystubs(stubs);
+      setDispensasSptf(disp);
+
+      if (emps.length > 0) {
+        setSelectedMatricula(emps[0].matricula);
       }
-      showToast('Exemplos de demonstração e canteiros carregados com sucesso!', 'success');
+      showToast(result.message || 'Modo Treinamento: dados de exemplo carregados com sucesso no Firestore!', 'success');
     } catch (err: any) {
-      console.error('Erro ao carregar mocks:', err);
+      console.error('Erro ao carregar dados de treinamento:', err);
       const mockEmps = storageService.getEmployees();
       const mockRecs = storageService.getTimeRecords();
       setEmployees(mockEmps);
       setRecords(mockRecs);
-      showToast('Exemplos carregados no cache local.', 'info');
+      showToast('Dados de treinamento carregados no cache local.', 'info');
     }
   };
 
@@ -1717,7 +1751,12 @@ export default function App() {
               fallbackTitle="Backup e Restauração Restritos"
               fallbackMessage="A exportação e restauração completa do Firestore são operações exclusivas do Super Administrador (TI)."
             >
-              <BackupRestorePanel theme={theme} userRole={userRole} />
+              <BackupRestorePanel 
+                theme={theme} 
+                userRole={userRole} 
+                onTriggerSeed={handleTriggerLoadMocksSafety}
+                onTriggerClear={handleTriggerClearDataSafety}
+              />
             </ProtectedRoute>
           )}
 

@@ -266,16 +266,19 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
   // Map de registros de insalubridade indexados por "matricula_YYYY-MM-DD"
   const recordsMap = useMemo(() => {
     const map = new Map<string, InsalubrityRecord>();
+    if (!employees || employees.length === 0) return map;
+    const registeredMatriculas = new Set(employees.map(e => e.matricula.trim().toUpperCase()));
     const monthPrefix = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
     
     insalubrityRecords.forEach(rec => {
-      if (rec.dataEvento.startsWith(monthPrefix)) {
-        const key = `${rec.matricula.trim().toUpperCase()}_${rec.dataEvento}`;
+      const cleanMat = (rec.matricula || '').trim().toUpperCase();
+      if (registeredMatriculas.has(cleanMat) && rec.dataEvento && rec.dataEvento.startsWith(monthPrefix)) {
+        const key = `${cleanMat}_${rec.dataEvento}`;
         map.set(key, rec);
       }
     });
     return map;
-  }, [insalubrityRecords, selectedYear, selectedMonth]);
+  }, [employees, insalubrityRecords, selectedYear, selectedMonth]);
 
   // Lista filtrada de colaboradores
   const filteredEmployees = useMemo(() => {

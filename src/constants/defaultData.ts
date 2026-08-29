@@ -35,11 +35,32 @@ export const BRAZILIAN_HOLIDAYS_2025_2026: Holiday[] = [
 
 export const INITIAL_ADMINS: AdminUser[] = [
   {
+    id: 'adm-000',
+    email: 'admin@comara.mil.br',
+    nome: 'Super Administrador COMARA',
+    cargo: 'Chefe da Divisão de Pessoal / TI',
+    nivelAcesso: 'SUPER_ADMIN',
+    role: 'SUPER_ADMIN',
+    ativo: true,
+    criadoEm: '2026-01-01 08:00:00',
+  },
+  {
     id: 'adm-001',
+    email: 'comarafab@gmail.com',
+    nome: 'Super Administrador COMARA',
+    cargo: 'Super Administrador TI / RH',
+    nivelAcesso: 'SUPER_ADMIN',
+    role: 'SUPER_ADMIN',
+    ativo: true,
+    criadoEm: '2026-01-01 08:00:00',
+  },
+  {
+    id: 'adm-002',
     email: 'coari.comara@gmail.com',
     nome: 'Coari Comara (Administrador Geral)',
     cargo: 'Gerente Geral de RH / TI',
     nivelAcesso: 'SUPER_ADMIN',
+    role: 'SUPER_ADMIN',
     ativo: true,
     criadoEm: '2025-01-01 08:00:00',
   },

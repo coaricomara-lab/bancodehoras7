@@ -172,6 +172,26 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
   // Statistics
   const stats = useMemo(() => {
+    if (!employees || employees.length === 0) {
+      return {
+        fixedCount: {
+          isento: 0,
+          g10: 0,
+          g20: 0,
+          g40: 0,
+          totalComAdicional: 0,
+        },
+        totalAtividadesLancadas: 0,
+        totalHorasAtividade: 0,
+        totalDiasAtividade: 0,
+      };
+    }
+
+    const registeredMatriculas = new Set(employees.map(e => e.matricula.trim().toUpperCase()));
+    const validInsalubrityRecords = insalubrityRecords.filter(r => 
+      registeredMatriculas.has((r.matricula || '').trim().toUpperCase())
+    );
+
     const fixedCount = {
       isento: employees.filter(e => !e.grauInsalubridadeFixa || e.grauInsalubridadeFixa === 'ISENTO').length,
       g10: employees.filter(e => e.grauInsalubridadeFixa === '10%').length,
@@ -180,11 +200,11 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
       totalComAdicional: employees.filter(e => e.grauInsalubridadeFixa && e.grauInsalubridadeFixa !== 'ISENTO').length,
     };
 
-    const totalAtividadesLancadas = insalubrityRecords.length;
-    const totalHorasAtividade = insalubrityRecords
+    const totalAtividadesLancadas = validInsalubrityRecords.length;
+    const totalHorasAtividade = validInsalubrityRecords
       .filter(r => r.unidade === 'HORAS')
       .reduce((acc, curr) => acc + (Number(curr.quantidadeHorasDias) || 0), 0);
-    const totalDiasAtividade = insalubrityRecords
+    const totalDiasAtividade = validInsalubrityRecords
       .filter(r => r.unidade === 'DIAS')
       .reduce((acc, curr) => acc + (Number(curr.quantidadeHorasDias) || 0), 0);
 
@@ -198,7 +218,12 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
   // Filtered Records for Atividades
   const filteredRecords = useMemo(() => {
+    if (!employees || employees.length === 0) return [];
+    const registeredMatriculas = new Set(employees.map(e => e.matricula.trim().toUpperCase()));
+
     return insalubrityRecords.filter((rec) => {
+      if (!registeredMatriculas.has((rec.matricula || '').trim().toUpperCase())) return false;
+
       // Search
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
@@ -225,7 +250,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
 
       return true;
     });
-  }, [insalubrityRecords, searchQuery, selectedBranch, selectedGrau, startDate, endDate]);
+  }, [employees, insalubrityRecords, searchQuery, selectedBranch, selectedGrau, startDate, endDate]);
 
   // Handle Form Submit
   const handleSubmitRecord = async (e: React.FormEvent) => {
@@ -511,7 +536,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
           }`}
         >
           <Activity className="w-4 h-4" />
-          <span>Apontamentos por Atividade ({insalubrityRecords.length})</span>
+          <span>Apontamentos por Atividade ({stats.totalAtividadesLancadas})</span>
         </button>
 
         <button

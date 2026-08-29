@@ -25,26 +25,27 @@ import {
   query,
   orderBy
 } from 'firebase/firestore';
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-};
+import firebaseAppletConfig from '../../firebase-applet-config.json';
 
-const missingFirebaseConfig = Object.entries(firebaseConfig)
-  .filter(([, value]) => !value)
-  .map(([key]) => `VITE_FIREBASE_${key.replace(/[A-Z]/g, (letter) => `_${letter}`).toUpperCase()}`);
-
-if (missingFirebaseConfig.length > 0) {
-  const message = `Configuração do Firebase incompleta. Preencha no arquivo .env: ${missingFirebaseConfig.join(', ')}`;
-  console.error(`[Firebase] ${message}`);
-  throw new Error(message);
+// Helper to determine if a string is a valid Google API key format (starts with AIza)
+function isValidGoogleApiKey(key?: string): boolean {
+  return typeof key === 'string' && key.trim().startsWith('AIza') && key.trim().length >= 30;
 }
 
-const firebaseDatabaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID;
+const envApiKey = import.meta.env.VITE_FIREBASE_API_KEY;
+const appletApiKey = firebaseAppletConfig?.apiKey;
+const resolvedApiKey = isValidGoogleApiKey(envApiKey) ? envApiKey.trim() : (appletApiKey || envApiKey || '');
+
+const firebaseConfig = {
+  apiKey: resolvedApiKey,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || firebaseAppletConfig?.authDomain || '',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || firebaseAppletConfig?.projectId || '',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || firebaseAppletConfig?.storageBucket || '',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || firebaseAppletConfig?.messagingSenderId || '',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || firebaseAppletConfig?.appId || '',
+};
+
+const firebaseDatabaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID || firebaseAppletConfig?.firestoreDatabaseId;
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -70,25 +71,59 @@ export async function ensureFirebaseAdminSession(email?: string, password?: stri
     console.warn('Persistência do Firebase Auth já estava ativa ou indisponível:', error);
   }
 
-  if (auth.currentUser && (!email || auth.currentUser.email?.toLowerCase() === email.trim().toLowerCase())) {
-    await auth.currentUser.getIdToken();
-    return auth.currentUser;
+  const cleanEmail = email?.trim().toLowerCase();
+
+  if (auth.currentUser && (!cleanEmail || auth.currentUser.email?.toLowerCase() === cleanEmail)) {
+    try {
+      await auth.currentUser.getIdToken();
+      return auth.currentUser;
+    } catch {
+      // Token expired, re-auth below
+    }
   }
 
-  if (auth.currentUser) {
+  if (auth.currentUser && cleanEmail && auth.currentUser.email?.toLowerCase() !== cleanEmail) {
     await firebaseSignOut(auth);
   }
 
-  if (email && password) {
+  if (cleanEmail && password) {
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
+      const result = await signInWithEmailAndPassword(auth, cleanEmail, password);
       return result.user;
     } catch (error: any) {
-      if (error?.code === 'auth/user-not-found') {
+      const errorCode = error?.code || '';
+      
+      if (errorCode === 'auth/operation-not-allowed') {
+        console.info(
+          '[Firebase Auth] Provedor de E-mail/Senha ainda não habilitado no console do Firebase. ' +
+          'Para habilitar: Firebase Console > Authentication > Sign-in method > Email/Password > Ativar.'
+        );
+        return null;
+      }
+
+      // Firebase Auth returns auth/user-not-found or auth/invalid-credential (when email enumeration protection is on)
+      const canAttemptAutoProvision = 
+        errorCode === 'auth/user-not-found' || 
+        errorCode === 'auth/invalid-credential' ||
+        errorCode === 'auth/invalid-login-credentials';
+
+      if (canAttemptAutoProvision) {
         try {
-          const result = await createUserWithEmailAndPassword(auth, email, password);
+          const result = await createUserWithEmailAndPassword(auth, cleanEmail, password);
+          console.log(`[Firebase Auth] Conta administrativa auto-provisionada com sucesso: ${cleanEmail}`);
           return result.user;
         } catch (createError: any) {
+          if (createError?.code === 'auth/operation-not-allowed') {
+            console.info(
+              '[Firebase Auth] Provedor de E-mail/Senha ainda não habilitado no console do Firebase. ' +
+              'Para habilitar: Firebase Console > Authentication > Sign-in method > Email/Password > Ativar.'
+            );
+            return null;
+          }
+          if (createError?.code === 'auth/email-already-in-use') {
+            // User exists in Firebase Auth but wrong password was typed
+            throw error;
+          }
           console.warn('Falha ao provisionar conta administrativa no Firebase Auth:', createError);
           throw createError;
         }

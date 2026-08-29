@@ -78,7 +78,7 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
 
   const requiredConfirmationText = actionType === 'CLEAR_DATABASE' 
     ? 'LIMPAR BASE CENTRAL' 
-    : 'CARREGAR MOCKS';
+    : 'MODO TREINAMENTO';
 
   // Load latest restore point on mount or open
   useEffect(() => {
@@ -101,7 +101,10 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
 
   if (!isOpen) return null;
 
-  const isConfirmed = typedConfirmation.trim().toUpperCase() === requiredConfirmationText;
+  const normalizedTyped = typedConfirmation.trim().toUpperCase();
+  const isConfirmed = actionType === 'CLEAR_DATABASE'
+    ? (normalizedTyped === 'LIMPAR BASE CENTRAL' || normalizedTyped === 'ZERAR BASE' || normalizedTyped === 'ZERAR BASE PRODUCAO')
+    : (normalizedTyped === 'MODO TREINAMENTO' || normalizedTyped === 'CARREGAR MOCKS');
 
   // Handle Backup Creation & Download
   const handleCreateRestorePointAndDownload = () => {
@@ -207,16 +210,16 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className={`text-sm font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  {actionType === 'CLEAR_DATABASE' ? 'Limpar Base Central de Dados' : 'Carregar Exemplos Mocks (Demonstração)'}
+                  {actionType === 'CLEAR_DATABASE' ? 'Zerar Base Central para Produção' : 'Modo Treinamento / Dados Fictícios (Seed)'}
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-600/10 text-rose-500 border border-rose-500/20 font-mono font-bold uppercase">
-                  Ação Crítica
+                  Ação Administrativa
                 </span>
               </div>
               <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
                 {actionType === 'CLEAR_DATABASE' 
-                  ? 'Exclusão de registros com proteção contra perda de dados' 
-                  : 'Substituição de registros por base de demonstração'}
+                  ? 'Exclusão de coleções operacionais preservando administradores e configurações' 
+                  : 'Povoamento oficial no Firestore com colaboradores, canteiros, lançamentos e insalubridade'}
               </p>
             </div>
           </div>
@@ -438,8 +441,8 @@ export const DatabaseSafetyActionModal: React.FC<DatabaseSafetyActionModalProps>
               {isProcessing
                 ? 'Processando...'
                 : actionType === 'CLEAR_DATABASE'
-                  ? 'Sim, Limpar Base Central'
-                  : 'Sim, Carregar Exemplos Mocks'}
+                  ? 'Sim, Zerar Base Operacional'
+                  : 'Sim, Ativar Modo Treinamento'}
             </span>
           </button>
         </div>

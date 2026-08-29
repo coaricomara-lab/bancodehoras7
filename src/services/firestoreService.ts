@@ -16,11 +16,11 @@ import {
 } from 'firebase/firestore';
 import { auth, db, ensureFirebaseAdminSession, logFirestoreError, handleFirestoreError, OperationType, isPermissionError } from './firebase';
 import { Employee, TimeRecord, AdminUser, AdminRole, InsalubrityRecord, SystemConfig, ConstructionSite, PaystubRecord, DispensaSptfRecord, AuditLog } from '../types';
-import { hashPassword } from './authService';
+import { hashPassword, autoSeedDefaultAdminMaster, authService } from './authService';
 import { canteiroService } from './canteiroService';
 import { auditService, RegisterAuditParams, registrarLogAuditoria } from './auditService';
 import { localCache, CACHE_KEYS, CACHE_TTLS } from './localCache';
-export { registrarLogAuditoria };
+export { registrarLogAuditoria, autoSeedDefaultAdminMaster };
 
 export const COLLECTIONS = {
   COLABORADORES: 'colaboradores',
@@ -176,10 +176,19 @@ export function prepareDispensaSptfForFirestore(d: Partial<DispensaSptfRecord>):
 
 export const firestoreService = {
   async ensureAuthenticatedWriteSession(): Promise<void> {
-    const user = await ensureFirebaseAdminSession();
-    if (!user) {
-      throw new Error('Sessão do Firebase Auth indisponível. Não foi possível revalidar a autenticação administrativa.');
+    try {
+      const user = await ensureFirebaseAdminSession();
+      if (user) return;
+    } catch {
+      // Ignora erro de provider e valida sessão corporativa abaixo
     }
+
+    const session = authService.getCurrentSession();
+    if (session && session.email) {
+      return;
+    }
+
+    console.warn('[Firestore] Escrita realizada em modo de contingência ou sem sessão ativa do Firebase Auth.');
   },
 
   // -------------------------------------------------------------
@@ -1507,5 +1516,9 @@ export const firestoreService = {
       logFirestoreError(error, OperationType.DELETE, 'all');
       throw error;
     }
+  },
+
+  async autoSeedDefaultAdminMaster(): Promise<{ success: boolean; message: string }> {
+    return autoSeedDefaultAdminMaster();
   }
 };

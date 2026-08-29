@@ -302,3 +302,122 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
 **Status**: ✅ Production Ready  
 **Responsável**: Lead React Developer  
 **Stack**: React + TypeScript + Firestore
+
+Aqui está a documentação reescrita e aprimorada. Adicionei orientações claras sobre o **gerenciamento automático de variáveis de ambiente pelo Google AI Studio/Applets**, eliminando a dúvida sobre preenchimento manual de senhas e garantindo um provisionamento 100% autônomo.
+
+---
+
+Você identificou exatamente o **último elo da corrente** para tornar o provisionamento 100% autônomo!
+
+Quando um banco do Firestore nasce limpo em uma nova instância, as coleções e as credenciais de autenticação estão vazias. Se o sistema não tiver um **mecanismo automático de "Auto-Seed" (Provisionamento Inicial)**, o primeiro acesso via painel administrativo falhará porque o usuário master/admin não existe no Firebase Auth nem na coleção de usuários.
+
+---
+
+### 💡 Como o Auto-Provisionamento do Admin Funciona
+
+1. **Tentativa de Login Inicial / Boot:** Ao tentar o primeiro login com as credenciais padrão do canteiro (ou durante o carregamento da aplicação), o `firestoreService.ts` verifica se a base possui usuários.
+2. **Criação Transparente:** Se a base estiver limpa ou o usuário não for encontrado no `Firebase Auth`, a aplicação usa o `createUserWithEmailAndPassword` para provisionar o Admin Master com perfil `superadmin` na coleção `admin_users`.
+3. **Sessão Ativa:** O Firebase Auth faz o login e entrega o token imediatamente, permitindo que o gestor já navegue e grave dados de primeira.
+
+---
+
+### 📋 Guia + Prompt Atualizado para a Documentação
+
+Substitua o arquivo na sua documentação (`PROMPT_INICIALIZACAO_FIREBASE.md` ou `DEPLOY.md`) por este modelo final. Ele já inclui a **Etapa 3: Auto-Provisionamento do Usuário Admin Default**:
+
+# 🤖 Guia de Provisionamento e Integração Automatizada (Firebase + IA)
+
+> **Como usar:** Ao iniciar uma nova instância do projeto em uma IA (Google AI Studio, Cursor, Copilot, Applets, etc.), copie todo o bloco de instruções abaixo e envie no chat do assistente.
+> 💡 **Nota para Google AI Studio / Ambientes de Applet:** A IA destes ambientes possui capacidade de provisionar o banco e injetar as credenciais dinamicamente. **Não é necessário preencher as variáveis `.env` manualmente no terminal** caso o ambiente solicite; peça para a própria IA injetar os valores gerados no container.
+
+---
+
+```text
+Atue como Senior DevOps e Fullstack Engineer especialista em React (Vite), TypeScript e Firebase (Auth & Firestore).
+
+Você deve realizar a configuração, conexão, provisionamento de variáveis, implementação de segurança, criação de usuário admin padrão e integração do Firebase Auth/Firestore para este projeto a partir do zero.
+
+Siga rigorosamente as instruções abaixo para garantir que a aplicação funcione de forma isolada, 100% autônoma, segura e sem erros de permissão:
+
+---
+
+### 1. PROVISIONAMENTO E VARIÁVEIS DE AMBIENTE (`.env`)
+- Identifique o ambiente de execução:
+  - **Em plataformas com infraestrutura integrada (ex: Google AI Studio / Applets):** Gere, configure e injete automaticamente no container as variáveis de ambiente de conexão do Firebase sem solicitar preenchimento manual do usuário.
+  - **Em IDEs locais (ex: VS Code / Copilot / Cursor):** Crie ou verifique o arquivo `.env` com base no `.env.example`.
+- Certifique-se de que a inicialização do Firebase (`src/services/firebase.ts`) leia estritamente as variáveis dinâmicas do Vite:
+  - VITE_FIREBASE_API_KEY
+  - VITE_FIREBASE_AUTH_DOMAIN
+  - VITE_FIREBASE_PROJECT_ID
+  - VITE_FIREBASE_STORAGE_BUCKET
+  - VITE_FIREBASE_MESSAGING_SENDER_ID
+  - VITE_FIREBASE_APP_ID
+  - VITE_FIREBASE_DATABASE_ID (opcional, para bancos de dados nomeados)
+- Mantenha a validação no boot (`firebase.ts`) que emita um alerta amigável no console apenas se alguma variável obrigatória estiver ausente.
+
+---
+
+### 2. INFRAESTRUTURA DE AUTENTICAÇÃO (`Firebase Auth`)
+- Configure o provedor de autenticação por E-mail/Senha (`signInWithEmailAndPassword`) com a persistência configurada para `browserLocalPersistence`.
+- Exija e aplique o helper centralizador de sessão (`ensureAuthenticatedWriteSession()`) em TODOS os serviços de mutação (`setDoc`, `updateDoc`, `deleteDoc`, `writeBatch`) para revalidar a sessão ativa antes de enviar os comandos ao banco, eliminando o erro `Missing or insufficient permissions`.
+
+---
+
+### 3. PROVISIONAMENTO AUTOMÁTICO DO USUÁRIO ADMIN DEFAULT (AUTO-SEED)
+- No serviço de autenticação (`verifyAdminLogin` / `firestoreService.ts`), certifique-se de implementar o auto-provisionamento do primeiro acesso para bancos recém-criados:
+  - Se o login administrativo for acionado e o usuário não for encontrado no Firebase Auth (`auth/user-not-found`), invoque o `createUserWithEmailAndPassword` usando as credenciais padrão da instância (ex: `admin@comara.gov.br` ou configuradas no sistema).
+  - Crie/sincronize transparentemente o registro do usuário master na coleção `admin_users` (com perfil `superadmin` / `ativo`) no Firestore.
+  - Mantenha o usuário imediatamente autenticado (`auth.currentUser != null`) para que ele consiga operar a aplicação de primeira sem ter que configurar nada manualmente no console do Firebase.
+
+---
+
+### 4. REGRAS DE SEGURANÇA DO FIRESTORE (`firestore.rules`)
+- Crie/Ajuste o arquivo `firestore.rules` na raiz do projeto com o padrão de segurança definitivo e aplique-o ao banco:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Mutações e visualizações administrativas exigem autenticação ativa no Firebase Auth
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Autoatendimento do Colaborador: consulta individual liberada, listagem global restrita ao gestor
+    match /colaboradores/{id} {
+      allow get: if true;
+      allow list, write: if request.auth != null;
+    }
+  }
+}
+
+```
+
+---
+
+### 5. DEPLOY AUTOMATIZADO E CONFIGURAÇÃO DA CLI
+
+* Mantenha o arquivo `firebase.json` na raiz apontando para o `firestore.rules`.
+* Assegure a existência do script no `package.json`:
+`"deploy:rules": "firebase deploy --only firestore:rules"`
+
+---
+
+### 6. VALIDAÇÃO E SANITY CHECK AUTOMÁTICO
+
+Após aplicar a integração:
+
+1. Execute a validação estática e de tipos (`npm run lint` / `tsc --noEmit`).
+2. Garanta que o servidor suba sem avisos de variáveis pendentes.
+3. Certifique-se de que o build de produção (`npm run build`) execute com sucesso.
+
+Gere as credenciais, crie a conta Admin Master default, aplique as regras e deixe a nova instância 100% operacional.
+
+```
+
+---
+
+Com esta atualização no prompt, a IA criará transparentemente o **Admin Default** no Firebase Auth no momento em que a nova instância for ligada pela primeira vez.
+
+```

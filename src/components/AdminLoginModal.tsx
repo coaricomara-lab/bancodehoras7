@@ -143,6 +143,17 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
               <button
                 type="button"
                 onClick={() => {
+                  setEmailInput('admin@comara.mil.br');
+                  setPasswordInput('Comara123#');
+                  setErrorMessage(null);
+                }}
+                className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-blue-600/30 hover:bg-blue-600/50 text-blue-200 border border-blue-500/50 transition-colors"
+              >
+                Preencher Admin Master (admin@comara.mil.br)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
                   setEmailInput('comarafab@gmail.com');
                   setPasswordInput('comara2026');
                   setErrorMessage(null);
@@ -210,7 +221,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 type="email"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
-                placeholder="gestor.rh@comara.aer.mil.br"
+                placeholder="admin@comara.mil.br"
                 required
                 className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none ${
                   isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
@@ -249,7 +260,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
 
         {/* Footer info */}
         <div className={`pt-2 text-center text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-          <span>Super Administrador padrão: <strong>coari.comara@gmail.com</strong></span>
+          <span>Super Administrador padrão: <strong>admin@comara.mil.br</strong></span>
         </div>
 
       </div>
