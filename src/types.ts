@@ -138,6 +138,9 @@ export interface AdminUser {
   tituloImpressao?: string; // Título do cargo impresso para assinaturas e relatórios (ex: Capitão Encarregado de Obras)
   nivelAcesso: AdminRole;
   role?: AdminRole;
+  status?: 'pendente' | 'ativo' | 'inativo';
+  perfil?: string;
+  foto?: string | null;
   sede?: string;
   ativo: boolean;
   passwordHash?: string;

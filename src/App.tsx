@@ -88,6 +88,7 @@ export default function App() {
   });
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
   const [isVerifyingPermissions, setIsVerifyingPermissions] = useState(false);
+  const [pendingAccessUser, setPendingAccessUser] = useState<{ email: string; nome: string; foto?: string | null } | null>(null);
 
   // Firestore Data State
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -371,11 +372,7 @@ export default function App() {
 
       if (user) {
         const email = user.email?.toLowerCase().trim() || '';
-
-        // Master super admin bypass
         const isMaster = isMasterAdminEmail(email);
-        
-        // Find user in Firestore admin_users collection
         const matchAdmin = adminUsers.find(a => a.email.toLowerCase().trim() === email);
 
         if (isMaster) {
@@ -389,6 +386,7 @@ export default function App() {
             loginTime: new Date().toISOString(),
             photoURL: user.photoURL,
           };
+          setPendingAccessUser(null);
           setCurrentUser(appUser);
           setUserRole('SUPER_ADMIN');
           setUserMode('ADMIN');
@@ -399,7 +397,7 @@ export default function App() {
             loginTime: new Date().toISOString(),
           });
           setIsVerifyingPermissions(false);
-        } else if (matchAdmin && matchAdmin.ativo) {
+        } else if (matchAdmin && matchAdmin.status !== 'pendente' && matchAdmin.perfil !== 'nenhum' && matchAdmin.ativo) {
           const appUser: AppUser = {
             uid: user.uid,
             email,
@@ -408,8 +406,9 @@ export default function App() {
             role: matchAdmin.nivelAcesso,
             cargo: matchAdmin.cargo,
             loginTime: new Date().toISOString(),
-            photoURL: user.photoURL,
+            photoURL: user.photoURL || matchAdmin.foto,
           };
+          setPendingAccessUser(null);
           setCurrentUser(appUser);
           setUserRole(matchAdmin.nivelAcesso);
           setUserMode(matchAdmin.nivelAcesso === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
@@ -421,18 +420,17 @@ export default function App() {
             loginTime: new Date().toISOString(),
           });
           setIsVerifyingPermissions(false);
-        } else if (adminUsers.length > 0) {
-          // Strict block: Not in authorized list or inactive
-          console.warn('Bloqueio de acesso RBAC:', email);
-          await firebaseSignOut(auth);
-          authService.clearSession();
+        } else if (matchAdmin || adminUsers.length > 0 || email) {
+          setPendingAccessUser({
+            email,
+            nome: matchAdmin?.nome || user.displayName || email.split('@')[0],
+            foto: matchAdmin?.foto || user.photoURL || null,
+          });
           setCurrentUser(null);
           setUserRole(null);
+          setUserMode('ADMIN');
           setIsVerifyingPermissions(false);
-          showToast('Acesso Negado: Usuário não cadastrado pela equipe de RH.', 'error');
         } else {
-          // S-001: adminUsers still syncing — do NOT assign any role provisionally.
-          // Keep currentUser null and show "Verificando permissões..." until adminUsers loads.
           setCurrentUser(null);
           setUserRole(null);
           setIsVerifyingPermissions(true);
@@ -474,27 +472,143 @@ export default function App() {
     };
   }, [adminUsers, showToast]);
 
+  const refreshAdminAccessStatus = useCallback(async (email?: string, userOverride?: FirebaseUser | null) => {
+    const targetEmail = (email || userOverride?.email || '').trim().toLowerCase();
+    if (!targetEmail) return null;
+
+    const refreshedAdmins = await firestoreService.getAdmins();
+    setAdminUsers(refreshedAdmins);
+
+    const matchAdmin = refreshedAdmins.find((a) => a.email.toLowerCase().trim() === targetEmail);
+    const isMaster = isMasterAdminEmail(targetEmail);
+
+    if (isMaster) {
+      const appUser: AppUser = {
+        uid: userOverride?.uid || auth.currentUser?.uid,
+        email: targetEmail,
+        nome: userOverride?.displayName || 'Super Administrador COMARA',
+        displayName: userOverride?.displayName,
+        role: 'SUPER_ADMIN',
+        cargo: 'Super Administrador',
+        loginTime: new Date().toISOString(),
+        photoURL: userOverride?.photoURL,
+      };
+      setPendingAccessUser(null);
+      setCurrentUser(appUser);
+      setUserRole('SUPER_ADMIN');
+      setUserMode('ADMIN');
+      authService.saveCurrentSession({
+        email: targetEmail,
+        nome: appUser.nome,
+        role: 'SUPER_ADMIN',
+        loginTime: appUser.loginTime || new Date().toISOString(),
+      });
+      return appUser;
+    }
+
+    if (!matchAdmin) {
+      const pendingDoc: AdminUser = {
+        id: targetEmail,
+        email: targetEmail,
+        nome: userOverride?.displayName || targetEmail.split('@')[0],
+        cargo: 'Aguardando aprovação',
+        nivelAcesso: 'RH_ADMIN',
+        role: 'RH_ADMIN',
+        status: 'pendente' as const,
+        perfil: 'nenhum',
+        foto: userOverride?.photoURL || null,
+        sede: 'TODAS',
+        ativo: false,
+        criadoEm: new Date().toISOString(),
+      };
+      await firestoreService.saveAdminUser(pendingDoc);
+      setPendingAccessUser({ email: targetEmail, nome: pendingDoc.nome, foto: pendingDoc.foto });
+      setCurrentUser(null);
+      setUserRole(null);
+      return null;
+    }
+
+    const pending = matchAdmin.status === 'pendente' || matchAdmin.perfil === 'nenhum' || matchAdmin.ativo === false;
+    if (pending) {
+      setPendingAccessUser({
+        email: targetEmail,
+        nome: matchAdmin.nome || userOverride?.displayName || targetEmail.split('@')[0],
+        foto: matchAdmin.foto || userOverride?.photoURL || null,
+      });
+      setCurrentUser(null);
+      setUserRole(null);
+      return null;
+    }
+
+    const appUser: AppUser = {
+      uid: userOverride?.uid || auth.currentUser?.uid,
+      email: targetEmail,
+      nome: matchAdmin.nome,
+      displayName: userOverride?.displayName,
+      role: matchAdmin.nivelAcesso,
+      cargo: matchAdmin.cargo,
+      loginTime: new Date().toISOString(),
+      photoURL: userOverride?.photoURL || matchAdmin.foto,
+    };
+    setPendingAccessUser(null);
+    setCurrentUser(appUser);
+    setUserRole(matchAdmin.nivelAcesso);
+    setUserMode(matchAdmin.nivelAcesso === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
+    authService.saveCurrentSession({
+      email: targetEmail,
+      nome: matchAdmin.nome,
+      role: matchAdmin.nivelAcesso,
+      cargo: matchAdmin.cargo,
+      loginTime: appUser.loginTime || new Date().toISOString(),
+    });
+    return appUser;
+  }, []);
+
   // Auth Handler: Google Workspace Sign-In
   const handleGoogleSignIn = async () => {
     try {
       const res = await signInWithPopup(auth, googleProvider);
       const email = res.user?.email?.toLowerCase().trim() || '';
-      
-      const isMaster = isMasterAdminEmail(email);
-      const matchAdmin = adminUsers.find(a => a.email.toLowerCase().trim() === email && a.ativo);
 
-      if (!isMaster && !matchAdmin && adminUsers.length > 0) {
-        await firebaseSignOut(auth);
-        authService.clearSession();
-        throw new Error('Acesso Negado: Usuário não cadastrado pela equipe de RH.');
+      if (!email) {
+        throw new Error('Não foi possível recuperar o e-mail da conta Google.');
       }
+
+      const existingUser = await firestoreService.getAdmins();
+      const matchAdmin = existingUser.find((a) => a.email.toLowerCase().trim() === email);
+      const isMaster = isMasterAdminEmail(email);
+
+      if (!isMaster && !matchAdmin) {
+        const pendingAdmin: AdminUser = {
+          id: email,
+          email,
+          nome: res.user.displayName || email.split('@')[0],
+          cargo: 'Aguardando aprovação',
+          nivelAcesso: 'RH_ADMIN',
+          role: 'RH_ADMIN',
+          status: 'pendente',
+          perfil: 'nenhum',
+          foto: res.user.photoURL || null,
+          sede: 'TODAS',
+          ativo: false,
+          criadoEm: new Date().toISOString(),
+        };
+
+        await firestoreService.saveAdminUser(pendingAdmin);
+      }
+
+      const result = await refreshAdminAccessStatus(email, res.user);
+      if (!result) {
+        showToast('Sua conta foi registrada e aguarda aprovação do administrador.', 'info');
+        return { success: true, pending: true, user: res.user };
+      }
+
       setFirestoreErrorNotice(null);
       showToast(`Bem-vindo, ${res.user?.displayName || 'Gestor'}!`, 'success');
       return { success: true, user: res.user };
     } catch (err: any) {
       if (err?.code === 'auth/unauthorized-domain' || err?.message?.includes('unauthorized-domain')) {
         const errorMsg = 'Domínio de prévia não autorizado no Firebase Auth para Popup Google. Utilize o login direto corporativo abaixo.';
-        // Don't log as an uncaught runtime error, return informative failure
         return { 
           success: false, 
           isDomainError: true, 
@@ -555,6 +669,7 @@ export default function App() {
     } finally {
       // 1. Limpeza completa dos estados globais e da sessão local
       authService.clearSession();
+      setPendingAccessUser(null);
       setCurrentUser(null);
       setUserRole(null);
       setUserMode('ADMIN');
@@ -579,6 +694,7 @@ export default function App() {
       console.error('Erro ao desconectar do Firebase na inatividade:', err);
     } finally {
       authService.clearSession();
+      setPendingAccessUser(null);
       setCurrentUser(null);
       setUserRole(null);
       setUserMode('ADMIN');
@@ -1286,6 +1402,80 @@ export default function App() {
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 rounded-full border-2 border-blue-500 border-t-transparent animate-spin"></div>
           <span className="text-gray-400">Verificando permissões...</span>
+        </div>
+      </div>
+    );
+  }
+
+  const handleCheckPendingStatus = async () => {
+    const email = pendingAccessUser?.email || auth.currentUser?.email || '';
+    if (!email) {
+      setPendingAccessUser(null);
+      return;
+    }
+    const refreshed = await firestoreService.getAdmins();
+    setAdminUsers(refreshed);
+    const matchAdmin = refreshed.find((a) => a.email.toLowerCase().trim() === email.toLowerCase().trim());
+    if (!matchAdmin || matchAdmin.status === 'pendente' || matchAdmin.perfil === 'nenhum' || matchAdmin.ativo === false) {
+      setPendingAccessUser({
+        email,
+        nome: matchAdmin?.nome || pendingAccessUser?.nome || email.split('@')[0],
+        foto: matchAdmin?.foto || pendingAccessUser?.foto || null,
+      });
+      return;
+    }
+
+    const appUser: AppUser = {
+      email: matchAdmin.email,
+      nome: matchAdmin.nome,
+      role: matchAdmin.nivelAcesso,
+      cargo: matchAdmin.cargo,
+      loginTime: new Date().toISOString(),
+      photoURL: matchAdmin.foto,
+    };
+    setPendingAccessUser(null);
+    setCurrentUser(appUser);
+    setUserRole(matchAdmin.nivelAcesso);
+    setUserMode(matchAdmin.nivelAcesso === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
+    authService.saveCurrentSession({
+      email: matchAdmin.email,
+      nome: matchAdmin.nome,
+      role: matchAdmin.nivelAcesso,
+      cargo: matchAdmin.cargo,
+      loginTime: appUser.loginTime || new Date().toISOString(),
+    });
+  };
+
+  // -------------------------------------------------------------
+  // RENDER: BLOQUEIO DE ACESSO PENDENTE (GOOGLE WORKSPACE)
+  // -------------------------------------------------------------
+  if (pendingAccessUser) {
+    return (
+      <div className={`notranslate min-h-screen flex items-center justify-center px-4 py-12 ${isDark ? 'bg-[#0F1B33] text-white' : 'bg-slate-50 text-slate-900'}`}>
+        <div className={`w-full max-w-lg rounded-3xl border p-8 text-center shadow-2xl ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
+          <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border ${isDark ? 'border-blue-500/30 bg-blue-500/10 text-blue-400' : 'border-blue-200 bg-blue-50 text-blue-600'}`}>
+            <AlertCircle className="h-8 w-8" />
+          </div>
+          <h2 className="text-2xl font-bold tracking-tight">Acesso pendente</h2>
+          <p className={`mt-4 text-sm leading-6 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
+            Sua conta <span className="font-semibold text-blue-500">{pendingAccessUser.email}</span> foi registrada com sucesso. Solicite ao RH, TI ou Administrador a liberação do seu perfil de acesso.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <button
+              type="button"
+              onClick={handleCheckPendingStatus}
+              className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-500 active:scale-[0.98] cursor-pointer"
+            >
+              Verificar Status novamente
+            </button>
+            <button
+              type="button"
+              onClick={async () => { await firebaseSignOut(auth); authService.clearSession(); setPendingAccessUser(null); setCurrentUser(null); setUserRole(null); setUserMode('ADMIN'); showToast('Sessão encerrada com sucesso.', 'info'); }}
+              className={`inline-flex items-center justify-center rounded-xl border px-4 py-2.5 text-sm font-bold transition-all active:scale-[0.98] cursor-pointer ${isDark ? 'border-[#335075] bg-[#243756] text-white hover:bg-[#335075]' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'}`}
+            >
+              Sair
+            </button>
+          </div>
         </div>
       </div>
     );

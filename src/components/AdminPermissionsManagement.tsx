@@ -258,16 +258,19 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
     if (target) {
       try {
-        const updated = {
+        const nextStatus: AdminUser['status'] = target.status === 'pendente' ? 'ativo' : target.status === 'ativo' ? 'inativo' : 'ativo';
+        const updated: AdminUser = {
           ...target,
-          ativo: !target.ativo,
+          status: nextStatus,
+          perfil: target.perfil || target.role || target.nivelAcesso || 'nenhum',
+          ativo: nextStatus === 'ativo',
         };
         await firestoreService.saveAdminUser(updated);
         await firestoreService.logSystemEvent({
           tipo: 'ALTERACAO_PERMISSAO_RBAC',
-          descricao: `Status de acesso de ${target.nome} alterado para ${updated.ativo ? 'ATIVO' : 'INATIVO'}`,
+          descricao: `Status de acesso de ${target.nome} alterado para ${nextStatus.toUpperCase()}`,
           usuario: currentUserEmail,
-          detalhes: { email: target.email, ativo: updated.ativo }
+          detalhes: { email: target.email, status: nextStatus, ativo: updated.ativo }
         });
         registrarLogAuditoria({
           usuarioId: currentUserEmail,
@@ -275,7 +278,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
           usuarioPerfil: 'SUPER_ADMIN',
           canteiroId: target.canteiroCodigo || 'SEDE-MN',
           tipoAcao: 'ALTERACAO_FUNCAO',
-          detalhes: `Status de acesso RBAC de ${target.nome} (${target.email}) alterado para ${updated.ativo ? 'ATIVO' : 'INATIVO'}.`,
+          detalhes: `Status de acesso RBAC de ${target.nome} (${target.email}) alterado para ${nextStatus.toUpperCase()}.`,
           recursoId: target.email,
         });
       } catch (err) {
@@ -284,14 +287,34 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
     }
   };
 
+  const handleApprovePendingUser = async (adm: AdminUser) => {
+    if (!adm || !adm.email) return;
+
+    const selectedRole = adm.role || adm.nivelAcesso || 'RH_ADMIN';
+    try {
+      await firestoreService.saveAdminUser({
+        ...adm,
+        status: 'ativo',
+        perfil: selectedRole,
+        nivelAcesso: selectedRole as AdminRole,
+        role: selectedRole as AdminRole,
+        ativo: true,
+        atualizadoEm: new Date().toISOString(),
+      });
+      setFeedbackMsg(`Usuário ${adm.nome} aprovado e ativado com o perfil ${selectedRole}.`);
+      setTimeout(() => setFeedbackMsg(null), 4000);
+    } catch (err) {
+      console.error('Erro ao aprovar usuário pendente:', err);
+      setErrorMsg('Não foi possível aprovar o usuário pendente.');
+    }
+  };
+
   const handleDeleteAdmin = async (id: string) => {
     const target = admins.find((a) => a.id === id || a.email === id);
-    if (target?.email.toLowerCase() === currentUserEmail.toLowerCase()) {
-      alert('Você não pode excluir seu próprio usuário de administrador.');
-      return;
-    }
 
-    if (window.confirm(`Tem certeza que deseja revogar o acesso administrativo de "${target?.nome || id}"?`)) {
+    if (!target) return;
+
+    if (window.confirm(`Tem certeza que deseja revogar o acesso administrativo de "${target.nome || id}"?`)) {
       try {
         await firestoreService.deleteAdminUser(target?.email || id);
         await firestoreService.logSystemEvent({
@@ -372,6 +395,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                 <th className="py-3 px-5">Cargo / Título Impresso</th>
                 <th className="py-3 px-5 text-center">Canteiro / Sede</th>
                 <th className="py-3 px-5 text-center">Nível de Acesso</th>
+                <th className="py-3 px-5 text-center">Perfil</th>
                 <th className="py-3 px-5 text-center">Status</th>
                 <th className="py-3 px-5 text-right">Cadastrado em</th>
                 <th className="py-3 px-5 text-right">Ações</th>
@@ -446,23 +470,34 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                       </span>
                     </td>
 
+                    {/* Perfil */}
+                    <td className="py-3.5 px-5 text-center whitespace-nowrap">
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
+                        adm.perfil === 'nenhum' || adm.status === 'pendente'
+                          ? (isDark ? 'bg-amber-950/40 text-amber-400 border-amber-800/50' : 'bg-amber-50 text-amber-700 border-amber-200')
+                          : (isDark ? 'bg-blue-950/40 text-blue-300 border-blue-800/40' : 'bg-blue-50 text-blue-700 border-blue-200')
+                      }`}>
+                        {adm.perfil && adm.perfil !== 'nenhum' ? adm.perfil : (adm.status === 'pendente' ? 'PENDENTE' : 'SEM PERFIL')}
+                      </span>
+                    </td>
+
                     {/* Status */}
                     <td className="py-3.5 px-5 text-center whitespace-nowrap">
                       <button
                         onClick={() => handleToggleStatus(adm.id)}
                         disabled={isSelf}
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
-                          adm.ativo
-                            ? isDark 
+                          adm.status === 'pendente' || adm.ativo === false
+                            ? isDark
+                              ? 'bg-amber-950/40 text-amber-400 border-amber-800/50 hover:bg-amber-900/50'
+                              : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+                            : isDark 
                               ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800/50 hover:bg-emerald-900/50' 
                               : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                            : isDark
-                              ? 'bg-red-950/40 text-red-400 border-red-800/50 hover:bg-red-900/50'
-                              : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
                         } ${isSelf ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
                         title={isSelf ? 'Não é permitido desativar seu próprio login' : 'Clique para alternar o status'}
                       >
-                        {adm.ativo ? '● ATIVO' : '○ INATIVO'}
+                        {adm.status === 'pendente' ? '● PENDENTE' : adm.ativo ? '● ATIVO' : '○ INATIVO'}
                       </button>
                     </td>
 
@@ -476,6 +511,18 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     {/* Ações */}
                     <td className="py-3.5 px-5 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5">
+                        {adm.status === 'pendente' && isCurrentSuperAdmin && (
+                          <button
+                            type="button"
+                            onClick={() => handleApprovePendingUser(adm)}
+                            className={`p-1.5 rounded transition-colors active:scale-[0.98] cursor-pointer ${
+                              isDark ? 'text-emerald-400 hover:bg-emerald-950/40' : 'text-emerald-600 hover:bg-emerald-50'
+                            }`}
+                            title="Aprovar usuário pendente"
+                          >
+                            <CheckCircle2 className="w-4 h-4" />
+                          </button>
+                        )}
                         {isCurrentSuperAdmin && (
                           <button
                             type="button"

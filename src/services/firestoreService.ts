@@ -392,15 +392,20 @@ export const firestoreService = {
             snapshot.forEach((docSnap) => {
               const data = docSnap.data();
               const role = (data.role as AdminRole) || (data.nivelAcesso as AdminRole) || 'GESTOR_RH';
-              list.push({
+              const status = (data.status as 'pendente' | 'ativo' | 'inativo') || (data.ativo === false ? 'inativo' : 'ativo');
+            const perfil = (data.perfil as string) || (data.role as string) || (data.nivelAcesso as string) || 'nenhum';
+            list.push({
                 id: docSnap.id,
                 email: data.email || docSnap.id,
                 nome: data.nome || data.email?.split('@')[0] || 'Administrador',
                 cargo: data.cargo || 'Gestor RH',
                 nivelAcesso: role,
                 role,
+                status,
+                perfil,
+                foto: data.foto || data.photoURL || null,
                 sede: data.sede || 'TODAS',
-                ativo: data.ativo !== false,
+                ativo: data.ativo !== false && status !== 'pendente',
                 criadoEm: data.criadoEm || new Date().toISOString(),
               });
             });
@@ -433,6 +438,8 @@ export const firestoreService = {
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         const role = (data.role as AdminRole) || (data.nivelAcesso as AdminRole) || 'GESTOR_RH';
+        const status = (data.status as 'pendente' | 'ativo' | 'inativo') || (data.ativo === false ? 'inativo' : 'ativo');
+        const perfil = (data.perfil as string) || (data.role as string) || (data.nivelAcesso as string) || 'nenhum';
         list.push({
           id: docSnap.id,
           email: data.email || docSnap.id,
@@ -440,8 +447,11 @@ export const firestoreService = {
           cargo: data.cargo || 'Gestor RH',
           nivelAcesso: role,
           role,
+          status,
+          perfil,
+          foto: data.foto || data.photoURL || null,
           sede: data.sede || 'TODAS',
-          ativo: data.ativo !== false,
+          ativo: data.ativo !== false && status !== 'pendente',
           criadoEm: data.criadoEm || new Date().toISOString(),
         });
       });
@@ -1038,6 +1048,8 @@ export const firestoreService = {
     const path = `${COLLECTIONS.ADMIN_USERS}/${docId}`;
     try {
       await this.ensureAuthenticatedWriteSession();
+      const resolvedStatus = adminUser.status || (adminUser.ativo === false ? 'inativo' : 'ativo');
+      const resolvedPerfil = adminUser.perfil || adminUser.role || adminUser.nivelAcesso || 'nenhum';
       const dataToSave: Record<string, any> = {
         id: docId,
         email: docId,
@@ -1045,8 +1057,11 @@ export const firestoreService = {
         cargo: adminUser.cargo || 'Gestor RH',
         role: adminUser.role || adminUser.nivelAcesso || 'GESTOR_RH',
         nivelAcesso: adminUser.nivelAcesso || adminUser.role || 'GESTOR_RH',
+        status: resolvedStatus,
+        perfil: resolvedPerfil,
+        foto: adminUser.foto || null,
         sede: adminUser.sede || 'TODAS',
-        ativo: adminUser.ativo !== false,
+        ativo: adminUser.ativo !== false && resolvedStatus !== 'pendente',
         desativacaoAgendada: adminUser.desativacaoAgendada || null,
         transicaoStatus: adminUser.transicaoStatus || (adminUser.desativacaoAgendada ? 'PENDENTE_48H' : 'ATIVO'),
         canteiroCodigo: adminUser.canteiroCodigo || '',
