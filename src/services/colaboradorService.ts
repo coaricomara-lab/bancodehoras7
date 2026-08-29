@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db, logFirestoreError, OperationType } from './firebase';
 import { Employee } from '../types';
-import { prepareEmployeeForFirestore, sanitizeFirestoreData, COLLECTIONS, BatchProgressInfo } from './firestoreService';
+import { firestoreService, prepareEmployeeForFirestore, sanitizeFirestoreData, COLLECTIONS, BatchProgressInfo } from './firestoreService';
 import { hashPassword } from './authService';
 
 export const colaboradorService = {
@@ -132,6 +132,7 @@ export const colaboradorService = {
     const docId = (employee.matricula || employee.id || '').trim().toUpperCase();
     const path = `${COLLECTIONS.COLABORADORES}/${docId}`;
     try {
+      await firestoreService.ensureAuthenticatedWriteSession();
       const cleanData = prepareEmployeeForFirestore(employee);
       await setDoc(doc(db, COLLECTIONS.COLABORADORES, docId), cleanData, { merge: true });
 
@@ -169,6 +170,7 @@ export const colaboradorService = {
     const totalChunks = Math.ceil(total / CHUNK_SIZE);
 
     try {
+      await firestoreService.ensureAuthenticatedWriteSession();
       for (let i = 0; i < total; i += CHUNK_SIZE) {
         const chunk = employees.slice(i, i + CHUNK_SIZE);
         const batch = writeBatch(db);
@@ -210,6 +212,7 @@ export const colaboradorService = {
   async deleteColaborador(docId: string): Promise<void> {
     const path = `${COLLECTIONS.COLABORADORES}/${docId}`;
     try {
+      await firestoreService.ensureAuthenticatedWriteSession();
       await Promise.all([
         deleteDoc(doc(db, COLLECTIONS.COLABORADORES, docId)),
         deleteDoc(doc(db, COLLECTIONS.COLABORADORES_AUTH, docId)).catch(() => {}),

@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db, logFirestoreError, OperationType } from './firebase';
 import { AuditLog, AuditActionType } from '../types';
+import { firestoreService } from './firestoreService';
 
 export const AUDIT_COLLECTION = 'logs_auditoria';
 
@@ -76,6 +77,7 @@ export async function registrarLogAuditoria(dadosLog: DadosLogAuditoria | Regist
       }
     }
 
+    await firestoreService.ensureAuthenticatedWriteSession();
     await setDoc(doc(db, AUDIT_COLLECTION, auditId), sanitized);
     console.info(`[AUDIT] Log registrado com sucesso: [${tipoAcaoFinal}] ${dadosLog.detalhes}`);
   } catch (err) {

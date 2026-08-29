@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db, logFirestoreError, OperationType } from './firebase';
 import { InsalubrityRecord } from '../types';
-import { sanitizeFirestoreData } from './firestoreService';
+import { firestoreService, sanitizeFirestoreData } from './firestoreService';
 
 export const INSALUBRIDADE_COLLECTION = 'insalubridade_records';
 
@@ -109,6 +109,7 @@ export const insalubridadeService = {
     const docId = record.id || `insalubre-${record.matricula.trim()}-${record.dataEvento}-${Date.now()}`;
     const path = `${INSALUBRIDADE_COLLECTION}/${docId}`;
     try {
+      await firestoreService.ensureAuthenticatedWriteSession();
       const dataToSave = sanitizeFirestoreData({
         id: docId,
         matricula: record.matricula.trim().toUpperCase(),
@@ -137,6 +138,7 @@ export const insalubridadeService = {
    */
   async saveInsalubrityBatch(records: InsalubrityRecord[]): Promise<number> {
     if (records.length === 0) return 0;
+    await firestoreService.ensureAuthenticatedWriteSession();
     const CHUNK_SIZE = 400;
     let savedCount = 0;
 
@@ -179,6 +181,7 @@ export const insalubridadeService = {
   async deleteInsalubrityRecord(docId: string): Promise<void> {
     const path = `${INSALUBRIDADE_COLLECTION}/${docId}`;
     try {
+      await firestoreService.ensureAuthenticatedWriteSession();
       await deleteDoc(doc(db, INSALUBRIDADE_COLLECTION, docId));
     } catch (error) {
       logFirestoreError(error, OperationType.DELETE, path);

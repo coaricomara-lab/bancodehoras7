@@ -12,7 +12,7 @@ import { collection, query, where, getDocs, doc, setDoc, updateDoc } from 'fireb
 import { db } from './firebase';
 import { Employee, ConstructionSite } from '../types';
 import { generateCPFHash, maskCPF, cleanCPF, isValidCPF } from '../utils/lgpdUtils';
-import { COLLECTIONS } from './firestoreService';
+import { firestoreService, COLLECTIONS } from './firestoreService';
 
 /**
  * Result of an employee sync operation
@@ -133,6 +133,7 @@ export async function syncEmployeeUpsert(
   constructionSites: ConstructionSite[]
 ): Promise<EmployeeSyncResult> {
   try {
+    await firestoreService.ensureAuthenticatedWriteSession();
     // 1. Validate and prepare data
     const matricula = (employeeData.matricula || employeeData.id || '').trim();
     const nome = (employeeData.nome || '').trim();

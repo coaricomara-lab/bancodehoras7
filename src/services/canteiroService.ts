@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 import { db, logFirestoreError, OperationType } from './firebase';
 import { ConstructionSite, CanteiroSignatures, TratamentoTitulo } from '../types';
-import { sanitizeFirestoreData } from './firestoreService';
+import { firestoreService, sanitizeFirestoreData } from './firestoreService';
 
 export const CANTEIROS_COLLECTION = 'canteiros_obras';
 
@@ -469,6 +469,7 @@ export const canteiroService = {
     });
 
     try {
+      await firestoreService.ensureAuthenticatedWriteSession();
       await setDoc(doc(db, CANTEIROS_COLLECTION, docId), dataToSave, { merge: true });
     } catch (error) {
       logFirestoreError(error, OperationType.WRITE, path);
@@ -482,6 +483,7 @@ export const canteiroService = {
   async deleteCanteiro(id: string): Promise<void> {
     const path = `${CANTEIROS_COLLECTION}/${id}`;
     try {
+      await firestoreService.ensureAuthenticatedWriteSession();
       await deleteDoc(doc(db, CANTEIROS_COLLECTION, id));
     } catch (error) {
       logFirestoreError(error, OperationType.DELETE, path);

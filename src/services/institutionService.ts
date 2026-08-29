@@ -6,6 +6,7 @@ import {
 } from '../types/institutionConfig';
 import { rbacService } from './rbacService';
 import { registrarLogAuditoria } from './auditService';
+import { firestoreService } from './firestoreService';
 
 export const INSTITUTION_COLLECTION = 'institution_settings';
 export const INSTITUTION_DOC_ID = 'current';
@@ -144,6 +145,7 @@ export const institutionService = {
     const sanitized = sanitizePayload(mergedSettings);
 
     try {
+      await firestoreService.ensureAuthenticatedWriteSession();
       await setDoc(docRef, sanitized, { merge: true });
       
       // Atualiza o cache local

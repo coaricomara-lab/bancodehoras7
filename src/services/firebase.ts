@@ -34,6 +34,16 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+const missingFirebaseConfig = Object.entries(firebaseConfig)
+  .filter(([, value]) => !value)
+  .map(([key]) => `VITE_FIREBASE_${key.replace(/[A-Z]/g, (letter) => `_${letter}`).toUpperCase()}`);
+
+if (missingFirebaseConfig.length > 0) {
+  const message = `Configuração do Firebase incompleta. Preencha no arquivo .env: ${missingFirebaseConfig.join(', ')}`;
+  console.error(`[Firebase] ${message}`);
+  throw new Error(message);
+}
+
 const firebaseDatabaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID;
 
 // Initialize Firebase
