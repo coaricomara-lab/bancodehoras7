@@ -5,6 +5,8 @@ import { ContrachequeMirrorView } from './ContrachequeMirrorView';
 import { getSignaturesForCanteiro } from '../services/canteiroService';
 import { useInstitution } from '../contexts/InstitutionContext';
 import { IconButton } from './IconButton';
+import { EditEmployeeModal } from './EditEmployeeModal';
+import { firestoreService } from '../services/firestoreService';
 import { 
   getEmployeeTotalBalance, 
   formatHoursDecimal, 
@@ -27,6 +29,7 @@ import {
   ChevronDown,
   ChevronUp,
   Download,
+  Edit2,
   ShieldCheck,
   Layers,
   Sparkles,
@@ -58,6 +61,7 @@ interface EmployeeStatementProps {
   onOpenEditEntry?: (record: TimeRecord) => void;
   onDeleteRecord?: (id: string) => void | Promise<void>;
   onViewAttachment: (attachment: Attachment, empName?: string, recordDate?: string) => void;
+  onUpdateEmployees?: (employees: Employee[]) => void;
   theme?: 'dark' | 'light';
 }
 
@@ -78,6 +82,7 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
   onOpenEditEntry,
   onDeleteRecord,
   onViewAttachment,
+  onUpdateEmployees,
   theme = 'dark',
 }) => {
   const isDark = theme === 'dark';
@@ -91,6 +96,9 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
   
   // Modal de Espelho de Contracheque
   const [selectedPaystubForModal, setSelectedPaystubForModal] = useState<PaystubRecord | null>(null);
+  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
+  const [isSavingEmployee, setIsSavingEmployee] = useState(false);
+  const [employeeEditError, setEmployeeEditError] = useState('');
 
   // Assinaturas dinâmicas do Canteiro do Colaborador
   const dynamicSignatures = useMemo(() => {
@@ -232,6 +240,20 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
     return (val || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
+  const handleSaveEmployeeEdit = async (employee: Employee) => {
+    setIsSavingEmployee(true);
+    setEmployeeEditError('');
+    try {
+      await firestoreService.saveEmployee(employee);
+      onUpdateEmployees?.(employees.map((item) => item.id === employee.id ? employee : item));
+      setEmployeeToEdit(null);
+    } catch (error: any) {
+      setEmployeeEditError(error?.message || 'Não foi possível salvar o cadastro.');
+    } finally {
+      setIsSavingEmployee(false);
+    }
+  };
+
   if (!currentEmployee || !balance) {
     return (
       <div className={`p-8 text-center rounded-2xl border ${
@@ -321,8 +343,31 @@ export const EmployeeStatement: React.FC<EmployeeStatementProps> = ({
               onClick={() => onOpenSptfDispensa(currentEmployee.matricula)}
             />
           )}
+
+          <button
+            type="button"
+            onClick={() => { setEmployeeToEdit(currentEmployee); setEmployeeEditError(''); }}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-bold transition active:scale-[0.98] cursor-pointer ${
+              isDark ? 'border-[#335075] text-[#CBD5E1] hover:border-blue-500 hover:text-blue-400' : 'border-slate-300 text-slate-700 hover:border-blue-500 hover:text-blue-700'
+            }`}
+          >
+            <Edit2 className="h-3.5 w-3.5" />
+            <span>Editar Cadastro</span>
+          </button>
         </div>
       </div>
+
+      {employeeToEdit && (
+        <EditEmployeeModal
+          employee={employeeToEdit}
+          constructionSites={constructionSites}
+          theme={theme}
+          isSaving={isSavingEmployee}
+          error={employeeEditError}
+          onClose={() => setEmployeeToEdit(null)}
+          onSave={handleSaveEmployeeEdit}
+        />
+      )}
 
       {/* Cabeçalho Institucional Oficial COMARA (Visível na Tela e na Impressão/PDF) */}
       <div className={`p-4 sm:p-5 rounded-2xl border shadow-xs flex items-center justify-between gap-4 transition-all print:border-b-2 print:border-slate-300 print:shadow-none print:rounded-none print:p-2 ${

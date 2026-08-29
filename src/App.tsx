@@ -1618,6 +1618,7 @@ export default function App() {
               onOpenEditEntry={(rec) => handleOpenEditEntry(rec)}
               onDeleteRecord={(id) => handleDeleteRecord(id)}
               onViewAttachment={handleViewAttachment}
+              onUpdateEmployees={handleUpdateEmployees}
               theme={theme}
             />
           )}
