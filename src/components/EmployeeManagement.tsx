@@ -14,7 +14,7 @@ import {
   Search, 
   CheckCircle2, 
   AlertCircle, 
-  Edit, 
+  Edit2,
   Plus, 
   Building, 
   FileSpreadsheet, 
@@ -50,6 +50,7 @@ import { InfoTooltip } from './InfoTooltip';
 import { IconButton } from './IconButton';
 import { PortariaAttendanceSheetModal } from './PortariaAttendanceSheetModal';
 import { DispensaSptfRecord } from '../types';
+import { EditEmployeeModal } from './EditEmployeeModal';
 
 interface EmployeeManagementProps {
   employees: Employee[];
@@ -129,6 +130,9 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   // Manual Employee Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
+  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
+  const [editEmployeeError, setEditEmployeeError] = useState('');
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const [isPortariaModalOpen, setIsPortariaModalOpen] = useState(false);
 
   // Form State
@@ -460,6 +464,20 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
       }, 500);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleSaveEditEmployee = async (employee: Employee) => {
+    setIsSavingEdit(true);
+    setEditEmployeeError('');
+    try {
+      await firestoreService.saveEmployee(employee);
+      onUpdateEmployees(employees.map((item) => item.id === employee.id ? employee : item));
+      setEmployeeToEdit(null);
+    } catch (err: any) {
+      setEditEmployeeError(err?.message || 'Não foi possível salvar o cadastro.');
+    } finally {
+      setIsSavingEdit(false);
+    }
   };
 
   const handleSaveEmployee = async (e: React.FormEvent) => {
@@ -1119,26 +1137,16 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       </div>
                     </th>
 
-                    {/* 4. Sede */}
+                    {/* 4. Lotação / Canteiro */}
                     <th 
                       onClick={() => handleSort('sede')}
                       className="py-3 px-4 cursor-pointer group hover:text-blue-400 transition-colors active:scale-[0.98]"
                       title="Clique para ordenar por Sede"
                     >
                       <div className="flex items-center gap-1">
-                        <span>Sede</span>
+                        <span>Lotação / Canteiro</span>
                         {renderSortIcon('sede')}
                       </div>
-                    </th>
-
-                    {/* 4b. Canteiro/Construção */}
-                    <th className="py-3 px-4 text-center">
-                      <span>Canteiro / Frente</span>
-                    </th>
-
-                    {/* 4c. CPF Mascarado (LGPD) */}
-                    <th className="py-3 px-4">
-                      <span>CPF (LGPD)</span>
                     </th>
 
                     {/* 5. Data Admissão */}
@@ -1197,7 +1205,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 }`}>
                   {filteredAndSortedEmployees.length === 0 ? (
                     <tr>
-                      <td colSpan={11} className={`py-12 text-center text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
+                      <td colSpan={9} className={`py-12 text-center text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
                         <div className="flex flex-col items-center justify-center gap-2">
                           <AlertCircle className="w-6 h-6 text-gray-500" />
                           <p className="font-semibold text-sm">Nenhum colaborador localizado com os filtros selecionados.</p>
@@ -1270,8 +1278,17 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                   ? 'bg-[#243756] text-blue-400 border-[#335075]' 
                                   : 'bg-blue-50 text-blue-700 border-blue-200'
                               }`}>
-                                {emp.sede}
+                                {emp.sede_atual || emp.sede}
                               </span>
+                              <span className={`text-[9px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+                                Origem: {emp.sede_origem || emp.sede}
+                              </span>
+                              {emp.canteiroId && constructionSites ? (
+                                (() => {
+                                  const site = constructionSites.find(s => s.id === emp.canteiroId);
+                                  return site ? <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${isDark ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-amber-50 text-amber-800 border-amber-200'}`} title={site.name || site.nome}>{site.code || site.codigo || site.name || site.nome}</span> : null;
+                                })()
+                              ) : null}
                               {emp.sede_atual && emp.sede_atual !== emp.sede && (
                                 <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${
                                   isDark 
@@ -1282,31 +1299,6 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                 </span>
                               )}
                             </div>
-                          </td>
-                          <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                            {emp.canteiroId && constructionSites ? (
-                              (() => {
-                                const site = constructionSites.find(s => s.id === emp.canteiroId);
-                                return site ? (
-                                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold border inline-block ${
-                                    isDark 
-                                      ? 'bg-amber-950/40 text-amber-400 border-amber-800/40' 
-                                      : 'bg-amber-50 text-amber-800 border-amber-200'
-                                  }`} title={`Canteiro: ${site.name || site.nome || 'N/A'}`}>
-                                    {site.code || site.codigo || 'CT'}
-                                  </span>
-                                ) : (
-                                  <span className={`text-[10px] ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>—</span>
-                                );
-                              })()
-                            ) : (
-                              <span className={`text-[10px] ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>—</span>
-                            )}
-                          </td>
-                          <td className="py-3.5 px-4 whitespace-nowrap font-mono">
-                            <span className={`text-[11px] font-semibold ${isDark ? 'text-green-400' : 'text-green-700'}`}>
-                              {emp.cpfMascarado || '***.***.***-**'}
-                            </span>
                           </td>
                           <td className={`py-3.5 px-4 whitespace-nowrap ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                             {emp.dataAdmissao}
@@ -1383,12 +1375,12 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                 onClick={() => onViewStatement(emp.matricula)}
                               />
                               <IconButton
-                                icon={Edit}
+                                icon={Edit2}
                                 variant="ghost"
                                 size="xs"
                                 tooltip={`Editar Cadastro de ${emp.nome}`}
                                 aria-label={`Editar ${emp.nome}`}
-                                onClick={() => handleOpenEditModal(emp)}
+                                onClick={() => { setEmployeeToEdit(emp); setEditEmployeeError(''); }}
                               />
                             </div>
                           </td>
@@ -1960,6 +1952,18 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         </div>
       )}
       </div>
+
+      {employeeToEdit && (
+        <EditEmployeeModal
+          employee={employeeToEdit}
+          constructionSites={constructionSites}
+          theme={theme}
+          isSaving={isSavingEdit}
+          error={editEmployeeError}
+          onClose={() => setEmployeeToEdit(null)}
+          onSave={handleSaveEditEmployee}
+        />
+      )}
 
       {/* Modal de Impressão da Relação de Portaria (Entrada e Saída) */}
       <PortariaAttendanceSheetModal
