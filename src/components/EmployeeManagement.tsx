@@ -4,6 +4,7 @@ import { parseEmployeesCSV, generateEmployeesTemplateCSV, triggerFileDownload } 
 import { getEmployeeTotalBalance, formatHoursDecimal, formatHoursToDays } from '../utils/calculations';
 import { firestoreService } from '../services/firestoreService';
 import { authService } from '../services/authService';
+import { batchSyncEmployees, getSyncStatistics } from '../services/employeeSyncService';
 import { 
   Users, 
   UploadCloud, 
@@ -332,31 +333,63 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
     const reader = new FileReader();
     reader.onload = async (event) => {
-      const content = event.target?.result as string;
-      const result = await parseEmployeesCSV(content, employees, 'update');
+      try {
+        const content = event.target?.result as string;
+        const parseResult = await parseEmployeesCSV(content, employees, 'update');
 
-      if (result.success) {
-        const empMap = new Map<string, Employee>();
-        employees.forEach((emp) => empMap.set(emp.matricula.toUpperCase(), emp));
-        result.data.forEach((newEmp) => empMap.set(newEmp.matricula.toUpperCase(), newEmp));
+        if (!parseResult.success || parseResult.data.length === 0) {
+          setImportFeedback({
+            success: false,
+            message: `Falha na importação do CSV. Verifique a formatação do arquivo.`,
+            errors: parseResult.errors,
+          });
+          setIsImporting(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+          return;
+        }
 
-        const updatedList = Array.from(empMap.values());
-        onUpdateEmployees(updatedList);
+        // Create department code map for each employee
+        // Parse from sede field or departamento field (which contains the department code)
+        const departmentCodesMap: Record<string, string | undefined> = {};
+        parseResult.data.forEach((emp) => {
+          // Map departmentCode from the parsed employee data
+          departmentCodesMap[emp.matricula] = emp.departamento || emp.sede || 'KO';
+        });
+
+        // Perform batch sync with Firestore using new UPSERT logic
+        const syncResults = await batchSyncEmployees(
+          parseResult.data,
+          departmentCodesMap,
+          constructionSites || [],
+          (progress) => {
+            console.log(`Importação: ${progress.processed}/${progress.total} (${progress.percent}%)`);
+          }
+        );
+
+        const stats = getSyncStatistics(syncResults);
+
+        // Reload all employees from Firestore to reflect changes
+        const allEmployees = await firestoreService.getAllEmployees();
+        onUpdateEmployees(allEmployees);
 
         setImportFeedback({
-          success: true,
-          message: `Importação concluída com sucesso! ${result.importedCount} colaboradores processados (${result.duplicateCount} atualizados).`,
-          errors: result.errors,
+          success: stats.successful > 0,
+          message: `Importação concluída! Criados: ${stats.created} | Atualizados: ${stats.updated} | Falhados: ${stats.failed}`,
+          errors: syncResults
+            .filter((r) => !r.success)
+            .map((r) => `${r.matricula} (${r.nome}): ${r.message}`),
         });
-      } else {
+      } catch (err: any) {
+        console.error('Erro na importação CSV:', err);
         setImportFeedback({
           success: false,
-          message: `Falha na importação do CSV. Verifique a formatação do arquivo.`,
-          errors: result.errors,
+          message: `Erro ao processar importação: ${err.message}`,
+          errors: [err.message],
         });
+      } finally {
+        setIsImporting(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
       }
-      setIsImporting(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
     };
     reader.readAsText(file, 'UTF-8');
   };
@@ -1098,6 +1131,16 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                       </div>
                     </th>
 
+                    {/* 4b. Canteiro/Construção */}
+                    <th className="py-3 px-4 text-center">
+                      <span>Canteiro / Frente</span>
+                    </th>
+
+                    {/* 4c. CPF Mascarado (LGPD) */}
+                    <th className="py-3 px-4">
+                      <span>CPF (LGPD)</span>
+                    </th>
+
                     {/* 5. Data Admissão */}
                     <th 
                       onClick={() => handleSort('dataAdmissao')}
@@ -1154,7 +1197,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 }`}>
                   {filteredAndSortedEmployees.length === 0 ? (
                     <tr>
-                      <td colSpan={9} className={`py-12 text-center text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
+                      <td colSpan={11} className={`py-12 text-center text-xs ${isDark ? 'text-gray-400' : 'text-slate-500'}`}>
                         <div className="flex flex-col items-center justify-center gap-2">
                           <AlertCircle className="w-6 h-6 text-gray-500" />
                           <p className="font-semibold text-sm">Nenhum colaborador localizado com os filtros selecionados.</p>
@@ -1239,6 +1282,31 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                 </span>
                               )}
                             </div>
+                          </td>
+                          <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                            {emp.canteiroId && constructionSites ? (
+                              (() => {
+                                const site = constructionSites.find(s => s.id === emp.canteiroId);
+                                return site ? (
+                                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold border inline-block ${
+                                    isDark 
+                                      ? 'bg-amber-950/40 text-amber-400 border-amber-800/40' 
+                                      : 'bg-amber-50 text-amber-800 border-amber-200'
+                                  }`} title={`Canteiro: ${site.name || site.nome || 'N/A'}`}>
+                                    {site.code || site.codigo || 'CT'}
+                                  </span>
+                                ) : (
+                                  <span className={`text-[10px] ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>—</span>
+                                );
+                              })()
+                            ) : (
+                              <span className={`text-[10px] ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>—</span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 whitespace-nowrap font-mono">
+                            <span className={`text-[11px] font-semibold ${isDark ? 'text-green-400' : 'text-green-700'}`}>
+                              {emp.cpfMascarado || '***.***.***-**'}
+                            </span>
                           </td>
                           <td className={`py-3.5 px-4 whitespace-nowrap ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
                             {emp.dataAdmissao}

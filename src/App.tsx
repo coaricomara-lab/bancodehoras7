@@ -1655,6 +1655,7 @@ export default function App() {
               <ContrachequesManagement
                 employees={employees}
                 paystubs={paystubs}
+                constructionSites={constructionSites}
                 onSaveBatchPaystubs={handleSaveBatchPaystubs}
                 onSaveEmployees={handleUpdateEmployees}
                 onDeletePaystub={handleDeletePaystub}

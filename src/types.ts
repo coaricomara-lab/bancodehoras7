@@ -172,6 +172,7 @@ export interface Employee {
   sede: Branch; // Sede padrão/fixa
   sede_origem?: Branch; // Sede contratual / fixa
   sede_atual?: Branch; // Canteiro / sede temporária
+  canteiroId?: string; // ID do canteiro/construção site (FK para ConstructionSite.id)
   dataInicioAlocacao?: string; // Início da missão
   dataFimAlocacao?: string; // Fim da missão
   dataAdmissao: string;
@@ -188,6 +189,9 @@ export interface Employee {
   horarioTrabalho?: string;
   email?: string;
   telefone?: string;
+  cpf?: string; // CPF em texto plano (retirado em futuras versões para LGPD)
+  cpfHash?: string; // Hash SHA-256 do CPF limpo (para desduplicação segura)
+  cpfMascarado?: string; // CPF mascarado (ex: ***.XXX.XXX-**)
   saldoInicialHoras?: number;
   grauInsalubridadeFixa?: GrauInsalubridade;
   primeiroAcesso?: boolean;
@@ -303,6 +307,7 @@ export interface ConstructionSite {
   nome: string; // Ex: Canteiro Aeroporto Coari
   endereco?: string;
   sede?: Branch;
+  bigramasImportacao?: string[]; // Bigramas/siglas para matching em importações (ex: ["KO", "DECO-KO"], ["MN", "DACO-MN"])
   chefeCanteiro?: string; // Encarregado / Chefe de Canteiro
   tratamentoChefeCanteiro?: TratamentoTitulo; // [ Chefe | Encarregado ]
   chefeContato?: string; // Telefone / Contato do Chefe de Canteiro

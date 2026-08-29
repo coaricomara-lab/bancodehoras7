@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { PaystubRecord, Employee } from '../types';
+import { PaystubRecord, Employee, ConstructionSite } from '../types';
 import { 
   parseMultipleComaraPdfs, 
   MultiPdfProgress,
@@ -7,6 +7,7 @@ import {
   buildEmployeesFromPaystubs,
   normalizeMatricula
 } from '../utils/pdfParser';
+import { batchSyncEmployees, getSyncStatistics } from '../services/employeeSyncService';
 import { 
   UploadCloud, 
   FileText, 
@@ -34,6 +35,7 @@ interface ImportContrachequeModalProps {
   onImportBatch: (paystubs: PaystubRecord[]) => Promise<void>;
   onSaveEmployees?: (employees: Employee[]) => Promise<void>;
   employees?: Employee[];
+  constructionSites?: ConstructionSite[];
   theme?: 'dark' | 'light';
   currentUserEmail?: string;
 }
@@ -44,6 +46,7 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
   onImportBatch,
   onSaveEmployees,
   employees = [],
+  constructionSites = [],
   theme = 'dark',
   currentUserEmail = 'coari.comara@gmail.com',
 }) => {
@@ -232,12 +235,31 @@ export const ImportContrachequeModal: React.FC<ImportContrachequeModalProps> = (
     setErrorMessage(null);
 
     try {
-      // 1. Se o usuário optou por cadastrar os servidores que não existem
-      if (autoCreateEmployees && unregisteredEmployees.length > 0 && onSaveEmployees) {
+      // 1. Sincroniza colaboradores não registrados usando o novo UPSERT service
+      if (autoCreateEmployees && unregisteredEmployees.length > 0) {
         const toCreate = unregisteredEmployees.filter(u => selectedUnregistered.has(u.matricula));
         if (toCreate.length > 0) {
+          // Build employees from paystubs
           const newEmps = buildEmployeesFromPaystubs(toCreate);
-          await onSaveEmployees(newEmps);
+          
+          // Create department code map from paystub sede field
+          const departmentCodesMap: Record<string, string | undefined> = {};
+          toCreate.forEach((emp) => {
+            departmentCodesMap[emp.matricula] = emp.sede || 'KO';
+          });
+
+          // Perform batch sync with new UPSERT logic
+          const syncResults = await batchSyncEmployees(
+            newEmps,
+            departmentCodesMap,
+            constructionSites,
+            (progress) => {
+              console.log(`Sincronização de colaboradores: ${progress.processed}/${progress.total}`);
+            }
+          );
+
+          const stats = getSyncStatistics(syncResults);
+          console.log(`Colaboradores sincronizados - Criados: ${stats.created}, Atualizados: ${stats.updated}`);
         }
       }
 

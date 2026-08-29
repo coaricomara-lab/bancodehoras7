@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Employee, PaystubRecord, AdminRole } from '../types';
+import { Employee, PaystubRecord, AdminRole, ConstructionSite } from '../types';
 import { ContrachequeMirrorView } from './ContrachequeMirrorView';
 import { ImportContrachequeModal } from './ImportContrachequeModal';
 import { normalizeMatricula } from '../utils/pdfParser';
@@ -27,6 +27,7 @@ import {
 interface ContrachequesManagementProps {
   employees: Employee[];
   paystubs: PaystubRecord[];
+  constructionSites?: ConstructionSite[];
   onSaveBatchPaystubs: (paystubs: PaystubRecord[]) => Promise<void>;
   onSaveEmployees?: (employees: Employee[]) => Promise<void>;
   onDeletePaystub: (id: string) => Promise<void>;
@@ -38,6 +39,7 @@ interface ContrachequesManagementProps {
 export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = ({
   employees,
   paystubs,
+  constructionSites = [],
   onSaveBatchPaystubs,
   onSaveEmployees,
   onDeletePaystub,
@@ -369,6 +371,7 @@ export const ContrachequesManagement: React.FC<ContrachequesManagementProps> = (
         onImportBatch={onSaveBatchPaystubs}
         onSaveEmployees={onSaveEmployees}
         employees={employees}
+        constructionSites={constructionSites}
         theme={theme}
         currentUserEmail={currentUserEmail}
       />

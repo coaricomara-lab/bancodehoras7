@@ -55,6 +55,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
   const [formCode, setFormCode] = useState('');
   const [formAddress, setFormAddress] = useState('');
   const [formBranch, setFormBranch] = useState<Branch>('KO');
+  const [formBigramas, setFormBigramas] = useState(''); // Bigramas separados por vírgula
   const [formChief, setFormChief] = useState('');
   const [formChiefContact, setFormChiefContact] = useState('');
   const [formManager, setFormManager] = useState('');
@@ -113,6 +114,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
     setFormCode(`KO-${Math.floor(10 + Math.random() * 90)}`);
     setFormAddress('');
     setFormBranch('KO');
+    setFormBigramas('');
     setFormChief('');
     setFormChiefContact('');
     setFormManager('');
@@ -132,6 +134,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
     setFormCode(site.code || site.codigo || '');
     setFormAddress(site.address || site.endereco || '');
     setFormBranch((site.branch || site.sede || 'KO') as Branch);
+    setFormBigramas((site.bigramasImportacao || []).join(', '));
     setFormChief(site.chief || site.chefeCanteiro || '');
     setFormChiefContact((site as any).chiefContact || (site as any).chefeContato || (site as any).contato || '');
     setFormManager(site.manager || site.gerente || '');
@@ -162,6 +165,12 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
     setIsSubmitting(true);
     setFeedbackMsg(null);
 
+    // Parse bigramas from comma-separated string
+    const bigramasArray = formBigramas
+      .split(',')
+      .map(b => b.trim().toUpperCase())
+      .filter(b => b.length > 0);
+
     const sitePayload: any = {
       ...(editingSite ? { id: editingSite.id } : {}),
       name: formName.trim(),
@@ -172,6 +181,7 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
       endereco: formAddress.trim(),
       branch: formBranch,
       sede: formBranch,
+      bigramasImportacao: bigramasArray,
       chief: formChief.trim(),
       chefeCanteiro: formChief.trim(),
       chiefContact: formChiefContact.trim(),
@@ -632,6 +642,25 @@ export const CanteirosManagement: React.FC<CanteirosManagementProps> = ({
                     <option value="RJ">Rio de Janeiro (RJ)</option>
                   </select>
                 </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs font-bold uppercase flex items-center gap-2">
+                  Bigramas para Importação (Siglas de Matching)
+                  <span className={`text-[10px] font-normal ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Opcional</span>
+                </label>
+                <input
+                  type="text"
+                  value={formBigramas}
+                  onChange={(e) => setFormBigramas(e.target.value.toUpperCase())}
+                  placeholder="Ex: KO, DECO-KO, DACO-KO (separados por vírgula)"
+                  className={`w-full px-3 py-2 rounded-xl text-xs font-mono border outline-none ${
+                    isDark ? 'bg-[#0B1426] border-[#2E4566] text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20' : 'bg-gray-50 border-gray-300 text-gray-900 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20'
+                  }`}
+                />
+                <p className={`text-[11px] mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Use esses códigos para vincular colaboradores automaticamente durante importações de CSV ou Contracheques. Ex: "KO" corresponde a "KO" em arquivos.
+                </p>
               </div>
 
               <div className="space-y-1">
