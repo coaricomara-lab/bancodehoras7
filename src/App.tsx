@@ -342,6 +342,7 @@ export default function App() {
   useEffect(() => {
     // 1.4: Guard against duplicate listeners — only subscribe when user is verified
     if (isSubscribedRef.current) return;
+    if (isAuthLoading || !auth.currentUser) return;
     if (!currentUser || !userRole) return;
     isSubscribedRef.current = true;
     const cleanup = initFirestoreSubscriptions();
@@ -349,7 +350,7 @@ export default function App() {
       isSubscribedRef.current = false;
       if (typeof cleanup === 'function') cleanup();
     };
-  }, [initFirestoreSubscriptions, currentUser, userRole]);
+  }, [initFirestoreSubscriptions, currentUser, userRole, isAuthLoading]);
 
   // -------------------------------------------------------------
   // 2. Monitor and Enforce Strict RBAC on Authentication State
@@ -430,23 +431,9 @@ export default function App() {
         // S-008: a sessão local não pode substituir a autenticação oficial do Firebase Auth.
         // Se o token do Firebase não estiver ativo, a sessão deve ser rejeitada e o usuário deve fazer login novamente.
         setIsVerifyingPermissions(false);
-        const savedSession = authService.getCurrentSession();
-        if (savedSession && savedSession.role && auth.currentUser) {
-          const appUser: AppUser = {
-            email: savedSession.email,
-            nome: savedSession.nome,
-            role: savedSession.role as AdminRole,
-            cargo: savedSession.cargo,
-            loginTime: savedSession.loginTime,
-          };
-          setCurrentUser(appUser);
-          setUserRole(savedSession.role as AdminRole);
-          setUserMode(savedSession.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
-        } else {
-          if (savedSession) authService.clearSession();
-          setCurrentUser(null);
-          setUserRole(null);
-        }
+        authService.clearSession();
+        setCurrentUser(null);
+        setUserRole(null);
       }
     });
 

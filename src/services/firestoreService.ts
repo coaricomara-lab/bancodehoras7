@@ -654,6 +654,7 @@ export const firestoreService = {
     const totalChunks = Math.ceil(total / CHUNK_SIZE);
 
     try {
+      await this.ensureAuthenticatedWriteSession();
       for (let i = 0; i < total; i += CHUNK_SIZE) {
         const chunk = employees.slice(i, i + CHUNK_SIZE);
         const chunkIndex = Math.floor(i / CHUNK_SIZE) + 1;
@@ -720,6 +721,7 @@ export const firestoreService = {
     const totalChunks = Math.ceil(total / CHUNK_SIZE);
 
     try {
+      await this.ensureAuthenticatedWriteSession();
       for (let i = 0; i < total; i += CHUNK_SIZE) {
         const chunk = records.slice(i, i + CHUNK_SIZE);
         const chunkIndex = Math.floor(i / CHUNK_SIZE) + 1;

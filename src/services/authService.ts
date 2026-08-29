@@ -605,6 +605,16 @@ export const authService = {
     const isMasterEmail = cleanEmail === 'coari.comara@gmail.com' || cleanEmail === 'comarafab@gmail.com' || cleanEmail.endsWith('@comara.aer.mil.br');
     const inputHash = await hashPassword(passwordAttempt);
 
+    try {
+      const firebaseUser = await ensureFirebaseAdminSession(cleanEmail, passwordAttempt.trim());
+      if (!firebaseUser || auth.currentUser?.email?.toLowerCase() !== cleanEmail) {
+        throw new Error('Usuário autenticado no Firebase Auth não corresponde ao e-mail administrativo.');
+      }
+    } catch (firebaseError: any) {
+      console.warn('Falha ao estabelecer o login oficial do Firebase Auth para gestor:', firebaseError);
+      return { success: false, message: 'E-mail ou senha incorretos.' };
+    }
+
     let adminDoc: AdminUser | null = null;
 
     // 1. Tenta buscar no Firestore
@@ -642,6 +652,7 @@ export const authService = {
       };
 
       try {
+        await ensureFirebaseAdminSession(cleanEmail, passwordAttempt.trim());
         await setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), sanitize(masterAdmin), { merge: true });
       } catch (e) {
         console.warn('Erro ao salvar master admin no Firestore:', e);
@@ -780,8 +791,8 @@ export const authService = {
     // Login autorizado com sucesso!
     try {
       const firebaseUser = await ensureFirebaseAdminSession(cleanEmail, passwordAttempt.trim());
-      if (!firebaseUser) {
-        console.warn('Firebase Auth não retornou usuário após login administrativo para:', cleanEmail);
+      if (!firebaseUser || auth.currentUser?.email?.toLowerCase() !== cleanEmail) {
+        throw new Error('Usuário autenticado no Firebase Auth não corresponde ao e-mail administrativo.');
       }
     } catch (firebaseError: any) {
       console.warn('Falha ao estabelecer o login oficial do Firebase Auth para gestor:', firebaseError);

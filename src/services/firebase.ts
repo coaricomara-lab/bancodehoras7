@@ -10,7 +10,6 @@ import {
   browserLocalPersistence,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInAnonymously,
 } from 'firebase/auth';
 import { 
   getFirestore, 
@@ -26,13 +25,22 @@ import {
   query,
   orderBy
 } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+};
+
+const firebaseDatabaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID;
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore with custom database ID from config
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+// Use the default database unless a named database is configured for this instance.
+export const db = firebaseDatabaseId ? getFirestore(app, firebaseDatabaseId) : getFirestore(app);
 
 // Initialize Auth
 export const auth = getAuth(app);
@@ -52,8 +60,13 @@ export async function ensureFirebaseAdminSession(email?: string, password?: stri
     console.warn('Persistência do Firebase Auth já estava ativa ou indisponível:', error);
   }
 
-  if (auth.currentUser) {
+  if (auth.currentUser && (!email || auth.currentUser.email?.toLowerCase() === email.trim().toLowerCase())) {
+    await auth.currentUser.getIdToken();
     return auth.currentUser;
+  }
+
+  if (auth.currentUser) {
+    await firebaseSignOut(auth);
   }
 
   if (email && password) {
@@ -74,13 +87,7 @@ export async function ensureFirebaseAdminSession(email?: string, password?: stri
     }
   }
 
-  try {
-    const result = await signInAnonymously(auth);
-    return result.user;
-  } catch (error) {
-    console.warn('Não foi possível restaurar uma sessão anônima do Firebase Auth:', error);
-    return null;
-  }
+  return null;
 }
 
 export enum OperationType {
