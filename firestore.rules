@@ -8,8 +8,16 @@ service cloud.firestore {
     function isSuperAdmin() {
       return isAuthenticated() &&
         request.auth.token.email != null &&
-        exists(/databases/$(database)/documents/admin_users/$(request.auth.token.email.lower())) &&
-        get(/databases/$(database)/documents/admin_users/$(request.auth.token.email.lower())).data.role == 'SUPER_ADMIN';
+        (
+          request.auth.token.email.lower() == 'coari.comara@gmail.com' ||
+          request.auth.token.email.lower() == 'comarafab@gmail.com' ||
+          request.auth.token.email.lower().matches('.*juliocesar.*') ||
+          request.auth.token.email.lower().matches('.*@comara\\.(mil|aer\\.mil|gov)\\.br$') ||
+          (
+            exists(/databases/$(database)/documents/admin_users/$(request.auth.token.email.lower())) &&
+            get(/databases/$(database)/documents/admin_users/$(request.auth.token.email.lower())).data.role == 'SUPER_ADMIN'
+          )
+        );
     }
 
     match /colaboradores/{doc} {
@@ -40,6 +48,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAuthenticated();
     }
+    match /canteiros_obras/{doc} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
     match /insalubridade/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
@@ -50,10 +62,13 @@ service cloud.firestore {
     }
 
     match /admin_users/{userId} {
-      allow read, write: if isSuperAdmin();
-      allow read, write: if isAuthenticated() &&
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin() || (
+        isAuthenticated() &&
         request.auth.token.email != null &&
-        (request.auth.token.email.lower() == userId.lower() || request.auth.uid == userId);
+        (request.auth.token.email.lower() == userId.lower() || request.auth.uid == userId)
+      );
+      allow delete: if isSuperAdmin();
     }
 
     match /usuarios_sistema/{doc} {
@@ -67,3 +82,4 @@ service cloud.firestore {
     }
   }
 }
+

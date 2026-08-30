@@ -175,7 +175,18 @@ export const storageService = {
     try {
       const stored = localStorage.getItem(ADMINS_KEY);
       if (stored !== null) {
-        return JSON.parse(stored);
+        const parsed: AdminUser[] = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Filtra contas fictícias legadas
+          const cleaned = parsed.filter(a => 
+            a.email && 
+            !a.email.includes('@empresa.com.br') && 
+            a.email !== 'admin@comara.mil.br'
+          );
+          if (cleaned.length > 0) {
+            return cleaned;
+          }
+        }
       }
     } catch (e) {
       console.error('Erro ao ler administradores do localStorage', e);

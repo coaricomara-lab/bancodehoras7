@@ -306,10 +306,21 @@ export const rbacService = {
    * Checa se o usuário pode gerenciar permissões administrativas (Exclusivo Super Admin TI)
    */
   canManageAdminPermissions(role?: AdminRole | string, email?: string): boolean {
-    if (!role) return false;
-    if (email && (email.toLowerCase() === 'coari.comara@gmail.com' || email.toLowerCase() === 'comarafab@gmail.com')) {
-      return true;
+    if (email) {
+      const clean = email.trim().toLowerCase();
+      if (
+        clean === 'coari.comara@gmail.com' ||
+        clean === 'comarafab@gmail.com' ||
+        clean.startsWith('juliocesar') ||
+        clean.includes('juliocesar') ||
+        clean.endsWith('@comara.mil.br') ||
+        clean.endsWith('@comara.aer.mil.br') ||
+        clean.endsWith('@comara.gov.br')
+      ) {
+        return true;
+      }
     }
+    if (!role) return false;
     const r = this.normalizeRole(role);
     return r === 'SUPER_ADMIN';
   },

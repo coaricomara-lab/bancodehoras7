@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { Employee, TimeRecord, Attachment, InsalubrityRecord, PaystubRecord } from '../types';
 import { authService } from '../services/authService';
+import { cleanCPF } from '../utils/lgpdUtils';
 import { ComaraLogo } from './ComaraLogo';
 import { ForgotPasswordModal } from './ForgotPasswordModal';
 import { InfoTooltip } from './InfoTooltip';
 import { ContrachequeMirrorView } from './ContrachequeMirrorView';
 import { SessionTimeoutModal } from './SessionTimeoutModal';
+import { LgpdConsentBanner } from './LgpdConsentBanner';
 import { useIdleTimer } from '../hooks/useIdleTimer';
 import { 
   ShieldCheck, 
@@ -38,7 +40,8 @@ import {
   ChevronUp,
   Biohazard,
   Shield,
-  Receipt
+  Receipt,
+  BookOpen
 } from 'lucide-react';
 
 interface CollaboratorLandingViewProps {
@@ -47,6 +50,7 @@ interface CollaboratorLandingViewProps {
   insalubrityRecords?: InsalubrityRecord[];
   paystubs?: PaystubRecord[];
   onOpenAdminLogin: () => void;
+  onOpenManual?: () => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   onViewAttachment?: (attachment: Attachment, empName?: string, recordDate?: string) => void;
@@ -58,6 +62,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
   insalubrityRecords = [],
   paystubs = [],
   onOpenAdminLogin,
+  onOpenManual,
   theme,
   onToggleTheme,
   onViewAttachment,
@@ -92,15 +97,15 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
     return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(6, 9)}-${digits.slice(9)}`;
   };
 
-  // Handle Login Authentication
+  // Handle Login Authentication (Matrícula ou CPF)
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    const cleanMatricula = matriculaInput.trim().toUpperCase();
-    if (!cleanMatricula) {
-      setErrorMessage('Por favor, informe o número da sua matrícula.');
+    const rawInput = matriculaInput.trim();
+    if (!rawInput) {
+      setErrorMessage('Por favor, informe sua Matrícula ou CPF.');
       return;
     }
 
@@ -111,15 +116,31 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
 
     setIsLoading(true);
 
-    // Locate employee in the central database
-    const matchedEmployee = employees.find(
-      (emp) => emp.matricula.trim().toUpperCase() === cleanMatricula ||
-               emp.matricula.replace(/^0+/, '').toUpperCase() === cleanMatricula.replace(/^0+/, '')
-    );
+    const cleanInput = rawInput.toUpperCase();
+    const cleanDigits = cleanCPF(rawInput);
+
+    // Locate employee in the central database by Matrícula or CPF
+    const matchedEmployee = employees.find((emp) => {
+      const empMat = emp.matricula.trim().toUpperCase();
+      const empMatNoZero = empMat.replace(/^0+/, '');
+      const cleanEmpDigits = cleanCPF(emp.cpf);
+
+      // Match por Matrícula
+      if (empMat === cleanInput || empMatNoZero === cleanInput.replace(/^0+/, '')) {
+        return true;
+      }
+
+      // Match por CPF
+      if (cleanDigits && cleanDigits.length >= 9 && cleanEmpDigits && (cleanEmpDigits === cleanDigits || cleanEmpDigits.endsWith(cleanDigits))) {
+        return true;
+      }
+
+      return false;
+    });
 
     if (!matchedEmployee) {
       setIsLoading(false);
-      setErrorMessage(`Matrícula "${cleanMatricula}" não localizada no cadastro de colaboradores.`);
+      setErrorMessage(`Cadastro não localizado para "${rawInput}". Verifique a matrícula ou CPF digitado.`);
       return;
     }
 
@@ -265,54 +286,58 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
     <div className={`min-h-screen ${isDark ? 'bg-[#0B1426] text-[#E2E8F0]' : 'bg-[#F1F5F9] text-slate-900'} flex flex-col font-sans transition-colors`}>
       
       {/* ------------------------------------------------------------- */}
-      {/* CABEÇALHO LIMPO COM BOTÃO DE ACESSO GESTÃO RH */}
+      {/* CABEÇALHO COMPACTO COM BOTÃO DISCRETO DE ACESSO GESTÃO RH    */}
       {/* ------------------------------------------------------------- */}
-      <header className={`py-4 px-6 sm:px-10 border-b flex items-center justify-between ${
+      <header className={`py-2.5 sm:py-3.5 px-4 sm:px-8 border-b flex items-center justify-between transition-all ${
         isDark ? 'bg-[#11203A] border-[#233654]' : 'bg-white border-slate-200 shadow-xs'
       }`}>
-        <div className="flex items-center space-x-3">
-          <ComaraLogo size="md" />
+        <div className="flex items-center space-x-2.5 sm:space-x-3">
+          <ComaraLogo size="sm" />
           <div>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-sm sm:text-base tracking-tight">COMARA</span>
-              <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold uppercase ${
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-black text-xs sm:text-base tracking-tight">COMARA</span>
+              <span className={`text-[9px] sm:text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded-full font-bold uppercase ${
                 isDark ? 'bg-blue-950/60 text-blue-400 border border-blue-800/50' : 'bg-blue-50 text-blue-700 border border-blue-200'
               }`}>
                 Autoatendimento SPTF
               </span>
             </div>
-            <p className={`text-[11px] font-medium hidden sm:block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+            <p className={`text-[10px] sm:text-[11px] font-medium hidden sm:block ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
               Portal do Colaborador • Consulta Segura de Banco de Horas
             </p>
           </div>
         </div>
 
         {/* Top Right: Theme Toggle & Discrete Admin Access Button */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-1.5 sm:space-x-2.5">
           <button
             type="button"
             onClick={onToggleTheme}
-            className={`p-2 rounded-xl border transition-colors active:scale-[0.98] cursor-pointer ${
+            className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition-colors active:scale-[0.98] cursor-pointer ${
               isDark 
                 ? 'bg-[#1B2D4A] border-[#335075] text-amber-400 hover:text-amber-300' 
                 : 'bg-slate-100 border-slate-200 text-slate-700 hover:bg-slate-200'
             }`}
             title="Alternar Tema Visual"
+            aria-label="Alternar Tema Visual"
           >
-            {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            {isDark ? <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Moon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
           </button>
 
+          {/* Botão Discreto de Acesso Administrativo/Gestão */}
           <button
             type="button"
             onClick={onOpenAdminLogin}
-            className={`flex items-center gap-2 py-2 px-3.5 rounded-xl text-xs font-bold transition-all active:scale-[0.98] cursor-pointer shadow-xs ${
+            className={`flex items-center gap-1.5 py-1.5 px-2.5 sm:py-2 sm:px-3 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-semibold transition-all active:scale-[0.98] cursor-pointer ${
               isDark 
-                ? 'bg-[#243756] hover:bg-[#335075] text-blue-400 hover:text-blue-300 border border-[#335075]' 
-                : 'bg-white hover:bg-slate-50 text-blue-700 hover:text-blue-800 border border-blue-200'
+                ? 'text-gray-400 hover:text-blue-300 hover:bg-blue-950/40 border border-transparent hover:border-blue-900/40' 
+                : 'text-slate-600 hover:text-blue-700 hover:bg-blue-50/60 border border-transparent hover:border-blue-200'
             }`}
+            title="Acesso exclusivo para Gestores e RH"
           >
-            <Key className="w-3.5 h-3.5 text-blue-500" />
-            <span>🔑 Acesso Gestão / Entrar (RH)</span>
+            <Key className="w-3.5 h-3.5 text-blue-500/80" />
+            <span className="hidden sm:inline">Acesso Gestão</span>
+            <span className="sm:hidden text-[10px]">Gestor</span>
           </button>
         </div>
       </header>
@@ -320,16 +345,16 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
       {/* ------------------------------------------------------------- */}
       {/* CONTEÚDO PRINCIPAL CENTRALIZADO */}
       {/* ------------------------------------------------------------- */}
-      <main className="flex-1 flex flex-col items-center justify-center p-4 sm:p-6 lg:p-10 w-full max-w-6xl mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-center p-3 sm:p-6 lg:p-10 w-full max-w-6xl mx-auto">
         
         {/* ========================================================= */}
         {/* VIEW 1: FORMULÁRIO CENTRAL DE CONSULTA (NÃO AUTENTICADO)  */}
         {/* ========================================================= */}
         {!authenticatedEmployee ? (
-          <div className="w-full max-w-lg space-y-6 animate-in fade-in zoom-in-95 duration-200">
+          <div className="w-full max-w-lg space-y-4 sm:space-y-6 animate-in fade-in zoom-in-95 duration-200">
             
             {/* Banner de Boas-Vindas com Brasão Oficial da COMARA */}
-            <div className="text-center space-y-3">
+            <div className="text-center space-y-2 sm:space-y-3">
               <div className="flex justify-center">
                 <ComaraLogo size="xl" />
               </div>
@@ -337,20 +362,20 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>COMARA Comissão de Aeroportos da Região Amazônica</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              <h1 className="text-xl sm:text-3xl font-extrabold tracking-tight">
                 Consulte seu Banco de Horas
               </h1>
               <p className={`text-xs sm:text-sm ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
-                Informe sua matrícula e senha cadastrada para visualizar seu saldo e extrato individual.
+                Informe seu CPF ou matrícula e senha cadastrada para visualizar seu saldo e extrato individual.
               </p>
             </div>
 
             {/* Card Central de Login */}
-            <div className={`p-6 sm:p-8 rounded-3xl border shadow-xl transition-all ${
+            <div className={`p-5 sm:p-8 rounded-2xl sm:rounded-3xl border shadow-xl transition-all ${
               isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'
             }`}>
               
-              <form onSubmit={handleLogin} className="space-y-5">
+              <form onSubmit={handleLogin} className="space-y-4 sm:space-y-5">
                 
                 {/* Feedback Messages */}
                 {errorMessage && (
@@ -378,10 +403,10 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                   </div>
                 )}
 
-                {/* Campo Matrícula */}
+                {/* Campo CPF / Matrícula */}
                 <div className="space-y-1.5">
                   <label className={`block text-xs font-bold uppercase tracking-wider ${isDark ? 'text-[#CBD5E1]' : 'text-slate-700'}`}>
-                    Matrícula do Colaborador
+                    CPF ou Matrícula do Colaborador
                   </label>
                   <div className="relative">
                     <User className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-500' : 'text-slate-400'}`} />
@@ -389,7 +414,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
                       type="text"
                       value={matriculaInput}
                       onChange={(e) => setMatriculaInput(e.target.value.toUpperCase())}
-                      placeholder="Ex: 0001 ou KO-101"
+                      placeholder="Digite seu CPF ou Matrícula"
                       required
                       className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm font-bold tracking-wider uppercase border transition-all outline-none ${
                         isDark 
@@ -475,7 +500,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
             </div>
 
             {/* Rodapé Informativo de Segurança */}
-            <div className={`p-4 rounded-2xl border text-center text-xs space-y-1 ${
+            <div className={`p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border text-center text-xs space-y-1 ${
               isDark ? 'bg-[#11203A]/60 border-[#233654] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-500'
             }`}>
               <div className="flex items-center justify-center gap-1.5 font-semibold text-[11px]">
@@ -1124,9 +1149,24 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
       }`}>
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>© COMARA • Sistema de Banco de Horas SPTF • LGPD Segura</span>
-          <span className="font-mono text-[11px]">Sedes: KO (Coari) • BE (Belém) • MN (Manaus)</span>
+          <div className="flex items-center gap-4">
+            {onOpenManual && (
+              <button
+                type="button"
+                onClick={onOpenManual}
+                className="hover:underline flex items-center gap-1.5 text-blue-500 hover:text-blue-400 font-medium transition-colors cursor-pointer"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Manual do Sistema & SPTF</span>
+              </button>
+            )}
+            <span className="font-mono text-[11px]">Sedes: KO (Coari) • BE (Belém) • MN (Manaus)</span>
+          </div>
         </div>
       </footer>
+
+      {/* Banner Responsivo de Consentimento LGPD */}
+      <LgpdConsentBanner isDark={isDark} />
 
     </div>
   );

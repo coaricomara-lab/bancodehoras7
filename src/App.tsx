@@ -45,7 +45,7 @@ import { rbacService } from './services/rbacService';
 import { registrarLogAuditoria } from './services/auditService';
 import { useInactivityTimeout } from './hooks/useInactivityTimeout';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { CheckCircle2, AlertCircle, Cloud, RefreshCw, X, Database } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Cloud, RefreshCw, X, Database, ShieldAlert, BookOpen, ArrowLeft, LogOut, Lock } from 'lucide-react';
 
 export interface AppUser {
   uid?: string;
@@ -60,6 +60,11 @@ export interface AppUser {
   loginTime?: string;
   photoURL?: string | null;
   tratamentoTitulo?: string;
+  postoGraduacao?: string;
+  nomeGuerra?: string;
+  saram?: string;
+  funcao?: string;
+  canteiroSede?: string;
 }
 
 export default function App() {
@@ -69,7 +74,8 @@ export default function App() {
   const [userRole, setUserRole] = useState<AdminRole | null>(null);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
   const [isVerifyingPermissions, setIsVerifyingPermissions] = useState(false);
-  const [pendingAccessUser, setPendingAccessUser] = useState<{ email: string; nome: string; foto?: string | null } | null>(null);
+  const [pendingAccessUser, setPendingAccessUser] = useState<{ email: string; nome: string; foto?: string | null; status?: 'pendente' | 'inativo' | 'bloqueado' } | null>(null);
+  const [isViewingManualModal, setIsViewingManualModal] = useState(false);
 
   // Firestore Data State
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -208,9 +214,21 @@ export default function App() {
       activeCanteiro
     );
 
-    // Carrega administradores do cache local seguro (sem listagem não-autorizada no Firestore)
-    const localAdmins = storageService.getAdmins();
-    setAdminUsers(localAdmins);
+    // Realtime subscription para admin_users no Firestore (com fallback local seguro)
+    const unsubAdmins = firestoreService.subscribeAdmins(
+      (admins) => {
+        const cleaned = admins.filter(a => a.email && !a.email.includes('@empresa.com.br') && a.email !== 'admin@comara.mil.br');
+        setAdminUsers(cleaned);
+        if (cleaned.length > 0) {
+          storageService.saveAdmins(cleaned);
+        }
+      },
+      (err) => {
+        console.warn('Fallback local para administradores:', err);
+        const local = storageService.getAdmins();
+        setAdminUsers(local);
+      }
+    );
 
     // Subscribe to Insalubrity Records in Firestore
     const unsubInsalubrity = firestoreService.subscribeInsalubrityRecords(
@@ -305,6 +323,11 @@ export default function App() {
       } catch (e) {
         console.warn('Erro ao cancelar listener de dispensas SPTF:', e);
       }
+      try {
+        if (typeof unsubAdmins === 'function') unsubAdmins();
+      } catch (e) {
+        console.warn('Erro ao cancelar listener de administradores:', e);
+      }
     };
   }, [userRole, currentUser]);
 
@@ -344,10 +367,27 @@ export default function App() {
               email: processed.admin.email,
               nome: processed.admin.nome || user.displayName || email.split('@')[0],
               foto: processed.admin.foto || user.photoURL || null,
+              status: 'pendente'
             });
             setCurrentUser(null);
             setUserRole(null);
             setUserMode('ADMIN');
+            authService.clearSession();
+            setIsVerifyingPermissions(false);
+            return;
+          }
+
+          if (processed.status === 'inativo' || processed.status === 'bloqueado' || processed.admin.ativo === false) {
+            setPendingAccessUser({
+              email: processed.admin.email,
+              nome: processed.admin.nome || user.displayName || email.split('@')[0],
+              foto: processed.admin.foto || user.photoURL || null,
+              status: 'inativo'
+            });
+            setCurrentUser(null);
+            setUserRole(null);
+            setUserMode('ADMIN');
+            authService.clearSession();
             setIsVerifyingPermissions(false);
             return;
           }
@@ -408,10 +448,26 @@ export default function App() {
           email: processed.admin.email,
           nome: processed.admin.nome || userToProcess?.displayName || targetEmail.split('@')[0],
           foto: processed.admin.foto || userToProcess?.photoURL || null,
+          status: 'pendente'
         });
         setCurrentUser(null);
         setUserRole(null);
         setUserMode('ADMIN');
+        authService.clearSession();
+        return null;
+      }
+
+      if (processed.status === 'inativo' || processed.status === 'bloqueado' || processed.admin.ativo === false) {
+        setPendingAccessUser({
+          email: processed.admin.email,
+          nome: processed.admin.nome || userToProcess?.displayName || targetEmail.split('@')[0],
+          foto: processed.admin.foto || userToProcess?.photoURL || null,
+          status: 'inativo'
+        });
+        setCurrentUser(null);
+        setUserRole(null);
+        setUserMode('ADMIN');
+        authService.clearSession();
         return null;
       }
 
@@ -528,11 +584,16 @@ export default function App() {
       setIsVerifyingPermissions(true);
       const { user, processed } = await authService.signInWithGoogle();
 
-      if (processed.status === 'inativo' || processed.status === 'bloqueado') {
+      if (processed.status === 'inativo' || processed.status === 'bloqueado' || processed.admin.ativo === false) {
         authService.clearSession();
         setCurrentUser(null);
         setUserRole(null);
-        setPendingAccessUser(null);
+        setPendingAccessUser({
+          email: processed.admin.email,
+          nome: processed.admin.nome || user.displayName || processed.admin.email.split('@')[0],
+          foto: processed.admin.foto || user.photoURL || null,
+          status: 'inativo'
+        });
         showToast('Usuário desativado. Procure o Gerente ou DA do canteiro para solicitar o desbloqueio.', 'error');
         return { success: false, error: 'Usuário desativado. Procure o Gerente ou DA do canteiro para solicitar o desbloqueio.' };
       }
@@ -542,6 +603,7 @@ export default function App() {
           email: processed.admin.email,
           nome: processed.admin.nome || user.displayName || processed.admin.email.split('@')[0],
           foto: processed.admin.foto || user.photoURL || null,
+          status: 'pendente'
         });
         setCurrentUser(null);
         setUserRole(null);
@@ -1414,18 +1476,66 @@ export default function App() {
   };
 
   // -------------------------------------------------------------
-  // RENDER: BLOQUEIO DE ACESSO PENDENTE (GOOGLE WORKSPACE)
+  // RENDER: BLOQUEIO DE ACESSO PENDENTE / INATIVO (GOOGLE WORKSPACE)
   // -------------------------------------------------------------
   if (pendingAccessUser) {
+    const isInactive = pendingAccessUser.status === 'inativo' || pendingAccessUser.status === 'bloqueado';
+
+    if (isViewingManualModal) {
+      return (
+        <div className={`notranslate min-h-screen flex flex-col ${isDark ? 'bg-[#0F1B33] text-white' : 'bg-slate-50 text-slate-900'}`}>
+          <header className={`py-3 px-4 border-b flex items-center justify-between z-10 sticky top-0 backdrop-blur-md ${isDark ? 'bg-[#16243D]/90 border-[#243756]' : 'bg-white/90 border-slate-200'}`}>
+            <button
+              type="button"
+              onClick={() => setIsViewingManualModal(false)}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow transition-all cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Voltar para Tela de Acesso</span>
+            </button>
+            <div className="flex items-center gap-2 text-xs font-mono">
+              <span className="text-gray-400">Autenticado como:</span>
+              <span className="text-blue-400 font-bold">{pendingAccessUser.email}</span>
+            </div>
+            <button
+              type="button"
+              onClick={async () => {
+                await firebaseSignOut(auth);
+                authService.clearSession();
+                setPendingAccessUser(null);
+                setCurrentUser(null);
+                setUserRole(null);
+                setIsViewingManualModal(false);
+                showToast('Sessão encerrada com sucesso.', 'info');
+              }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isDark ? 'border-red-500/40 text-red-400 hover:bg-red-500/10' : 'border-red-200 text-red-600 hover:bg-red-50'}`}
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Sair</span>
+            </button>
+          </header>
+          <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
+            <GoogleArchitectureSpec isDark={isDark} />
+          </main>
+        </div>
+      );
+    }
+
     return (
       <div className={`notranslate min-h-screen flex items-center justify-center px-4 py-12 ${isDark ? 'bg-[#0F1B33] text-white' : 'bg-slate-50 text-slate-900'}`}>
         <div className={`w-full max-w-lg rounded-3xl border p-8 text-center shadow-2xl ${isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'}`}>
-          <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border ${isDark ? 'border-blue-500/30 bg-blue-500/10 text-blue-400' : 'border-blue-200 bg-blue-50 text-blue-600'}`}>
-            <AlertCircle className="h-8 w-8" />
+          <div className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border ${isInactive ? (isDark ? 'border-amber-500/30 bg-amber-500/10 text-amber-400' : 'border-amber-200 bg-amber-50 text-amber-600') : (isDark ? 'border-blue-500/30 bg-blue-500/10 text-blue-400' : 'border-blue-200 bg-blue-50 text-blue-600')}`}>
+            {isInactive ? <ShieldAlert className="h-8 w-8" /> : <AlertCircle className="h-8 w-8" />}
           </div>
-          <h2 className="text-2xl font-bold tracking-tight">Acesso pendente</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            {isInactive ? 'Acesso desativado' : 'Acesso pendente'}
+          </h2>
           <p className={`mt-4 text-sm leading-6 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
-            Sua conta <span className="font-semibold text-blue-500">{pendingAccessUser.email}</span> foi registrada com sucesso. Solicite ao RH, TI ou Administrador a liberação do seu perfil de acesso.
+            {isInactive ? (
+              <>Sua conta <span className="font-semibold text-blue-500">{pendingAccessUser.email}</span> está atualmente inativa no sistema. Procure a Seção de TI ou o Gerente do canteiro para solicitar o desbloqueio.</>
+            ) : (
+              <>Sua conta <span className="font-semibold text-blue-500">{pendingAccessUser.email}</span> foi registrada com sucesso. Solicite ao RH, TI ou Administrador a liberação do seu perfil de acesso.</>
+            )}
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
@@ -1434,6 +1544,14 @@ export default function App() {
               className="inline-flex items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-500 active:scale-[0.98] cursor-pointer"
             >
               Verificar Status novamente
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsViewingManualModal(true)}
+              className={`inline-flex items-center justify-center gap-1.5 rounded-xl border px-4 py-2.5 text-sm font-bold transition-all active:scale-[0.98] cursor-pointer ${isDark ? 'border-blue-500/40 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20' : 'border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100'}`}
+            >
+              <BookOpen className="w-4 h-4" />
+              <span>Manual do Sistema</span>
             </button>
             <button
               type="button"
@@ -1452,6 +1570,37 @@ export default function App() {
   // RENDER: PORTAL DO COLABORADOR (LANDING PAGE PADRÃO / LGPD)
   // -------------------------------------------------------------
   if (!currentUser) {
+    if (isViewingManualModal) {
+      return (
+        <div className={`notranslate min-h-screen flex flex-col ${isDark ? 'bg-[#0F1B33] text-white' : 'bg-slate-50 text-slate-900'}`}>
+          <header className={`py-3 px-4 border-b flex items-center justify-between z-10 sticky top-0 backdrop-blur-md ${isDark ? 'bg-[#16243D]/90 border-[#243756]' : 'bg-white/90 border-slate-200'}`}>
+            <button
+              type="button"
+              onClick={() => setIsViewingManualModal(false)}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow transition-all cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Voltar ao Portal do Colaborador</span>
+            </button>
+            <div className="flex items-center gap-2 text-xs font-mono text-gray-400">
+              <span>COMARA SPTF • Manual e Governança</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => { setIsViewingManualModal(false); setIsAdminLoginModalOpen(true); }}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isDark ? 'border-blue-500/40 text-blue-400 hover:bg-blue-500/10' : 'border-blue-200 text-blue-600 hover:bg-blue-50'}`}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>Acesso Administrativo</span>
+            </button>
+          </header>
+          <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
+            <GoogleArchitectureSpec isDark={isDark} />
+          </main>
+        </div>
+      );
+    }
+
     return (
       <div translate="no" className="notranslate min-h-screen flex flex-col">
         {/* Banner de Aviso de Permissão (se houver) */}
@@ -1497,6 +1646,7 @@ export default function App() {
             insalubrityRecords={insalubrityRecords}
             paystubs={paystubs}
             onOpenAdminLogin={() => setIsAdminLoginModalOpen(true)}
+            onOpenManual={() => setIsViewingManualModal(true)}
             theme={theme}
             onToggleTheme={handleToggleTheme}
             onViewAttachment={handleViewAttachment}

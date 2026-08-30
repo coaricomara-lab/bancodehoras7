@@ -4,6 +4,7 @@ import { storageService } from '../services/storageService';
 import { firestoreService } from '../services/firestoreService';
 import { registrarLogAuditoria } from '../services/auditService';
 import { ROLE_INFO, rbacService, CONSOLIDATED_ROLES } from '../services/rbacService';
+import { isMasterAdminEmail } from '../services/authService';
 import { InfoTooltip } from './InfoTooltip';
 import { 
   ShieldCheck, 
@@ -93,20 +94,27 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
   // Sync real-time with Firestore (once, optimized)
   useEffect(() => {
     const unsub = firestoreService.subscribeAdmins((list) => {
+      // Filtra contas fictícias legadas
+      const cleanedList = list.filter(a => 
+        a.email && 
+        !a.email.includes('@empresa.com.br') && 
+        a.email !== 'admin@comara.mil.br'
+      );
+
       const masterEmail = 'coari.comara@gmail.com';
-      const hasMaster = list.some(a => a.email.toLowerCase() === masterEmail.toLowerCase());
-      let fullList = [...list];
+      const hasMaster = cleanedList.some(a => a.email.toLowerCase() === masterEmail.toLowerCase());
+      let fullList = [...cleanedList];
       if (!hasMaster) {
         fullList.unshift({
           id: 'adm-super-master',
           email: masterEmail,
-          nome: 'Administrador Master COMARA',
+          nome: 'Coari Comara (Administrador Geral)',
           cargo: 'Super Administrador TI / RH',
           funcao: 'Super Administrador TI / RH',
           postoGraduacao: 'Maj',
-          nomeGuerra: 'Master',
+          nomeGuerra: 'Coari',
           saram: '1000000',
-          tituloImpressao: 'Chefe da Seção de TI & Pessoal',
+          tituloImpressao: 'Chefe da Seção de Pessoal & TI',
           nivelAcesso: 'SUPER_ADMIN',
           role: 'SUPER_ADMIN',
           status: 'ativo',
@@ -129,7 +137,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
     (a) => a.ativo && a.email.toLowerCase() === currentUserEmail.toLowerCase()
   );
 
-  const isCurrentSuperAdmin = currentUserEmail.toLowerCase() === 'coari.comara@gmail.com' || currentAdmin?.nivelAcesso === 'SUPER_ADMIN';
+  const isCurrentSuperAdmin = isMasterAdminEmail(currentUserEmail) || currentAdmin?.nivelAcesso === 'SUPER_ADMIN' || currentAdmin?.role === 'SUPER_ADMIN';
 
   // Toggle Row Expansion
   const toggleRow = (id: string) => {

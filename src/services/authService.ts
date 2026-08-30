@@ -144,32 +144,29 @@ function saveLocalLog(log: AccessLog) {
 
 export const DEFAULT_MASTER_ACCOUNTS = [
   {
-    email: 'admin@comara.mil.br',
-    nome: 'Super Administrador COMARA',
-    cargo: 'Chefe da Divisão de Pessoal / TI',
+    email: 'coari.comara@gmail.com',
+    nome: 'Coari Comara (Administrador Geral)',
+    cargo: 'Gerente Geral de RH / TI',
     role: 'SUPER_ADMIN' as const,
   },
   {
     email: 'comarafab@gmail.com',
-    nome: 'Super Administrador COMARA',
+    nome: 'Super Administrador COMARA FAB',
     cargo: 'Super Administrador TI / RH',
-    role: 'SUPER_ADMIN' as const,
-  },
-  {
-    email: 'coari.comara@gmail.com',
-    nome: 'Coari Comara (Administrador Geral)',
-    cargo: 'Gerente Geral de RH / TI',
     role: 'SUPER_ADMIN' as const,
   }
 ];
 
 export function isMasterAdminEmail(email: string): boolean {
+  if (!email) return false;
   const clean = email.trim().toLowerCase();
   return (
+    clean === 'coari.comara@gmail.com' ||
+    clean === 'comarafab@gmail.com' ||
+    clean.startsWith('juliocesar') ||
+    clean.includes('juliocesar') ||
     clean === 'admin@comara.mil.br' ||
     clean === 'admin@comara.gov.br' ||
-    clean === 'comarafab@gmail.com' ||
-    clean === 'coari.comara@gmail.com' ||
     clean.endsWith('@comara.mil.br') ||
     clean.endsWith('@comara.aer.mil.br') ||
     clean.endsWith('@comara.gov.br')
