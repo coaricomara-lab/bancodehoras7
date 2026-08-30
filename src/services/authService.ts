@@ -1,6 +1,45 @@
 import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, orderBy, limit, onSnapshot, Unsubscribe } from 'firebase/firestore';
-import { auth, db, ensureFirebaseAdminSession, handleFirestoreError, OperationType } from './firebase';
-import { Employee, EmployeeAuth, AccessLog, AccessLogType, AdminUser, AuthSession } from '../types';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
+  signOut as firebaseSignOut,
+  User as FirebaseUser 
+} from 'firebase/auth';
+import { auth, googleProvider, db, handleFirestoreError, OperationType } from './firebase';
+import { Employee, EmployeeAuth, AccessLog, AccessLogType, AdminUser, AdminRole, AuthSession } from '../types';
+
+export function getFirebaseAuthErrorMessage(errorCode: string, defaultMessage?: string): string {
+  switch (errorCode) {
+    case 'auth/invalid-credential':
+    case 'auth/wrong-password':
+    case 'auth/user-not-found':
+    case 'auth/invalid-login-credentials':
+      return 'E-mail ou senha incorretos.';
+    case 'auth/user-disabled':
+      return 'Este usuário foi desativado no Firebase Authentication.';
+    case 'auth/too-many-requests':
+      return 'Acesso temporariamente bloqueado devido a muitas tentativas inválidas. Tente novamente mais tarde.';
+    case 'auth/invalid-email':
+      return 'Formato de e-mail inválido.';
+    case 'auth/operation-not-allowed':
+      return 'O provedor de autenticação (E-mail/Senha) não está habilitado no Firebase Console. Utilize o botão "Entrar com Google Workspace" ou habilite o provedor em Firebase Console > Authentication > Sign-in method.';
+    case 'auth/email-already-in-use':
+      return 'Este e-mail já está cadastrado no Firebase Authentication.';
+    case 'auth/weak-password':
+      return 'A senha é muito fraca. Utilize ao menos 6 caracteres.';
+    case 'auth/network-request-failed':
+      return 'Falha de conexão com os servidores do Firebase Auth. Verifique sua conexão com a internet.';
+    case 'auth/popup-closed-by-user':
+      return 'A janela de autenticação do Google foi fechada antes da conclusão.';
+    case 'auth/unauthorized-domain':
+      return 'Domínio não autorizado no Firebase Authentication Console.';
+    default:
+      return defaultMessage || 'Falha na autenticação via Firebase Auth.';
+  }
+}
 
 const COLLECTIONS = {
   COLABORADORES_AUTH: 'colaboradores_auth',
@@ -106,21 +145,18 @@ function saveLocalLog(log: AccessLog) {
 export const DEFAULT_MASTER_ACCOUNTS = [
   {
     email: 'admin@comara.mil.br',
-    password: 'Comara123#',
     nome: 'Super Administrador COMARA',
     cargo: 'Chefe da Divisão de Pessoal / TI',
     role: 'SUPER_ADMIN' as const,
   },
   {
     email: 'comarafab@gmail.com',
-    password: 'comara2026',
     nome: 'Super Administrador COMARA',
     cargo: 'Super Administrador TI / RH',
     role: 'SUPER_ADMIN' as const,
   },
   {
     email: 'coari.comara@gmail.com',
-    password: 'admin123',
     nome: 'Coari Comara (Administrador Geral)',
     cargo: 'Gerente Geral de RH / TI',
     role: 'SUPER_ADMIN' as const,
@@ -141,55 +177,109 @@ export function isMasterAdminEmail(email: string): boolean {
 }
 
 export async function autoSeedDefaultAdminMaster(): Promise<{ success: boolean; message: string }> {
+  return { success: true, message: 'Inicialização concluída.' };
+}
+
+export interface ProcessAuthResult {
+  status: 'ativo' | 'pendente' | 'inativo' | 'bloqueado';
+  admin: AdminUser;
+  isSuperAdmin: boolean;
+  message?: string;
+}
+
+export async function processAuthenticatedUser(firebaseUser: FirebaseUser): Promise<ProcessAuthResult> {
+  const email = (firebaseUser.email || '').trim().toLowerCase();
+  if (!email) {
+    throw new Error('E-mail do usuário não identificado na sessão.');
+  }
+
+  const nowIso = new Date().toISOString();
+  const isMaster = isMasterAdminEmail(email);
+
+  let adminDoc: AdminUser | null = null;
+  const docRef = doc(db, COLLECTIONS.ADMIN_USERS, email);
+
   try {
-    console.log('[Auto-Seed] Iniciando verificação/provisionamento das contas Master do sistema...');
-    for (const master of DEFAULT_MASTER_ACCOUNTS) {
-      const cleanEmail = master.email.trim().toLowerCase();
-      const inputHash = await hashPassword(master.password);
-      const nowIso = new Date().toISOString();
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      adminDoc = snap.data() as AdminUser;
+    }
+  } catch (err) {
+    console.warn('[Auth] Erro ao consultar documento em admin_users:', err);
+  }
 
-      const masterAdminDoc: AdminUser = {
-        id: cleanEmail,
-        email: cleanEmail,
-        nome: master.nome,
-        cargo: master.cargo,
-        nivelAcesso: 'SUPER_ADMIN',
-        role: 'SUPER_ADMIN',
-        ativo: true,
-        passwordHash: inputHash,
-        sede: 'TODAS',
-        criadoEm: nowIso,
-        atualizadoEm: nowIso,
-      };
+  // Se não existir, auto-cadastra com status 'pendente' e role 'NENHUM'
+  if (!adminDoc) {
+    const newDoc: AdminUser = {
+      id: email,
+      email,
+      nome: firebaseUser.displayName || email.split('@')[0] || 'Sem nome',
+      cargo: isMaster ? 'Super Administrador TI / RH' : 'Aguardando aprovação',
+      funcao: isMaster ? 'Super Administrador TI / RH' : '',
+      role: (isMaster ? 'SUPER_ADMIN' : 'NENHUM') as AdminRole,
+      nivelAcesso: (isMaster ? 'SUPER_ADMIN' : 'NENHUM') as AdminRole,
+      status: isMaster ? 'ativo' : 'pendente',
+      perfil: isMaster ? 'SUPER_ADMIN' : 'nenhum',
+      foto: firebaseUser.photoURL || null,
+      sede: 'TODAS',
+      canteiroSede: 'TODAS',
+      ativo: isMaster ? true : false,
+      criadoEm: nowIso,
+      atualizadoEm: nowIso,
+    };
 
-      // 1. Tentar garantir conta no Firebase Auth
+    try {
+      await setDoc(docRef, sanitize(newDoc), { merge: true });
+      adminDoc = newDoc;
+    } catch (saveErr) {
+      console.warn('[Auth] Erro ao salvar auto-cadastro inicial no Firestore:', saveErr);
+      adminDoc = newDoc;
+    }
+  } else {
+    // Se o documento existe e é conta master, garante permissão de super admin
+    if (isMaster && (adminDoc.role !== 'SUPER_ADMIN' || adminDoc.status !== 'ativo' || !adminDoc.ativo)) {
+      adminDoc.role = 'SUPER_ADMIN';
+      adminDoc.nivelAcesso = 'SUPER_ADMIN';
+      adminDoc.status = 'ativo';
+      adminDoc.ativo = true;
+      adminDoc.atualizadoEm = nowIso;
       try {
-        await ensureFirebaseAdminSession(cleanEmail, master.password);
-        console.log(`[Auto-Seed] ✅ Conta Master ativa no Firebase Auth: ${cleanEmail}`);
-      } catch (authErr: any) {
-        console.warn(`[Auto-Seed] Nota sobre autenticação ${cleanEmail}:`, authErr?.message || authErr);
-      }
-
-      // 2. Garantir documento na coleção admin_users e usuarios_sistema no Firestore
-      try {
-        await Promise.all([
-          setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), sanitize(masterAdminDoc), { merge: true }),
-          setDoc(doc(db, 'usuarios_sistema', cleanEmail), sanitize(masterAdminDoc), { merge: true }),
-        ]);
-        console.log(`[Auto-Seed] ✅ Documento Master sincronizado no Firestore: ${cleanEmail}`);
-      } catch (firestoreErr) {
-        console.warn(`[Auto-Seed] Documento Master salvo em cache local/offline para ${cleanEmail}:`, firestoreErr);
+        await setDoc(docRef, sanitize(adminDoc), { merge: true });
+      } catch (e) {
+        console.warn('Erro ao atualizar master admin:', e);
       }
     }
-
-    return { success: true, message: 'Auto-seed do Admin Master executado com sucesso!' };
-  } catch (error: any) {
-    console.error('[Auto-Seed] Erro no provisionamento do Admin Master:', error);
-    return { success: false, message: error?.message || 'Erro no Auto-seed' };
   }
+
+  // Verificação de usuário desativado / bloqueado
+  if (!isMaster && (adminDoc.status === 'inativo' || adminDoc.status === 'bloqueado' || adminDoc.ativo === false)) {
+    return {
+      status: 'inativo',
+      admin: adminDoc,
+      isSuperAdmin: false,
+      message: 'Usuário desativado. Procure o Gerente ou DA do canteiro para solicitar o desbloqueio.'
+    };
+  }
+
+  const isAtivo = isMaster || (
+    adminDoc.status === 'ativo' && 
+    adminDoc.ativo !== false && 
+    adminDoc.role !== 'NENHUM' && 
+    adminDoc.perfil !== 'nenhum'
+  );
+
+  return {
+    status: isAtivo ? 'ativo' : 'pendente',
+    admin: adminDoc,
+    isSuperAdmin: isMaster || adminDoc.role === 'SUPER_ADMIN',
+    message: isAtivo 
+      ? `Bem-vindo(a), ${adminDoc.nome}!` 
+      : 'Sua conta foi registrada e aguarda liberação do administrador.'
+  };
 }
 
 export const authService = {
+  processAuthenticatedUser,
   // -------------------------------------------------------------
   // LOGS DE AUDITORIA LGPD
   // -------------------------------------------------------------
@@ -526,7 +616,7 @@ export const authService = {
       employee?.nome || cleanMat,
       'DEFINICAO_SENHA',
       true,
-      'Senha redefinida com sucesso 100% via Firestore'
+      'Senha redefinida com sucesso'
     );
 
     return {
@@ -645,19 +735,23 @@ export const authService = {
   },
 
   // -------------------------------------------------------------
-  // GERENCIAMENTO DE SESSÃO LOCAL (FIRESTORE-ONLY AUTH)
+  // GERENCIAMENTO DE SESSÃO TEMPORÁRIA (SESSION-ONLY / NÃO-PERSISTENTE)
   // -------------------------------------------------------------
   saveCurrentSession(session: AuthSession): void {
     try {
-      localStorage.setItem('banco_horas_auth_session', JSON.stringify(session));
+      // Usa sessionStorage para que a sessão expire imediatamente ao fechar o navegador/aba
+      sessionStorage.setItem('banco_horas_auth_session', JSON.stringify(session));
+      // Garante remoção de chaves legadas no localStorage
+      localStorage.removeItem('banco_horas_auth_session');
     } catch (e) {
-      console.warn('Erro ao salvar sessão local:', e);
+      console.warn('Erro ao salvar sessão temporária:', e);
     }
   },
 
   getCurrentSession(): AuthSession | null {
     try {
-      const raw = localStorage.getItem('banco_horas_auth_session');
+      // Prioriza sessionStorage (sessão por aba)
+      const raw = sessionStorage.getItem('banco_horas_auth_session');
       return raw ? JSON.parse(raw) : null;
     } catch {
       return null;
@@ -666,20 +760,20 @@ export const authService = {
 
   clearSession(): void {
     try {
+      sessionStorage.removeItem('banco_horas_auth_session');
       localStorage.removeItem('banco_horas_auth_session');
     } catch (e) {
-      console.warn('Erro ao limpar sessão local:', e);
+      console.warn('Erro ao limpar sessão:', e);
     }
   },
 
   // -------------------------------------------------------------
-  // AUTENTICAÇÃO ADMINISTRATIVA DIRETA NO FIRESTORE (SEM FIREBASE AUTH)
+  // AUTENTICAÇÃO ADMINISTRATIVA OFICIAL VIA FIREBASE AUTH SDK
   // -------------------------------------------------------------
   async verifyAdminLogin(
     email: string,
-    passwordAttempt: string,
-    cachedAdmins: AdminUser[] = []
-  ): Promise<{ success: boolean; admin?: AdminUser; session?: AuthSession; message: string }> {
+    passwordAttempt: string
+  ): Promise<{ success: boolean; pending?: boolean; admin?: AdminUser; session?: AuthSession; message: string }> {
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail) {
       return { success: false, message: 'Informe seu e-mail administrativo.' };
@@ -688,233 +782,136 @@ export const authService = {
       return { success: false, message: 'Informe sua senha de acesso.' };
     }
 
-    const isMasterEmail = isMasterAdminEmail(cleanEmail);
-    const isFirstAccessOrEmpty = isMasterEmail || cachedAdmins.length === 0;
-    const inputHash = await hashPassword(passwordAttempt);
-
-    // 1. Tenta estabelecer / sincronizar sessão oficial do Firebase Auth
     try {
-      await ensureFirebaseAdminSession(cleanEmail, passwordAttempt.trim());
-    } catch (firebaseError: any) {
-      console.warn('Nota sobre sincronização do Firebase Auth para gestor:', firebaseError?.message || firebaseError);
-    }
+      // Autenticação oficial no Firebase Auth
+      const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, passwordAttempt.trim());
+      const processed = await processAuthenticatedUser(userCredential.user);
 
-    let adminDoc: AdminUser | null = null;
-
-    // 1. Tenta buscar no Firestore
-    try {
-      const docRef = doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail);
-      const snap = await getDoc(docRef);
-      if (snap.exists()) {
-        adminDoc = snap.data() as AdminUser;
-      }
-    } catch (err) {
-      console.warn('Busca de admin no Firestore offline, buscando no cache:', err);
-    }
-
-    // 2. Fallback no cache fornecido
-    if (!adminDoc) {
-      const matchCached = cachedAdmins.find(a => a.email.toLowerCase().trim() === cleanEmail);
-      if (matchCached) {
-        adminDoc = matchCached;
-      }
-    }
-
-    // 3. Caso especial: Master Super Admin / Primeiro Acesso (se ainda não existir no Firestore)
-    if (!adminDoc && isFirstAccessOrEmpty) {
-      const masterAdmin: AdminUser = {
-        id: cleanEmail,
-        email: cleanEmail,
-        nome: (cleanEmail === 'admin@comara.mil.br' || cleanEmail === 'coari.comara@gmail.com' || cleanEmail === 'comarafab@gmail.com') 
-          ? 'Super Administrador COMARA' 
-          : (cleanEmail.split('@')[0].toUpperCase()),
-        cargo: 'Super Administrador TI / RH',
-        nivelAcesso: 'SUPER_ADMIN',
-        role: 'SUPER_ADMIN',
-        ativo: true,
-        passwordHash: inputHash,
-        sede: 'TODAS',
-        criadoEm: new Date().toISOString(),
-        atualizadoEm: new Date().toISOString(),
-      };
-
-      try {
-        await Promise.all([
-          setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), sanitize(masterAdmin), { merge: true }),
-          setDoc(doc(db, 'usuarios_sistema', cleanEmail), sanitize(masterAdmin), { merge: true }),
-        ]);
-      } catch (e) {
-        console.warn('Erro ao salvar master admin no Firestore:', e);
+      if (processed.status === 'pendente') {
+        await this.logAccess(
+          'ADMIN_AUTH',
+          cleanEmail,
+          'PRIMEIRO_ACESSO',
+          true,
+          `Usuário autenticado via E-mail/Senha aguardando aprovação de perfil: ${cleanEmail}`
+        );
+        return {
+          success: true,
+          pending: true,
+          admin: processed.admin,
+          message: 'Sua conta foi registrada e aguarda liberação do administrador.'
+        };
       }
 
+      // Regra das 48 Horas na Passagem de Bastão:
+      if (processed.admin && processed.admin.desativacaoAgendada) {
+        const agora = Date.now();
+        const expiracao = new Date(processed.admin.desativacaoAgendada).getTime();
+        if (!isNaN(expiracao) && agora > expiracao) {
+          processed.admin.ativo = false;
+          processed.admin.transicaoStatus = 'EXPIRADO';
+          
+          try {
+            const nowIso = new Date().toISOString();
+            await Promise.all([
+              setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), {
+                ativo: false,
+                transicaoStatus: 'EXPIRADO',
+                atualizadoEm: nowIso,
+              }, { merge: true }),
+              setDoc(doc(db, 'usuarios_sistema', cleanEmail), {
+                ativo: false,
+                transicaoStatus: 'EXPIRADO',
+                atualizadoEm: nowIso,
+              }, { merge: true })
+            ]);
+          } catch (e) {
+            console.warn('Erro ao persistir revogação pós-48h no Firestore:', e);
+          }
+
+          await firebaseSignOut(auth);
+          this.clearSession();
+
+          await this.logAccess(
+            cleanEmail,
+            processed.admin.nome,
+            'TENTATIVA_INVALIDA',
+            false,
+            `Acesso bloqueado: Carência de 48h da transição de liderança expirou para ${cleanEmail}.`
+          );
+
+          return {
+            success: false,
+            message: 'Período de transição de 48 horas concluído. Suas credenciais de liderança/gestão foram revogadas conforme regra institucional.'
+          };
+        }
+      }
+
+      // Verifica se está ativo
+      if (processed.admin && processed.admin.ativo === false) {
+        await firebaseSignOut(auth);
+        this.clearSession();
+
+        await this.logAccess(
+          cleanEmail,
+          processed.admin.nome,
+          'TENTATIVA_INVALIDA',
+          false,
+          `Tentativa de login de usuário inativo: ${cleanEmail}`
+        );
+        return { success: false, message: 'Este usuário está inativo ou teve seu acesso revogado. Contate o administrador.' };
+      }
+
+      // Sessão corporativa oficial
       const session: AuthSession = {
-        email: masterAdmin.email,
-        nome: masterAdmin.nome,
-        role: 'SUPER_ADMIN',
-        cargo: masterAdmin.cargo,
+        email: processed.admin.email,
+        nome: processed.admin.nome,
+        role: (processed.admin.nivelAcesso || processed.admin.role || 'GESTOR_RH') as any,
+        cargo: processed.admin.cargo || 'Gestor RH',
+        sede: processed.admin.sede || processed.admin.canteiroCodigo || 'KO',
+        canteiroCodigo: processed.admin.canteiroCodigo || processed.admin.sede || 'KO',
+        canteiroId: processed.admin.canteiroCodigo || processed.admin.sede || 'KO',
+        tratamentoTitulo: processed.admin.tratamentoTitulo,
         loginTime: new Date().toISOString(),
       };
       this.saveCurrentSession(session);
 
       await this.logAccess(
+        'ADMIN_AUTH',
         cleanEmail,
-        masterAdmin.nome,
         'LOGIN_GESTAO_RH',
         true,
-        `Login administrativo Master (Auto-Provisionado) realizado por ${cleanEmail}`
+        `Login administrativo RH autenticado via Firebase Auth SDK por ${cleanEmail}`
       );
 
-      return { success: true, admin: masterAdmin, session, message: 'Acesso autorizado como Super Administrador!' };
-    }
+      return {
+        success: true,
+        pending: false,
+        admin: processed.admin,
+        session,
+        message: `Bem-vindo(a), ${session.nome}!`
+      };
+    } catch (authError: any) {
+      const errorCode = authError?.code || '';
+      const userFriendlyMsg = getFirebaseAuthErrorMessage(errorCode, authError?.message);
 
-    // Se não encontrou o usuário
-    if (!adminDoc) {
       await this.logAccess(
+        'ADMIN_AUTH',
         cleanEmail,
-        'Desconhecido',
         'TENTATIVA_INVALIDA',
         false,
-        `Tentativa de login com e-mail não autorizado: ${cleanEmail}`
+        `Falha de autenticação no Firebase Auth (${errorCode}): ${userFriendlyMsg}`
       );
-      return { success: false, message: 'Usuário não cadastrado na equipe de gestão/RH.' };
+
+      return {
+        success: false,
+        message: userFriendlyMsg,
+      };
     }
-
-    // Regra das 48 Horas na Passagem de Bastão:
-    // Verifica se há desativação agendada decorrente de transição de chefia/liderança
-    if (adminDoc.desativacaoAgendada) {
-      const agora = Date.now();
-      const expiracao = new Date(adminDoc.desativacaoAgendada).getTime();
-      if (!isNaN(expiracao) && agora > expiracao) {
-        // Transcorreram as 48 horas: revoga as permissões de acesso administrativo automaticamente
-        adminDoc.ativo = false;
-        adminDoc.transicaoStatus = 'EXPIRADO';
-        
-        try {
-          const nowIso = new Date().toISOString();
-          await Promise.all([
-            setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), {
-              ativo: false,
-              transicaoStatus: 'EXPIRADO',
-              atualizadoEm: nowIso,
-            }, { merge: true }),
-            setDoc(doc(db, 'usuarios_sistema', cleanEmail), {
-              ativo: false,
-              transicaoStatus: 'EXPIRADO',
-              atualizadoEm: nowIso,
-            }, { merge: true })
-          ]);
-        } catch (e) {
-          console.warn('Erro ao persistir revogação pós-48h no Firestore:', e);
-        }
-
-        await this.logAccess(
-          cleanEmail,
-          adminDoc.nome,
-          'TENTATIVA_INVALIDA',
-          false,
-          `Acesso bloqueado: Carência de 48h da transição de liderança expirou para ${cleanEmail}.`
-        );
-
-        return {
-          success: false,
-          message: 'Período de transição de 48 horas concluído. Suas credenciais de liderança/gestão foram revogadas conforme regra institucional.'
-        };
-      }
-    }
-
-    // Verifica se está ativo
-    if (adminDoc.ativo === false) {
-      await this.logAccess(
-        cleanEmail,
-        adminDoc.nome,
-        'TENTATIVA_INVALIDA',
-        false,
-        `Tentativa de login de usuário inativo: ${cleanEmail}`
-      );
-      return { success: false, message: 'Este usuário está inativo ou teve seu acesso revogado. Contate o administrador.' };
-    }
-
-    // Verifica senha
-    let passwordMatch = false;
-
-    if (adminDoc.passwordHash) {
-      passwordMatch = (adminDoc.passwordHash === inputHash);
-    } else if (adminDoc.senha) {
-      passwordMatch = (adminDoc.senha === passwordAttempt.trim());
-      // Migra para hash automaticamente
-      if (passwordMatch) {
-        try {
-          await setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), {
-            passwordHash: inputHash,
-            senha: null,
-            atualizadoEm: new Date().toISOString(),
-          }, { merge: true });
-        } catch (e) {
-          console.warn('Erro na migração de hash:', e);
-        }
-      }
-    } else if (isMasterEmail) {
-      // Se for master e ainda não tinha hash gravado, define agora
-      passwordMatch = true;
-      try {
-        await setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), {
-          passwordHash: inputHash,
-          atualizadoEm: new Date().toISOString(),
-        }, { merge: true });
-      } catch (e) {
-        console.warn('Erro ao atualizar hash master:', e);
-      }
-    }
-
-    if (!passwordMatch) {
-      await this.logAccess(
-        cleanEmail,
-        adminDoc.nome,
-        'TENTATIVA_INVALIDA',
-        false,
-        `Senha incorreta informada para ${cleanEmail}`
-      );
-      return { success: false, message: 'E-mail ou senha incorretos.' };
-    }
-
-    // Login autorizado com sucesso!
-    try {
-      await ensureFirebaseAdminSession(cleanEmail, passwordAttempt.trim());
-    } catch (firebaseError: any) {
-      console.warn('Sessão oficial do Firebase Auth em modo resiliente:', firebaseError?.message || firebaseError);
-    }
-
-    const session: AuthSession = {
-      email: adminDoc.email,
-      nome: adminDoc.nome,
-      role: adminDoc.nivelAcesso || adminDoc.role || 'GESTOR_RH',
-      cargo: adminDoc.cargo,
-      sede: adminDoc.sede || adminDoc.canteiroCodigo || 'KO',
-      canteiroCodigo: adminDoc.canteiroCodigo || adminDoc.sede || 'KO',
-      canteiroId: adminDoc.canteiroCodigo || adminDoc.sede || 'KO',
-      tratamentoTitulo: adminDoc.tratamentoTitulo,
-      loginTime: new Date().toISOString(),
-    };
-    this.saveCurrentSession(session);
-
-    await this.logAccess(
-      cleanEmail,
-      adminDoc.nome,
-      'LOGIN_GESTAO_RH',
-      true,
-      `Login administrativo RH realizado com sucesso por ${cleanEmail}`
-    );
-
-    return {
-      success: true,
-      admin: adminDoc,
-      session,
-      message: `Bem-vindo(a), ${adminDoc.nome}!`
-    };
   },
 
   // -------------------------------------------------------------
-  // CADASTRO DE NOVO GESTOR/ADMIN NO FIRESTORE (SEM FIREBASE AUTH)
+  // CADASTRO DE NOVO GESTOR/ADMIN VIA FIREBASE AUTH SDK
   // -------------------------------------------------------------
   async createAdminAccount(
     email: string,
@@ -931,27 +928,50 @@ export const authService = {
       return { success: false, message: 'A senha deve conter no mínimo 6 caracteres.' };
     }
 
-    const passwordHash = await hashPassword(password);
     const nowIso = new Date().toISOString();
+
+    // 1. Criação no Firebase Auth oficial
+    let firebaseUser: FirebaseUser;
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, cleanEmail, password);
+      firebaseUser = userCredential.user;
+    } catch (authError: any) {
+      const errorCode = authError?.code || '';
+      if (errorCode === 'auth/email-already-in-use') {
+        try {
+          const loginCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
+          firebaseUser = loginCredential.user;
+        } catch (loginErr: any) {
+          const msg = getFirebaseAuthErrorMessage(loginErr?.code || errorCode, loginErr?.message);
+          return { success: false, message: msg };
+        }
+      } else {
+        const msg = getFirebaseAuthErrorMessage(errorCode, authError?.message);
+        return { success: false, message: msg };
+      }
+    }
 
     const newAdmin: AdminUser = {
       id: cleanEmail,
       email: cleanEmail,
-      nome: nome?.trim() || cleanEmail.split('@')[0],
+      nome: nome?.trim() || firebaseUser.displayName || cleanEmail.split('@')[0],
       cargo: cargo?.trim() || 'Gestor RH',
       nivelAcesso,
       role: nivelAcesso,
       ativo: true,
-      passwordHash,
       criadoEm: nowIso,
       atualizadoEm: nowIso,
     };
 
+    // 2. Gravação de perfil no Firestore
     try {
-      await setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), sanitize(newAdmin), { merge: true });
+      await Promise.all([
+        setDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanEmail), sanitize(newAdmin), { merge: true }),
+        setDoc(doc(db, 'usuarios_sistema', cleanEmail), sanitize(newAdmin), { merge: true }),
+      ]);
     } catch (err: any) {
-      console.error('Erro ao cadastrar administrador no Firestore:', err);
-      return { success: false, message: 'Erro ao gravar cadastro no Firestore.' };
+      console.error('Erro ao cadastrar perfil administrativo no Firestore:', err);
+      return { success: false, message: 'Erro ao gravar cadastro de perfil no Firestore.' };
     }
 
     const session: AuthSession = {
@@ -968,7 +988,7 @@ export const authService = {
       newAdmin.nome,
       'PRIMEIRO_ACESSO',
       true,
-      `Nova conta de gestor criada diretamente no Firestore: ${cleanEmail}`
+      `Nova conta de gestor criada via Firebase Auth SDK: ${cleanEmail}`
     );
 
     return {
@@ -1062,6 +1082,27 @@ export const authService = {
     }
 
     return updatedUsers;
+  },
+
+  /**
+   * Inicia o fluxo oficial de login Google Workspace via Popup do Firebase Auth
+   */
+  async signInWithGoogle(): Promise<{ user: FirebaseUser; processed: ProcessAuthResult }> {
+    const userCredential = await signInWithPopup(auth, googleProvider);
+    const processed = await processAuthenticatedUser(userCredential.user);
+    return { user: userCredential.user, processed };
+  },
+
+  /**
+   * Processa e obtém o resultado de redirecionamento residual (se houver)
+   */
+  async getRedirectResult(): Promise<FirebaseUser | null> {
+    try {
+      const userCredential = await getRedirectResult(auth);
+      return userCredential ? userCredential.user : null;
+    } catch {
+      return null;
+    }
   }
 };
 

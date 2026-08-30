@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { AdminUser, AdminRole } from '../types';
 import { storageService } from '../services/storageService';
 import { firestoreService } from '../services/firestoreService';
 import { registrarLogAuditoria } from '../services/auditService';
-import { hashPassword } from '../services/authService';
-import { ROLE_INFO, rbacService } from '../services/rbacService';
-import { auth } from '../services/firebase';
+import { ROLE_INFO, rbacService, CONSOLIDATED_ROLES } from '../services/rbacService';
 import { InfoTooltip } from './InfoTooltip';
 import { 
   ShieldCheck, 
   UserPlus, 
-  Trash2, 
-  Key, 
   Lock, 
   CheckCircle2, 
   AlertCircle, 
   Mail, 
   User, 
   Briefcase,
-  Layers,
-  Sparkles,
   Shield,
+  Cloud, 
+  Edit3,
+  Search,
+  ChevronDown,
+  ChevronUp,
   UserCheck,
-  Building,
   ToggleLeft,
   ToggleRight,
-  Cloud,
-  Send,
-  Edit3
+  Building2,
+  Calendar,
+  X,
+  Sparkles,
+  Ban
 } from 'lucide-react';
 
 interface AdminPermissionsManagementProps {
@@ -36,32 +36,63 @@ interface AdminPermissionsManagementProps {
   onAdminListChange?: (admins: AdminUser[]) => void;
 }
 
+const POSTO_GRAD_OPTIONS = [
+  'Cel',
+  'Ten Cel',
+  'Maj',
+  'Cap',
+  '1º Ten',
+  '2º Ten',
+  'Asp',
+  'SO',
+  '1S',
+  '2S',
+  '3S',
+  'CB',
+  'SD',
+  'Servidor Civil',
+  'Engenheiro',
+  'Analista',
+  'Outro'
+];
+
 export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProps> = ({
   theme = 'dark',
   currentUserEmail,
   onAdminListChange,
 }) => {
   const isDark = theme === 'dark';
+
+  // Base state
   const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [activeTab, setActiveTab] = useState<string>('SUPER_ADMIN');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+
+  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState<AdminUser | null>(null);
-  
-  // Form State
+
+  // Form Fields
   const [email, setEmail] = useState('');
   const [nome, setNome] = useState('');
-  const [cargo, setCargo] = useState('Analista de RH');
+  const [saram, setSaram] = useState('');
+  const [nomeGuerra, setNomeGuerra] = useState('');
+  const [postoGraduacao, setPostoGraduacao] = useState('');
+  const [funcao, setFuncao] = useState('');
   const [tituloImpressao, setTituloImpressao] = useState('');
   const [nivelAcesso, setNivelAcesso] = useState<AdminRole>('RH_ADMIN');
-  const [sede, setSede] = useState('KO');
-  const [senhaInicial, setSenhaInicial] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [canteiroSede, setCanteiroSede] = useState('KO');
+  const [statusInicial, setStatusInicial] = useState<'ativo' | 'pendente'>('ativo');
+
+  // Feedback State
   const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Sync real-time with Firestore
+  // Sync real-time with Firestore (once, optimized)
   useEffect(() => {
     const unsub = firestoreService.subscribeAdmins((list) => {
-      // Ensure master admin is present
       const masterEmail = 'coari.comara@gmail.com';
       const hasMaster = list.some(a => a.email.toLowerCase() === masterEmail.toLowerCase());
       let fullList = [...list];
@@ -71,16 +102,23 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
           email: masterEmail,
           nome: 'Administrador Master COMARA',
           cargo: 'Super Administrador TI / RH',
+          funcao: 'Super Administrador TI / RH',
+          postoGraduacao: 'Maj',
+          nomeGuerra: 'Master',
+          saram: '1000000',
           tituloImpressao: 'Chefe da Seção de TI & Pessoal',
           nivelAcesso: 'SUPER_ADMIN',
+          role: 'SUPER_ADMIN',
+          status: 'ativo',
           ativo: true,
+          sede: 'TODAS',
+          canteiroSede: 'TODAS',
           criadoEm: '2026-01-01 00:00:00',
         });
       }
       setAdmins(fullList);
       if (onAdminListChange) onAdminListChange(fullList);
     }, () => {
-      // Fallback to local
       setAdmins(storageService.getAdmins());
     });
 
@@ -93,256 +131,330 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
 
   const isCurrentSuperAdmin = currentUserEmail.toLowerCase() === 'coari.comara@gmail.com' || currentAdmin?.nivelAcesso === 'SUPER_ADMIN';
 
+  // Toggle Row Expansion
+  const toggleRow = (id: string) => {
+    setExpandedRows(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  // Group and count admins locally
+  const { pendingCount, inactiveCount, roleCounts, activeTabsList } = useMemo(() => {
+    let pending = 0;
+    let inactive = 0;
+    const rCounts: Record<string, number> = {};
+
+    CONSOLIDATED_ROLES.forEach(r => {
+      rCounts[r] = 0;
+    });
+
+    admins.forEach(adm => {
+      const isInactive = adm.status === 'inativo' || adm.status === 'bloqueado' || adm.ativo === false;
+      const isPending = adm.status === 'pendente';
+
+      if (isPending) {
+        pending++;
+      } else if (isInactive) {
+        inactive++;
+      } else {
+        const normalized = rbacService.normalizeRole(adm.nivelAcesso || adm.role);
+        rCounts[normalized] = (rCounts[normalized] || 0) + 1;
+      }
+    });
+
+    // Auto-select tab if currently active tab has 0 but another has items, or stay
+    return {
+      pendingCount: pending,
+      inactiveCount: inactive,
+      roleCounts: rCounts,
+      activeTabsList: CONSOLIDATED_ROLES
+    };
+  }, [admins]);
+
+  // Filtered admins based on activeTab and searchQuery
+  const filteredAdmins = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    return admins.filter(adm => {
+      const isInactive = adm.status === 'inativo' || adm.status === 'bloqueado' || adm.ativo === false;
+      const isPending = adm.status === 'pendente';
+      const normalizedRole = rbacService.normalizeRole(adm.nivelAcesso || adm.role);
+
+      // Tab filter
+      let matchesTab = false;
+      if (activeTab === 'PENDENTES') {
+        matchesTab = isPending;
+      } else if (activeTab === 'DESATIVADOS') {
+        matchesTab = isInactive;
+      } else {
+        matchesTab = !isPending && !isInactive && normalizedRole === activeTab;
+      }
+
+      if (!matchesTab) return false;
+
+      // Search Query filter (local in memory)
+      if (!query) return true;
+
+      const matchNome = (adm.nome || '').toLowerCase().includes(query);
+      const matchEmail = (adm.email || '').toLowerCase().includes(query);
+      const matchSaram = (adm.saram || '').toLowerCase().includes(query);
+      const matchNomeGuerra = (adm.nomeGuerra || '').toLowerCase().includes(query);
+      const matchPosto = (adm.postoGraduacao || '').toLowerCase().includes(query);
+      const matchFuncao = (adm.funcao || adm.cargo || '').toLowerCase().includes(query);
+      const matchCanteiro = (adm.canteiroSede || adm.sede || '').toLowerCase().includes(query);
+
+      return matchNome || matchEmail || matchSaram || matchNomeGuerra || matchPosto || matchFuncao || matchCanteiro;
+    });
+  }, [admins, activeTab, searchQuery]);
+
+  // Open "Novo Pré-Cadastro" Modal
   const handleOpenCreateModal = () => {
     setEditingAdmin(null);
     setEmail('');
     setNome('');
-    setCargo('Analista de RH');
+    setSaram('');
+    setNomeGuerra('');
+    setPostoGraduacao('1º Ten');
+    setFuncao('Analista de RH');
     setTituloImpressao('');
     setNivelAcesso('RH_ADMIN');
-    setSede('KO');
-    setSenhaInicial('');
-    setConfirmarSenha('');
+    setCanteiroSede('TODAS');
+    setStatusInicial('ativo');
     setErrorMsg(null);
     setIsModalOpen(true);
   };
 
-  const handleGenerateAdminRandomPassword = () => {
-    const pin = Math.floor(100000 + Math.random() * 900000).toString();
-    setSenhaInicial(pin);
-    setConfirmarSenha(pin);
-  };
-
+  // Open Edit Modal
   const handleOpenEditModal = (adm: AdminUser) => {
     setEditingAdmin(adm);
     setEmail(adm.email);
-    setNome(adm.nome);
-    setCargo(adm.cargo || 'Gestor RH');
-    setTituloImpressao(adm.tituloImpressao || adm.cargo || '');
-    setNivelAcesso(rbacService.normalizeRole(adm.nivelAcesso || adm.role));
-    setSede(adm.sede || adm.canteiroCodigo || 'KO');
-    setSenhaInicial('');
-    setConfirmarSenha('');
+    setNome(adm.nome || '');
+    setSaram(adm.saram || '');
+    setNomeGuerra(adm.nomeGuerra || '');
+    setPostoGraduacao(adm.postoGraduacao || '');
+    setFuncao(adm.funcao || adm.cargo || '');
+    setTituloImpressao(adm.tituloImpressao || '');
+    const normalizedRole = rbacService.normalizeRole(adm.nivelAcesso || adm.role);
+    setNivelAcesso(normalizedRole);
+    setCanteiroSede(adm.canteiroSede || adm.sede || 'KO');
+    setStatusInicial(adm.status === 'pendente' ? 'pendente' : 'ativo');
     setErrorMsg(null);
     setIsModalOpen(true);
   };
 
+  // Save or Update Admin User (Firestore + Local State)
   const handleSaveAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
 
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
-      setErrorMsg('Informe um endereço de e-mail corporativo ou Google Account válido.');
+      setErrorMsg('Informe um endereço de e-mail corporativo ou Google Workspace válido.');
       return;
     }
 
     if (!editingAdmin) {
-      if (senhaInicial.length < 6) {
-        setErrorMsg('A senha inicial deve conter no mínimo 6 caracteres.');
-        return;
-      }
-
-      if (senhaInicial !== confirmarSenha) {
-        setErrorMsg('As senhas digitadas não coincidem.');
-        return;
-      }
-
       if (admins.some((a) => a.email.toLowerCase() === cleanEmail)) {
-        setErrorMsg(`O e-mail "${cleanEmail}" já está cadastrado na lista de administradores.`);
-        return;
-      }
-    } else {
-      if (senhaInicial && senhaInicial.length < 6) {
-        setErrorMsg('A nova senha deve conter no mínimo 6 caracteres.');
-        return;
-      }
-      if (senhaInicial && senhaInicial !== confirmarSenha) {
-        setErrorMsg('As novas senhas não coincidem.');
+        setErrorMsg(`O e-mail "${cleanEmail}" já está cadastrado na base de usuários.`);
         return;
       }
     }
+
+    setIsSaving(true);
+
+    const resolvedStatus = editingAdmin 
+      ? editingAdmin.status 
+      : statusInicial;
+    const isAtivo = resolvedStatus === 'ativo';
+
+    const selectedSede = rbacService.hasGlobalAccess(nivelAcesso) ? 'TODAS' : canteiroSede;
 
     const adminData: AdminUser = {
       id: cleanEmail,
       email: cleanEmail,
       nome: nome.trim() || cleanEmail.split('@')[0],
-      cargo: cargo.trim() || 'Gestor RH',
+      saram: saram.trim() || undefined,
+      nomeGuerra: nomeGuerra.trim() || undefined,
+      postoGraduacao: postoGraduacao.trim() || undefined,
+      funcao: funcao.trim() || 'Gestor RH',
+      cargo: funcao.trim() || 'Gestor RH',
       tituloImpressao: tituloImpressao.trim() || undefined,
       nivelAcesso,
       role: nivelAcesso,
-      sede: rbacService.hasGlobalAccess(nivelAcesso) ? 'TODAS' : sede,
-      canteiroCodigo: rbacService.hasGlobalAccess(nivelAcesso) ? 'TODAS' : sede,
-      ativo: editingAdmin ? editingAdmin.ativo : true,
+      perfil: nivelAcesso,
+      sede: selectedSede,
+      canteiroSede: selectedSede,
+      canteiroCodigo: selectedSede,
+      status: resolvedStatus,
+      ativo: isAtivo,
       criadoEm: editingAdmin?.criadoEm || new Date().toISOString().replace('T', ' ').substring(0, 19),
+      atualizadoEm: new Date().toISOString(),
     };
-
-    if (senhaInicial && senhaInicial.trim().length >= 6) {
-      adminData.passwordHash = await hashPassword(senhaInicial.trim());
-    } else if (editingAdmin?.passwordHash) {
-      adminData.passwordHash = editingAdmin.passwordHash;
-    }
 
     try {
       await firestoreService.saveAdminUser(adminData);
-      
-      // Log de Auditoria no Firestore
+
+      // Local State immediate update
+      setAdmins(prev => {
+        const idx = prev.findIndex(a => a.email.toLowerCase() === cleanEmail);
+        if (idx >= 0) {
+          const copy = [...prev];
+          copy[idx] = adminData;
+          return copy;
+        } else {
+          return [adminData, ...prev];
+        }
+      });
+
+      // Audit Log
       await firestoreService.logSystemEvent({
         tipo: 'ALTERACAO_PERMISSAO_RBAC',
         descricao: editingAdmin 
-          ? `Atualização de perfil/nível de acesso RBAC de ${adminData.nome} (${adminData.email}) para ${nivelAcesso}${adminData.tituloImpressao ? ` [Impresso: ${adminData.tituloImpressao}]` : ''}`
-          : `Cadastro de novo administrador ${adminData.nome} (${adminData.email}) com nível ${nivelAcesso}${adminData.tituloImpressao ? ` [Impresso: ${adminData.tituloImpressao}]` : ''}`,
+          ? `Atualização de dados e perfil RBAC de ${adminData.nome} (${adminData.email}) -> ${nivelAcesso}`
+          : `Novo pré-cadastro de usuário ${adminData.nome} (${adminData.email}) com perfil ${nivelAcesso}`,
         usuario: currentUserEmail,
         detalhes: {
           email: adminData.email,
           nome: adminData.nome,
+          saram: adminData.saram,
+          nomeGuerra: adminData.nomeGuerra,
+          postoGraduacao: adminData.postoGraduacao,
+          funcao: adminData.funcao,
           nivelAcesso,
-          cargo: adminData.cargo,
-          tituloImpressao: adminData.tituloImpressao,
+          canteiroSede: adminData.canteiroSede,
+          status: adminData.status,
         }
       });
 
-      // Trilha de Auditoria Oficial
       registrarLogAuditoria({
         usuarioId: currentUserEmail,
         usuarioNome: currentUserEmail.split('@')[0] || 'Super Admin',
         usuarioPerfil: 'SUPER_ADMIN',
-        canteiroId: adminData.canteiroCodigo || 'SEDE-MN',
-        tipoAcao: 'ALTERACAO_FUNCAO',
+        canteiroId: adminData.canteiroSede || 'SEDE-MN',
+        tipoAcao: editingAdmin ? 'ALTERACAO_FUNCAO' : 'CRIACAO_REGISTRO',
         detalhes: editingAdmin 
-          ? `Perfil RBAC atualizado: ${adminData.nome} (${adminData.email}) alterado para perfil ${nivelAcesso} (${adminData.cargo || 'Sem cargo'})${adminData.tituloImpressao ? ` • Título Impresso: ${adminData.tituloImpressao}` : ''}.`
-          : `Novo usuário administrativo criado: ${adminData.nome} (${adminData.email}) com perfil ${nivelAcesso}${adminData.tituloImpressao ? ` • Título Impresso: ${adminData.tituloImpressao}` : ''}.`,
+          ? `Perfil RBAC atualizado: ${adminData.nome} (${adminData.email}) alterado para ${nivelAcesso} [${adminData.postoGraduacao || ''} - ${adminData.funcao || ''}].`
+          : `Pré-cadastro criado: ${adminData.nome} (${adminData.email}) com perfil ${nivelAcesso} no canteiro ${adminData.canteiroSede}.`,
         recursoId: adminData.email,
-        detalhesJson: {
-          email: adminData.email,
-          nome: adminData.nome,
-          nivelAcesso,
-          cargo: adminData.cargo,
-          tituloImpressao: adminData.tituloImpressao,
-        }
       });
 
       setFeedbackMsg(editingAdmin 
-        ? `Permissões de "${adminData.nome}" atualizadas com sucesso no Firestore!` 
-        : `Administrador "${adminData.nome}" cadastrado com sucesso no Cloud Firestore!`
+        ? `Usuário "${adminData.nome}" atualizado com sucesso!` 
+        : `Pré-cadastro de "${adminData.nome}" concluído com sucesso!`
       );
+
+      // Switch to the user's tab automatically
+      if (adminData.status === 'pendente') {
+        setActiveTab('PENDENTES');
+      } else if (adminData.status === 'inativo' || adminData.status === 'bloqueado' || !adminData.ativo) {
+        setActiveTab('DESATIVADOS');
+      } else {
+        setActiveTab(nivelAcesso);
+      }
+
       setIsModalOpen(false);
       setEditingAdmin(null);
-      setEmail('');
-      setNome('');
-      setSenhaInicial('');
-      setConfirmarSenha('');
       setTimeout(() => setFeedbackMsg(null), 4000);
-    } catch (err) {
-      console.error(err);
-      setErrorMsg('Erro ao salvar usuário no Firestore.');
+    } catch (err: any) {
+      console.error('Erro ao salvar usuário no Firestore:', err);
+      setErrorMsg('Erro ao salvar usuário no Firestore. Verifique sua conexão.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  const handleSendResetEmail = async (targetEmail: string, adminNome: string) => {
-    // Open edit modal directly so Super Admin can define a new password
-    const target = admins.find(a => a.email.toLowerCase() === targetEmail.toLowerCase());
-    if (target) {
-      handleOpenEditModal(target);
-      setFeedbackMsg(`Defina uma nova senha para ${adminNome} (${targetEmail}) diretamente pelo formulário.`);
-      setTimeout(() => setFeedbackMsg(null), 5000);
-    }
-  };
-
-  const handleToggleStatus = async (id: string) => {
-    const target = admins.find((a) => a.id === id || a.email === id);
-    if (target?.email.toLowerCase() === currentUserEmail.toLowerCase()) {
+  // Toggle Status: Enable / Disable
+  const handleToggleStatus = async (adm: AdminUser) => {
+    if (adm.email.toLowerCase() === currentUserEmail.toLowerCase()) {
       alert('Você não pode desativar seu próprio acesso administrativo ativo.');
       return;
     }
 
-    if (target) {
-      try {
-        const nextStatus: AdminUser['status'] = target.status === 'pendente' ? 'ativo' : target.status === 'ativo' ? 'inativo' : 'ativo';
-        const updated: AdminUser = {
-          ...target,
-          status: nextStatus,
-          perfil: target.perfil || target.role || target.nivelAcesso || 'nenhum',
-          ativo: nextStatus === 'ativo',
-        };
-        await firestoreService.saveAdminUser(updated);
-        await firestoreService.logSystemEvent({
-          tipo: 'ALTERACAO_PERMISSAO_RBAC',
-          descricao: `Status de acesso de ${target.nome} alterado para ${nextStatus.toUpperCase()}`,
-          usuario: currentUserEmail,
-          detalhes: { email: target.email, status: nextStatus, ativo: updated.ativo }
-        });
-        registrarLogAuditoria({
-          usuarioId: currentUserEmail,
-          usuarioNome: currentUserEmail.split('@')[0] || 'Super Admin',
-          usuarioPerfil: 'SUPER_ADMIN',
-          canteiroId: target.canteiroCodigo || 'SEDE-MN',
-          tipoAcao: 'ALTERACAO_FUNCAO',
-          detalhes: `Status de acesso RBAC de ${target.nome} (${target.email}) alterado para ${nextStatus.toUpperCase()}.`,
-          recursoId: target.email,
-        });
-      } catch (err) {
-        console.error(err);
+    const isCurrentlyInactive = adm.status === 'inativo' || adm.status === 'bloqueado' || adm.ativo === false;
+    const nextStatus: AdminUser['status'] = isCurrentlyInactive ? 'ativo' : 'inativo';
+    const nextAtivo = nextStatus === 'ativo';
+
+    const normalizedRole = rbacService.normalizeRole(adm.nivelAcesso || adm.role);
+
+    const updated: AdminUser = {
+      ...adm,
+      status: nextStatus,
+      ativo: nextAtivo,
+      atualizadoEm: new Date().toISOString(),
+    };
+
+    try {
+      await firestoreService.saveAdminUser(updated);
+
+      setAdmins(prev => prev.map(a => a.email.toLowerCase() === adm.email.toLowerCase() ? updated : a));
+
+      // Auto tab change if necessary
+      if (nextStatus === 'inativo') {
+        setActiveTab('DESATIVADOS');
+      } else {
+        setActiveTab(normalizedRole);
       }
+
+      setFeedbackMsg(nextStatus === 'ativo' 
+        ? `Usuário "${adm.nome}" reabilitado e ativado com sucesso!` 
+        : `Acesso do usuário "${adm.nome}" desabilitado.`
+      );
+      setTimeout(() => setFeedbackMsg(null), 4000);
+
+      await firestoreService.logSystemEvent({
+        tipo: 'ALTERACAO_PERMISSAO_RBAC',
+        descricao: `Status de acesso de ${adm.nome} alterado para ${nextStatus.toUpperCase()}`,
+        usuario: currentUserEmail,
+        detalhes: { email: adm.email, status: nextStatus, ativo: nextAtivo }
+      });
+    } catch (err) {
+      console.error('Erro ao alternar status do usuário:', err);
+      setErrorMsg('Não foi possível alterar o status do usuário.');
     }
   };
 
+  // Approve Pending User
   const handleApprovePendingUser = async (adm: AdminUser) => {
     if (!adm || !adm.email) return;
 
-    const selectedRole = adm.role || adm.nivelAcesso || 'RH_ADMIN';
+    const selectedRole = rbacService.normalizeRole(adm.role || adm.nivelAcesso || 'AUX_DA');
+    const updated: AdminUser = {
+      ...adm,
+      status: 'ativo',
+      ativo: true,
+      perfil: selectedRole,
+      nivelAcesso: selectedRole,
+      role: selectedRole,
+      sede: adm.sede || adm.canteiroSede || 'TODAS',
+      canteiroSede: adm.canteiroSede || adm.sede || 'TODAS',
+      atualizadoEm: new Date().toISOString(),
+    };
+
     try {
-      await firestoreService.saveAdminUser({
-        ...adm,
-        status: 'ativo',
-        perfil: selectedRole,
-        nivelAcesso: selectedRole as AdminRole,
-        role: selectedRole as AdminRole,
-        ativo: true,
-        atualizadoEm: new Date().toISOString(),
-      });
-      setFeedbackMsg(`Usuário ${adm.nome} aprovado e ativado com o perfil ${selectedRole}.`);
+      await firestoreService.saveAdminUser(updated);
+
+      setAdmins(prev => prev.map(a => a.email.toLowerCase() === adm.email.toLowerCase() ? updated : a));
+      setActiveTab(selectedRole);
+
+      setFeedbackMsg(`Usuário "${adm.nome}" aprovado e ativado no perfil ${ROLE_INFO[selectedRole]?.shortLabel || selectedRole}!`);
       setTimeout(() => setFeedbackMsg(null), 4000);
+
+      await firestoreService.logSystemEvent({
+        tipo: 'ALTERACAO_PERMISSAO_RBAC',
+        descricao: `Aprovação de usuário pendente: ${adm.nome} (${adm.email}) ativado como ${selectedRole}`,
+        usuario: currentUserEmail,
+        detalhes: { email: adm.email, role: selectedRole }
+      });
     } catch (err) {
       console.error('Erro ao aprovar usuário pendente:', err);
-      setErrorMsg('Não foi possível aprovar o usuário pendente.');
-    }
-  };
-
-  const handleDeleteAdmin = async (id: string) => {
-    const target = admins.find((a) => a.id === id || a.email === id);
-
-    if (!target) return;
-
-    if (window.confirm(`Tem certeza que deseja revogar o acesso administrativo de "${target.nome || id}"?`)) {
-      try {
-        await firestoreService.deleteAdminUser(target?.email || id);
-        await firestoreService.logSystemEvent({
-          tipo: 'ALTERACAO_PERMISSAO_RBAC',
-          descricao: `Revogação de acesso de administrador para ${target?.nome || id} (${target?.email || id})`,
-          usuario: currentUserEmail,
-          detalhes: { email: target?.email || id }
-        });
-        registrarLogAuditoria({
-          usuarioId: currentUserEmail,
-          usuarioNome: currentUserEmail.split('@')[0] || 'Super Admin',
-          usuarioPerfil: 'SUPER_ADMIN',
-          canteiroId: target?.canteiroCodigo || 'SEDE-MN',
-          tipoAcao: 'EXCLUSAO_REGISTRO',
-          detalhes: `Revogação e exclusão definitiva de acesso administrativo de ${target?.nome || id} (${target?.email || id}).`,
-          recursoId: target?.email || id,
-        });
-        setFeedbackMsg('Administrador removido da base.');
-        setTimeout(() => setFeedbackMsg(null), 3000);
-      } catch (err) {
-        console.error(err);
-      }
+      setErrorMsg('Não foi possível aprovar o usuário.');
     }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header com indicador Cloud */}
+    <div className="space-y-6" id="admin-rbac-management-view">
+      {/* Top Header & Cloud Status */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -353,26 +465,29 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
               isDark ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/40' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
             }`}>
               <Cloud className="w-3 h-3" />
-              <span>Firestore Sync</span>
+              <span>Cloud Firestore Sync</span>
             </span>
           </div>
           <p className={`text-xs mt-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-                Perfis de acesso e permissões RBAC <InfoTooltip theme={isDark ? 'dark' : 'light'} content="Controle estrito de perfis de acesso: Apenas e-mails autorizados têm permissão para acessar o painel de gestão." />
-              </p>
+            Controle de perfis de acesso, escopos por canteiro e homologação de novos gestores
+            <InfoTooltip theme={theme} content="Apenas e-mails corporativos cadastrados e ativos no Cloud Firestore têm permissão para acessar o painel de gestão." />
+          </p>
         </div>
 
         {isCurrentSuperAdmin && (
           <button
+            id="btn-novo-pre-cadastro"
+            type="button"
             onClick={handleOpenCreateModal}
-            className="flex items-center gap-2 px-4 py-2 bg-[#3B82F6] hover:bg-blue-600 active:scale-95 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 bg-[#3B82F6] hover:bg-blue-600 active:scale-95 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-500/20 transition-all cursor-pointer"
           >
             <UserPlus className="w-4 h-4" />
-            <span>Cadastrar Administrador RH</span>
+            <span>Novo Pré-Cadastro</span>
           </button>
         )}
       </div>
 
-      {/* Alerta de Feedback */}
+      {/* Feedback Alert */}
       {feedbackMsg && (
         <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2.5 animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -380,191 +495,465 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
         </div>
       )}
 
-      {/* Tabela de Administradores */}
+      {errorMsg && (
+        <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2.5 animate-in fade-in">
+          <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+          <span>{errorMsg}</span>
+        </div>
+      )}
+
+      {/* Top Search Filter (Local in-memory search) */}
+      <div className={`p-3 rounded-2xl border ${
+        isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200 shadow-xs'
+      }`}>
+        <div className="relative">
+          <Search className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 ${isDark ? 'text-slate-400' : 'text-slate-400'}`} />
+          <input
+            id="input-busca-rbac"
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Buscar por nome, SARAM, nome de guerra, e-mail ou função..."
+            className={`w-full pl-10 pr-10 py-2 rounded-xl text-xs outline-hidden border transition-all ${
+              isDark 
+                ? 'bg-[#0F1B33] border-[#243756] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 placeholder:text-slate-500' 
+                : 'bg-slate-50 border-slate-200 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 placeholder:text-slate-400'
+            }`}
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className={`absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-xs cursor-pointer ${
+                isDark ? 'text-slate-400 hover:text-white' : 'text-slate-400 hover:text-slate-800'
+              }`}
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Tab Navigation (Abas com contadores) */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        {/* Aba Pendentes */}
+        <button
+          type="button"
+          id="tab-pendentes"
+          onClick={() => setActiveTab('PENDENTES')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
+            activeTab === 'PENDENTES'
+              ? isDark 
+                ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm' 
+                : 'bg-amber-100 text-amber-900 border-amber-300 shadow-sm'
+              : isDark 
+                ? 'bg-[#16243D] text-slate-400 border-[#243756] hover:text-slate-200 hover:bg-[#1E3252]' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+          }`}
+        >
+          <span>Pendentes</span>
+          {pendingCount > 0 && (
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-amber-500 text-slate-950">
+              {pendingCount}
+            </span>
+          )}
+        </button>
+
+        {/* Abas dos Perfis Ativos */}
+        {activeTabsList.map((roleKey) => {
+          const meta = ROLE_INFO[roleKey] || ROLE_INFO.AUX_DA;
+          const count = roleCounts[roleKey] || 0;
+          const isActive = activeTab === roleKey;
+
+          return (
+            <button
+              key={roleKey}
+              type="button"
+              id={`tab-role-${roleKey.toLowerCase()}`}
+              onClick={() => setActiveTab(roleKey)}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
+                isActive
+                  ? isDark 
+                    ? 'bg-blue-600 text-white border-blue-500 shadow-md shadow-blue-600/20' 
+                    : 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-600/20'
+                  : isDark 
+                    ? 'bg-[#16243D] text-slate-300 border-[#243756] hover:text-white hover:bg-[#1E3252]' 
+                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+              }`}
+            >
+              <span>{meta.shortLabel || roleKey}</span>
+              {count > 0 && (
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold ${
+                  isActive
+                    ? 'bg-white/20 text-white'
+                    : isDark ? 'bg-[#243756] text-slate-300' : 'bg-slate-100 text-slate-600'
+                }`}>
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
+
+        {/* Aba Desativados */}
+        <button
+          type="button"
+          id="tab-desativados"
+          onClick={() => setActiveTab('DESATIVADOS')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
+            activeTab === 'DESATIVADOS'
+              ? isDark 
+                ? 'bg-red-500/20 text-red-300 border-red-500/40 shadow-sm' 
+                : 'bg-red-100 text-red-900 border-red-300 shadow-sm'
+              : isDark 
+                ? 'bg-[#16243D] text-slate-400 border-[#243756] hover:text-slate-200 hover:bg-[#1E3252]' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
+          }`}
+        >
+          <span>Desativados</span>
+          {inactiveCount > 0 && (
+            <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-red-500 text-white">
+              {inactiveCount}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* Tabela de Administradores / Gestores */}
       <div className={`rounded-2xl border shadow-sm overflow-hidden ${
         isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
       }`}>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs" id="table-rbac-users">
             <thead className={`uppercase font-bold border-b ${
               isDark ? 'bg-[#0F1B33] border-[#243756] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-600'
             }`}>
               <tr>
-                <th className="py-3 px-5">Administrador</th>
-                <th className="py-3 px-5">E-mail Corporativo</th>
-                <th className="py-3 px-5">Cargo / Título Impresso</th>
-                <th className="py-3 px-5 text-center">Canteiro / Sede</th>
-                <th className="py-3 px-5 text-center">Nível de Acesso</th>
-                <th className="py-3 px-5 text-center">Perfil</th>
-                <th className="py-3 px-5 text-center">Status</th>
-                <th className="py-3 px-5 text-right">Cadastrado em</th>
-                <th className="py-3 px-5 text-right">Ações</th>
+                <th className="py-3.5 px-5">NOME</th>
+                <th className="py-3.5 px-5">POSTO/GRAD</th>
+                <th className="py-3.5 px-5">FUNÇÃO</th>
+                <th className="py-3.5 px-5 text-center">CANTEIRO/SEDE</th>
+                <th className="py-3.5 px-5 text-right w-16">DETALHES</th>
               </tr>
             </thead>
             <tbody className={`divide-y ${
               isDark ? 'divide-[#243756] text-[#E2E8F0]' : 'divide-slate-200 text-slate-800'
             }`}>
-              {admins.map((adm) => {
-                const isSelf = adm.email.toLowerCase() === currentUserEmail.toLowerCase();
-                const roleKey = rbacService.normalizeRole(adm.nivelAcesso || adm.role);
-                const roleMeta = ROLE_INFO[roleKey] || ROLE_INFO.AUX_DA;
-                const canteiroDisplay = rbacService.hasGlobalAccess(roleKey) ? 'TODAS (Global)' : (adm.sede || adm.canteiroCodigo || 'KO');
+              {filteredAdmins.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-10 text-center text-xs">
+                    <p className={isDark ? 'text-slate-400' : 'text-slate-500'}>
+                      Nenhum usuário encontrado nesta aba.
+                    </p>
+                  </td>
+                </tr>
+              ) : (
+                filteredAdmins.map((adm) => {
+                  const isSelf = adm.email.toLowerCase() === currentUserEmail.toLowerCase();
+                  const roleKey = rbacService.normalizeRole(adm.nivelAcesso || adm.role);
+                  const roleMeta = ROLE_INFO[roleKey] || ROLE_INFO.AUX_DA;
+                  const isExpanded = Boolean(expandedRows[adm.email]);
+                  const isInactive = adm.status === 'inativo' || adm.status === 'bloqueado' || adm.ativo === false;
+                  const isPending = adm.status === 'pendente';
 
-                return (
-                  <tr key={adm.id} className={`transition-colors ${isDark ? 'hover:bg-[#1E3252]' : 'hover:bg-slate-50/80'}`}>
-                    {/* Nome */}
-                    <td className="py-3.5 px-5 font-sans">
-                      <div className="flex items-center gap-2.5">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border ${
-                          rbacService.hasGlobalAccess(roleKey)
-                            ? isDark ? 'bg-purple-950/60 text-purple-300 border-purple-800/40' : 'bg-purple-100 text-purple-700 border-purple-300'
-                            : isDark ? 'bg-blue-950/60 text-blue-300 border-blue-800/40' : 'bg-blue-100 text-blue-700 border-blue-300'
-                        }`}>
-                          {adm.nome.split(' ').map(n => n[0]).slice(0, 2).join('')}
-                        </div>
-                        <div>
-                          <div className={`font-semibold ${isDark ? 'text-white' : 'text-slate-900'} text-xs`}>
-                            {adm.nome} {isSelf && <span className="text-[10px] text-blue-500 font-mono">(Você)</span>}
-                          </div>
-                          <span className={`text-[10px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>ID: {adm.id}</span>
-                        </div>
-                      </div>
-                    </td>
+                  const canteiroDisplay = rbacService.hasGlobalAccess(roleKey) 
+                    ? 'TODAS (Global)' 
+                    : (adm.canteiroSede || adm.sede || adm.canteiroCodigo || 'KO');
 
-                    {/* Email */}
-                    <td className="py-3.5 px-5 whitespace-nowrap">
-                      <span className={`font-mono text-xs ${isDark ? 'text-[#E2E8F0]' : 'text-slate-900'}`}>
-                        {adm.email}
-                      </span>
-                    </td>
-
-                    {/* Cargo / Titulo Impresso */}
-                    <td className="py-3.5 px-5 font-sans text-xs">
-                      <div className="flex flex-col gap-0.5">
-                        <span className={`font-medium ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
-                          {adm.cargo || 'Gestor'}
-                        </span>
-                        {adm.tituloImpressao && (
-                          <span className={`text-[10px] font-mono ${isDark ? 'text-cyan-400/90' : 'text-cyan-700'}`}>
-                            🖨️ Impresso: {adm.tituloImpressao}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-
-                    {/* Canteiro / Sede */}
-                    <td className="py-3.5 px-5 text-center whitespace-nowrap">
-                      <span className={`px-2 py-0.5 rounded-md text-[11px] font-mono font-bold border ${
-                        canteiroDisplay.includes('Global')
-                          ? isDark ? 'bg-indigo-950/40 text-indigo-300 border-indigo-800/40' : 'bg-indigo-50 text-indigo-700 border-indigo-200'
-                          : isDark ? 'bg-blue-950/40 text-blue-300 border-blue-800/40' : 'bg-blue-50 text-blue-700 border-blue-200'
-                      }`}>
-                        {canteiroDisplay}
-                      </span>
-                    </td>
-
-                    {/* Nível de Acesso */}
-                    <td className="py-3.5 px-5 text-center whitespace-nowrap">
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${roleMeta.badgeColor || 'bg-slate-500/20 text-slate-300 border-slate-500/30'}`}>
-                        {roleMeta.label || adm.nivelAcesso}
-                      </span>
-                    </td>
-
-                    {/* Perfil */}
-                    <td className="py-3.5 px-5 text-center whitespace-nowrap">
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${
-                        adm.perfil === 'nenhum' || adm.status === 'pendente'
-                          ? (isDark ? 'bg-amber-950/40 text-amber-400 border-amber-800/50' : 'bg-amber-50 text-amber-700 border-amber-200')
-                          : (isDark ? 'bg-blue-950/40 text-blue-300 border-blue-800/40' : 'bg-blue-50 text-blue-700 border-blue-200')
-                      }`}>
-                        {adm.perfil && adm.perfil !== 'nenhum' ? adm.perfil : (adm.status === 'pendente' ? 'PENDENTE' : 'SEM PERFIL')}
-                      </span>
-                    </td>
-
-                    {/* Status */}
-                    <td className="py-3.5 px-5 text-center whitespace-nowrap">
-                      <button
-                        onClick={() => handleToggleStatus(adm.id)}
-                        disabled={isSelf}
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
-                          adm.status === 'pendente' || adm.ativo === false
-                            ? isDark
-                              ? 'bg-amber-950/40 text-amber-400 border-amber-800/50 hover:bg-amber-900/50'
-                              : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
-                            : isDark 
-                              ? 'bg-emerald-950/40 text-emerald-400 border-emerald-800/50 hover:bg-emerald-900/50' 
-                              : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                        } ${isSelf ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
-                        title={isSelf ? 'Não é permitido desativar seu próprio login' : 'Clique para alternar o status'}
+                  return (
+                    <React.Fragment key={adm.email}>
+                      <tr 
+                        onClick={() => toggleRow(adm.email)}
+                        className={`transition-colors cursor-pointer ${
+                          isExpanded 
+                            ? isDark ? 'bg-[#1E3252]/80' : 'bg-blue-50/50' 
+                            : isDark ? 'hover:bg-[#1E3252]/40' : 'hover:bg-slate-50/80'
+                        }`}
                       >
-                        {adm.status === 'pendente' ? '● PENDENTE' : adm.ativo ? '● ATIVO' : '○ INATIVO'}
-                      </button>
-                    </td>
+                        {/* 1. NOME */}
+                        <td className="py-3.5 px-5 font-sans">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border shrink-0 ${
+                              isInactive
+                                ? isDark ? 'bg-red-950/40 text-red-400 border-red-800/40' : 'bg-red-100 text-red-700 border-red-300'
+                                : isPending
+                                ? isDark ? 'bg-amber-950/40 text-amber-400 border-amber-800/40' : 'bg-amber-100 text-amber-700 border-amber-300'
+                                : rbacService.hasGlobalAccess(roleKey)
+                                ? isDark ? 'bg-purple-950/60 text-purple-300 border-purple-800/40' : 'bg-purple-100 text-purple-700 border-purple-300'
+                                : isDark ? 'bg-blue-950/60 text-blue-300 border-blue-800/40' : 'bg-blue-100 text-blue-700 border-blue-300'
+                            }`}>
+                              {adm.nome.split(' ').map(n => n[0]).slice(0, 2).join('')}
+                            </div>
+                            <div>
+                              <div className={`font-semibold ${isDark ? 'text-white' : 'text-slate-900'} text-xs flex items-center gap-1.5`}>
+                                <span>{adm.nome}</span>
+                                {adm.nomeGuerra && (
+                                  <span className={`text-[11px] font-normal ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
+                                    ({adm.nomeGuerra})
+                                  </span>
+                                )}
+                                {isSelf && (
+                                  <span className="text-[10px] px-1.5 py-0.2 rounded font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                    Você
+                                  </span>
+                                )}
+                              </div>
+                              <span className={`text-[10px] font-mono ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+                                {adm.email}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
 
-                    {/* Data de Criação */}
-                    <td className={`py-3.5 px-5 text-right whitespace-nowrap text-[11px] ${
-                      isDark ? 'text-[#94A3B8]' : 'text-slate-500'
-                    }`}>
-                      {adm.criadoEm}
-                    </td>
+                        {/* 2. POSTO/GRAD */}
+                        <td className="py-3.5 px-5 whitespace-nowrap">
+                          <span className={`font-medium ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                            {adm.postoGraduacao || '—'}
+                          </span>
+                        </td>
 
-                    {/* Ações */}
-                    <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1.5">
-                        {adm.status === 'pendente' && isCurrentSuperAdmin && (
-                          <button
-                            type="button"
-                            onClick={() => handleApprovePendingUser(adm)}
-                            className={`p-1.5 rounded transition-colors active:scale-[0.98] cursor-pointer ${
-                              isDark ? 'text-emerald-400 hover:bg-emerald-950/40' : 'text-emerald-600 hover:bg-emerald-50'
-                            }`}
-                            title="Aprovar usuário pendente"
-                          >
-                            <CheckCircle2 className="w-4 h-4" />
-                          </button>
-                        )}
-                        {isCurrentSuperAdmin && (
-                          <button
-                            type="button"
-                            onClick={() => handleOpenEditModal(adm)}
-                            className={`p-1.5 rounded transition-colors active:scale-[0.98] cursor-pointer ${
-                              isDark ? 'text-amber-400 hover:bg-amber-950/40' : 'text-amber-600 hover:bg-amber-50'
-                            }`}
-                            title="Editar cadastro e nível de acesso"
-                          >
-                            <Edit3 className="w-4 h-4" />
-                          </button>
-                        )}
-                        {isCurrentSuperAdmin && (
-                          <button
-                            type="button"
-                            onClick={() => handleSendResetEmail(adm.email, adm.nome)}
-                            className={`p-1.5 rounded transition-colors active:scale-[0.98] cursor-pointer ${
-                              isDark ? 'text-blue-400 hover:bg-blue-950/40' : 'text-blue-600 hover:bg-blue-50'
-                            }`}
-                            title="Enviar link de redefinição de senha"
-                          >
-                            <Key className="w-4 h-4" />
-                          </button>
-                        )}
-                        {!isSelf ? (
-                          <button
-                            onClick={() => handleDeleteAdmin(adm.id)}
-                            className={`p-1.5 rounded transition-colors active:scale-[0.98] cursor-pointer ${
-                              isDark ? 'text-red-400 hover:bg-red-950/40' : 'text-red-600 hover:bg-red-50'
-                            }`}
-                            title="Revogar acesso administrativo"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        ) : (
-                          <span className={`text-[10px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>Protegido</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                        {/* 3. FUNÇÃO */}
+                        <td className="py-3.5 px-5">
+                          <div className="flex flex-col gap-0.5">
+                            <span className={`font-medium ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                              {adm.funcao || adm.cargo || 'Gestor RH'}
+                            </span>
+                            {adm.tituloImpressao && (
+                              <span className={`text-[10px] font-mono ${isDark ? 'text-cyan-400/90' : 'text-cyan-700'}`}>
+                                🖨️ Impresso: {adm.tituloImpressao}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+
+                        {/* 4. CANTEIRO/SEDE */}
+                        <td className="py-3.5 px-5 text-center whitespace-nowrap">
+                          <span className={`px-2.5 py-0.5 rounded-md text-[11px] font-mono font-bold border ${
+                            canteiroDisplay.includes('Global')
+                              ? isDark ? 'bg-indigo-950/40 text-indigo-300 border-indigo-800/40' : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                              : isDark ? 'bg-blue-950/40 text-blue-300 border-blue-800/40' : 'bg-blue-50 text-blue-700 border-blue-200'
+                          }`}>
+                            {canteiroDisplay}
+                          </span>
+                        </td>
+
+                        {/* 5. CHEVRON EXPANSÃO */}
+                        <td className="py-3.5 px-5 text-right whitespace-nowrap">
+                          <div className="flex items-center justify-end">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleRow(adm.email);
+                              }}
+                              className={`p-1.5 rounded-lg border transition-all ${
+                                isDark 
+                                  ? 'bg-[#0F1B33] border-[#243756] text-slate-300 hover:bg-[#243756]' 
+                                  : 'bg-slate-100 border-slate-200 text-slate-600 hover:bg-slate-200'
+                              }`}
+                              title={isExpanded ? "Ocultar detalhes" : "Ver detalhes e ações"}
+                            >
+                              {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+
+                      {/* PAINEL EXPANDIDO DE DETALHES & AÇÕES */}
+                      {isExpanded && (
+                        <tr className={isDark ? 'bg-[#0F1B33]/90' : 'bg-slate-50'}>
+                          <td colSpan={5} className="p-5 border-t border-b border-blue-500/20">
+                            <div className="space-y-4">
+                              {/* Grid de Informações Detalhadas */}
+                              <div className={`p-4 rounded-xl border grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs ${
+                                isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
+                              }`}>
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    E-mail Corporativo
+                                  </span>
+                                  <span className={`font-mono font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                                    {adm.email}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    SARAM / Matrícula
+                                  </span>
+                                  <span className={`font-mono font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                                    {adm.saram || 'Não informado'}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Nome de Guerra
+                                  </span>
+                                  <span className={`font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                                    {adm.nomeGuerra || 'Não informado'}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Posto / Graduação
+                                  </span>
+                                  <span className={`font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                                    {adm.postoGraduacao || 'Não informado'}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Função Oficial
+                                  </span>
+                                  <span className={`font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                                    {adm.funcao || adm.cargo || 'Gestor RH'}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Perfil de Acesso (RBAC)
+                                  </span>
+                                  <span className={`inline-block px-2 py-0.5 mt-0.5 rounded-full text-[10px] font-bold border ${roleMeta.badgeColor}`}>
+                                    {roleMeta.label}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Status do Usuário
+                                  </span>
+                                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 mt-0.5 rounded-full text-[10px] font-bold border ${
+                                    isPending 
+                                      ? isDark ? 'bg-amber-950/50 text-amber-400 border-amber-800/60' : 'bg-amber-100 text-amber-800 border-amber-300'
+                                      : isInactive
+                                      ? isDark ? 'bg-red-950/50 text-red-400 border-red-800/60' : 'bg-red-100 text-red-800 border-red-300'
+                                      : isDark ? 'bg-emerald-950/50 text-emerald-400 border-emerald-800/60' : 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                                  }`}>
+                                    {isPending ? '● PENDENTE DE APROVAÇÃO' : isInactive ? '○ DESATIVADO' : '● ATIVO'}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Canteiro / Sede
+                                  </span>
+                                  <span className={`font-mono font-semibold ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                                    {canteiroDisplay}
+                                  </span>
+                                </div>
+
+                                <div className="sm:col-span-2">
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Título do Cargo Impresso (Guias & Assinaturas)
+                                  </span>
+                                  <span className={`font-sans ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                                    {adm.tituloImpressao || 'Mesmo da função'}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Data de Cadastro
+                                  </span>
+                                  <span className={`font-mono text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    {adm.criadoEm || '—'}
+                                  </span>
+                                </div>
+
+                                <div>
+                                  <span className={`block text-[10px] uppercase font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    Última Atualização
+                                  </span>
+                                  <span className={`font-mono text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    {adm.atualizadoEm || '—'}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* Aviso se usuário estiver desativado */}
+                              {isInactive && (
+                                <div className="p-3.5 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 text-xs flex items-center gap-2.5">
+                                  <Ban className="w-4 h-4 text-red-400 shrink-0" />
+                                  <span className="font-semibold">
+                                    Usuário desativado. Procure o Gerente ou DA do canteiro para solicitar o desbloqueio.
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Barra de Ações */}
+                              <div className="flex flex-wrap items-center justify-end gap-2.5 pt-1">
+                                {isPending && isCurrentSuperAdmin && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleApprovePendingUser(adm)}
+                                    className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer"
+                                  >
+                                    <CheckCircle2 className="w-3.5 h-3.5" />
+                                    <span>Aprovar Acesso</span>
+                                  </button>
+                                )}
+
+                                {isCurrentSuperAdmin && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEditModal(adm)}
+                                    className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl border transition-all active:scale-95 cursor-pointer ${
+                                      isDark 
+                                        ? 'bg-[#16243D] hover:bg-[#1E3252] text-amber-300 border-amber-500/40' 
+                                        : 'bg-white hover:bg-amber-50 text-amber-800 border-amber-300'
+                                    }`}
+                                  >
+                                    <Edit3 className="w-3.5 h-3.5" />
+                                    <span>Editar Dados</span>
+                                  </button>
+                                )}
+
+                                {isCurrentSuperAdmin && !isSelf && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleToggleStatus(adm)}
+                                    className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl border transition-all active:scale-95 cursor-pointer ${
+                                      isInactive
+                                        ? isDark 
+                                          ? 'bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 border-emerald-700/60' 
+                                          : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300'
+                                        : isDark 
+                                          ? 'bg-red-950/40 hover:bg-red-900/50 text-red-300 border-red-800/60' 
+                                          : 'bg-red-50 hover:bg-red-100 text-red-800 border-red-300'
+                                    }`}
+                                  >
+                                    {isInactive ? (
+                                      <>
+                                        <ToggleRight className="w-4 h-4 text-emerald-400" />
+                                        <span>Reabilitar / Ativar Acesso</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <ToggleLeft className="w-4 h-4 text-red-400" />
+                                        <span>Desabilitar Acesso</span>
+                                      </>
+                                    )}
+                                  </button>
+                                )}
+
+                                {isSelf && (
+                                  <span className={`text-[11px] px-3 py-1.5 rounded-lg ${isDark ? 'text-slate-500 bg-[#16243D]' : 'text-slate-400 bg-slate-100'}`}>
+                                    Sua própria conta de acesso ativo
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
@@ -574,33 +963,35 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
           isDark ? 'border-[#243756] bg-[#0F1B33] text-[#94A3B8]' : 'border-slate-200 bg-slate-50 text-slate-600'
         }`}>
           <div className="flex items-center gap-1.5">
-            <Lock className="w-3.5 h-3.5 text-blue-500" />
-            <span>Segurança RBAC: Apenas usuários cadastrados e ativos no Cloud Firestore podem efetuar lançamentos e homologações.</span>
+            <Lock className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+            <span>Segurança RBAC: Autenticação exclusiva Google Workspace com verificação direta de perfil e status.</span>
           </div>
-          <span className="font-bold">SPTF Security Engine v4.0</span>
+          <span className="font-mono text-[11px]">SPTF Security Engine v4.5</span>
         </div>
       </div>
 
-      {/* MODAL: NOVO ADMINISTRADOR OU EDITAR PERMISSÕES */}
+      {/* MODAL: NOVO PRÉ-CADASTRO OU EDITAR USUÁRIO */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
-          <div className={`w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border animate-in fade-in zoom-in-95 ${
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-xs animate-in fade-in">
+          <div className={`w-full max-w-xl rounded-2xl shadow-2xl overflow-hidden border animate-in zoom-in-95 ${
             isDark ? 'bg-[#16243D] border-[#243756]' : 'bg-white border-slate-200'
           }`}>
+            {/* Modal Header */}
             <div className={`flex items-center justify-between px-6 py-4 border-b ${
               isDark ? 'border-[#243756] bg-[#0F1B33]' : 'border-slate-200 bg-slate-50'
             }`}>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <Shield className="w-5 h-5 text-blue-500" />
                 <h3 className={`font-bold text-sm font-sans ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                  {editingAdmin ? 'Editar Permissões de Acesso (RBAC)' : 'Cadastrar Administrador RH com Senha'}
+                  {editingAdmin ? 'Editar Dados do Usuário (RBAC)' : 'Novo Pré-Cadastro de Usuário'}
                 </h3>
               </div>
               <button
+                type="button"
                 onClick={() => { setIsModalOpen(false); setEditingAdmin(null); }}
-                className={`text-sm cursor-pointer ${isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-400 hover:text-slate-800'}`}
+                className={`text-sm p-1 rounded-md cursor-pointer ${isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-400 hover:text-slate-800'}`}
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -611,7 +1002,8 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
               </div>
             )}
 
-            <form onSubmit={handleSaveAdmin} className="p-6 space-y-3.5">
+            <form onSubmit={handleSaveAdmin} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+              {/* E-mail */}
               <div>
                 <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   E-mail Corporativo / Google Workspace *
@@ -621,7 +1013,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                   value={email}
                   disabled={Boolean(editingAdmin)}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="analista.rh@empresa.com.br"
+                  placeholder="usuario@comara.gov.br ou usuario@gmail.com"
                   required
                   className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-mono ${
                     editingAdmin ? 'opacity-60 cursor-not-allowed' : ''
@@ -631,8 +1023,14 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                       : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                   }`}
                 />
+                {!editingAdmin && (
+                  <p className={`text-[10px] mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                    Quando o colaborador fizer login com esta conta Google, as permissões pré-definidas serão vinculadas automaticamente.
+                  </p>
+                )}
               </div>
 
+              {/* Nome Completo */}
               <div>
                 <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
                   Nome Completo *
@@ -641,7 +1039,7 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                   type="text"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
-                  placeholder="Nome do gestor ou analista"
+                  placeholder="Ex: João da Silva Santos"
                   required
                   className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                     isDark 
@@ -651,17 +1049,18 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* SARAM / Matrícula & Nome de Guerra */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
-                    Cargo / Função Interna
+                    SARAM / Matrícula
                   </label>
                   <input
                     type="text"
-                    value={cargo}
-                    onChange={(e) => setCargo(e.target.value)}
-                    placeholder="Ex: Engenheiro Fiscal, Analista"
-                    className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
+                    value={saram}
+                    onChange={(e) => setSaram(e.target.value)}
+                    placeholder="Ex: 7654321 ou 12345"
+                    className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-mono ${
                       isDark 
                         ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
@@ -670,20 +1069,14 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <label className={`block font-semibold text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
-                      Título do Cargo Impresso
-                    </label>
-                    <InfoTooltip 
-                      theme={theme}
-                      content="Nome/Título oficial que sairá impresso nas Guias de Dispensa SPTF e Assinaturas (ex: 'Capitão Encarregado de Obras', 'Chefe da DA', 'Auxiliar de DA')."
-                    />
-                  </div>
+                  <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
+                    Nome de Guerra
+                  </label>
                   <input
                     type="text"
-                    value={tituloImpressao}
-                    onChange={(e) => setTituloImpressao(e.target.value)}
-                    placeholder="Ex: Capitão Encarregado de Obras"
+                    value={nomeGuerra}
+                    onChange={(e) => setNomeGuerra(e.target.value)}
+                    placeholder="Ex: Silva, Santos, Ferreira"
                     className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
                       isDark 
                         ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
@@ -691,16 +1084,83 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                     }`}
                   />
                 </div>
+              </div>
 
+              {/* Posto / Graduação & Função */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
+                    Posto / Graduação
+                  </label>
+                  <input
+                    type="text"
+                    list="posto-grad-list"
+                    value={postoGraduacao}
+                    onChange={(e) => setPostoGraduacao(e.target.value)}
+                    placeholder="Selecione ou digite (ex: Cap, SO, Servidor Civil)"
+                    className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
+                      isDark 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                    }`}
+                  />
+                  <datalist id="posto-grad-list">
+                    {POSTO_GRAD_OPTIONS.map(opt => (
+                      <option key={opt} value={opt} />
+                    ))}
+                  </datalist>
+                </div>
+
+                <div>
+                  <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
+                    Função Oficial *
+                  </label>
+                  <input
+                    type="text"
+                    value={funcao}
+                    onChange={(e) => setFuncao(e.target.value)}
+                    placeholder="Ex: Engenheiro Fiscal, Encarregado de DA"
+                    required
+                    className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
+                      isDark 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                    }`}
+                  />
+                </div>
+              </div>
+
+              {/* Título do Cargo Impresso */}
+              <div>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <label className={`block font-semibold text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
+                    Título do Cargo Impresso (Guias SPTF & Assinaturas)
+                  </label>
+                  <InfoTooltip 
+                    theme={theme}
+                    content="Título oficial que constará nas Guias de Dispensa SPTF e Relatórios executivos (ex: 'Capitão Encarregado de Obras', 'Chefe da DA', 'Auxiliar de DA')."
+                  />
+                </div>
+                <input
+                  type="text"
+                  value={tituloImpressao}
+                  onChange={(e) => setTituloImpressao(e.target.value)}
+                  placeholder="Ex: Capitão Encarregado de Obras"
+                  className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-sans ${
+                    isDark 
+                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                  }`}
+                />
+              </div>
+
+              {/* Perfil / Nível de Acesso (RBAC) & Canteiro/Sede */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
                     <label className={`block font-semibold text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
-                      Nível de Acesso (Role) *
+                      Perfil / Nível de Acesso (Role) *
                     </label>
-                    <InfoTooltip 
-                      theme={theme}
-                      content="6 Níveis Consolidados: SUPER_ADMIN (TI), RH_ADMIN (RH Sede), GERENTE_CANTEIRO (Visualização), CHEFE_CANTEIRO (Operacional), CHEFE_DA (Gestão DA & Auditoria Local), AUX_DA (Auxiliar de Campo)."
-                    />
                   </div>
                   <select
                     value={nivelAcesso}
@@ -711,120 +1171,87 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                         : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
                     }`}
                   >
-                    <option value="SUPER_ADMIN">1. SUPER_ADMIN (TI - Acesso Global, Config & Auditoria)</option>
-                    <option value="RH_ADMIN">2. RH_ADMIN (RH Sede - Gestão Global, Folha & Auditoria)</option>
-                    <option value="GERENTE_CANTEIRO">3. GERENTE_CANTEIRO (Visualização e Acompanhamento do Canteiro)</option>
-                    <option value="CHEFE_CANTEIRO">4. CHEFE_CANTEIRO (Operacional - Lançamentos, Insalubridade & Dispensas)</option>
-                    <option value="CHEFE_DA">5. CHEFE_DA (Gestão DA - Lançamentos, Dispensas & Auditoria Local)</option>
-                    <option value="AUX_DA">6. AUX_DA (Auxiliar de Campo - Lançamentos & Dispensas)</option>
+                    <option value="SUPER_ADMIN">SUPER_ADMIN (TI - Global)</option>
+                    <option value="RH_ADMIN">RH_ADMIN (RH Sede - Global)</option>
+                    <option value="GERENTE_CANTEIRO">GERENTE_CANTEIRO (Visualização)</option>
+                    <option value="CHEFE_CANTEIRO">CHEFE_CANTEIRO (Operacional)</option>
+                    <option value="CHEFE_DA">CHEFE_DA (Gestão DA & Auditoria Local)</option>
+                    <option value="AUX_DA">AUX_DA (Auxiliar de Campo / Lançamentos)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
+                    Canteiro / Sede Vinculada {rbacService.hasGlobalAccess(nivelAcesso) ? '(Global)' : '*'}
+                  </label>
+                  <select
+                    value={rbacService.hasGlobalAccess(nivelAcesso) ? 'TODAS' : canteiroSede}
+                    disabled={rbacService.hasGlobalAccess(nivelAcesso)}
+                    onChange={(e) => setCanteiroSede(e.target.value)}
+                    className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-semibold ${
+                      rbacService.hasGlobalAccess(nivelAcesso) ? 'opacity-60 cursor-not-allowed' : ''
+                    } ${
+                      isDark 
+                        ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
+                        : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
+                    }`}
+                  >
+                    {rbacService.hasGlobalAccess(nivelAcesso) ? (
+                      <option value="TODAS">TODAS AS SEDES E CANTEIROS (Acesso Global)</option>
+                    ) : (
+                      <>
+                        <option value="KO">KO - Canteiro de Obras Coari (DECO-KO)</option>
+                        <option value="BE">BE - Sede Belém / Destacamento de Apoio</option>
+                        <option value="MN">MN - Destacamento de Manaus (BAMN)</option>
+                        <option value="SP">SP - Destacamento São Paulo</option>
+                        <option value="RJ">RJ - Destacamento Rio de Janeiro</option>
+                      </>
+                    )}
                   </select>
                 </div>
               </div>
 
-              {/* Seção Canteiro / Sede Vinculada */}
-              <div>
-                <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
-                  Canteiro de Obras / Sede Vinculada {rbacService.hasGlobalAccess(nivelAcesso) ? '(Acesso Global)' : '*'}
-                </label>
-                <select
-                  value={rbacService.hasGlobalAccess(nivelAcesso) ? 'TODAS' : sede}
-                  disabled={rbacService.hasGlobalAccess(nivelAcesso)}
-                  onChange={(e) => setSede(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-semibold ${
-                    rbacService.hasGlobalAccess(nivelAcesso) ? 'opacity-60 cursor-not-allowed' : ''
-                  } ${
-                    isDark 
-                      ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
-                      : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                  }`}
-                >
-                  {rbacService.hasGlobalAccess(nivelAcesso) ? (
-                    <option value="TODAS">TODAS AS SEDES E CANTEIROS (Acesso Irrestrito)</option>
-                  ) : (
-                    <>
-                      <option value="KO">KO - Canteiro de Obras Coari (DECO-KO)</option>
-                      <option value="BE">BE - Sede Belém / Destacamento de Apoio</option>
-                      <option value="MN">MN - Destacamento de Manaus (BAMN)</option>
-                      <option value="SP">SP - Destacamento São Paulo</option>
-                      <option value="RJ">RJ - Destacamento Rio de Janeiro</option>
-                    </>
-                  )}
-                </select>
-              </div>
-
-              {/* Senha Inicial e Confirmação */}
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <span className={`font-semibold text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
-                      {editingAdmin ? 'Credenciais de Acesso' : 'Definição de Senha Inicial'}
-                    </span>
-                    <InfoTooltip 
-                      theme={theme}
-                      content="O usuário poderá fazer login usando o e-mail cadastrado + esta senha, ou autenticar-se via Google Account vinculada."
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleGenerateAdminRandomPassword}
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold rounded-md border transition-all active:scale-95 cursor-pointer ${
-                      isDark 
-                        ? 'bg-blue-950/40 text-blue-300 border-blue-800/60 hover:bg-blue-900/50' 
-                        : 'bg-blue-50 text-blue-700 border-blue-300 hover:bg-blue-100'
-                    }`}
-                    title="Gerar senha aleatória de 6 dígitos"
-                  >
-                    <Sparkles className="w-2.5 h-2.5 text-blue-400" />
-                    <span>Gerar 6 Dígitos</span>
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className={`block text-[11px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
-                      {editingAdmin ? 'Nova Senha (opcional)' : 'Senha (mín. 6 dígitos) *'}
+              {/* Status Inicial (Apenas para novos pré-cadastros) */}
+              {!editingAdmin && (
+                <div>
+                  <label className={`block font-semibold text-xs mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-700'}`}>
+                    Status Inicial do Cadastro
+                  </label>
+                  <div className="flex items-center gap-4 text-xs">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="statusInicial"
+                        value="ativo"
+                        checked={statusInicial === 'ativo'}
+                        onChange={() => setStatusInicial('ativo')}
+                        className="text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className={isDark ? 'text-slate-200' : 'text-slate-800'}>Ativo (Liberado para acesso imediato)</span>
                     </label>
-                    <input
-                      type="password"
-                      value={senhaInicial}
-                      onChange={(e) => setSenhaInicial(e.target.value)}
-                      placeholder="••••••••"
-                      required={!editingAdmin}
-                      className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-mono ${
-                        isDark 
-                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
-                          : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                      }`}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={`block text-[11px] mb-1 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
-                      {editingAdmin ? 'Confirmar Nova Senha' : 'Confirmar Senha *'}
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="statusInicial"
+                        value="pendente"
+                        checked={statusInicial === 'pendente'}
+                        onChange={() => setStatusInicial('pendente')}
+                        className="text-blue-600 focus:ring-blue-500"
+                      />
+                      <span className={isDark ? 'text-slate-200' : 'text-slate-800'}>Pendente (Aguardando homologação futura)</span>
                     </label>
-                    <input
-                      type="password"
-                      value={confirmarSenha}
-                      onChange={(e) => setConfirmarSenha(e.target.value)}
-                      placeholder="••••••••"
-                      required={!editingAdmin && Boolean(senhaInicial)}
-                      className={`w-full px-3 py-2 rounded-lg text-xs border focus:outline-hidden font-mono ${
-                        isDark 
-                          ? 'bg-[#0F1B33] border-[#243756] text-[#E2E8F0] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' 
-                          : 'bg-white border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                      }`}
-                    />
                   </div>
                 </div>
-              </div>
+              )}
 
-              <div className={`pt-4 border-t flex justify-end gap-2 ${
+              {/* Modal Buttons */}
+              <div className={`pt-4 border-t flex justify-end gap-2.5 ${
                 isDark ? 'border-[#243756]' : 'border-slate-200'
               }`}>
                 <button
                   type="button"
                   onClick={() => { setIsModalOpen(false); setEditingAdmin(null); }}
-                  className={`px-4 py-2 font-semibold text-xs cursor-pointer ${
+                  className={`px-4 py-2 font-semibold text-xs rounded-xl cursor-pointer ${
                     isDark ? 'text-[#94A3B8] hover:text-white' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -832,9 +1259,10 @@ export const AdminPermissionsManagement: React.FC<AdminPermissionsManagementProp
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 font-bold text-white bg-[#3B82F6] hover:bg-blue-600 rounded-lg shadow-md shadow-blue-500/20 text-xs cursor-pointer"
+                  disabled={isSaving}
+                  className="px-5 py-2 font-bold text-white bg-[#3B82F6] hover:bg-blue-600 rounded-xl shadow-md shadow-blue-500/20 text-xs cursor-pointer disabled:opacity-50"
                 >
-                  {editingAdmin ? 'Salvar Alterações' : 'Salvar no Firestore'}
+                  {isSaving ? 'Salvando...' : editingAdmin ? 'Salvar Alterações' : 'Concluir Pré-Cadastro'}
                 </button>
               </div>
             </form>

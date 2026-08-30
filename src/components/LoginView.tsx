@@ -1,26 +1,15 @@
 import React, { useState } from 'react';
-import { 
-  signInWithPopup, 
-} from 'firebase/auth';
-import { auth, googleProvider } from '../services/firebase';
-import { authService } from '../services/authService';
+import { authService, getFirebaseAuthErrorMessage } from '../services/authService';
 import { AuthSession } from '../types';
 import { ComaraLogo } from './ComaraLogo';
 import { 
   ShieldCheck, 
-  Lock, 
-  Mail, 
-  KeyRound, 
   AlertCircle, 
   CheckCircle2, 
-  Building2, 
   UserCheck, 
-  ArrowRight, 
-  Database, 
   Cloud, 
-  Sparkles, 
-  Layers, 
-  ChevronRight 
+  ChevronRight,
+  Lock
 } from 'lucide-react';
 
 interface LoginViewProps {
@@ -35,86 +24,59 @@ export const LoginView: React.FC<LoginViewProps> = ({
   theme = 'dark',
 }) => {
   const isDark = theme === 'dark';
-  const [authMode, setAuthMode] = useState<'LOGIN' | 'CADASTRO' | 'RESET'>('LOGIN');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [nome, setNome] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  // Login com Google Workspace
+  // Login com Google Workspace via Popup (Firebase Auth SDK)
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     setErrorMessage(null);
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (error: any) {
-      console.error('Erro no Google Sign-In:', error);
-      if (error.code === 'auth/popup-closed-by-user') {
-        setErrorMessage('A janela de login do Google foi fechada antes da conclusão.');
-      } else if (error.code === 'auth/cancelled-popup-request') {
-        setErrorMessage('Operação cancelada.');
-      } else if (error.code === 'auth/unauthorized-domain' || error.message?.includes('unauthorized-domain')) {
-        setErrorMessage('Domínio de prévia/Cloud Run não listado nos domínios autorizados do Firebase Auth. Utilize a autenticação direta por e-mail corporativo abaixo para entrar.');
-        setAuthMode('LOGIN');
-        setEmail('comarafab@gmail.com');
-        setPassword('comara2026');
-      } else {
-        setErrorMessage(`Falha na autenticação Google: ${error.message || error.code}`);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Login com Email e Senha 100% via Firestore
-  const handleEmailAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrorMessage(null);
     setSuccessMessage(null);
-
-    const cleanEmail = email.trim().toLowerCase();
-
     try {
-      if (authMode === 'LOGIN') {
-        const res = await authService.verifyAdminLogin(cleanEmail, password);
-        if (res.success && res.session) {
-          setSuccessMessage(res.message);
-          if (onLoginSuccess) {
-            onLoginSuccess(res.session);
-          } else {
-            window.location.reload();
-          }
-        } else {
-          setErrorMessage(res.message);
-        }
-      } else if (authMode === 'CADASTRO') {
-        if (password.length < 6) {
-          setErrorMessage('A senha deve conter no mínimo 6 caracteres.');
-          setIsLoading(false);
-          return;
-        }
-        const res = await authService.createAdminAccount(cleanEmail, password, nome, 'Gestor RH');
-        if (res.success && res.session) {
-          setSuccessMessage('Conta corporativa de gestão criada no Cloud Firestore! Entrando...');
-          setTimeout(() => {
-            if (onLoginSuccess) {
-              onLoginSuccess(res.session!);
-            } else {
-              window.location.reload();
-            }
-          }, 1000);
-        } else {
-          setErrorMessage(res.message);
-        }
-      } else if (authMode === 'RESET') {
-        setSuccessMessage(`Solicitação registrada para ${cleanEmail}. Por questões de segurança CLT/LGPD, acerte sua senha através da Validação Tripla no Portal do Colaborador ou solicite o reset ao Gestor Master.`);
+      const { user, processed } = await authService.signInWithGoogle();
+
+      if (processed.status === 'inativo' || processed.status === 'bloqueado') {
+        setErrorMessage('Usuário desativado. Procure o Gerente ou DA do canteiro para solicitar o desbloqueio.');
+        return;
+      }
+
+      if (processed.status === 'pendente') {
+        setErrorMessage('Sua conta foi registrada no sistema e aguarda liberação de perfil pelo administrador.');
+        return;
+      }
+
+      const session: AuthSession = {
+        email: processed.admin.email,
+        nome: processed.admin.nome || user.displayName || 'Gestor RH',
+        saram: processed.admin.saram,
+        nomeGuerra: processed.admin.nomeGuerra,
+        postoGraduacao: processed.admin.postoGraduacao,
+        funcao: processed.admin.funcao || processed.admin.cargo,
+        canteiroSede: processed.admin.canteiroSede || processed.admin.sede || 'TODAS',
+        role: (processed.admin.nivelAcesso || processed.admin.role || 'GESTOR_RH') as any,
+        cargo: processed.admin.cargo || 'Gestor RH',
+        sede: processed.admin.sede || processed.admin.canteiroCodigo || 'KO',
+        canteiroCodigo: processed.admin.canteiroCodigo || processed.admin.sede || 'KO',
+        canteiroId: processed.admin.canteiroCodigo || processed.admin.sede || 'KO',
+        tratamentoTitulo: processed.admin.tratamentoTitulo,
+        loginTime: new Date().toISOString(),
+      };
+      authService.saveCurrentSession(session);
+      setSuccessMessage(`Bem-vindo(a), ${session.nome}!`);
+      if (onLoginSuccess) {
+        onLoginSuccess(session);
+      } else {
+        window.location.reload();
       }
     } catch (error: any) {
-      console.error('Erro na autenticação por e-mail:', error);
-      setErrorMessage(error.message || 'Falha ao autenticar credenciais no Firestore.');
+      console.error('Erro no Google Sign-In Popup:', error);
+      const code = error?.code || '';
+      if (code === 'auth/popup-closed-by-user') {
+        setErrorMessage('A janela de autenticação foi fechada antes de concluir o login.');
+      } else {
+        setErrorMessage(getFirebaseAuthErrorMessage(code, error.message));
+      }
     } finally {
       setIsLoading(false);
     }
@@ -169,220 +131,69 @@ export const LoginView: React.FC<LoginViewProps> = ({
                 <ComaraLogo size="xl" />
               </div>
               <h1 className={`text-xl font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
-                {authMode === 'LOGIN' && 'Acesso ao Painel RH'}
-                {authMode === 'CADASTRO' && 'Novo Cadastro de Administrador'}
-                {authMode === 'RESET' && 'Recuperar Senha de Acesso'}
+                Acesso ao Painel de Gestão & RH
               </h1>
               <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-                {authMode === 'LOGIN' && 'COMARA • Comissão de Aeroportos da Região Amazônica'}
-                {authMode === 'CADASTRO' && 'Crie sua credencial para gestão das bases KO, BE e MN'}
-                {authMode === 'RESET' && 'Informe seu e-mail para receber instruções de recuperação'}
+                COMARA • Comissão de Aeroportos da Região Amazônica
               </p>
             </div>
 
             {/* Alerts */}
             {errorMessage && (
-              <div className="mb-4 p-3 rounded-xl bg-red-950/40 border border-red-800/60 text-red-300 text-xs flex items-start gap-2.5">
+              <div className="mb-5 p-3.5 rounded-xl bg-red-950/50 border border-red-800/60 text-red-300 text-xs flex items-start gap-2.5">
                 <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                <span>{errorMessage}</span>
+                <span className="leading-relaxed">{errorMessage}</span>
               </div>
             )}
 
             {successMessage && (
-              <div className="mb-4 p-3 rounded-xl bg-emerald-950/40 border border-emerald-800/60 text-emerald-300 text-xs flex items-start gap-2.5">
+              <div className="mb-5 p-3.5 rounded-xl bg-emerald-950/50 border border-emerald-800/60 text-emerald-300 text-xs flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                 <span>{successMessage}</span>
               </div>
             )}
 
-            {/* Opção 1: Google Sign-In */}
-            {authMode === 'LOGIN' && (
-              <div className="space-y-4 mb-6">
-                <button
-                  type="button"
-                  onClick={handleGoogleLogin}
-                  disabled={isLoading}
-                  className={`w-full py-3.5 px-4 rounded-xl border font-bold text-xs flex items-center justify-center gap-3 transition-all shadow-md active:scale-98 cursor-pointer ${
-                    isDark 
-                      ? 'bg-[#243756] hover:bg-[#335075] text-white border-[#335075]' 
-                      : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 hover:border-slate-400 shadow-xs'
-                  }`}
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24">
-                    <path
-                      fill="#4285F4"
-                      d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.04 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
-                    />
-                    <path
-                      fill="#EA4335"
-                      d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
-                    />
-                  </svg>
-                  <span>Entrar com Google Workspace</span>
-                </button>
-
-                <div className="relative flex items-center justify-center">
-                  <div className={`border-t w-full ${isDark ? 'border-[#243756]' : 'border-slate-200'}`}></div>
-                  <span className={`px-3 text-[10px] uppercase font-bold tracking-wider absolute ${
-                    isDark ? 'bg-[#16243D] text-[#94A3B8]' : 'bg-white text-slate-400'
-                  }`}>
-                    OU COM E-MAIL CORPORATIVO
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Opção 2: E-mail e Senha */}
-            <form onSubmit={handleEmailAuth} className="space-y-4 text-xs">
-              {authMode === 'CADASTRO' && (
-                <div>
-                  <label className={`block font-semibold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
-                    NOME COMPLETO DO GESTOR
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      required
-                      placeholder="Nome do Gestor de RH"
-                      value={nome}
-                      onChange={(e) => setNome(e.target.value)}
-                      className={`w-full rounded-xl px-4 py-3 text-xs font-sans outline-hidden border transition-colors ${
-                        isDark
-                          ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-gray-600'
-                          : 'bg-slate-50 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-900 placeholder:text-slate-400'
-                      }`}
-                    />
-                    <UserCheck className={`absolute right-3.5 top-3.5 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label className={`block font-semibold mb-1.5 ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
-                  E-MAIL CORPORATIVO
-                </label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    required
-                    placeholder="seu.email@empresa.com.br"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={`w-full rounded-xl px-4 py-3 text-xs font-mono outline-hidden border transition-colors ${
-                      isDark
-                        ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-gray-600'
-                        : 'bg-slate-50 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-900 placeholder:text-slate-400'
-                    }`}
-                  />
-                  <Mail className={`absolute right-3.5 top-3.5 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
-                </div>
-              </div>
-
-              {authMode !== 'RESET' && (
-                <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className={`font-semibold ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
-                      SENHA DE ACESSO
-                    </label>
-                    {authMode === 'LOGIN' && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setAuthMode('RESET');
-                          setErrorMessage(null);
-                          setSuccessMessage(null);
-                        }}
-                        className="text-[11px] text-blue-400 hover:text-blue-300 transition-colors"
-                      >
-                        Esqueceu?
-                      </button>
-                    )}
-                  </div>
-                  <div className="relative">
-                    <input
-                      type="password"
-                      required
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className={`w-full rounded-xl px-4 py-3 text-xs font-mono outline-hidden border transition-colors ${
-                        isDark
-                          ? 'bg-[#0F1B33] border-[#243756] focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-white placeholder:text-gray-600'
-                          : 'bg-slate-50 border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-slate-900 placeholder:text-slate-400'
-                      }`}
-                    />
-                    <KeyRound className={`absolute right-3.5 top-3.5 w-4 h-4 ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`} />
-                  </div>
-                </div>
-              )}
-
+            {/* Google Workspace Sign-In Button */}
+            <div className="space-y-4">
               <button
-                type="submit"
+                type="button"
+                onClick={handleGoogleLogin}
                 disabled={isLoading}
-                className="w-full mt-2 py-3.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 active:scale-98 cursor-pointer disabled:opacity-50"
+                className={`w-full py-3.5 px-4 rounded-xl border font-bold text-xs flex items-center justify-center gap-3 transition-all shadow-md active:scale-98 cursor-pointer disabled:opacity-50 ${
+                  isDark 
+                    ? 'bg-[#243756] hover:bg-[#335075] text-white border-[#335075]' 
+                    : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 hover:border-slate-400 shadow-xs'
+                }`}
               >
-                {isLoading ? (
-                  <span>Processando autenticação...</span>
-                ) : authMode === 'LOGIN' ? (
-                  <>
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>Entrar no Sistema</span>
-                  </>
-                ) : authMode === 'CADASTRO' ? (
-                  <>
-                    <UserCheck className="w-4 h-4" />
-                    <span>Cadastrar Conta de Gestão</span>
-                  </>
-                ) : (
-                  <>
-                    <Mail className="w-4 h-4" />
-                    <span>Enviar Link de Recuperação</span>
-                  </>
-                )}
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.04 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                  />
+                </svg>
+                <span>{isLoading ? 'Autenticando...' : 'Entrar com Google Workspace'}</span>
               </button>
-            </form>
 
-            {/* Alternar Modos */}
-            <div className={`mt-5 pt-4 border-t text-center text-xs ${isDark ? 'border-[#243756]' : 'border-slate-100'}`}>
-              {authMode === 'LOGIN' ? (
-                <p className={isDark ? 'text-[#94A3B8]' : 'text-slate-500'}>
-                  Primeiro acesso de gestão?{' '}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAuthMode('CADASTRO');
-                      setErrorMessage(null);
-                      setSuccessMessage(null);
-                    }}
-                    className="text-blue-400 font-bold hover:underline"
-                  >
-                    Criar conta corporativa
-                  </button>
-                </p>
-              ) : (
-                <p className={isDark ? 'text-[#94A3B8]' : 'text-slate-500'}>
-                  Já possui conta cadastrada?{' '}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAuthMode('LOGIN');
-                      setErrorMessage(null);
-                      setSuccessMessage(null);
-                    }}
-                    className="text-blue-400 font-bold hover:underline"
-                  >
-                    Voltar para o Login
-                  </button>
-                </p>
-              )}
+              <div className={`p-3 rounded-xl border text-[11px] leading-relaxed flex items-start gap-2 ${
+                isDark ? 'bg-[#0F1B33]/60 border-[#243756] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-600'
+              }`}>
+                <Lock className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
+                <span>
+                  O acesso administrativo é restrito a contas corporativas autorizadas. Novos usuários entram em fila de homologação.
+                </span>
+              </div>
             </div>
           </div>
 
@@ -419,7 +230,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
           {/* Compliance Footer Note */}
           <div className="text-center text-[10px] text-[#94A3B8] flex items-center justify-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-            <span>Autenticação Centralizada Google Firebase • RBAC Rigoroso CLT</span>
+            <span>Autenticação Centralizada Google Workspace • RBAC Rigoroso CLT</span>
           </div>
 
         </div>

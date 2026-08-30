@@ -14,7 +14,7 @@ import {
   limit,
   Unsubscribe 
 } from 'firebase/firestore';
-import { auth, db, ensureFirebaseAdminSession, logFirestoreError, handleFirestoreError, OperationType, isPermissionError } from './firebase';
+import { auth, db, logFirestoreError, handleFirestoreError, OperationType, isPermissionError } from './firebase';
 import { Employee, TimeRecord, AdminUser, AdminRole, InsalubrityRecord, SystemConfig, ConstructionSite, PaystubRecord, DispensaSptfRecord, AuditLog } from '../types';
 import { hashPassword, autoSeedDefaultAdminMaster, authService } from './authService';
 import { canteiroService } from './canteiroService';
@@ -176,19 +176,14 @@ export function prepareDispensaSptfForFirestore(d: Partial<DispensaSptfRecord>):
 
 export const firestoreService = {
   async ensureAuthenticatedWriteSession(): Promise<void> {
-    try {
-      const user = await ensureFirebaseAdminSession();
-      if (user) return;
-    } catch {
-      // Ignora erro de provider e valida sessão corporativa abaixo
-    }
+    if (auth.currentUser) return;
 
     const session = authService.getCurrentSession();
     if (session && session.email) {
       return;
     }
 
-    console.warn('[Firestore] Escrita realizada em modo de contingência ou sem sessão ativa do Firebase Auth.');
+    console.warn('[Firestore] Escrita realizada sem sessão autenticada ativa.');
   },
 
   // -------------------------------------------------------------
@@ -392,21 +387,28 @@ export const firestoreService = {
             snapshot.forEach((docSnap) => {
               const data = docSnap.data();
               const role = (data.role as AdminRole) || (data.nivelAcesso as AdminRole) || 'GESTOR_RH';
-              const status = (data.status as 'pendente' | 'ativo' | 'inativo') || (data.ativo === false ? 'inativo' : 'ativo');
-            const perfil = (data.perfil as string) || (data.role as string) || (data.nivelAcesso as string) || 'nenhum';
-            list.push({
+              const status = (data.status as 'pendente' | 'ativo' | 'inativo' | 'bloqueado') || (data.ativo === false ? 'inativo' : 'ativo');
+              const perfil = (data.perfil as string) || (data.role as string) || (data.nivelAcesso as string) || 'nenhum';
+              list.push({
                 id: docSnap.id,
                 email: data.email || docSnap.id,
                 nome: data.nome || data.email?.split('@')[0] || 'Administrador',
-                cargo: data.cargo || 'Gestor RH',
+                cargo: data.cargo || data.funcao || 'Gestor RH',
+                funcao: data.funcao || data.cargo || '',
+                saram: data.saram || '',
+                nomeGuerra: data.nomeGuerra || '',
+                postoGraduacao: data.postoGraduacao || '',
+                canteiroSede: data.canteiroSede || data.sede || 'TODAS',
+                tituloImpressao: data.tituloImpressao || '',
                 nivelAcesso: role,
                 role,
                 status,
                 perfil,
                 foto: data.foto || data.photoURL || null,
-                sede: data.sede || 'TODAS',
-                ativo: data.ativo !== false && status !== 'pendente',
+                sede: data.sede || data.canteiroSede || 'TODAS',
+                ativo: data.ativo !== false && status === 'ativo',
                 criadoEm: data.criadoEm || new Date().toISOString(),
+                atualizadoEm: data.atualizadoEm,
               });
             });
             onSuccess(list);
@@ -438,21 +440,28 @@ export const firestoreService = {
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         const role = (data.role as AdminRole) || (data.nivelAcesso as AdminRole) || 'GESTOR_RH';
-        const status = (data.status as 'pendente' | 'ativo' | 'inativo') || (data.ativo === false ? 'inativo' : 'ativo');
+        const status = (data.status as 'pendente' | 'ativo' | 'inativo' | 'bloqueado') || (data.ativo === false ? 'inativo' : 'ativo');
         const perfil = (data.perfil as string) || (data.role as string) || (data.nivelAcesso as string) || 'nenhum';
         list.push({
           id: docSnap.id,
           email: data.email || docSnap.id,
           nome: data.nome || data.email?.split('@')[0] || 'Administrador',
-          cargo: data.cargo || 'Gestor RH',
+          cargo: data.cargo || data.funcao || 'Gestor RH',
+          funcao: data.funcao || data.cargo || '',
+          saram: data.saram || '',
+          nomeGuerra: data.nomeGuerra || '',
+          postoGraduacao: data.postoGraduacao || '',
+          canteiroSede: data.canteiroSede || data.sede || 'TODAS',
+          tituloImpressao: data.tituloImpressao || '',
           nivelAcesso: role,
           role,
           status,
           perfil,
           foto: data.foto || data.photoURL || null,
-          sede: data.sede || 'TODAS',
-          ativo: data.ativo !== false && status !== 'pendente',
+          sede: data.sede || data.canteiroSede || 'TODAS',
+          ativo: data.ativo !== false && status === 'ativo',
           criadoEm: data.criadoEm || new Date().toISOString(),
+          atualizadoEm: data.atualizadoEm,
         });
       });
       localCache.setCache(CACHE_KEYS.ADMIN_USERS, list, CACHE_TTLS.STATIC_PERSISTENT);
@@ -460,6 +469,44 @@ export const firestoreService = {
     } catch (error) {
       logFirestoreError(error, OperationType.GET, path);
       return [];
+    }
+  },
+
+  async getAdminUserById(idOrEmail: string): Promise<AdminUser | null> {
+    const cleanId = idOrEmail.trim().toLowerCase();
+    try {
+      const docSnap = await getDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanId));
+      if (!docSnap.exists()) {
+        return null;
+      }
+      const data = docSnap.data();
+      const role = (data.role as AdminRole) || (data.nivelAcesso as AdminRole) || 'GESTOR_RH';
+      const status = (data.status as 'pendente' | 'ativo' | 'inativo' | 'bloqueado') || (data.ativo === false ? 'inativo' : 'ativo');
+      const perfil = (data.perfil as string) || (data.role as string) || (data.nivelAcesso as string) || 'nenhum';
+      return {
+        id: docSnap.id,
+        email: data.email || docSnap.id,
+        nome: data.nome || data.email?.split('@')[0] || 'Administrador',
+        cargo: data.cargo || data.funcao || 'Gestor RH',
+        funcao: data.funcao || data.cargo || '',
+        saram: data.saram || '',
+        nomeGuerra: data.nomeGuerra || '',
+        postoGraduacao: data.postoGraduacao || '',
+        canteiroSede: data.canteiroSede || data.sede || 'TODAS',
+        tituloImpressao: data.tituloImpressao || '',
+        nivelAcesso: role,
+        role,
+        status,
+        perfil,
+        foto: data.foto || data.photoURL || null,
+        sede: data.sede || data.canteiroSede || 'TODAS',
+        ativo: data.ativo !== false && status === 'ativo',
+        criadoEm: data.criadoEm || new Date().toISOString(),
+        atualizadoEm: data.atualizadoEm,
+      };
+    } catch (error) {
+      logFirestoreError(error, OperationType.GET, `${COLLECTIONS.ADMIN_USERS}/${cleanId}`);
+      return null;
     }
   },
 
@@ -1054,14 +1101,20 @@ export const firestoreService = {
         id: docId,
         email: docId,
         nome: adminUser.nome || docId.split('@')[0],
-        cargo: adminUser.cargo || 'Gestor RH',
+        cargo: adminUser.cargo || adminUser.funcao || 'Gestor RH',
+        funcao: adminUser.funcao || adminUser.cargo || '',
+        saram: adminUser.saram || '',
+        nomeGuerra: adminUser.nomeGuerra || '',
+        postoGraduacao: adminUser.postoGraduacao || '',
+        canteiroSede: adminUser.canteiroSede || adminUser.sede || 'TODAS',
+        tituloImpressao: adminUser.tituloImpressao || '',
         role: adminUser.role || adminUser.nivelAcesso || 'GESTOR_RH',
         nivelAcesso: adminUser.nivelAcesso || adminUser.role || 'GESTOR_RH',
         status: resolvedStatus,
         perfil: resolvedPerfil,
         foto: adminUser.foto || null,
-        sede: adminUser.sede || 'TODAS',
-        ativo: adminUser.ativo !== false && resolvedStatus !== 'pendente',
+        sede: adminUser.sede || adminUser.canteiroSede || 'TODAS',
+        ativo: adminUser.ativo !== false && resolvedStatus === 'ativo',
         desativacaoAgendada: adminUser.desativacaoAgendada || null,
         transicaoStatus: adminUser.transicaoStatus || (adminUser.desativacaoAgendada ? 'PENDENTE_48H' : 'ATIVO'),
         canteiroCodigo: adminUser.canteiroCodigo || '',
@@ -1078,6 +1131,7 @@ export const firestoreService = {
         setDoc(doc(db, COLLECTIONS.ADMIN_USERS, docId), dataToSave, { merge: true }),
         setDoc(doc(db, COLLECTIONS.USUARIOS_SISTEMA, docId), dataToSave, { merge: true })
       ]);
+      localCache.clearCache(CACHE_KEYS.ADMIN_USERS);
     } catch (error) {
       logFirestoreError(error, OperationType.WRITE, path);
       throw error;
@@ -1093,6 +1147,7 @@ export const firestoreService = {
         deleteDoc(doc(db, COLLECTIONS.ADMIN_USERS, cleanId)),
         deleteDoc(doc(db, COLLECTIONS.USUARIOS_SISTEMA, cleanId))
       ]);
+      localCache.clearCache(CACHE_KEYS.ADMIN_USERS);
     } catch (error) {
       logFirestoreError(error, OperationType.DELETE, path);
       throw error;

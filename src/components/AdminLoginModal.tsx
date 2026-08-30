@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import { 
-  Building2, 
-  Key, 
-  Lock, 
-  Mail, 
   AlertCircle, 
-  CheckCircle2, 
-  ShieldCheck, 
   X, 
-  ArrowRight, 
-  Sparkles 
+  Lock,
+  ShieldCheck 
 } from 'lucide-react';
 import { authService } from '../services/authService';
 import { ComaraLogo } from './ComaraLogo';
@@ -18,7 +12,7 @@ interface AdminLoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onGoogleSignIn: () => Promise<any>;
-  onEmailSignIn: (email: string, pass: string) => Promise<void>;
+  onEmailSignIn?: (email: string, pass: string) => Promise<void>;
   isDark: boolean;
 }
 
@@ -26,47 +20,12 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
   isOpen,
   onClose,
   onGoogleSignIn,
-  onEmailSignIn,
   isDark,
 }) => {
-  const [emailInput, setEmailInput] = useState('');
-  const [passwordInput, setPasswordInput] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
-
-  const handleEmailSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErrorMessage(null);
-
-    if (!emailInput.trim()) {
-      setErrorMessage('Informe seu e-mail corporativo.');
-      return;
-    }
-    if (!passwordInput.trim()) {
-      setErrorMessage('Digite sua senha.');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      await onEmailSignIn(emailInput.trim(), passwordInput);
-      onClose();
-    } catch (err: any) {
-      console.error(err);
-      setErrorMessage(err?.message || 'Falha ao autenticar com e-mail e senha corporativa.');
-      await authService.logAccess(
-        'ADMIN_AUTH',
-        emailInput.trim(),
-        'TENTATIVA_INVALIDA',
-        false,
-        `Falha no login administrativo RH: ${err?.message || 'Credenciais inválidas'}`
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleGoogleSubmit = async () => {
     setErrorMessage(null);
@@ -79,24 +38,15 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
           'Google Workspace User',
           'LOGIN_GESTAO_RH',
           true,
-          'Login administrativo RH via Google Workspace autenticado'
+          'Login administrativo RH via Google Workspace autenticado com sucesso'
         );
         onClose();
       } else if (res?.error) {
         setErrorMessage(res.error);
-        if (res?.isDomainError) {
-          setEmailInput('comarafab@gmail.com');
-          setPasswordInput('comara2026');
-        }
       }
     } catch (err: any) {
-      if (err?.code === 'auth/unauthorized-domain' || err?.message?.includes('unauthorized-domain')) {
-        setErrorMessage('Domínio de prévia não autorizado no Firebase Auth para Popup Google. Utilize o login corporativo direto abaixo.');
-        setEmailInput('comarafab@gmail.com');
-        setPasswordInput('comara2026');
-      } else {
-        setErrorMessage(err?.message || 'Erro ao conectar via Google Workspace.');
-      }
+      console.error('Erro no login Google:', err);
+      setErrorMessage(err?.message || 'Falha ao autenticar com Google Workspace.');
     } finally {
       setIsLoading(false);
     }
@@ -128,62 +78,25 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
             Acesso à Gestão & RH • COMARA
           </h2>
           <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-            Área restrita a Gestores de RH, Auditores e Super Administradores
+            Autenticação segura via Google Workspace para Gestores e Administradores
           </p>
         </div>
 
-        {/* Error Alert with Quick Fallback */}
+        {/* Error Alert */}
         {errorMessage && (
-          <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs space-y-2 animate-in fade-in">
-            <div className="flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
-              <span className="leading-relaxed">{errorMessage}</span>
-            </div>
-            <div className="pt-1 flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setEmailInput('admin@comara.mil.br');
-                  setPasswordInput('Comara123#');
-                  setErrorMessage(null);
-                }}
-                className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-blue-600/30 hover:bg-blue-600/50 text-blue-200 border border-blue-500/50 transition-colors"
-              >
-                Preencher Admin Master (admin@comara.mil.br)
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmailInput('comarafab@gmail.com');
-                  setPasswordInput('comara2026');
-                  setErrorMessage(null);
-                }}
-                className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 transition-colors"
-              >
-                Preencher Super Admin (comarafab)
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmailInput('coari.comara@gmail.com');
-                  setPasswordInput('admin123');
-                  setErrorMessage(null);
-                }}
-                className="px-2.5 py-1 text-[11px] font-bold rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 transition-colors"
-              >
-                Preencher Master (coari.comara)
-              </button>
-            </div>
+          <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs flex items-start gap-2.5 animate-in fade-in">
+            <AlertCircle className="w-4 h-4 shrink-0 text-red-400 mt-0.5" />
+            <span className="leading-relaxed">{errorMessage}</span>
           </div>
         )}
 
-        {/* Opção 1: Google Workspace */}
+        {/* Google Workspace Sign-In */}
         <div>
           <button
             type="button"
             onClick={handleGoogleSubmit}
             disabled={isLoading}
-            className={`w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold border transition-all active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer shadow-xs ${
+            className={`w-full py-3.5 px-4 rounded-xl text-xs sm:text-sm font-bold border transition-all active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer shadow-md ${
               isDark 
                 ? 'bg-[#243756] hover:bg-[#335075] border-[#335075] text-white' 
                 : 'bg-white hover:bg-slate-50 border-slate-300 text-slate-700'
@@ -195,72 +108,21 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
             </svg>
-            <span>Entrar com Google Workspace</span>
+            <span>{isLoading ? 'Autenticando...' : 'Entrar com Google Workspace'}</span>
           </button>
         </div>
 
-        {/* Divisor */}
-        <div className="relative flex items-center justify-center">
-          <div className={`border-t w-full ${isDark ? 'border-[#335075]' : 'border-slate-200'}`} />
-          <span className={`absolute px-3 text-[11px] font-bold uppercase tracking-wider ${
-            isDark ? 'bg-[#16243D] text-[#94A3B8]' : 'bg-white text-slate-400'
-          }`}>
-            ou e-mail corporativo
-          </span>
+        {/* RBAC Notice */}
+        <div className={`p-3 rounded-xl border text-[11px] leading-relaxed flex items-start gap-2 ${
+          isDark ? 'bg-[#0F1B33]/60 border-[#243756] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-600'
+        }`}>
+          <Lock className="w-3.5 h-3.5 text-blue-400 shrink-0 mt-0.5" />
+          <span>Acesso corporativo restrito às contas cadastradas na matriz de permissões RBAC.</span>
         </div>
-
-        {/* Opção 2: E-mail e Senha Corporativa */}
-        <form onSubmit={handleEmailSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider">
-              E-mail Administrativo
-            </label>
-            <div className="relative">
-              <Mail className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-500' : 'text-slate-400'}`} />
-              <input
-                type="email"
-                value={emailInput}
-                onChange={(e) => setEmailInput(e.target.value)}
-                placeholder="admin@comara.mil.br"
-                required
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none ${
-                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
-                }`}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-1.5">
-            <label className="block text-xs font-bold uppercase tracking-wider">
-              Senha de Gestão
-            </label>
-            <div className="relative">
-              <Lock className={`w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-500' : 'text-slate-400'}`} />
-              <input
-                type="password"
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="••••••••"
-                required
-                className={`w-full pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm border outline-none transition-all ${
-                  isDark ? 'bg-[#0F1B33] border-[#335075] text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20' : 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20'
-                }`}
-              />
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-blue-600 hover:bg-blue-500 active:scale-[0.99] transition-all shadow-lg shadow-blue-600/20 cursor-pointer shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
-          >
-            {isLoading ? 'Autenticando...' : 'Entrar no Painel RH'}
-          </button>
-        </form>
 
         {/* Footer info */}
         <div className={`pt-2 text-center text-[11px] ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
-          <span>Super Administrador padrão: <strong>admin@comara.mil.br</strong></span>
+          <span>Acesso corporativo seguro • COMARA / FAB</span>
         </div>
 
       </div>

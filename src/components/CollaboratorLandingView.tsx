@@ -335,7 +335,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
               </div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>COMARA • Ambiente Seguro • Em Conformidade com a LGPD</span>
+                <span>COMARA Comissão de Aeroportos da Região Amazônica</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
                 Consulte seu Banco de Horas

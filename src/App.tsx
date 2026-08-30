@@ -4,10 +4,12 @@ import { storageService } from './services/storageService';
 import { firestoreService, BatchProgressInfo } from './services/firestoreService';
 import { seedService } from './services/seedService';
 import { auth, googleProvider, testFirestoreConnection, isPermissionError, isQuotaError } from './services/firebase';
-import { authService, isMasterAdminEmail, autoSeedDefaultAdminMaster } from './services/authService';
+import { authService, isMasterAdminEmail, getFirebaseAuthErrorMessage } from './services/authService';
 import { 
   onAuthStateChanged, 
-  signInWithPopup, 
+  signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signOut as firebaseSignOut, 
   User as FirebaseUser 
 } from 'firebase/auth';
@@ -41,7 +43,7 @@ import { SessionTimeoutModal } from './components/SessionTimeoutModal';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { rbacService } from './services/rbacService';
 import { registrarLogAuditoria } from './services/auditService';
-import { useIdleTimer } from './hooks/useIdleTimer';
+import { useInactivityTimeout } from './hooks/useInactivityTimeout';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { CheckCircle2, AlertCircle, Cloud, RefreshCw, X, Database } from 'lucide-react';
 
@@ -61,31 +63,10 @@ export interface AppUser {
 }
 
 export default function App() {
-  // Auth State
-  const [currentUser, setCurrentUser] = useState<AppUser | null>(() => {
-    const saved = authService.getCurrentSession();
-    // S-002: Never fall back to SUPER_ADMIN — if no valid role, clear session and force re-auth
-    if (!saved || !saved.role) {
-      if (saved && !saved.role) authService.clearSession();
-      return null;
-    }
-    return {
-      email: saved.email,
-      nome: saved.nome,
-      role: saved.role as AdminRole,
-      cargo: saved.cargo,
-      loginTime: saved.loginTime,
-    };
-  });
+  // Auth State - Inicializado como nulo para impedir qualquer auto-login indevido ao reabrir o navegador
+  const [currentUser, setCurrentUser] = useState<AppUser | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const [userRole, setUserRole] = useState<AdminRole | null>(() => {
-    const session = authService.getCurrentSession();
-    if (!session || !session.role) {
-      if (session) authService.clearSession();
-      return null;
-    }
-    return session.role as AdminRole;
-  });
+  const [userRole, setUserRole] = useState<AdminRole | null>(null);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = useState(false);
   const [isVerifyingPermissions, setIsVerifyingPermissions] = useState(false);
   const [pendingAccessUser, setPendingAccessUser] = useState<{ email: string; nome: string; foto?: string | null } | null>(null);
@@ -227,23 +208,9 @@ export default function App() {
       activeCanteiro
     );
 
-    // 1.2/1.3: admin_users — one-time fetch with local cache instead of onSnapshot listener
-    firestoreService.getAdmins().then((adms) => {
-      setAdminUsers(adms);
-      setFirestoreErrorNotice(null);
-      if (adms.length > 0) {
-        storageService.saveAdmins(adms);
-      }
-    }).catch((err) => {
-      console.warn('Fallback local para administradores:', err);
-      if (isQuotaError(err)) {
-        setFirestoreErrorNotice('Cota do Cloud Firestore excedida. Operando com dados em cache local.');
-      } else if (isPermissionError(err)) {
-        setFirestoreErrorNotice('Erro de permissão no banco de dados. Verifique a autenticação.');
-      }
-      const local = storageService.getAdmins();
-      setAdminUsers(local);
-    });
+    // Carrega administradores do cache local seguro (sem listagem não-autorizada no Firestore)
+    const localAdmins = storageService.getAdmins();
+    setAdminUsers(localAdmins);
 
     // Subscribe to Insalubrity Records in Firestore
     const unsubInsalubrity = firestoreService.subscribeInsalubrityRecords(
@@ -354,14 +321,6 @@ export default function App() {
     };
   }, [initFirestoreSubscriptions, currentUser, userRole, isAuthLoading]);
 
-  // -------------------------------------------------------------
-  // 1.5 Auto-Seed do Admin Master no boot da aplicação
-  // -------------------------------------------------------------
-  useEffect(() => {
-    autoSeedDefaultAdminMaster().catch((err) => {
-      console.warn('Auto-seed em segundo plano:', err);
-    });
-  }, []);
 
   // -------------------------------------------------------------
   // 2. Monitor and Enforce Strict RBAC on Authentication State
@@ -372,94 +331,56 @@ export default function App() {
 
       if (user) {
         const email = user.email?.toLowerCase().trim() || '';
-        const isMaster = isMasterAdminEmail(email);
-        const matchAdmin = adminUsers.find(a => a.email.toLowerCase().trim() === email);
-
-        if (isMaster) {
-          const appUser: AppUser = {
-            uid: user.uid,
-            email,
-            nome: user.displayName || 'Super Administrador COMARA',
-            displayName: user.displayName,
-            role: 'SUPER_ADMIN',
-            cargo: 'Super Administrador',
-            loginTime: new Date().toISOString(),
-            photoURL: user.photoURL,
-          };
-          setPendingAccessUser(null);
-          setCurrentUser(appUser);
-          setUserRole('SUPER_ADMIN');
-          setUserMode('ADMIN');
-          authService.saveCurrentSession({
-            email,
-            nome: user.displayName || 'Super Administrador COMARA',
-            role: 'SUPER_ADMIN',
-            loginTime: new Date().toISOString(),
-          });
+        if (!email) {
           setIsVerifyingPermissions(false);
-        } else if (matchAdmin && matchAdmin.status !== 'pendente' && matchAdmin.perfil !== 'nenhum' && matchAdmin.ativo) {
-          const appUser: AppUser = {
-            uid: user.uid,
-            email,
-            nome: matchAdmin.nome,
-            displayName: user.displayName,
-            role: matchAdmin.nivelAcesso,
-            cargo: matchAdmin.cargo,
-            loginTime: new Date().toISOString(),
-            photoURL: user.photoURL || matchAdmin.foto,
-          };
-          setPendingAccessUser(null);
-          setCurrentUser(appUser);
-          setUserRole(matchAdmin.nivelAcesso);
-          setUserMode(matchAdmin.nivelAcesso === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
-          authService.saveCurrentSession({
-            email,
-            nome: matchAdmin.nome,
-            role: matchAdmin.nivelAcesso,
-            cargo: matchAdmin.cargo,
-            loginTime: new Date().toISOString(),
-          });
-          setIsVerifyingPermissions(false);
-        } else if (matchAdmin || adminUsers.length > 0 || email) {
-          setPendingAccessUser({
-            email,
-            nome: matchAdmin?.nome || user.displayName || email.split('@')[0],
-            foto: matchAdmin?.foto || user.photoURL || null,
-          });
-          setCurrentUser(null);
-          setUserRole(null);
-          setUserMode('ADMIN');
-          setIsVerifyingPermissions(false);
-        } else {
-          setCurrentUser(null);
-          setUserRole(null);
-          setIsVerifyingPermissions(true);
+          return;
         }
-      } else {
-        // Se o Firebase Auth estiver nulo, verifica se existe sessão corporativa ativa verificada
-        const savedSession = authService.getCurrentSession();
-        if (savedSession && savedSession.email) {
-          const cleanEmail = savedSession.email.toLowerCase().trim();
-          const isMaster = isMasterAdminEmail(cleanEmail);
-          const matchAdmin = adminUsers.find(a => a.email.toLowerCase().trim() === cleanEmail);
 
-          if (isMaster || (matchAdmin && matchAdmin.ativo)) {
-            const role: AdminRole = isMaster ? 'SUPER_ADMIN' : (matchAdmin?.nivelAcesso || (savedSession.role as AdminRole) || 'RH_ADMIN');
-            const appUser: AppUser = {
-              email: savedSession.email,
-              nome: savedSession.nome,
-              role,
-              cargo: savedSession.cargo || 'Gestor de RH',
-              loginTime: savedSession.loginTime,
-            };
-            setCurrentUser(appUser);
-            setUserRole(role);
-            setUserMode(role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
+        try {
+          const processed = await authService.processAuthenticatedUser(user);
+
+          if (processed.status === 'pendente') {
+            setPendingAccessUser({
+              email: processed.admin.email,
+              nome: processed.admin.nome || user.displayName || email.split('@')[0],
+              foto: processed.admin.foto || user.photoURL || null,
+            });
+            setCurrentUser(null);
+            setUserRole(null);
+            setUserMode('ADMIN');
             setIsVerifyingPermissions(false);
             return;
           }
-        }
 
+          // Usuário ativo e com perfil liberado
+          const appUser: AppUser = {
+            uid: user.uid,
+            email: processed.admin.email,
+            nome: processed.admin.nome,
+            displayName: user.displayName || processed.admin.nome,
+            role: processed.isSuperAdmin ? 'SUPER_ADMIN' : processed.admin.nivelAcesso,
+            cargo: processed.admin.cargo,
+            loginTime: new Date().toISOString(),
+            photoURL: user.photoURL || processed.admin.foto,
+          };
+          setPendingAccessUser(null);
+          setCurrentUser(appUser);
+          setUserRole(appUser.role);
+          setUserMode(appUser.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
+          authService.saveCurrentSession({
+            email: processed.admin.email,
+            nome: processed.admin.nome,
+            role: appUser.role,
+            cargo: processed.admin.cargo,
+            loginTime: new Date().toISOString(),
+          });
+        } catch (err) {
+          console.warn('[onAuthStateChanged] Erro ao processar perfil do usuário:', err);
+        } finally {
+          setIsVerifyingPermissions(false);
+        }
+      } else {
+        // Sem sessão autenticada válida no Firebase Auth: encerra sessão e mantém tela de login
         setIsVerifyingPermissions(false);
         authService.clearSession();
         setCurrentUser(null);
@@ -473,177 +394,250 @@ export default function App() {
   }, [adminUsers, showToast]);
 
   const refreshAdminAccessStatus = useCallback(async (email?: string, userOverride?: FirebaseUser | null) => {
-    const targetEmail = (email || userOverride?.email || '').trim().toLowerCase();
+    const userToProcess = userOverride || auth.currentUser;
+    const targetEmail = (email || userToProcess?.email || '').trim().toLowerCase();
     if (!targetEmail) return null;
 
-    const refreshedAdmins = await firestoreService.getAdmins();
-    setAdminUsers(refreshedAdmins);
+    try {
+      const processed = await authService.processAuthenticatedUser(
+        userToProcess || ({ email: targetEmail, displayName: targetEmail.split('@')[0] } as FirebaseUser)
+      );
 
-    const matchAdmin = refreshedAdmins.find((a) => a.email.toLowerCase().trim() === targetEmail);
-    const isMaster = isMasterAdminEmail(targetEmail);
+      if (processed.status === 'pendente') {
+        setPendingAccessUser({
+          email: processed.admin.email,
+          nome: processed.admin.nome || userToProcess?.displayName || targetEmail.split('@')[0],
+          foto: processed.admin.foto || userToProcess?.photoURL || null,
+        });
+        setCurrentUser(null);
+        setUserRole(null);
+        setUserMode('ADMIN');
+        return null;
+      }
 
-    if (isMaster) {
       const appUser: AppUser = {
-        uid: userOverride?.uid || auth.currentUser?.uid,
-        email: targetEmail,
-        nome: userOverride?.displayName || 'Super Administrador COMARA',
-        displayName: userOverride?.displayName,
-        role: 'SUPER_ADMIN',
-        cargo: 'Super Administrador',
+        uid: userToProcess?.uid || auth.currentUser?.uid,
+        email: processed.admin.email,
+        nome: processed.admin.nome,
+        displayName: userToProcess?.displayName || processed.admin.nome,
+        role: processed.isSuperAdmin ? 'SUPER_ADMIN' : processed.admin.nivelAcesso,
+        cargo: processed.admin.cargo,
         loginTime: new Date().toISOString(),
-        photoURL: userOverride?.photoURL,
+        photoURL: userToProcess?.photoURL || processed.admin.foto,
       };
       setPendingAccessUser(null);
       setCurrentUser(appUser);
-      setUserRole('SUPER_ADMIN');
-      setUserMode('ADMIN');
+      setUserRole(appUser.role);
+      setUserMode(appUser.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
       authService.saveCurrentSession({
-        email: targetEmail,
-        nome: appUser.nome,
-        role: 'SUPER_ADMIN',
+        email: processed.admin.email,
+        nome: processed.admin.nome,
+        role: appUser.role,
+        cargo: processed.admin.cargo,
         loginTime: appUser.loginTime || new Date().toISOString(),
       });
       return appUser;
-    }
-
-    if (!matchAdmin) {
-      const pendingDoc: AdminUser = {
-        id: targetEmail,
-        email: targetEmail,
-        nome: userOverride?.displayName || targetEmail.split('@')[0],
-        cargo: 'Aguardando aprovação',
-        nivelAcesso: 'RH_ADMIN',
-        role: 'RH_ADMIN',
-        status: 'pendente' as const,
-        perfil: 'nenhum',
-        foto: userOverride?.photoURL || null,
-        sede: 'TODAS',
-        ativo: false,
-        criadoEm: new Date().toISOString(),
-      };
-      await firestoreService.saveAdminUser(pendingDoc);
-      setPendingAccessUser({ email: targetEmail, nome: pendingDoc.nome, foto: pendingDoc.foto });
-      setCurrentUser(null);
-      setUserRole(null);
+    } catch (err) {
+      console.warn('Erro ao atualizar status de acesso do admin:', err);
       return null;
     }
-
-    const pending = matchAdmin.status === 'pendente' || matchAdmin.perfil === 'nenhum' || matchAdmin.ativo === false;
-    if (pending) {
-      setPendingAccessUser({
-        email: targetEmail,
-        nome: matchAdmin.nome || userOverride?.displayName || targetEmail.split('@')[0],
-        foto: matchAdmin.foto || userOverride?.photoURL || null,
-      });
-      setCurrentUser(null);
-      setUserRole(null);
-      return null;
-    }
-
-    const appUser: AppUser = {
-      uid: userOverride?.uid || auth.currentUser?.uid,
-      email: targetEmail,
-      nome: matchAdmin.nome,
-      displayName: userOverride?.displayName,
-      role: matchAdmin.nivelAcesso,
-      cargo: matchAdmin.cargo,
-      loginTime: new Date().toISOString(),
-      photoURL: userOverride?.photoURL || matchAdmin.foto,
-    };
-    setPendingAccessUser(null);
-    setCurrentUser(appUser);
-    setUserRole(matchAdmin.nivelAcesso);
-    setUserMode(matchAdmin.nivelAcesso === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
-    authService.saveCurrentSession({
-      email: targetEmail,
-      nome: matchAdmin.nome,
-      role: matchAdmin.nivelAcesso,
-      cargo: matchAdmin.cargo,
-      loginTime: appUser.loginTime || new Date().toISOString(),
-    });
-    return appUser;
   }, []);
 
-  // Auth Handler: Google Workspace Sign-In
+  // -------------------------------------------------------------
+  // Processamento do Retorno do Redirecionamento Google Auth
+  // -------------------------------------------------------------
+  useEffect(() => {
+    let isSubscribed = true;
+
+    async function checkRedirect() {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user && isSubscribed) {
+          const user = result.user;
+          const processed = await authService.processAuthenticatedUser(user);
+
+          if (processed.status === 'inativo' || processed.status === 'bloqueado') {
+            authService.clearSession();
+            setCurrentUser(null);
+            setUserRole(null);
+            setPendingAccessUser(null);
+            showToast('Usuário desativado. Procure o Gerente ou DA do canteiro para solicitar o desbloqueio.', 'error');
+          } else if (processed.status === 'pendente') {
+            setPendingAccessUser({
+              email: processed.admin.email,
+              nome: processed.admin.nome || user.displayName || processed.admin.email.split('@')[0],
+              foto: processed.admin.foto || user.photoURL || null,
+            });
+            setCurrentUser(null);
+            setUserRole(null);
+            setUserMode('ADMIN');
+            showToast('Sua conta foi registrada e aguarda liberação do administrador.', 'info');
+          } else {
+            const appUser: AppUser = {
+              uid: user.uid,
+              email: processed.admin.email,
+              nome: processed.admin.nome,
+              displayName: user.displayName || processed.admin.nome,
+              role: processed.isSuperAdmin ? 'SUPER_ADMIN' : processed.admin.nivelAcesso,
+              cargo: processed.admin.cargo,
+              sede: processed.admin.sede || processed.admin.canteiroSede || 'TODAS',
+              canteiroCodigo: processed.admin.canteiroCodigo || processed.admin.sede || 'KO',
+              loginTime: new Date().toISOString(),
+              photoURL: user.photoURL || processed.admin.foto,
+            };
+            setPendingAccessUser(null);
+            setCurrentUser(appUser);
+            setUserRole(appUser.role);
+            setUserMode(appUser.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
+            authService.saveCurrentSession({
+              email: processed.admin.email,
+              nome: processed.admin.nome,
+              role: appUser.role,
+              cargo: processed.admin.cargo,
+              saram: processed.admin.saram,
+              nomeGuerra: processed.admin.nomeGuerra,
+              postoGraduacao: processed.admin.postoGraduacao,
+              funcao: processed.admin.funcao || processed.admin.cargo,
+              canteiroSede: processed.admin.canteiroSede || processed.admin.sede || 'TODAS',
+              sede: processed.admin.sede || processed.admin.canteiroSede || 'TODAS',
+              loginTime: new Date().toISOString(),
+            });
+            setFirestoreErrorNotice(null);
+            showToast(`Bem-vindo(a), ${user.displayName || processed.admin.nome}!`, 'success');
+          }
+        }
+      } catch (err: any) {
+        console.error('Erro ao capturar retorno do redirecionamento Google:', err);
+        if (isSubscribed) {
+          const errorMsg = err?.message || 'Falha ao processar autenticação Google.';
+          showToast(errorMsg, 'error');
+        }
+      }
+    }
+
+    checkRedirect();
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [showToast]);
+
+  // Auth Handler: Google Workspace Sign-In (Firebase Auth SDK via Popup)
   const handleGoogleSignIn = async () => {
     try {
-      const res = await signInWithPopup(auth, googleProvider);
-      const email = res.user?.email?.toLowerCase().trim() || '';
+      setIsVerifyingPermissions(true);
+      const { user, processed } = await authService.signInWithGoogle();
 
-      if (!email) {
-        throw new Error('Não foi possível recuperar o e-mail da conta Google.');
+      if (processed.status === 'inativo' || processed.status === 'bloqueado') {
+        authService.clearSession();
+        setCurrentUser(null);
+        setUserRole(null);
+        setPendingAccessUser(null);
+        showToast('Usuário desativado. Procure o Gerente ou DA do canteiro para solicitar o desbloqueio.', 'error');
+        return { success: false, error: 'Usuário desativado. Procure o Gerente ou DA do canteiro para solicitar o desbloqueio.' };
       }
 
-      const existingUser = await firestoreService.getAdmins();
-      const matchAdmin = existingUser.find((a) => a.email.toLowerCase().trim() === email);
-      const isMaster = isMasterAdminEmail(email);
-
-      if (!isMaster && !matchAdmin) {
-        const pendingAdmin: AdminUser = {
-          id: email,
-          email,
-          nome: res.user.displayName || email.split('@')[0],
-          cargo: 'Aguardando aprovação',
-          nivelAcesso: 'RH_ADMIN',
-          role: 'RH_ADMIN',
-          status: 'pendente',
-          perfil: 'nenhum',
-          foto: res.user.photoURL || null,
-          sede: 'TODAS',
-          ativo: false,
-          criadoEm: new Date().toISOString(),
-        };
-
-        await firestoreService.saveAdminUser(pendingAdmin);
+      if (processed.status === 'pendente') {
+        setPendingAccessUser({
+          email: processed.admin.email,
+          nome: processed.admin.nome || user.displayName || processed.admin.email.split('@')[0],
+          foto: processed.admin.foto || user.photoURL || null,
+        });
+        setCurrentUser(null);
+        setUserRole(null);
+        setUserMode('ADMIN');
+        showToast('Sua conta foi registrada e aguarda liberação do administrador.', 'info');
+        return { success: true, pending: true };
       }
 
-      const result = await refreshAdminAccessStatus(email, res.user);
-      if (!result) {
-        showToast('Sua conta foi registrada e aguarda aprovação do administrador.', 'info');
-        return { success: true, pending: true, user: res.user };
-      }
-
+      const appUser: AppUser = {
+        uid: user.uid,
+        email: processed.admin.email,
+        nome: processed.admin.nome,
+        displayName: user.displayName || processed.admin.nome,
+        role: processed.isSuperAdmin ? 'SUPER_ADMIN' : processed.admin.nivelAcesso,
+        cargo: processed.admin.cargo,
+        sede: processed.admin.sede || processed.admin.canteiroSede || 'TODAS',
+        canteiroCodigo: processed.admin.canteiroCodigo || processed.admin.sede || 'KO',
+        loginTime: new Date().toISOString(),
+        photoURL: user.photoURL || processed.admin.foto,
+      };
+      setPendingAccessUser(null);
+      setCurrentUser(appUser);
+      setUserRole(appUser.role);
+      setUserMode(appUser.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
+      authService.saveCurrentSession({
+        email: processed.admin.email,
+        nome: processed.admin.nome,
+        role: appUser.role,
+        cargo: processed.admin.cargo,
+        saram: processed.admin.saram,
+        nomeGuerra: processed.admin.nomeGuerra,
+        postoGraduacao: processed.admin.postoGraduacao,
+        funcao: processed.admin.funcao || processed.admin.cargo,
+        canteiroSede: processed.admin.canteiroSede || processed.admin.sede || 'TODAS',
+        sede: processed.admin.sede || processed.admin.canteiroSede || 'TODAS',
+        loginTime: new Date().toISOString(),
+      });
       setFirestoreErrorNotice(null);
-      showToast(`Bem-vindo, ${res.user?.displayName || 'Gestor'}!`, 'success');
-      return { success: true, user: res.user };
+      showToast(`Bem-vindo(a), ${user.displayName || processed.admin.nome}!`, 'success');
+      return { success: true, pending: false };
     } catch (err: any) {
-      if (err?.code === 'auth/unauthorized-domain' || err?.message?.includes('unauthorized-domain')) {
-        const errorMsg = 'Domínio de prévia não autorizado no Firebase Auth para Popup Google. Utilize o login direto corporativo abaixo.';
-        return { 
-          success: false, 
-          isDomainError: true, 
-          error: errorMsg 
-        };
-      } else if (err?.code === 'auth/popup-closed-by-user') {
-        return { success: false, error: 'Janela de login fechada pelo usuário.' };
+      const code = err?.code || '';
+      let errorMsg = err?.message || 'Falha ao autenticar com Google Workspace.';
+      if (code === 'auth/popup-closed-by-user') {
+        errorMsg = 'A janela de login do Google foi fechada antes de concluir.';
+      } else if (code === 'auth/unauthorized-domain') {
+        errorMsg = 'Domínio não autorizado no Firebase Console > Authentication > Settings.';
       } else {
-        console.warn('Tentativa de login Google:', err?.message || err);
-        showToast(err?.message || 'Falha ao autenticar com Google.', 'error');
-        return { success: false, error: err?.message || 'Falha ao autenticar com Google.' };
+        errorMsg = getFirebaseAuthErrorMessage(code, errorMsg);
       }
+      console.error('Erro na autenticação Google Popup:', err);
+      showToast(errorMsg, 'error');
+      return { success: false, error: errorMsg };
+    } finally {
+      setIsVerifyingPermissions(false);
     }
   };
 
-  // Auth Handler: Corporate Email & Password Sign-In (100% via Firestore)
+  // Auth Handler: Corporate Email & Password Sign-In (Firebase Auth SDK)
   const handleEmailSignIn = async (email: string, pass: string) => {
-    const result = await authService.verifyAdminLogin(email, pass, adminUsers);
-    if (!result.success || !result.session) {
+    const result = await authService.verifyAdminLogin(email, pass);
+    if (!result.success) {
       showToast(result.message, 'error');
       throw new Error(result.message);
     }
 
-    const appUser: AppUser = {
-      email: result.session.email,
-      nome: result.session.nome,
-      role: result.session.role as AdminRole,
-      cargo: result.session.cargo,
-      loginTime: result.session.loginTime,
-    };
-    setCurrentUser(appUser);
-    setUserRole(result.session.role);
-    setUserMode(result.session.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
-    setFirestoreErrorNotice(null);
-    showToast(result.message, 'success');
+    if (result.pending) {
+      setPendingAccessUser({
+        email: result.admin?.email || email.toLowerCase().trim(),
+        nome: result.admin?.nome || email.split('@')[0],
+        foto: result.admin?.foto || null,
+      });
+      setCurrentUser(null);
+      setUserRole(null);
+      setUserMode('ADMIN');
+      showToast(result.message, 'info');
+      return;
+    }
+
+    if (result.session) {
+      const appUser: AppUser = {
+        uid: auth.currentUser?.uid,
+        email: result.session.email,
+        nome: result.session.nome,
+        displayName: auth.currentUser?.displayName || result.session.nome,
+        role: result.session.role as AdminRole,
+        cargo: result.session.cargo,
+        loginTime: result.session.loginTime,
+        photoURL: auth.currentUser?.photoURL,
+      };
+      setCurrentUser(appUser);
+      setUserRole(result.session.role);
+      setUserMode(result.session.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
+      setFirestoreErrorNotice(null);
+      showToast(result.message, 'success');
+    }
   };
 
   const handleToggleTheme = () => {
@@ -711,9 +705,9 @@ export default function App() {
     }
   }, [showToast]);
 
-  // Monitor de Inatividade do Usuário Adaptativo (useIdleTimer)
+  // Monitor de Inatividade do Usuário Adaptativo (useInactivityTimeout)
   // Perfil AUX_DA (Canteiro): 15 minutos sem interação
-  // Perfil RH_ADMIN / Administrador: 30 minutos sem interação
+  // Perfil RH_ADMIN / Administrador / Super Admin: 30 minutos sem interação
   // Faltando 60 segundos: Dispara aviso prévio com contagem regressiva
   const {
     isWarning: isIdleWarning,
@@ -721,7 +715,7 @@ export default function App() {
     profileLabel: idleProfileLabel,
     resetTimer: resetIdleTimer,
     forceTimeout: forceIdleTimeout,
-  } = useIdleTimer({
+  } = useInactivityTimeout({
     enabled: !!currentUser,
     role: userRole,
     warnSeconds: 60,
@@ -1413,37 +1407,10 @@ export default function App() {
       setPendingAccessUser(null);
       return;
     }
-    const refreshed = await firestoreService.getAdmins();
-    setAdminUsers(refreshed);
-    const matchAdmin = refreshed.find((a) => a.email.toLowerCase().trim() === email.toLowerCase().trim());
-    if (!matchAdmin || matchAdmin.status === 'pendente' || matchAdmin.perfil === 'nenhum' || matchAdmin.ativo === false) {
-      setPendingAccessUser({
-        email,
-        nome: matchAdmin?.nome || pendingAccessUser?.nome || email.split('@')[0],
-        foto: matchAdmin?.foto || pendingAccessUser?.foto || null,
-      });
-      return;
+    const result = await refreshAdminAccessStatus(email);
+    if (!result) {
+      showToast('Seu cadastro continua pendente de aprovação.', 'info');
     }
-
-    const appUser: AppUser = {
-      email: matchAdmin.email,
-      nome: matchAdmin.nome,
-      role: matchAdmin.nivelAcesso,
-      cargo: matchAdmin.cargo,
-      loginTime: new Date().toISOString(),
-      photoURL: matchAdmin.foto,
-    };
-    setPendingAccessUser(null);
-    setCurrentUser(appUser);
-    setUserRole(matchAdmin.nivelAcesso);
-    setUserMode(matchAdmin.nivelAcesso === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
-    authService.saveCurrentSession({
-      email: matchAdmin.email,
-      nome: matchAdmin.nome,
-      role: matchAdmin.nivelAcesso,
-      cargo: matchAdmin.cargo,
-      loginTime: appUser.loginTime || new Date().toISOString(),
-    });
   };
 
   // -------------------------------------------------------------

@@ -36,6 +36,7 @@ export type AdminRole =
   | 'CHEFE_CANTEIRO' 
   | 'CHEFE_DA' 
   | 'AUX_DA'
+  | 'NENHUM'
   // Retrocompatibilidade temporária com registros legados
   | 'GESTOR_RH' 
   | 'GERENTE' 
@@ -138,10 +139,15 @@ export interface AdminUser {
   tituloImpressao?: string; // Título do cargo impresso para assinaturas e relatórios (ex: Capitão Encarregado de Obras)
   nivelAcesso: AdminRole;
   role?: AdminRole;
-  status?: 'pendente' | 'ativo' | 'inativo';
+  status?: 'pendente' | 'ativo' | 'inativo' | 'bloqueado';
   perfil?: string;
   foto?: string | null;
   sede?: string;
+  saram?: string;
+  nomeGuerra?: string;
+  postoGraduacao?: string;
+  funcao?: string;
+  canteiroSede?: string;
   ativo: boolean;
   passwordHash?: string;
   senha?: string;
@@ -157,6 +163,11 @@ export interface AuthSession {
   email: string;
   nome: string;
   matricula?: string;
+  saram?: string;
+  nomeGuerra?: string;
+  postoGraduacao?: string;
+  funcao?: string;
+  canteiroSede?: string;
   role: AdminRole;
   cargo?: string;
   tituloImpressao?: string;

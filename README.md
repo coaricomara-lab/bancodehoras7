@@ -75,27 +75,55 @@ O fluxo de dados prioriza Firestore em nuvem, mas possui fallback para armazenam
 - Firebase CLI (opcional para deploy de regras)
 - Docker + Docker Compose (opcional para ambiente de execução local)
 
-## Configuração do ambiente
+## Configuração do ambiente e Isolamento por Desenvolvedor
 
-Crie um arquivo `.env` a partir do exemplo:
+Para garantir que desenvolvedores não compartilhem ou sobrescrevam dados de homologação e produção, o sistema suporta **isolamento completo por desenvolvedor** através de projetos Firebase próprios ou do Firebase Emulator Suite.
+
+### 1. Criando seu Projeto Firebase Individual
+
+1. Acesse o [Firebase Console](https://console.firebase.google.com/) e crie um novo projeto (ex: `comara-sptf-dev-seunome`).
+2. No menu lateral, acesse **Build > Authentication** e ative os provedores:
+   - **Google** (para login com Workspace)
+   - **Email/Password** (para login com e-mail/senha)
+3. Acesse **Build > Firestore Database** e crie uma base no modo de produção.
+4. Registre uma aplicação Web no console do Firebase para obter suas credenciais.
+5. Crie um arquivo `.env` local na raiz do projeto:
 
 ```bash
 cp .env.example .env
 ```
 
-Preencha as variáveis esperadas:
+Preencha com as credenciais do seu projeto Firebase:
 
 ```env
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_APP_ID=
-VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_API_KEY=AIzaSy...
+VITE_FIREBASE_APP_ID=1:123456...
+VITE_FIREBASE_AUTH_DOMAIN=comara-sptf-dev-seunome.firebaseapp.com
 VITE_FIREBASE_DATABASE_ID=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=1234567890
+VITE_FIREBASE_PROJECT_ID=comara-sptf-dev-seunome
+VITE_FIREBASE_STORAGE_BUCKET=comara-sptf-dev-seunome.firebasestorage.app
 ```
 
-> O projeto também suporta configuração do Firebase por `firebase-applet-config.json`, usada como fallback em ambientes dinâmicos.
+6. Publique as regras de segurança no seu banco:
+```bash
+firebase deploy --only firestore:rules
+```
+
+---
+
+### 2. Desenvolvimento Local com Firebase Emulator Suite (Offline)
+
+Você também pode rodar o backend do Firestore e Auth 100% localmente sem internet:
+
+1. Instale o Firebase CLI: `npm install -g firebase-tools`
+2. Inicie os emuladores:
+```bash
+firebase emulators:start
+```
+3. Os emuladores iniciarão com UI de depuração em `http://localhost:4000`, Firestore na porta `8080` e Auth na porta `9099`.
+
+---
 
 ## Execução local
 

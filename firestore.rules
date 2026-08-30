@@ -1,98 +1,69 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
     function isAuthenticated() {
       return request.auth != null;
     }
+    
+    function isSuperAdmin() {
+      return isAuthenticated() &&
+        request.auth.token.email != null &&
+        exists(/databases/$(database)/documents/admin_users/$(request.auth.token.email.lower())) &&
+        get(/databases/$(database)/documents/admin_users/$(request.auth.token.email.lower())).data.role == 'SUPER_ADMIN';
+    }
 
-    // Configurações Globais do Sistema e Institucionais (Logo COMARA, sedes, parâmetros)
-    match /system_config/{docId} {
+    match /colaboradores/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }
-
-    match /institution_settings/{docId} {
+    match /contracheques/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }
-
-    // Gestão de Canteiros de Obras e Sedes
-    match /canteiros_obras/{docId} {
+    match /lancamentos/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }
-
-    // Colaboradores e Cadastro Central
-    match /colaboradores/{colaboradorId} {
-      allow get: if true;
-      allow list: if true;
-      allow write: if isAuthenticated();
-    }
-
-    // Autenticação dos Colaboradores (Portal do Colaborador)
-    match /colaboradores_auth/{matriculaId} {
-      allow get: if true;
-      allow list: if isAuthenticated();
-      allow write: if isAuthenticated();
-    }
-
-    // Lançamentos e Ocorrências de Banco de Horas
-    match /lancamentos/{lancamentoId} {
+    match /dispensas_sptf/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }
-
-    // Dispensas de SPTF e Guias de 2 Vias
-    match /dispensas_sptf/{dispensaId} {
+    match /system_config/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }
-
-    // Contracheques Digitais
-    match /contracheques/{contrachequeId} {
+    match /institution_settings/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }
-
-    // Insalubridade e Registros de Exposição
-    match /insalubridade_records/{recordId} {
+    match /canteiros/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }
-
-    // Resumos Mensais Consolidados
-    match /resumo_mensal/{resumoId} {
+    match /insalubridade/{doc} {
       allow read: if true;
       allow write: if isAuthenticated();
     }
-
-    // Usuários Administrativos e Gestores RH (RBAC)
-    match /admin_users/{adminId} {
-      allow read, write: if isAuthenticated();
+    match /logs_acesso/{doc} {
+      allow read: if true;
+      allow write: if true;
     }
 
-    match /usuarios_sistema/{usuarioId} {
-      allow read, write: if isAuthenticated();
+    match /admin_users/{userId} {
+      allow read, write: if isSuperAdmin();
+      allow read, write: if isAuthenticated() &&
+        request.auth.token.email != null &&
+        (request.auth.token.email.lower() == userId.lower() || request.auth.uid == userId);
     }
 
-    // Trilha de Auditoria e Logs de Sistema
-    match /system_logs/{logId} {
-      allow read, write: if isAuthenticated();
+    match /usuarios_sistema/{doc} {
+      allow read, write: if isSuperAdmin();
     }
-
-    match /logs_auditoria/{auditId} {
-      allow read, write: if isAuthenticated();
+    match /system_logs/{doc} {
+      allow read, write: if isSuperAdmin();
     }
-
-    match /logs_acesso/{logId} {
-      allow read, write: if isAuthenticated();
-    }
-
-    // Fallback defensivo para qualquer outra coleção
-    match /{document=**} {
-      allow read, write: if isAuthenticated();
+    match /logs/{doc} {
+      allow read, write: if isSuperAdmin();
     }
   }
 }
-
