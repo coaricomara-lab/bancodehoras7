@@ -51,7 +51,6 @@ import { InfoTooltip } from './InfoTooltip';
 import { IconButton } from './IconButton';
 import { PortariaAttendanceSheetModal } from './PortariaAttendanceSheetModal';
 import { DispensaSptfRecord } from '../types';
-import { EditEmployeeModal } from './EditEmployeeModal';
 
 interface EmployeeManagementProps {
   employees: Employee[];
@@ -138,9 +137,6 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   // Manual Employee Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
-  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
-  const [editEmployeeError, setEditEmployeeError] = useState('');
-  const [isSavingEdit, setIsSavingEdit] = useState(false);
   const [isPortariaModalOpen, setIsPortariaModalOpen] = useState(false);
 
   // Form State
@@ -503,20 +499,6 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
       }, 500);
     };
     reader.readAsDataURL(file);
-  };
-
-  const handleSaveEditEmployee = async (employee: Employee) => {
-    setIsSavingEdit(true);
-    setEditEmployeeError('');
-    try {
-      await firestoreService.saveEmployee(employee);
-      onUpdateEmployees(employees.map((item) => item.id === employee.id ? employee : item));
-      setEmployeeToEdit(null);
-    } catch (err: any) {
-      setEditEmployeeError(err?.message || 'Não foi possível salvar o cadastro.');
-    } finally {
-      setIsSavingEdit(false);
-    }
   };
 
   const handleSaveEmployee = async (e: React.FormEvent) => {
@@ -1480,7 +1462,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                                 size="xs"
                                 tooltip={`Editar Cadastro de ${emp.nome}`}
                                 aria-label={`Editar ${emp.nome}`}
-                                onClick={() => { setEmployeeToEdit(emp); setEditEmployeeError(''); }}
+                                onClick={() => handleOpenEditModal(emp)}
                               />
                             </div>
                           </td>
@@ -2052,18 +2034,6 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         </div>
       )}
       </div>
-
-      {employeeToEdit && (
-        <EditEmployeeModal
-          employee={employeeToEdit}
-          constructionSites={constructionSites}
-          theme={theme}
-          isSaving={isSavingEdit}
-          error={editEmployeeError}
-          onClose={() => setEmployeeToEdit(null)}
-          onSave={handleSaveEditEmployee}
-        />
-      )}
 
       {/* Modal de Impressão da Relação de Portaria (Entrada e Saída) */}
       <PortariaAttendanceSheetModal
