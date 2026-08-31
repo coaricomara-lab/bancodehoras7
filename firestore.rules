@@ -1,89 +1,254 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // =========================================================================
+    // FUNÇÕES AUXILIARES — Autenticação, papéis e tenancy
+    // =========================================================================
+
     function isAuthenticated() {
       return request.auth != null;
     }
-    
-    function isSuperAdmin() {
-      return isAuthenticated() &&
-        request.auth.token.email != null &&
-        (
-          request.auth.token.email.lower() == 'coari.comara@gmail.com' ||
-          request.auth.token.email.lower() == 'comarafab@gmail.com' ||
-          request.auth.token.email.lower().matches('.*juliocesar.*') ||
-          request.auth.token.email.lower().matches('.*@comara\\.(mil|aer\\.mil|gov)\\.br$') ||
-          (
-            exists(/databases/$(database)/documents/admin_users/$(request.auth.token.email.lower())) &&
-            get(/databases/$(database)/documents/admin_users/$(request.auth.token.email.lower())).data.role == 'SUPER_ADMIN'
-          )
-        );
+
+    function userEmail() {
+      return isAuthenticated() && request.auth.token.email != null
+        ? request.auth.token.email.lower()
+        : '';
     }
 
+    // E-mails master de Super Admin (alinhado a authService.isMasterAdminEmail)
+    function isMasterEmail() {
+      return isAuthenticated() && (
+        userEmail() == 'admin@comara.mil.br' ||
+        userEmail() == 'admin@comara.gov.br' ||
+        userEmail().matches('.*@comara\\.mil\\.br$') ||
+        userEmail().matches('.*@comara\\.aer\\.mil\\.br$') ||
+        userEmail().matches('.*@comara\\.gov\\.br$')
+      );
+    }
+
+    function adminRef() {
+      return /databases/$(database)/documents/admin_users/$(userEmail());
+    }
+
+    function hasAdminDoc() {
+      return isAuthenticated() && exists(adminRef());
+    }
+
+    function adminData() {
+      return get(adminRef()).data;
+    }
+
+    // Role bruta persistida (nivelAcesso tem precedência sobre role)
+    function rawRole() {
+      return hasAdminDoc()
+        ? (adminData().nivelAcesso != null
+            ? string(adminData().nivelAcesso)
+            : (adminData().role != null ? string(adminData().role) : ''))
+        : '';
+    }
+
+    function adminStatus() {
+      return hasAdminDoc()
+        ? (adminData().status != null
+            ? string(adminData().status)
+            : (adminData().ativo == false ? 'inativo' : 'ativo'))
+        : '';
+    }
+
+    // Apenas admins ativos (status=ativo) com papel diferente de NENHUM
+    function isAdminActive() {
+      return hasAdminDoc()
+        && adminStatus() == 'ativo'
+        && rawRole() != ''
+        && rawRole() != 'NENHUM';
+    }
+
+    // Normaliza aliases legados para um dos 6 perfis canônicos
+    function normalizeRole() {
+      let r = rawRole();
+      return
+        r == 'SUPER_ADMIN' ? 'SUPER_ADMIN' :
+        r == 'RH_ADMIN' || r == 'GESTOR_RH' ? 'RH_ADMIN' :
+        r == 'GERENTE_CANTEIRO' || r == 'GERENTE' || r == 'GERENTE_CAMPO' ||
+        r == 'ROLE_GERENTE' || r == 'AUDITOR' ? 'GERENTE_CANTEIRO' :
+        r == 'CHEFE_CANTEIRO' || r == 'ENCARREGADO_CANTEIRO' ? 'CHEFE_CANTEIRO' :
+        r == 'CHEFE_DA' || r == 'ENCARREGADO_DA' ? 'CHEFE_DA' :
+        r == 'AUX_DA' || r == 'AUXILIAR_DA' ? 'AUX_DA' :
+        '';
+    }
+
+    function isSuperAdmin() {
+      return isMasterEmail() || (isAdminActive() && normalizeRole() == 'SUPER_ADMIN');
+    }
+
+    function isGestorRH() {
+      return isAdminActive() && normalizeRole() == 'RH_ADMIN';
+    }
+
+    // Acesso global: SUPER_ADMIN ou RH_ADMIN
+    function isGlobalAdmin() {
+      return isSuperAdmin() || isGestorRH();
+    }
+
+    function isGerenteCampo() {
+      return isAdminActive() && normalizeRole() == 'GERENTE_CANTEIRO';
+    }
+
+    function isChefeCanteiro() {
+      return isAdminActive() && normalizeRole() == 'CHEFE_CANTEIRO';
+    }
+
+    function isChefeDA() {
+      return isAdminActive() && normalizeRole() == 'CHEFE_DA';
+    }
+
+    function isAuxDA() {
+      return isAdminActive() && normalizeRole() == 'AUX_DA';
+    }
+
+    // Usuários operacionais de campo (CHEFE_CANTEIRO, CHEFE_DA, AUX_DA)
+    function isFieldUser() {
+      return isChefeCanteiro() || isChefeDA() || isAuxDA();
+    }
+
+    // =========================================================================
+    // PORTAL DO COLABORADOR (autoatendimento)
+    // O autoatendimento consulta por matrícula/senha e NÃO usa Firebase Auth.
+    // As coleções estritamente necessárias à consulta pública permanecem com
+    // leitura pública; a ESCRITA fica restrita a administradores autorizados.
+    // =========================================================================
+
+    // Cadastro de colaboradores — leitura pública (consulta de extrato/saldo)
+    // Escrita: apenas RH / Super Admin (gestão de pessoal)
     match /colaboradores/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isGlobalAdmin();
     }
-    match /contracheques/{doc} {
+
+    // Credenciais de autoatendimento (hash de senha por matrícula)
+    // Leitura pública é necessária à validação do login do colaborador;
+    // escrita restrita a RH / Super Admin.
+    match /colaboradores_auth/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isGlobalAdmin();
     }
+
+    // Lançamentos de horas (banco de horas)
+    // Leitura pública (extrato do colaborador); escrita: admins globais + campo
+    // (GERENTE_CANTEIRO é somente leitura — não lança horas)
     match /lancamentos/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isGlobalAdmin() || isFieldUser();
     }
+
+    // Guias de Dispensa SPTF
     match /dispensas_sptf/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isGlobalAdmin() || isFieldUser();
     }
+
+    // Contracheques / folha (dado sensível — LGPD)
+    // Leitura pública necessária ao espelho de contracheque do colaborador;
+    // escrita e exclusão restritas a RH / Super Admin.
+    match /contracheques/{doc} {
+      allow read: if true;
+      allow write: if isGlobalAdmin();
+      allow delete: if isGlobalAdmin();
+    }
+
+    // Resumo mensal consolidado (dados analíticos derivados)
+    // Leitura autenticada; escrita restrita a admins globais.
+    match /resumo_mensal/{doc} {
+      allow read: if isAuthenticated() && (isGlobalAdmin() || isGerenteCampo() || isFieldUser());
+      allow write: if isGlobalAdmin();
+    }
+
+    // Canteiros de obras (cadastro institucional)
+    match /canteiros_obras/{doc} {
+      allow read: if true;
+      allow write: if isGlobalAdmin();
+      allow delete: if isGlobalAdmin();
+    }
+    // Alias legado mantido por compatibilidade
+    match /canteiros/{doc} {
+      allow read: if true;
+      allow write: if isGlobalAdmin();
+    }
+
+    // Insalubridade (laudos)
+    // Leitura pública; escrita: admins globais + CHEFE_CANTEIRO + CHEFE_DA
+    // (AUX_DA não valida insalubridade; GERENTE_CANTEIRO é somente leitura)
+    match /insalubridade_records/{doc} {
+      allow read: if true;
+      allow write: if isGlobalAdmin() || isChefeCanteiro() || isChefeDA();
+      allow delete: if isGlobalAdmin() || isChefeCanteiro() || isChefeDA();
+    }
+    // Alias legado mantido por compatibilidade
+    match /insalubridade/{doc} {
+      allow read: if true;
+      allow write: if isGlobalAdmin() || isChefeCanteiro() || isChefeDA();
+    }
+
+    // Configurações do sistema e da instituição (branding/identidade)
     match /system_config/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isGlobalAdmin();
     }
     match /institution_settings/{doc} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isGlobalAdmin();
     }
-    match /canteiros/{doc} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /canteiros_obras/{doc} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /insalubridade/{doc} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
-    match /insalubridade_records/{doc} {
-      allow read: if true;
-      allow write: if isAuthenticated();
-    }
+
+    // =========================================================================
+    // LOGS
+    // =========================================================================
+
+    // Logs de acesso do autoatendimento — gravados sem Firebase Auth
+    // (colaborador não autenticado). Escrita permanece pública para preservar
+    // o registro de login; LEITURA restrita a quem pode auditar.
     match /logs_acesso/{doc} {
-      allow read: if true;
+      allow read: if isGlobalAdmin() || isChefeDA();
       allow write: if true;
     }
 
-    match /admin_users/{userId} {
-      allow read: if isAuthenticated();
-      allow write: if isSuperAdmin() || (
-        isAuthenticated() &&
-        request.auth.token.email != null &&
-        (request.auth.token.email.lower() == userId.lower() || request.auth.uid == userId)
-      );
+    // Trilha de auditoria — gravada por admins autenticados em ações do sistema
+    match /logs_auditoria/{doc} {
+      allow read: if isGlobalAdmin() || isChefeDA();
+      allow write: if isAuthenticated() && isAdminActive();
       allow delete: if isSuperAdmin();
     }
 
-    match /usuarios_sistema/{doc} {
-      allow read, write: if isSuperAdmin();
+    // =========================================================================
+    // GESTÃO DE USUÁRIOS ADMINISTRATIVOS (sensível)
+    // =========================================================================
+
+    match /admin_users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isSuperAdmin() || (isAuthenticated() && userEmail() == userId.lower());
+      allow delete: if isSuperAdmin();
     }
+
+    // Espelho sincronizado de admin_users — acesso restrito
+    match /usuarios_sistema/{userId} {
+      allow read, write: if isSuperAdmin() || (isAuthenticated() && userEmail() == userId.lower());
+      allow delete: if isSuperAdmin();
+    }
+
     match /system_logs/{doc} {
       allow read, write: if isSuperAdmin();
     }
     match /logs/{doc} {
       allow read, write: if isSuperAdmin();
     }
+
+    // =========================================================================
+    // SUPER_ADMIN — acesso total a qualquer coleção (catch-all, por último)
+    // Para demais perfis, o catch-all nega; regras mais específicas acima
+    // ainda concedem acesso conforme o mapeamento.
+    // =========================================================================
+    match /{document=**} {
+      allow read, write: if isSuperAdmin();
+    }
   }
 }
-
