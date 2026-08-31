@@ -662,6 +662,20 @@ export function inferGrauInsalubridade(activityName: string): '10%' | '20%' | '4
 }
 
 /**
+ * Normaliza strings para cruzamento de nomes (sem acentos, minúsculo, sem pontuação duplicada)
+ */
+export function normalizeNameForMatching(name: string): string {
+  if (!name) return '';
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
  * Faz o parsing de matriz de controle de campo (Folha Quinzenal / Mensal ou Tabela) para Insalubridades Simples
  */
 export function parseInsalubrityMatrixCSV(
@@ -692,21 +706,45 @@ export function parseInsalubrityMatrixCSV(
           return;
         }
 
-        // 2. Cria mapa de busca para colaboradores existentes
-        const empByMatricula = new Map<string, Employee>();
+        // 2. Cria mapas de busca com múltiplos critérios de matching
+        const empByExactMatricula = new Map<string, Employee>();
+        const empByDigitsMatricula = new Map<string, Employee>();
         const empByNormalizedName = new Map<string, Employee>();
+        const empListWithNormalized = existingEmployees.map(emp => ({
+          emp,
+          cleanMat: sanitizeCsvCell(emp.matricula).toUpperCase(),
+          digitsMat: sanitizeCsvCell(emp.matricula).replace(/\D/g, ''),
+          normName: normalizeNameForMatching(emp.nome),
+        }));
 
-        existingEmployees.forEach((emp) => {
-          if (emp.matricula) {
-            empByMatricula.set(sanitizeCsvCell(emp.matricula).toUpperCase(), emp);
-          }
-          if (emp.nome) {
-            const cleanName = sanitizeCsvCell(emp.nome).toLowerCase().replace(/\s+/g, ' ').trim();
-            empByNormalizedName.set(cleanName, emp);
-          }
+        empListWithNormalized.forEach(({ emp, cleanMat, digitsMat, normName }) => {
+          if (cleanMat) empByExactMatricula.set(cleanMat, emp);
+          if (digitsMat) empByDigitsMatricula.set(digitsMat, emp);
+          if (normName) empByNormalizedName.set(normName, emp);
         });
 
-        // 3. Localiza a linha com as datas (Ex: "1/8/2026", "2/8/2026", "11/8/2026" ou "2026-08-01")
+        // Tenta detectar o ano e mês presentes em qualquer parte dos metadados superiores
+        let globalDetectedYear = new Date().getFullYear();
+        let globalDetectedMonth = new Date().getMonth();
+
+        for (let r = 0; r < Math.min(rawRows.length, 10); r++) {
+          const rowStr = (rawRows[r] || []).map(c => sanitizeCsvCell(c)).join(' ').toUpperCase();
+          
+          // Procura nomes dos meses em PT
+          MONTH_NAMES_PT.forEach((mName, mIdx) => {
+            if (rowStr.includes(mName.toUpperCase())) {
+              globalDetectedMonth = mIdx;
+            }
+          });
+
+          // Procura padrão de 4 dígitos para ano (ex: 2024, 2025, 2026, 2027)
+          const yearMatch = rowStr.match(/\b(202\d)\b/);
+          if (yearMatch) {
+            globalDetectedYear = parseInt(yearMatch[1], 10);
+          }
+        }
+
+        // 3. Localiza a linha com as datas
         let dateHeaderRowIndex = -1;
         interface DateColMeta {
           colIndex: number;
@@ -714,8 +752,8 @@ export function parseInsalubrityMatrixCSV(
           dayNum: number;
         }
         let dateColumns: DateColMeta[] = [];
-        let detectedYear = new Date().getFullYear();
-        let detectedMonth = new Date().getMonth();
+        let detectedYear = globalDetectedYear;
+        let detectedMonth = globalDetectedMonth;
 
         for (let r = 0; r < Math.min(rawRows.length, 15); r++) {
           const row = rawRows[r];
@@ -726,12 +764,13 @@ export function parseInsalubrityMatrixCSV(
             const cell = sanitizeCsvCell(row[c]);
             if (!cell) continue;
 
-            // Padrão D/M/YYYY ou DD/MM/YYYY
-            const dmyMatch = cell.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+            // 1. Padrão D/M/YYYY ou DD/MM/YYYY ou D/M/YY
+            const dmyMatch = cell.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})$/);
             if (dmyMatch) {
               const day = parseInt(dmyMatch[1], 10);
               const month = parseInt(dmyMatch[2], 10); // 1-12
-              const year = parseInt(dmyMatch[3], 10);
+              let year = parseInt(dmyMatch[3], 10);
+              if (year < 100) year += 2000;
 
               if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
                 detectedYear = year;
@@ -742,7 +781,7 @@ export function parseInsalubrityMatrixCSV(
               continue;
             }
 
-            // Padrão YYYY-MM-DD
+            // 2. Padrão YYYY-MM-DD
             const ymdMatch = cell.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
             if (ymdMatch) {
               const year = parseInt(ymdMatch[1], 10);
@@ -752,10 +791,24 @@ export function parseInsalubrityMatrixCSV(
               detectedMonth = month - 1;
               const formatted = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
               tempDates.push({ colIndex: c, dateStr: formatted, dayNum: day });
+              continue;
+            }
+
+            // 3. Padrão D/M sem ano (ex: "1/8", "15/08")
+            const dmMatch = cell.match(/^(\d{1,2})\/(\d{1,2})$/);
+            if (dmMatch) {
+              const day = parseInt(dmMatch[1], 10);
+              const month = parseInt(dmMatch[2], 10);
+              if (day >= 1 && day <= 31 && month >= 1 && month <= 12) {
+                detectedMonth = month - 1;
+                const formatted = `${detectedYear}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                tempDates.push({ colIndex: c, dateStr: formatted, dayNum: day });
+              }
+              continue;
             }
           }
 
-          // Se encontramos ao menos 3 colunas de datas consecutivas nesta linha, é a linha de cabeçalho da matriz!
+          // Se encontramos ao menos 3 colunas de datas completas nesta linha, é a linha de cabeçalho!
           if (tempDates.length >= 3) {
             dateHeaderRowIndex = r;
             dateColumns = tempDates;
@@ -763,9 +816,35 @@ export function parseInsalubrityMatrixCSV(
           }
         }
 
-        // Se não encontrou cabeçalho com datas explícitas, verifica se é formato tabular linear (Matricula/Nome, Data, Atividade)
+        // Se não achou datas no formato D/M/Y, tenta detectar linha com números sequenciais de dias (1 a 31)
         if (dateHeaderRowIndex === -1) {
-          // Tenta parsing tabular linear
+          for (let r = 0; r < Math.min(rawRows.length, 15); r++) {
+            const row = rawRows[r];
+            if (!row || !Array.isArray(row)) continue;
+
+            const tempDayCols: DateColMeta[] = [];
+            for (let c = 0; c < row.length; c++) {
+              const cell = sanitizeCsvCell(row[c]);
+              if (!cell) continue;
+
+              const num = parseInt(cell, 10);
+              if (/^\d{1,2}$/.test(cell) && num >= 1 && num <= 31) {
+                const formatted = `${detectedYear}-${String(detectedMonth + 1).padStart(2, '0')}-${String(num).padStart(2, '0')}`;
+                tempDayCols.push({ colIndex: c, dateStr: formatted, dayNum: num });
+              }
+            }
+
+            // Se encontrou ao menos 5 números de dias em sequência
+            if (tempDayCols.length >= 5) {
+              dateHeaderRowIndex = r;
+              dateColumns = tempDayCols;
+              break;
+            }
+          }
+        }
+
+        // Se não encontrou cabeçalho matricial, tenta formato tabular linear
+        if (dateHeaderRowIndex === -1) {
           let headerRowIndex = -1;
           for (let r = 0; r < Math.min(rawRows.length, 5); r++) {
             const row = rawRows[r];
@@ -777,7 +856,6 @@ export function parseInsalubrityMatrixCSV(
           }
 
           if (headerRowIndex !== -1) {
-            // Processamento tabular linear
             const headerRow = rawRows[headerRowIndex].map(c => sanitizeHeaderKey(c));
             const colMatricula = headerRow.findIndex(h => h.includes('mat') || h.includes('id') || h.includes('cod'));
             const colNome = headerRow.findIndex(h => h.includes('nom') || h.includes('colab') || h.includes('func'));
@@ -806,8 +884,8 @@ export function parseInsalubrityMatrixCSV(
               const cleanMatricula = matriculaVal || `MAT-${cleanName.substring(0, 3).toUpperCase()}-${r}`;
 
               const record: InsalubrityRecord = {
-                id: `insalubre-${cleanMatricula}-${cleanDate}-${r}`,
-                matricula: cleanMatricula,
+                id: `insalubre-${cleanMatricula.toUpperCase()}-${cleanDate}`,
+                matricula: cleanMatricula.toUpperCase(),
                 nomeColaborador: cleanName,
                 funcao: cargoVal,
                 sede: targetSede,
@@ -824,17 +902,17 @@ export function parseInsalubrityMatrixCSV(
               generatedRecords.push(record);
               activityCounter.set(ativVal, (activityCounter.get(ativVal) || 0) + 1);
 
-              if (!workersMap.has(cleanMatricula)) {
-                workersMap.set(cleanMatricula, {
+              if (!workersMap.has(cleanMatricula.toUpperCase())) {
+                workersMap.set(cleanMatricula.toUpperCase(), {
                   itemNum: String(r),
-                  matricula: cleanMatricula,
+                  matricula: cleanMatricula.toUpperCase(),
                   nome: cleanName,
                   cargo: cargoVal,
                   activityDaysCount: 1,
-                  isNewEmployee: !empByMatricula.has(cleanMatricula.toUpperCase()),
+                  isNewEmployee: !empByExactMatricula.has(cleanMatricula.toUpperCase()),
                   employeeObj: {
                     id: `emp-imp-${cleanMatricula}`,
-                    matricula: cleanMatricula,
+                    matricula: cleanMatricula.toUpperCase(),
                     nome: cleanName,
                     funcao: cargoVal,
                     cargo: cargoVal,
@@ -849,7 +927,7 @@ export function parseInsalubrityMatrixCSV(
                   sampleActivities: [ativVal],
                 });
               } else {
-                const w = workersMap.get(cleanMatricula)!;
+                const w = workersMap.get(cleanMatricula.toUpperCase())!;
                 w.activityDaysCount++;
                 if (!w.sampleActivities.includes(ativVal)) {
                   w.sampleActivities.push(ativVal);
@@ -897,13 +975,12 @@ export function parseInsalubrityMatrixCSV(
         let colNome = 1;
         let colCargo = 2;
 
-        // Procura colunas de Item, Nome, Cargo nas primeiras colunas antes da primeira data
         const firstDateCol = dateColumns[0].colIndex;
         for (let c = 0; c < firstDateCol; c++) {
           const val = sanitizeCsvCell(dateHeaderRow[c]).toLowerCase();
           if (val.includes('item') || val.includes('nº') || val.includes('n°') || val.includes('num')) {
             colItem = c;
-          } else if (val.includes('desc') || val.includes('nome') || val.includes('colab') || val.includes('func')) {
+          } else if (val.includes('desc') || val.includes('nome') || val.includes('colab') || val.includes('func') || val.includes('serv')) {
             colNome = c;
           } else if (val.includes('carg') || val.includes('função') || val.includes('funcao') || val.includes('oficio')) {
             colCargo = c;
@@ -938,19 +1015,43 @@ export function parseInsalubrityMatrixCSV(
           // Ignora linhas totalmente vazias ou de rodapé com totais gerais
           if (!nomeRaw && !itemNumRaw) continue;
           const nomeUpper = nomeRaw.toUpperCase();
-          if (nomeUpper.includes('TOTAL') || nomeUpper.includes('RESPONSÁVEL') || nomeUpper.includes('ENCARREGADO') || nomeUpper.includes('ASSINATURA')) {
+          if (
+            nomeUpper.includes('TOTAL') || 
+            nomeUpper.includes('RESPONSÁVEL') || 
+            nomeUpper.includes('ENCARREGADO') || 
+            nomeUpper.includes('ASSINATURA') ||
+            nomeUpper.includes('COMISSÃO DE') ||
+            nomeUpper.includes('CHEFE DE')
+          ) {
             continue;
           }
           if (nomeRaw.length < 2) continue;
 
-          // Tentativa de matching com base existente
-          const cleanNameNormalized = nomeRaw.toLowerCase().replace(/\s+/g, ' ').trim();
+          // Matching inteligente e robusto com a base existente
+          const cleanNameNormalized = normalizeNameForMatching(nomeRaw);
+          const itemDigits = itemNumRaw.replace(/\D/g, '');
+
+          // 1. Busca por nome normalizado exato
           let matchedEmp = empByNormalizedName.get(cleanNameNormalized);
 
-          // Se não achou por nome, tenta por matrícula/item se tiver padrão
+          // 2. Busca por matrícula exata ou numérica
           if (!matchedEmp && itemNumRaw) {
-            const possibleMat = `MAT-${itemNumRaw.padStart(4, '0')}`;
-            matchedEmp = empByMatricula.get(possibleMat.toUpperCase());
+            matchedEmp = empByExactMatricula.get(itemNumRaw.toUpperCase()) ||
+                         empByExactMatricula.get(`MAT-${itemNumRaw.padStart(4, '0')}`.toUpperCase());
+          }
+          if (!matchedEmp && itemDigits) {
+            matchedEmp = empByDigitsMatricula.get(itemDigits) ||
+                         empByDigitsMatricula.get(String(parseInt(itemDigits, 10)));
+          }
+
+          // 3. Busca por correspondência parcial de nome (se o nome do CSV está contido ou contém o nome do cadastro)
+          if (!matchedEmp && cleanNameNormalized.length >= 6) {
+            const foundPartial = empListWithNormalized.find(
+              e => e.normName.includes(cleanNameNormalized) || cleanNameNormalized.includes(e.normName)
+            );
+            if (foundPartial) {
+              matchedEmp = foundPartial.emp;
+            }
           }
 
           let finalMatricula = '';
@@ -958,13 +1059,12 @@ export function parseInsalubrityMatrixCSV(
           let empObj: Employee;
 
           if (matchedEmp) {
-            finalMatricula = matchedEmp.matricula;
+            finalMatricula = matchedEmp.matricula.trim().toUpperCase();
             empObj = matchedEmp;
           } else {
             isNewEmp = true;
-            const itemClean = itemNumRaw.replace(/\D/g, '');
-            finalMatricula = itemClean 
-              ? `MAT-${itemClean.padStart(4, '0')}` 
+            finalMatricula = itemDigits 
+              ? `MAT-${itemDigits.padStart(4, '0')}` 
               : `MAT-${cleanNameNormalized.split(' ')[0].substring(0, 3).toUpperCase()}-${String(r).padStart(3, '0')}`;
 
             empObj = {
@@ -982,9 +1082,17 @@ export function parseInsalubrityMatrixCSV(
               dataAdmissao: dateColumns[0]?.dateStr || `${detectedYear}-01-01`,
             };
             newEmployeesList.push(empObj);
-            // Registra nos maps locais para evitar duplicatas em linhas subsequentes
-            empByMatricula.set(finalMatricula.toUpperCase(), empObj);
+            
+            // Registra nos maps para evitar duplicatas em linhas subsequentes
+            empByExactMatricula.set(finalMatricula, empObj);
+            if (itemDigits) empByDigitsMatricula.set(itemDigits, empObj);
             empByNormalizedName.set(cleanNameNormalized, empObj);
+            empListWithNormalized.push({
+              emp: empObj,
+              cleanMat: finalMatricula,
+              digitsMat: itemDigits,
+              normName: cleanNameNormalized,
+            });
           }
 
           // Lê as atividades em cada coluna de data
@@ -995,8 +1103,8 @@ export function parseInsalubrityMatrixCSV(
             if (dateCol.colIndex >= row.length) continue;
             const cellVal = sanitizeCsvCell(row[dateCol.colIndex]);
 
-            // Se célula tem texto (ex: CONCRETO, CANALETA, RASGA SACO, CDC, TRILHO, etc.)
-            if (cellVal && cellVal !== '0' && cellVal !== '-' && cellVal !== '.') {
+            // Se célula tem atividade informada
+            if (cellVal && cellVal !== '0' && cellVal !== '-' && cellVal !== '.' && cellVal !== 'FALTA') {
               const atividadeNome = cellVal.toUpperCase().trim();
               workerActivityCount++;
               if (!workerActivities.includes(atividadeNome)) {
@@ -1006,7 +1114,7 @@ export function parseInsalubrityMatrixCSV(
               activityCounter.set(atividadeNome, (activityCounter.get(atividadeNome) || 0) + 1);
 
               const record: InsalubrityRecord = {
-                id: `insalubre-${finalMatricula}-${dateCol.dateStr}-${Math.floor(Math.random() * 10000)}`,
+                id: `insalubre-${finalMatricula}-${dateCol.dateStr}`,
                 matricula: finalMatricula,
                 nomeColaborador: empObj.nome,
                 funcao: empObj.funcao || cargoRaw || 'Servente de Obras',
@@ -1029,8 +1137,8 @@ export function parseInsalubrityMatrixCSV(
           workersList.push({
             itemNum: itemNumRaw || String(r - dateHeaderRowIndex),
             matricula: finalMatricula,
-            nome: nomeRaw,
-            cargo: cargoRaw,
+            nome: empObj.nome || nomeRaw,
+            cargo: empObj.funcao || cargoRaw,
             activityDaysCount: workerActivityCount,
             isNewEmployee: isNewEmp,
             employeeObj: empObj,

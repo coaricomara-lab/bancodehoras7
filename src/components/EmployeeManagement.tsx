@@ -44,7 +44,8 @@ import {
   ShieldCheck,
   Sparkles,
   Printer,
-  FileText
+  FileText,
+  Loader2
 } from 'lucide-react';
 import { InfoTooltip } from './InfoTooltip';
 import { IconButton } from './IconButton';
@@ -121,6 +122,13 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
   
   // CSV Import State
   const [isImporting, setIsImporting] = useState(false);
+  const [importProgress, setImportProgress] = useState<{
+    processed: number;
+    total: number;
+    percent: number;
+    currentName?: string;
+    statusText?: string;
+  } | null>(null);
   const [importFeedback, setImportFeedback] = useState<{
     success: boolean;
     message: string;
@@ -334,6 +342,12 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
 
     setIsImporting(true);
     setImportFeedback(null);
+    setImportProgress({
+      processed: 0,
+      total: 0,
+      percent: 0,
+      statusText: 'Lendo e validando estrutura do arquivo CSV...'
+    });
 
     const reader = new FileReader();
     reader.onload = async (event) => {
@@ -348,9 +362,18 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
             errors: parseResult.errors,
           });
           setIsImporting(false);
+          setImportProgress(null);
           if (fileInputRef.current) fileInputRef.current.value = '';
           return;
         }
+
+        const totalItems = parseResult.data.length;
+        setImportProgress({
+          processed: 0,
+          total: totalItems,
+          percent: 0,
+          statusText: `Preparando sincronização de ${totalItems} colaborador(es)...`
+        });
 
         // Create department code map for each employee
         // Parse from sede field or departamento field (which contains the department code)
@@ -366,11 +389,26 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
           departmentCodesMap,
           constructionSites || [],
           (progress) => {
-            console.log(`Importação: ${progress.processed}/${progress.total} (${progress.percent}%)`);
+            const currentEmp = parseResult.data[progress.processed - 1];
+            const empLabel = currentEmp?.nome ? `${currentEmp.nome} (${currentEmp.matricula || ''})` : undefined;
+            setImportProgress({
+              processed: progress.processed,
+              total: progress.total,
+              percent: progress.percent,
+              currentName: empLabel,
+              statusText: `Sincronizando colaboradores no Firestore (${progress.processed}/${progress.total})...`
+            });
           }
         );
 
         const stats = getSyncStatistics(syncResults);
+
+        setImportProgress({
+          processed: totalItems,
+          total: totalItems,
+          percent: 100,
+          statusText: 'Atualizando base de dados em tempo real...'
+        });
 
         // Reload all employees from Firestore to reflect changes
         const allEmployees = await firestoreService.getAllEmployees();
@@ -392,6 +430,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
         });
       } finally {
         setIsImporting(false);
+        setImportProgress(null);
         if (fileInputRef.current) fileInputRef.current.value = '';
       }
     };
@@ -810,12 +849,18 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                 <label 
                   aria-label="Importar Base de Colaboradores CSV"
                   className={`w-9 h-9 p-2 rounded-xl inline-flex items-center justify-center transition-all duration-150 cursor-pointer active:scale-95 border ${
-                    isDark 
-                      ? 'text-emerald-400 bg-emerald-950/40 hover:bg-emerald-900/60 border-emerald-800/40' 
-                      : 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border-emerald-200'
+                    isImporting
+                      ? 'bg-blue-900/40 text-blue-400 border-blue-700/50 cursor-not-allowed animate-pulse'
+                      : isDark 
+                        ? 'text-emerald-400 bg-emerald-950/40 hover:bg-emerald-900/60 border-emerald-800/40' 
+                        : 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border-emerald-200'
                   }`}
                 >
-                  <UploadCloud className="w-4 h-4" />
+                  {isImporting ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-blue-400" />
+                  ) : (
+                    <UploadCloud className="w-4 h-4" />
+                  )}
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -829,7 +874,7 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
                   role="tooltip"
                   className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 pointer-events-none whitespace-nowrap px-2.5 py-1.5 text-xs font-medium rounded-lg shadow-xl border bg-[#111317] dark:bg-[#1E3252] text-white border-[#335075] dark:border-[#383D4A]"
                 >
-                  Importar Arquivo CSV de Colaboradores
+                  {isImporting ? 'Processando importação...' : 'Importar Arquivo CSV de Colaboradores'}
                 </div>
               </div>
 
@@ -843,6 +888,61 @@ export const EmployeeManagement: React.FC<EmployeeManagementProps> = ({
               />
             </div>
           </div>
+
+          {/* Active Import Progress Banner */}
+          {isImporting && (
+            <div className={`p-4 rounded-xl border space-y-2.5 text-xs shadow-md transition-all animate-fadeIn ${
+              isDark ? 'bg-[#16243D] border-blue-500/40 text-[#E2E8F0]' : 'bg-blue-50/90 border-blue-200 text-blue-950'
+            }`}>
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="p-1.5 rounded-lg bg-blue-600/20 text-blue-500 shrink-0">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="font-bold text-sm text-blue-600 dark:text-blue-400">
+                        Importando e Sincronizando Colaboradores
+                      </p>
+                      {importProgress?.total ? (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-600/20 text-blue-600 dark:text-blue-300 border border-blue-500/30">
+                          {importProgress.processed} de {importProgress.total}
+                        </span>
+                      ) : null}
+                    </div>
+                    <p className={`text-xs truncate ${isDark ? 'text-[#94A3B8]' : 'text-slate-600'}`}>
+                      {importProgress?.currentName 
+                        ? `Sincronizando: ${importProgress.currentName}` 
+                        : importProgress?.statusText || 'Lendo dados e validando registros...'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <span className="text-base font-black font-mono text-blue-600 dark:text-blue-400">
+                    {importProgress?.percent ?? 0}%
+                  </span>
+                </div>
+              </div>
+
+              {/* Progress Bar Track */}
+              <div className={`h-2.5 w-full rounded-full overflow-hidden p-0.5 border ${
+                isDark ? 'bg-[#0B1426] border-[#243756]' : 'bg-slate-200 border-slate-300'
+              }`}>
+                <div 
+                  className="h-full rounded-full bg-gradient-to-r from-blue-600 via-indigo-500 to-emerald-500 transition-all duration-300 ease-out shadow-sm"
+                  style={{ 
+                    width: `${Math.max(importProgress?.total ? (importProgress?.percent || 2) : 10, 2)}%` 
+                  }}
+                />
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-0.5">
+                <span>Tratamento UPSERT (evita duplicação por CPF e Matrícula)</span>
+                <span>Gravando no Firestore...</span>
+              </div>
+            </div>
+          )}
 
           {/* Import Feedback Banner */}
           {importFeedback && (

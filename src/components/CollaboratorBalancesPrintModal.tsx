@@ -31,12 +31,17 @@ interface CollaboratorBalancesPrintModalProps {
   theme?: 'dark' | 'light';
 }
 
-export const CollaboratorBalancesPrintModal: React.FC<CollaboratorBalancesPrintModalProps> = ({
-  isOpen,
+export const CollaboratorBalancesPrintModal: React.FC<CollaboratorBalancesPrintModalProps> = (props) => {
+  if (!props.isOpen) return null;
+  return <CollaboratorBalancesPrintModalContent {...props} />;
+};
+
+const CollaboratorBalancesPrintModalContent: React.FC<CollaboratorBalancesPrintModalProps> = ({
+  isOpen: _isOpen,
   onClose,
-  employees,
-  sortField,
-  sortDirection,
+  employees = [],
+  sortField = 'matricula',
+  sortDirection = 'asc',
   filters,
   theme = 'dark',
 }) => {
@@ -45,8 +50,6 @@ export const CollaboratorBalancesPrintModal: React.FC<CollaboratorBalancesPrintM
 
   const [itemsPerPage, setItemsPerPage] = useState<number>(30); // 25, 30, 35, 40, 45, 50
   const [includeStatsSummary, setIncludeStatsSummary] = useState<boolean>(true);
-
-  if (!isOpen) return null;
 
   // Descrição do critério de ordenação aplicado
   const sortDescription = useMemo(() => {

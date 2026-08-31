@@ -18,101 +18,60 @@ export const INSALUBRIDADE_COLLECTION = 'insalubridade_records';
 
 export const insalubridadeService = {
   /**
-   * Monitora em tempo real a coleção de insalubridade
+   * Monitora em tempo real a coleção de insalubridade com filtro de período
    */
   subscribeInsalubrityRecords(
     onSuccess: (records: InsalubrityRecord[]) => void,
-    onError?: (error: Error) => void
-  ): Unsubscribe {
-    try {
-      const q = query(collection(db, INSALUBRIDADE_COLLECTION), orderBy('dataEvento', 'desc'));
-      return onSnapshot(
-        q,
-        (snapshot) => {
-          try {
-            const list: InsalubrityRecord[] = [];
-            snapshot.forEach((docSnap) => {
-              const data = docSnap.data();
-              list.push({
-                id: docSnap.id,
-                matricula: data.matricula || '',
-                nomeColaborador: data.nomeColaborador || '',
-                sede: data.sede || 'KO',
-                funcao: data.funcao || 'Operacional',
-                dataEvento: data.dataEvento || '',
-                atividadeDesempenhada: data.atividadeDesempenhada || '',
-                grauExposicao: data.grauExposicao || '20%',
-                quantidadeHorasDias: typeof data.quantidadeHorasDias === 'number' ? data.quantidadeHorasDias : 1,
-                unidade: data.unidade || 'DIAS',
-                responsavelLancamento: data.responsavelLancamento || 'RH / Encarregado',
-                observacoes: data.observacoes || '',
-                criadoEm: data.criadoEm || new Date().toISOString(),
-                criadoPorEmail: data.criadoPorEmail,
-              });
-            });
-            onSuccess(list);
-          } catch (err: any) {
-            console.error('Erro ao processar snapshot de insalubridade:', err);
-            if (onError) onError(err);
-          }
-        },
-        (error) => {
-          logFirestoreError(error, OperationType.LIST, INSALUBRIDADE_COLLECTION);
-          if (onError) onError(error);
-        }
-      );
-    } catch (error: any) {
-      logFirestoreError(error, OperationType.LIST, INSALUBRIDADE_COLLECTION);
-      if (onError) onError(error);
-      return () => {};
+    onError?: (error: Error) => void,
+    options?: {
+      canteiroId?: string;
+      startDate?: string;
+      endDate?: string;
     }
+  ): Unsubscribe {
+    return firestoreService.subscribeInsalubrityRecords(onSuccess, onError, options);
   },
 
   /**
-   * Lista todos os registros de insalubridade
+   * Busca registros de insalubridade por período específico com estratégia Cache-First
    */
-  async listInsalubrityRecords(): Promise<InsalubrityRecord[]> {
-    try {
-      const q = query(collection(db, INSALUBRIDADE_COLLECTION), orderBy('dataEvento', 'desc'));
-      const snapshot = await getDocs(q);
-      const list: InsalubrityRecord[] = [];
-      snapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        list.push({
-          id: docSnap.id,
-          matricula: data.matricula || '',
-          nomeColaborador: data.nomeColaborador || '',
-          sede: data.sede || 'KO',
-          funcao: data.funcao || 'Operacional',
-          dataEvento: data.dataEvento || '',
-          atividadeDesempenhada: data.atividadeDesempenhada || '',
-          grauExposicao: data.grauExposicao || '20%',
-          quantidadeHorasDias: typeof data.quantidadeHorasDias === 'number' ? data.quantidadeHorasDias : 1,
-          unidade: data.unidade || 'DIAS',
-          responsavelLancamento: data.responsavelLancamento || 'RH / Encarregado',
-          observacoes: data.observacoes || '',
-          criadoEm: data.criadoEm || new Date().toISOString(),
-          criadoPorEmail: data.criadoPorEmail,
-        });
-      });
-      return list;
-    } catch (error) {
-      logFirestoreError(error, OperationType.GET, INSALUBRIDADE_COLLECTION);
-      return [];
-    }
+  async getInsalubrityRecordsByPeriod(params: {
+    startDate: string;
+    endDate: string;
+    canteiroId?: string;
+    forceRefresh?: boolean;
+  }): Promise<InsalubrityRecord[]> {
+    return firestoreService.fetchInsalubrityRecordsByPeriod(params);
+  },
+
+  /**
+   * Lista registros de insalubridade (limitado ao período vigente ou especificado)
+   */
+  async listInsalubrityRecords(startDate?: string, endDate?: string, canteiroId?: string): Promise<InsalubrityRecord[]> {
+    const now = new Date();
+    const sDate = startDate || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const eDate = endDate || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+    
+    return firestoreService.fetchInsalubrityRecordsByPeriod({
+      startDate: sDate,
+      endDate: eDate,
+      canteiroId,
+    });
   },
 
   /**
    * Grava um registro de insalubridade diretamente no Cloud Firestore
    */
   async saveInsalubrityRecord(record: InsalubrityRecord): Promise<void> {
-    const docId = record.id || `insalubre-${record.matricula.trim()}-${record.dataEvento}-${Date.now()}`;
+    const cleanMat = record.matricula.trim().toUpperCase();
+    const docId = record.id || `insalubre-${cleanMat}-${record.dataEvento}`;
     const path = `${INSALUBRIDADE_COLLECTION}/${docId}`;
     try {
       await firestoreService.ensureAuthenticatedWriteSession();
       const dataToSave = sanitizeFirestoreData({
         id: docId,
-        matricula: record.matricula.trim().toUpperCase(),
+        matricula: cleanMat,
         nomeColaborador: record.nomeColaborador.trim(),
         sede: record.sede || 'KO',
         funcao: record.funcao || 'Operacional',
@@ -147,11 +106,12 @@ export const insalubridadeService = {
       const batch = writeBatch(db);
 
       chunk.forEach((rec) => {
-        const docId = rec.id || `insalubre-${rec.matricula.trim().toUpperCase()}-${rec.dataEvento}-${Math.floor(Math.random() * 100000)}`;
+        const cleanMat = rec.matricula.trim().toUpperCase();
+        const docId = rec.id || `insalubre-${cleanMat}-${rec.dataEvento}`;
         const ref = doc(db, INSALUBRIDADE_COLLECTION, docId);
         const cleanData = sanitizeFirestoreData({
           id: docId,
-          matricula: rec.matricula.trim().toUpperCase(),
+          matricula: cleanMat,
           nomeColaborador: rec.nomeColaborador.trim(),
           sede: rec.sede || 'KO',
           funcao: rec.funcao || 'Operacional',

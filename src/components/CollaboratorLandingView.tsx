@@ -41,7 +41,7 @@ import {
   Biohazard,
   Shield,
   Receipt,
-  BookOpen
+  X
 } from 'lucide-react';
 
 interface CollaboratorLandingViewProps {
@@ -50,7 +50,6 @@ interface CollaboratorLandingViewProps {
   insalubrityRecords?: InsalubrityRecord[];
   paystubs?: PaystubRecord[];
   onOpenAdminLogin: () => void;
-  onOpenManual?: () => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   onViewAttachment?: (attachment: Attachment, empName?: string, recordDate?: string) => void;
@@ -62,7 +61,6 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
   insalubrityRecords = [],
   paystubs = [],
   onOpenAdminLogin,
-  onOpenManual,
   theme,
   onToggleTheme,
   onViewAttachment,
@@ -84,6 +82,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
 
   // Modal: First Access / Reset Password State (100% Firestore)
   const [isFirstAccessModalOpen, setIsFirstAccessModalOpen] = useState(false);
+  const [isPrivacyModalOpen, setIsPrivacyModalOpen] = useState(false);
 
   // Filter for date range on authenticated employee statement
   const [periodFilter, setPeriodFilter] = useState<'ALL' | '30D' | '90D' | '180D'>('ALL');
@@ -288,7 +287,7 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
       {/* ------------------------------------------------------------- */}
       {/* CABEÇALHO COMPACTO COM BOTÃO DISCRETO DE ACESSO GESTÃO RH    */}
       {/* ------------------------------------------------------------- */}
-      <header className={`py-2.5 sm:py-3.5 px-4 sm:px-8 border-b flex items-center justify-between transition-all ${
+      <header className={`hidden sm:flex py-2.5 sm:py-3.5 px-4 sm:px-8 border-b items-center justify-between transition-all ${
         isDark ? 'bg-[#11203A] border-[#233654]' : 'bg-white border-slate-200 shadow-xs'
       }`}>
         <div className="flex items-center space-x-2.5 sm:space-x-3">
@@ -499,13 +498,38 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
 
             </div>
 
-            {/* Rodapé Informativo de Segurança */}
-            <div className={`p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border text-center text-xs space-y-1 ${
+            {/* No Mobile: Botão/Ícone Compacto com Instruções LGPD & Regras SPTF */}
+            <div className="flex sm:hidden justify-center pt-1">
+              <button
+                type="button"
+                onClick={() => setIsPrivacyModalOpen(true)}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all active:scale-[0.98] cursor-pointer shadow-xs ${
+                  isDark 
+                    ? 'bg-[#11203A]/90 border-[#233654] text-slate-300 hover:text-white hover:border-blue-500/50' 
+                    : 'bg-slate-100 border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300'
+                }`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Privacidade, LGPD & Regras SPTF</span>
+                <Info className="w-3 h-3 text-blue-400" />
+              </button>
+            </div>
+
+            {/* No Desktop: Rodapé Informativo de Segurança com Link para Detalhes */}
+            <div className={`hidden sm:block p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border text-center text-xs space-y-1 ${
               isDark ? 'bg-[#11203A]/60 border-[#233654] text-[#94A3B8]' : 'bg-slate-50 border-slate-200 text-slate-500'
             }`}>
               <div className="flex items-center justify-center gap-1.5 font-semibold text-[11px]">
                 <Lock className="w-3.5 h-3.5 text-emerald-500" />
                 <span>Privacidade Garantida • Visualização Restrita ao Próprio Colaborador</span>
+                <button
+                  type="button"
+                  onClick={() => setIsPrivacyModalOpen(true)}
+                  className="ml-1 text-blue-500 hover:text-blue-400 hover:underline inline-flex items-center gap-0.5 cursor-pointer font-bold"
+                >
+                  <Info className="w-3 h-3" />
+                  <span>Saiba mais</span>
+                </button>
               </div>
               <p className="text-[10px]">
                 Regras SPTF com multiplicadores automáticos (1.0x Seg-Sex, 1.5x Sáb, 2.0x Dom/Fer, -8h Faltas).
@@ -1143,6 +1167,123 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
         onLogoutNow={forceIdleTimeout}
       />
 
+      {/* ------------------------------------------------------------- */}
+      {/* MODAL: INSTRUÇÕES DE PRIVACIDADE, LGPD & REGRAS SPTF         */}
+      {/* ------------------------------------------------------------- */}
+      {isPrivacyModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200">
+          <div 
+            className={`w-full max-w-lg rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${
+              isDark ? 'bg-[#16243D] border-[#243756] text-white' : 'bg-white border-slate-200 text-slate-900'
+            }`}
+            role="dialog"
+            aria-modal="true"
+          >
+            {/* Cabeçalho do Modal */}
+            <div className={`p-4 sm:p-5 border-b flex items-center justify-between ${
+              isDark ? 'bg-[#11203A] border-[#243756]' : 'bg-slate-50 border-slate-200'
+            }`}>
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${
+                  isDark ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-emerald-50 border-emerald-200 text-emerald-600'
+                }`}>
+                  <ShieldCheck className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold">Privacidade & LGPD</h3>
+                  <p className={`text-xs ${isDark ? 'text-[#94A3B8]' : 'text-slate-500'}`}>
+                    Tratamento de Dados e Regras do SPTF COMARA
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPrivacyModalOpen(false)}
+                className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+                  isDark ? 'border-[#243756] text-gray-400 hover:text-white hover:bg-[#243756]' : 'border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+                aria-label="Fechar"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Conteúdo Informativo com Scroll */}
+            <div className="p-4 sm:p-6 space-y-4 overflow-y-auto text-xs leading-relaxed">
+              
+              {/* Seção 1: LGPD e Sigilo */}
+              <div className={`p-3.5 rounded-xl border space-y-2 ${
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
+              }`}>
+                <div className="flex items-center gap-2 font-bold text-emerald-500 text-xs">
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Proteção de Dados (Lei nº 13.709/2018 - LGPD)</span>
+                </div>
+                <ul className={`space-y-1.5 list-disc list-inside ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                  <li><strong>Finalidade Exclusiva:</strong> Consulta individual de registros funcionais, banco de horas, compensações e contracheques pelo próprio colaborador.</li>
+                  <li><strong>Acesso Restrito:</strong> Visualização permitida apenas ao titular autenticado mediante conferência de CPF/Matrícula e senha pessoal.</li>
+                  <li><strong>Sigilo e Não Indexação:</strong> Não há compartilhamento externo e as informações são protegidas contra indexação em mecanismos de busca.</li>
+                </ul>
+              </div>
+
+              {/* Seção 2: Regras do SPTF */}
+              <div className={`p-3.5 rounded-xl border space-y-2 ${
+                isDark ? 'bg-[#0F1B33] border-[#243756]' : 'bg-slate-50 border-slate-200'
+              }`}>
+                <div className="flex items-center gap-2 font-bold text-blue-500 text-xs">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Regras e Multiplicadores de Horas (SPTF)</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-1 font-mono text-[11px]">
+                  <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'}`}>
+                    <span className="text-gray-400 block text-[10px]">Segunda a Sexta</span>
+                    <strong className="text-blue-400">1.0x</strong> (Horas normais)
+                  </div>
+                  <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'}`}>
+                    <span className="text-gray-400 block text-[10px]">Sábados</span>
+                    <strong className="text-purple-400">1.5x</strong> (+50% adicional)
+                  </div>
+                  <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'}`}>
+                    <span className="text-gray-400 block text-[10px]">Domingos & Feriados</span>
+                    <strong className="text-emerald-400">2.0x</strong> (+100% adicional)
+                  </div>
+                  <div className={`p-2 rounded-lg border ${isDark ? 'bg-[#16243D] border-[#2A4063]' : 'bg-white border-slate-200'}`}>
+                    <span className="text-gray-400 block text-[10px]">Falta Injustificada</span>
+                    <strong className="text-red-400">-8.0h</strong> (Dedução automática)
+                  </div>
+                </div>
+              </div>
+
+              {/* Seção 3: Canais de Atendimento */}
+              <div className={`p-3 rounded-xl border flex items-start gap-2.5 text-[11px] ${
+                isDark ? 'bg-blue-500/10 border-blue-500/20 text-blue-300' : 'bg-blue-50 border-blue-200 text-blue-800'
+              }`}>
+                <Info className="w-4 h-4 shrink-0 mt-0.5" />
+                <div>
+                  <strong>Dúvidas sobre lançamentos ou cadastro?</strong>
+                  <p className="mt-0.5">Procure a Seção de Recursos Humanos ou a Fiscalização do seu canteiro de obras para solicitar revisões ou esclarecimentos.</p>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Rodapé do Modal */}
+            <div className={`p-3 sm:p-4 border-t flex justify-end ${
+              isDark ? 'bg-[#11203A] border-[#243756]' : 'bg-slate-50 border-slate-200'
+            }`}>
+              <button
+                type="button"
+                onClick={() => setIsPrivacyModalOpen(false)}
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 active:scale-[0.98] transition-all shadow-md shadow-blue-600/20 cursor-pointer"
+              >
+                Entendido, Fechar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
       {/* Footer */}
       <footer className={`py-4 px-6 border-t text-center text-xs mt-auto ${
         isDark ? 'bg-[#0F1B33] border-[#233654] text-[#94A3B8]' : 'bg-white border-slate-200 text-slate-500'
@@ -1150,16 +1291,14 @@ export const CollaboratorLandingView: React.FC<CollaboratorLandingViewProps> = (
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <span>© COMARA • Sistema de Banco de Horas SPTF • LGPD Segura</span>
           <div className="flex items-center gap-4">
-            {onOpenManual && (
-              <button
-                type="button"
-                onClick={onOpenManual}
-                className="hover:underline flex items-center gap-1.5 text-blue-500 hover:text-blue-400 font-medium transition-colors cursor-pointer"
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Manual do Sistema & SPTF</span>
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={onOpenAdminLogin}
+              className="sm:hidden hover:underline flex items-center gap-1 text-slate-400 hover:text-blue-400 font-medium transition-colors cursor-pointer text-[11px]"
+            >
+              <Key className="w-3 h-3 text-blue-500" />
+              <span>Acesso Gestão</span>
+            </button>
             <span className="font-mono text-[11px]">Sedes: KO (Coari) • BE (Belém) • MN (Manaus)</span>
           </div>
         </div>

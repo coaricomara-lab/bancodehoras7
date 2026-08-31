@@ -56,6 +56,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAuthenticated();
     }
+    match /insalubridade_records/{doc} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
     match /logs_acesso/{doc} {
       allow read: if true;
       allow write: if true;

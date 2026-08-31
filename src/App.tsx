@@ -80,7 +80,7 @@ export default function App() {
   // Firestore Data State
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [records, setRecords] = useState<TimeRecord[]>([]);
-  const [insalubrityRecords, setInsalubrityRecords] = useState<InsalubrityRecord[]>([]);
+  const [insalubrityRecords, setInsalubrityRecords] = useState<InsalubrityRecord[]>(() => storageService.getInsalubrityRecords());
   const [dispensasSptf, setDispensasSptf] = useState<DispensaSptfRecord[]>([]);
   const [constructionSites, setConstructionSites] = useState<ConstructionSite[]>([]);
   const [paystubs, setPaystubs] = useState<PaystubRecord[]>([]);
@@ -1218,39 +1218,93 @@ export default function App() {
 
   // Handlers para Módulo de Insalubridade
   const handleSaveInsalubrityRecord = async (record: InsalubrityRecord) => {
+    setInsalubrityRecords((prev) => {
+      const recKey = record.id || `${record.matricula.trim().toUpperCase()}_${record.dataEvento}`;
+      const idx = prev.findIndex(r => (r.id && r.id === record.id) || `${r.matricula.trim().toUpperCase()}_${r.dataEvento}` === recKey);
+      let updated: InsalubrityRecord[];
+      if (idx >= 0) {
+        updated = [...prev];
+        updated[idx] = record;
+      } else {
+        updated = [record, ...prev];
+      }
+      storageService.saveInsalubrityRecords(updated);
+      return updated;
+    });
+
     try {
       await firestoreService.saveInsalubrityRecord(record);
-      storageService.saveInsalubrityRecord(record);
       showToast('Registro de insalubridade gravado com sucesso no Cloud Firestore!');
     } catch (err: any) {
-      console.error('Erro ao salvar registro de insalubridade:', err);
-      storageService.saveInsalubrityRecord(record);
+      console.error('Erro ao salvar registro de insalubridade no Firestore:', err);
       showToast('Registro de insalubridade gravado localmente.', 'info');
     }
   };
 
   const handleSaveInsalubrityBatch = async (recordsToSave: InsalubrityRecord[]) => {
+    setInsalubrityRecords((prev) => {
+      const map = new Map<string, InsalubrityRecord>();
+      prev.forEach((r) => {
+        const key = r.id || `${r.matricula.trim().toUpperCase()}_${r.dataEvento}`;
+        map.set(key, r);
+      });
+      recordsToSave.forEach((r) => {
+        const key = r.id || `${r.matricula.trim().toUpperCase()}_${r.dataEvento}`;
+        map.set(key, r);
+      });
+      const merged = Array.from(map.values());
+      storageService.saveInsalubrityRecords(merged);
+      return merged;
+    });
+
     try {
       await firestoreService.saveInsalubrityBatch(recordsToSave);
       showToast(`${recordsToSave.length} lançamentos de insalubridade salvos com sucesso!`, 'success');
     } catch (err: any) {
-      console.error('Erro ao salvar lote de insalubridade:', err);
-      for (const r of recordsToSave) {
-        storageService.saveInsalubrityRecord(r);
-      }
+      console.error('Erro ao salvar lote de insalubridade no Firestore:', err);
       showToast(`${recordsToSave.length} lançamentos salvos no cache local.`, 'info');
     }
   };
 
   const handleDeleteInsalubrityRecord = async (id: string) => {
+    setInsalubrityRecords((prev) => {
+      const updated = prev.filter(r => r.id !== id);
+      storageService.saveInsalubrityRecords(updated);
+      return updated;
+    });
+
     try {
       await firestoreService.deleteInsalubrityRecord(id);
-      storageService.deleteInsalubrityRecord(id);
       showToast('Registro de insalubridade removido.');
     } catch (err: any) {
       console.error('Erro ao deletar registro de insalubridade:', err);
-      storageService.deleteInsalubrityRecord(id);
       showToast('Registro removido do cache local.', 'info');
+    }
+  };
+
+  const handleFetchInsalubrityPeriod = async (startDate: string, endDate: string, forceRefresh = false): Promise<InsalubrityRecord[]> => {
+    try {
+      const records = await firestoreService.fetchInsalubrityRecordsByPeriod({
+        startDate,
+        endDate,
+        canteiroId: activeCanteiro,
+        forceRefresh,
+      });
+
+      if (records && records.length > 0) {
+        setInsalubrityRecords((prev) => {
+          const map = new Map<string, InsalubrityRecord>();
+          prev.forEach(r => map.set(r.id || `${r.matricula.trim().toUpperCase()}_${r.dataEvento}`, r));
+          records.forEach(r => map.set(r.id || `${r.matricula.trim().toUpperCase()}_${r.dataEvento}`, r));
+          const merged = Array.from(map.values());
+          storageService.saveInsalubrityRecords(merged);
+          return merged;
+        });
+      }
+      return records;
+    } catch (err) {
+      console.warn('Erro ao carregar período sob demanda de insalubridade:', err);
+      return [];
     }
   };
 
@@ -1515,7 +1569,7 @@ export default function App() {
             </button>
           </header>
           <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
-            <GoogleArchitectureSpec isDark={isDark} />
+            <GoogleArchitectureSpec theme={theme} />
           </main>
         </div>
       );
@@ -1570,37 +1624,6 @@ export default function App() {
   // RENDER: PORTAL DO COLABORADOR (LANDING PAGE PADRÃO / LGPD)
   // -------------------------------------------------------------
   if (!currentUser) {
-    if (isViewingManualModal) {
-      return (
-        <div className={`notranslate min-h-screen flex flex-col ${isDark ? 'bg-[#0F1B33] text-white' : 'bg-slate-50 text-slate-900'}`}>
-          <header className={`py-3 px-4 border-b flex items-center justify-between z-10 sticky top-0 backdrop-blur-md ${isDark ? 'bg-[#16243D]/90 border-[#243756]' : 'bg-white/90 border-slate-200'}`}>
-            <button
-              type="button"
-              onClick={() => setIsViewingManualModal(false)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow transition-all cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Voltar ao Portal do Colaborador</span>
-            </button>
-            <div className="flex items-center gap-2 text-xs font-mono text-gray-400">
-              <span>COMARA SPTF • Manual e Governança</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => { setIsViewingManualModal(false); setIsAdminLoginModalOpen(true); }}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isDark ? 'border-blue-500/40 text-blue-400 hover:bg-blue-500/10' : 'border-blue-200 text-blue-600 hover:bg-blue-50'}`}
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span>Acesso Administrativo</span>
-            </button>
-          </header>
-          <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
-            <GoogleArchitectureSpec isDark={isDark} />
-          </main>
-        </div>
-      );
-    }
-
     return (
       <div translate="no" className="notranslate min-h-screen flex flex-col">
         {/* Banner de Aviso de Permissão (se houver) */}
@@ -1646,7 +1669,6 @@ export default function App() {
             insalubrityRecords={insalubrityRecords}
             paystubs={paystubs}
             onOpenAdminLogin={() => setIsAdminLoginModalOpen(true)}
-            onOpenManual={() => setIsViewingManualModal(true)}
             theme={theme}
             onToggleTheme={handleToggleTheme}
             onViewAttachment={handleViewAttachment}
@@ -1918,6 +1940,7 @@ export default function App() {
                 onUpdateEmployeeGrauFixa={handleUpdateEmployeeGrauFixa}
                 onUpdateEmployees={handleUpdateEmployees}
                 onNavigateToReports={() => setActiveTab('relatorios')}
+                onFetchPeriod={handleFetchInsalubrityPeriod}
                 systemConfig={systemConfig}
                 onUpdateSystemConfig={handleSaveSystemConfig}
                 constructionSites={constructionSites}
@@ -1938,6 +1961,7 @@ export default function App() {
               currentUserEmail={currentUserEmail}
               userRole={userRole}
               onSaveInsalubrityBatch={handleSaveInsalubrityBatch}
+              onFetchInsalubrityPeriod={handleFetchInsalubrityPeriod}
               onNavigateToInsalubrity={() => setActiveTab('insalubridade')}
               onOpenSptfDispensa={() => handleOpenSptfDispensa()}
               theme={theme}

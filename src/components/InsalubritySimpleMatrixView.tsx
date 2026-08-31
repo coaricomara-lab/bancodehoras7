@@ -26,11 +26,14 @@ import {
   MoreVertical,
   Plus,
   Users,
-  Clock
+  Clock,
+  Filter,
+  CalendarCheck
 } from 'lucide-react';
 import { IconButton } from './IconButton';
 import { InfoTooltip } from './InfoTooltip';
 import { ImportInsalubrityMatrixModal } from './ImportInsalubrityMatrixModal';
+import { InsalubritySimplePrintModal } from './InsalubritySimplePrintModal';
 
 interface InsalubritySimpleMatrixViewProps {
   employees: Employee[];
@@ -39,6 +42,7 @@ interface InsalubritySimpleMatrixViewProps {
   onSaveBatchRecords?: (records: InsalubrityRecord[]) => Promise<void>;
   onDeleteRecord: (id: string) => Promise<void>;
   onUpdateEmployees?: (employees: Employee[]) => Promise<void> | void;
+  onFetchPeriod?: (startDate: string, endDate: string, forceRefresh?: boolean) => Promise<InsalubrityRecord[]>;
   constructionSites?: ConstructionSite[];
   currentUserEmail?: string;
   userRole?: AdminRole;
@@ -103,7 +107,10 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedBranch, setSelectedBranch] = useState<string>('TODAS');
   const [selectedCargo, setSelectedCargo] = useState<string>('TODOS');
-  const [onlyWithRecords, setOnlyWithRecords] = useState(false);
+  // 1- Exibe apenas aqueles que tem insalubridade cadastrada por padrão
+  const [onlyWithRecords, setOnlyWithRecords] = useState(true);
+  // 2- Filtro por data/dia selecionado ao clicar no cabeçalho
+  const [selectedDayFilter, setSelectedDayFilter] = useState<string | null>(null);
 
   // 3. Atividade Ativa para Lançamento Rápido
   const [activeActivity, setActiveActivity] = useState<string>('CONCRETO');
@@ -266,23 +273,39 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
   // Map de registros de insalubridade indexados por "matricula_YYYY-MM-DD"
   const recordsMap = useMemo(() => {
     const map = new Map<string, InsalubrityRecord>();
-    if (!employees || employees.length === 0) return map;
-    const registeredMatriculas = new Set(employees.map(e => e.matricula.trim().toUpperCase()));
-    const monthPrefix = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
+    if (!insalubrityRecords || insalubrityRecords.length === 0) return map;
     
     insalubrityRecords.forEach(rec => {
+      if (!rec.dataEvento) return;
       const cleanMat = (rec.matricula || '').trim().toUpperCase();
-      if (registeredMatriculas.has(cleanMat) && rec.dataEvento && rec.dataEvento.startsWith(monthPrefix)) {
-        const key = `${cleanMat}_${rec.dataEvento}`;
-        map.set(key, rec);
+      const rawDate = rec.dataEvento.trim();
+      
+      // Normaliza formatos diversos de data para YYYY-MM-DD
+      let cleanDate = rawDate;
+      const dmyMatch = rawDate.match(/^(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})$/);
+      if (dmyMatch) {
+        let year = parseInt(dmyMatch[3], 10);
+        if (year < 100) year += 2000;
+        const month = parseInt(dmyMatch[2], 10);
+        const day = parseInt(dmyMatch[1], 10);
+        cleanDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      }
+      
+      const key = `${cleanMat}_${cleanDate}`;
+      map.set(key, rec);
+
+      if (cleanDate !== rawDate) {
+        map.set(`${cleanMat}_${rawDate}`, rec);
       }
     });
     return map;
-  }, [employees, insalubrityRecords, selectedYear, selectedMonth]);
+  }, [insalubrityRecords]);
 
   // Lista filtrada de colaboradores
   const filteredEmployees = useMemo(() => {
     return employees.filter(emp => {
+      const cleanMat = emp.matricula.trim().toUpperCase();
+
       // 1. Busca texto
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
@@ -304,18 +327,24 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
         if (empCargo !== selectedCargo) return false;
       }
 
-      // 4. Apenas com registros no mês
-      if (onlyWithRecords) {
-        const monthPrefix = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
-        const hasRec = insalubrityRecords.some(
-          r => r.matricula.trim().toUpperCase() === emp.matricula.trim().toUpperCase() && r.dataEvento.startsWith(monthPrefix)
-        );
-        if (!hasRec) return false;
+      // 4. Filtro por Data Específica selecionada no cabeçalho
+      if (selectedDayFilter) {
+        const dayKey = `${cleanMat}_${selectedDayFilter}`;
+        if (!recordsMap.has(dayKey)) return false;
+      }
+
+      // 5. Apenas com registros de insalubridade no mês/período
+      if (onlyWithRecords && !selectedDayFilter) {
+        const hasRecInMonth = allMonthDays.some(d => {
+          const dayKey = `${cleanMat}_${d.formattedDate}`;
+          return recordsMap.has(dayKey);
+        });
+        if (!hasRecInMonth) return false;
       }
 
       return true;
     });
-  }, [employees, searchQuery, selectedBranch, selectedCargo, onlyWithRecords, selectedYear, selectedMonth, insalubrityRecords]);
+  }, [employees, searchQuery, selectedBranch, selectedCargo, onlyWithRecords, selectedDayFilter, recordsMap, allMonthDays]);
 
   // Contagem de colaboradores ativos no filtro
   const activeCount = useMemo(() => {
@@ -949,9 +978,29 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
           </div>
 
           {/* Busca + Filtros da Matriz */}
-          <div className="flex items-center gap-2.5 ml-auto">
+          <div className="flex items-center gap-2.5 ml-auto flex-wrap">
+            {/* Botão Rápido: Apenas Com Insalubridade */}
+            <button
+              type="button"
+              onClick={() => {
+                setOnlyWithRecords(!onlyWithRecords);
+                if (selectedDayFilter) setSelectedDayFilter(null);
+              }}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
+                onlyWithRecords
+                  ? 'bg-amber-500/15 text-amber-400 border-amber-500/40 shadow-xs'
+                  : isDark
+                    ? 'border-[#243756] hover:bg-[#243756] text-[#94A3B8]'
+                    : 'border-slate-200 hover:bg-slate-100 text-slate-600'
+              }`}
+              title="Alternar: Exibir apenas colaboradores que possuem insalubridade cadastrada"
+            >
+              <Users className="w-3.5 h-3.5 text-amber-500" />
+              <span>{onlyWithRecords ? 'Com Insalubridade' : 'Todos Colaboradores'}</span>
+            </button>
+
             {/* Busca Colaborador */}
-            <div className="relative flex-1 md:w-48">
+            <div className="relative flex-1 md:w-44">
               <Search className={`w-3.5 h-3.5 absolute left-3 top-2.5 ${isDark ? 'text-gray-500' : 'text-slate-400'}`} />
               <input
                 type="text"
@@ -1040,7 +1089,7 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                         onChange={(e) => setOnlyWithRecords(e.target.checked)}
                         className="rounded text-amber-500 focus:ring-0"
                       />
-                      <span>Com lançamentos</span>
+                      <span>Apenas com insalubridade cadastrada</span>
                     </label>
 
                     {/* Divisor */}
@@ -1146,10 +1195,29 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
             </div>
 
             <span className={`italic hidden sm:inline ${isDark ? 'text-[#94A3B8]' : 'text-slate-400'}`}>
-              * Clique na célula para apontar <strong>{activeActivity}</strong> ou editar
+              * Clique no número do dia no cabeçalho para filtrar por aquela data
             </span>
           </div>
         </div>
+
+        {/* Banner de Filtro Ativo por Dia */}
+        {selectedDayFilter && (
+          <div className="px-4 py-2.5 bg-amber-500/15 border-b border-amber-500/30 flex items-center justify-between gap-3 text-xs flex-wrap">
+            <div className="flex items-center gap-2 text-amber-400 font-bold">
+              <CalendarCheck className="w-4 h-4 text-amber-500" />
+              <span>
+                Filtrando colaboradores com lançamento no <strong>Dia {selectedDayFilter.split('-')[2]}/{selectedDayFilter.split('-')[1]}</strong> ({filteredEmployees.length} encontrados)
+              </span>
+            </div>
+            <button
+              onClick={() => setSelectedDayFilter(null)}
+              className="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs flex items-center gap-1 transition-all active:scale-[0.98] cursor-pointer"
+            >
+              <X className="w-3.5 h-3.5" />
+              <span>Remover filtro de dia</span>
+            </button>
+          </div>
+        )}
 
         <div className="overflow-x-auto max-h-[620px] relative">
           <table className="w-full text-[11px] border-collapse text-left">
@@ -1165,22 +1233,41 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
                   COLABORADOR / MATRÍCULA
                 </th>
 
+                {/* Colunas dos Dias Selecionados (Centro - que deslizam livremente e são clicáveis para filtrar) */}
+                {visibleDays.map(d => {
+                  const isDaySelected = selectedDayFilter === d.formattedDate;
 
-                {/* Colunas dos Dias Selecionados (Centro - que deslizam livremente) */}
-                {visibleDays.map(d => (
-                  <th
-                    key={d.dayNumber}
-                    className={`py-2 px-1 font-mono text-center font-bold min-w-[46px] border-r border-b border-black/10 dark:border-white/10 ${
-                      d.isWeekend ? (isDark ? 'bg-[#16243D] text-red-400' : 'bg-slate-200/70 text-red-600') : ''
-                    }`}
-                    title={`${d.dayNumber} de ${MONTH_NAMES[selectedMonth]} (${d.weekdayInitial})`}
-                  >
-                    <div className="text-[12px] font-black leading-tight">{d.dayNumber}</div>
-                    <div className={`text-[9px] font-semibold ${d.isWeekend ? 'text-red-400 font-bold' : isDark ? 'text-gray-400' : 'text-slate-500'}`}>
-                      {d.weekdayInitial}
-                    </div>
-                  </th>
-                ))}
+                  return (
+                    <th
+                      key={d.dayNumber}
+                      onClick={() => {
+                        setSelectedDayFilter(prev => prev === d.formattedDate ? null : d.formattedDate);
+                      }}
+                      className={`py-2 px-1 font-mono text-center font-bold min-w-[46px] border-r border-b border-black/10 dark:border-white/10 cursor-pointer select-none transition-all ${
+                        isDaySelected
+                          ? 'bg-amber-500 text-black shadow-inner ring-2 ring-amber-400 z-30 scale-[1.02]'
+                          : d.isWeekend 
+                            ? (isDark ? 'bg-[#16243D] text-red-400 hover:bg-amber-500/20' : 'bg-slate-200/70 text-red-600 hover:bg-amber-100/60')
+                            : (isDark ? 'hover:bg-amber-500/20 text-gray-200' : 'hover:bg-amber-100/60 text-slate-700')
+                      }`}
+                      title={`Clique para filtrar lançamentos do dia ${d.dayNumber} (${isDaySelected ? 'Filtro Ativo - Clique para desativar' : 'Clique para filtrar'})`}
+                    >
+                      <div className="flex flex-col items-center justify-center">
+                        <div className={`text-[12px] font-black leading-tight ${isDaySelected ? 'text-black underline decoration-2' : ''}`}>
+                          {d.dayNumber}
+                        </div>
+                        <div className={`text-[9px] font-semibold ${
+                          isDaySelected ? 'text-black font-black' : d.isWeekend ? 'text-red-400 font-bold' : isDark ? 'text-gray-400' : 'text-slate-500'
+                        }`}>
+                          {d.weekdayInitial}
+                        </div>
+                        {isDaySelected && (
+                          <span className="inline-block w-1.5 h-1.5 bg-black rounded-full mt-0.5" />
+                        )}
+                      </div>
+                    </th>
+                  );
+                })}
 
                 {/* Colunas Finais: Total de Dias Trabalhados e Ações Rápidas (STICKY FIXO À DIREITA) */}
                 <th className={`py-2.5 px-3 font-bold text-center w-[130px] min-w-[130px] border-l-2 border-r border-b border-amber-500/40 sticky right-[110px] z-40 ${
@@ -1632,142 +1719,23 @@ export const InsalubritySimpleMatrixView: React.FC<InsalubritySimpleMatrixViewPr
       )}
 
       {/* ============================================================= */}
-      {/* 6. MODAL DE IMPRESSÃO QUINZENAL OFICIAL COMARA                */}
+      {/* 6. MODAL DE IMPRESSÃO QUINZENAL OFICIAL COMARA (PAISAGEM)     */}
       {/* ============================================================= */}
-      {isPrintModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xs">
-          <div className="w-full max-w-5xl max-h-[90vh] flex flex-col rounded-2xl bg-white text-black p-6 shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between pb-3 border-b mb-4 print:hidden">
-              <div className="flex items-center gap-2">
-                <Printer className="w-5 h-5 text-blue-600" />
-                <h3 className="font-bold text-base text-gray-900">Folha de Impressão Quinzenal COMARA (Modo Simples)</h3>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => window.print()}
-                  className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow"
-                >
-                  <Printer className="w-3.5 h-3.5" />
-                  <span>Imprimir Agora (Ctrl+P)</span>
-                </button>
-                <button
-                  onClick={() => setIsPrintModalOpen(false)}
-                  className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-600 cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Documento Formatado para Impressão */}
-            <div className="overflow-y-auto flex-1 font-sans text-xs p-2 space-y-4">
-              {/* Cabeçalho Oficial da COMARA com Logo e Dados Institucionais */}
-              <div className="border-b pb-3 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <ComaraLogo size="print" theme="light" />
-                  <div className="text-left space-y-0.5">
-                    <div className="text-[9px] font-bold uppercase tracking-widest text-gray-700">
-                      COMANDO DA AERONÁUTICA • DEPARTAMENTO DE CONTROLE DO ESPAÇO AÉREO
-                    </div>
-                    <div className="text-xs sm:text-sm font-black tracking-tight text-gray-900 uppercase">
-                      COMISSÃO DE AEROPORTOS DA REGIÃO AMAZÔNICA — COMARA
-                    </div>
-                    <div className="text-xs font-bold text-blue-900 uppercase">
-                      PLANILHA DE EFETIVO EM CAMPO & ATIVIDADES — {currentPeriodLabel.toUpperCase()}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right text-[10px] font-mono text-gray-600 space-y-0.5 shrink-0">
-                  <div>MÊS/ANO: <strong>{MONTH_NAMES[selectedMonth].toUpperCase()} / {selectedYear}</strong></div>
-                  <div>CANTEIRO/SEDE: <strong>{selectedBranch}</strong></div>
-                  <div>EMISSÃO: <strong>{new Date().toLocaleDateString('pt-BR')}</strong></div>
-                </div>
-              </div>
-
-              {/* Tabela de Efetivo Quinzenal */}
-              <table className="w-full text-[10px] border-collapse border border-gray-400">
-                <thead>
-                  <tr className="bg-gray-100 text-gray-900">
-                    <th className="border border-gray-400 p-1 w-8 text-center">Nº</th>
-                    <th className="border border-gray-400 p-1 text-left min-w-[150px]">NOME DO COLABORADOR</th>
-                    <th className="border border-gray-400 p-1 text-left">MAT.</th>
-                    <th className="border border-gray-400 p-1 text-left">FUNÇÃO</th>
-                    {currentQuinzenaDays.map(d => (
-                      <th key={d.dayNumber} className={`border border-gray-400 p-0.5 text-center w-6 ${d.isWeekend ? 'bg-gray-200' : ''}`}>
-                        <div>{d.dayNumber}</div>
-                        <div className="text-[8px] font-normal">{d.weekdayInitial}</div>
-                      </th>
-                    ))}
-                    <th className="border border-gray-400 p-1 text-center min-w-[60px]">TOTAL DE DIAS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredEmployees.map((emp, idx) => {
-                    let totalDays = 0;
-
-                    return (
-                      <tr key={emp.matricula} className="hover:bg-gray-50">
-                        <td className="border border-gray-400 p-1 text-center font-mono">{idx + 1}</td>
-                        <td className="border border-gray-400 p-1 font-bold truncate max-w-[170px]">{emp.nome}</td>
-                        <td className="border border-gray-400 p-1 font-mono text-[9px]">{emp.matricula}</td>
-                        <td className="border border-gray-400 p-1 truncate max-w-[110px]">{emp.funcao || emp.cargo}</td>
-                        {currentQuinzenaDays.map(d => {
-                          const key = `${emp.matricula.trim().toUpperCase()}_${d.formattedDate}`;
-                          const rec = recordsMap.get(key);
-                          if (rec) {
-                            totalDays++;
-                          }
-                          const act = rec?.atividadeDesempenhada || '';
-                          const code = act.length > 4 ? act.substring(0, 4) : act;
-                          return (
-                            <td key={d.dayNumber} className={`border border-gray-400 p-0.5 text-center font-bold text-[8px] ${d.isWeekend ? 'bg-gray-100' : ''}`}>
-                              {code}
-                            </td>
-                          );
-                        })}
-                        <td className="border border-gray-400 p-1 text-center font-bold font-mono">{totalDays}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-
-              {/* Blocos de Assinatura Oficiais COMARA */}
-              {(() => {
-                const branchCode = selectedBranch === 'TODAS' ? 'KO' : selectedBranch;
-                const sigs = getSignaturesForCanteiro(branchCode, constructionSites);
-                return (
-                  <div className="pt-8 grid grid-cols-3 gap-8 text-center text-[10px] print-avoid-break">
-                    <div className="space-y-1">
-                      <div className="border-t border-gray-800 pt-1 font-bold">
-                        {sigs.assinatura1.titulo}
-                      </div>
-                      <div className="font-semibold text-gray-900 text-[10px]">{sigs.assinatura1.nome}</div>
-                      <div className="text-gray-500 text-[9px]">{sigs.assinatura1.subtitulo}</div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="border-t border-gray-800 pt-1 font-bold">
-                        {sigs.assinatura2.titulo}
-                      </div>
-                      <div className="font-semibold text-gray-900 text-[10px]">{sigs.assinatura2.nome}</div>
-                      <div className="text-gray-500 text-[9px]">{sigs.assinatura2.subtitulo}</div>
-                    </div>
-
-                    <div className="space-y-1">
-                      <div className="border-t border-gray-800 pt-1 font-bold">
-                        {sigs.assinatura3.titulo}
-                      </div>
-                      <div className="font-semibold text-gray-900 text-[10px]">{sigs.assinatura3.nome}</div>
-                      <div className="text-gray-500 text-[9px]">{sigs.assinatura3.subtitulo}</div>
-                    </div>
-                  </div>
-                );
-              })()}
-            </div>
-          </div>
-        </div>
-      )}
+      <InsalubritySimplePrintModal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        employees={filteredEmployees}
+        insalubrityRecords={insalubrityRecords}
+        recordsMap={recordsMap}
+        currentQuinzenaDays={currentQuinzenaDays}
+        currentPeriodLabel={currentPeriodLabel}
+        selectedMonth={selectedMonth}
+        selectedYear={selectedYear}
+        selectedBranch={selectedBranch}
+        monthNames={MONTH_NAMES}
+        constructionSites={constructionSites}
+        theme={theme}
+      />
       {/* Modal de Importação de Matriz de Campo CSV */}
       <ImportInsalubrityMatrixModal
         isOpen={isImportModalOpen}

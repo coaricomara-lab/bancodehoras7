@@ -99,10 +99,15 @@ function formatDateBR(dateStr?: string): string {
   return dateStr;
 }
 
-export const PortariaAttendanceSheetModal: React.FC<PortariaAttendanceSheetModalProps> = ({
-  isOpen,
+export const PortariaAttendanceSheetModal: React.FC<PortariaAttendanceSheetModalProps> = (props) => {
+  if (!props.isOpen) return null;
+  return <PortariaAttendanceSheetModalContent {...props} />;
+};
+
+const PortariaAttendanceSheetModalContent: React.FC<PortariaAttendanceSheetModalProps> = ({
+  isOpen: _isOpen,
   onClose,
-  employees,
+  employees = [],
   records = [],
   dispensas = [],
   constructionSites = [],
@@ -110,14 +115,8 @@ export const PortariaAttendanceSheetModal: React.FC<PortariaAttendanceSheetModal
   theme = 'dark',
 }) => {
   const isDark = theme === 'dark';
-  
-  let instSettings: any = null;
-  try {
-    const inst = useInstitution();
-    instSettings = inst?.settings;
-  } catch {
-    // Fallback gracioso
-  }
+  const { settings: institutionSettings } = useInstitution();
+  const instSettings = institutionSettings;
 
   // Data atual no formato ISO YYYY-MM-DD
   const todayStr = useMemo(() => {
@@ -230,10 +229,10 @@ export const PortariaAttendanceSheetModal: React.FC<PortariaAttendanceSheetModal
 
   // Sincroniza se defaultSede mudar ao abrir
   React.useEffect(() => {
-    if (isOpen && defaultSede && defaultSede !== 'TODAS') {
+    if (defaultSede && defaultSede !== 'TODAS') {
       setSelectedSede(defaultSede);
     }
-  }, [isOpen, defaultSede]);
+  }, [defaultSede]);
 
   // Lista unificada de dispensas (prop ou localStorage)
   const allDispensas = useMemo(() => {
@@ -611,8 +610,6 @@ export const PortariaAttendanceSheetModal: React.FC<PortariaAttendanceSheetModal
   }, [processedEmployeeList, itemsPerPage]);
 
   const totalPages = pages.length;
-
-  if (!isOpen) return null;
 
   const handlePrint = () => {
     window.print();

@@ -191,7 +191,9 @@ function fromSerializable(value: unknown): unknown {
   }
 
   return Object.fromEntries(
-    Object.entries(record).map(([key, nestedValue]) => [key, fromSerializable(nestedValue)]),
+    Object.entries(record)
+      .map(([key, nestedValue]) => [key, fromSerializable(nestedValue)])
+      .filter(([_, v]) => v !== undefined),
   );
 }
 

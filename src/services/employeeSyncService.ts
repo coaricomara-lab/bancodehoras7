@@ -12,7 +12,7 @@ import { collection, query, where, getDocs, doc, setDoc, updateDoc } from 'fireb
 import { db } from './firebase';
 import { Employee, ConstructionSite } from '../types';
 import { generateCPFHash, maskCPF, cleanCPF, isValidCPF } from '../utils/lgpdUtils';
-import { firestoreService, COLLECTIONS } from './firestoreService';
+import { firestoreService, prepareEmployeeForFirestore, COLLECTIONS } from './firestoreService';
 
 /**
  * Result of an employee sync operation
@@ -169,7 +169,7 @@ export async function syncEmployeeUpsert(
 
     if (existingEmployee) {
       // UPDATE scenario: preserve original ID and update fields
-      const updatePayload: Partial<Employee> = {
+      const rawUpdatePayload: Partial<Employee> = {
         ...existingEmployee,
         ...employeeData,
         nome, // Ensure latest name
@@ -179,6 +179,7 @@ export async function syncEmployeeUpsert(
         canteiroId: canteiroId || existingEmployee.canteiroId,
         atualizadoEm: new Date().toISOString()
       };
+      const updatePayload = prepareEmployeeForFirestore(rawUpdatePayload);
 
       await updateDoc(
         doc(db, COLLECTIONS.COLABORADORES, existingEmployee.id),
@@ -197,7 +198,7 @@ export async function syncEmployeeUpsert(
       // CREATE scenario: generate new ID and save with security fields
       const newId = matricula || `emp-${Date.now()}`;
       
-      const createPayload: Employee = {
+      const rawCreatePayload: Employee = {
         id: newId,
         matricula,
         nome,
@@ -212,6 +213,7 @@ export async function syncEmployeeUpsert(
         atualizadoEm: new Date().toISOString(),
         ...employeeData
       };
+      const createPayload = prepareEmployeeForFirestore(rawCreatePayload);
 
       await setDoc(
         doc(db, COLLECTIONS.COLABORADORES, newId),

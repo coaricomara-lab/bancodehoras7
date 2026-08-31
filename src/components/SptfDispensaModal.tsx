@@ -149,19 +149,11 @@ export const DispensaVia: React.FC<DispensaViaProps> = ({
   constructionSites,
   logoUrl 
 }) => {
-  let instSettings: any = null;
-  let instCargos: any[] = [];
-  let instDocumentosModelo: any = null;
-
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const inst = useInstitution();
-    instSettings = inst?.settings;
-    instCargos = inst?.cargos || [];
-    instDocumentosModelo = inst?.documentosModelo;
-  } catch {
-    // Graceful fallback
-  }
+  const { 
+    settings: instSettings, 
+    cargos: instCargos = [], 
+    documentosModelo: instDocumentosModelo 
+  } = useInstitution();
 
   const dataFmt = formatDateBR(dispensa.data);
   const periodoStr = `${dataFmt} (${dispensa.horarioInicio}) A ${dataFmt} (${dispensa.horarioFim})`;
@@ -618,10 +610,15 @@ export const DispensaPrintTemplate: React.FC<DispensaPrintTemplateProps> = ({
 // ============================================================================
 // COMPONENTE PRINCIPAL DO MODAL DE DISPENSA SPTF
 // ============================================================================
-export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
-  isOpen,
+export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = (props) => {
+  if (!props.isOpen) return null;
+  return <SptfDispensaModalContent {...props} />;
+};
+
+const SptfDispensaModalContent: React.FC<SptfDispensaModalProps> = ({
+  isOpen: _isOpen,
   onClose,
-  employees,
+  employees = [],
   records,
   timeRecords,
   dispensas = [],
@@ -667,7 +664,6 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
 
   // Inicialização ao abrir
   useEffect(() => {
-    if (!isOpen) return;
     const safeDate = typeof preselectedDate === 'string' ? preselectedDate : todayStr;
     const safeMat = typeof preselectedMatricula === 'string' ? preselectedMatricula : '';
     setDataDispensa(safeDate);
@@ -681,11 +677,10 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
       }
     }
     setFeedbackMsg(null);
-  }, [isOpen, preselectedMatricula, preselectedDate]);
+  }, [preselectedMatricula, preselectedDate]);
 
   // Listener para fechamento por tecla Escape (Acessibilidade U-002)
   useEffect(() => {
-    if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
@@ -693,7 +688,7 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [onClose]);
 
   // Colaborador selecionado
   const selectedEmployee = useMemo(() => {
@@ -997,8 +992,6 @@ export const SptfDispensaModal: React.FC<SptfDispensaModalProps> = ({
       setFeedbackMsg({ type: 'error', text: 'Não foi possível fazer o download do arquivo de impressão.' });
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <div 

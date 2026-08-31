@@ -119,16 +119,33 @@ export const storageService = {
     }
   },
 
+  addInsalubrityBatch(newRecords: InsalubrityRecord[]): InsalubrityRecord[] {
+    const existing = this.getInsalubrityRecords();
+    const map = new Map<string, InsalubrityRecord>();
+    
+    existing.forEach(r => {
+      const key = r.id || `${r.matricula.trim().toUpperCase()}_${r.dataEvento}`;
+      map.set(key, r);
+    });
+
+    newRecords.forEach(r => {
+      const key = r.id || `${r.matricula.trim().toUpperCase()}_${r.dataEvento}`;
+      map.set(key, r);
+    });
+
+    const merged = Array.from(map.values());
+    this.saveInsalubrityRecords(merged);
+    return merged;
+  },
+
   addInsalubrityRecord(record: InsalubrityRecord) {
-    const records = this.getInsalubrityRecords();
-    records.unshift(record);
-    this.saveInsalubrityRecords(records);
-    return records;
+    return this.saveInsalubrityRecord(record);
   },
 
   saveInsalubrityRecord(record: InsalubrityRecord) {
     const records = this.getInsalubrityRecords();
-    const idx = records.findIndex(r => r.id === record.id);
+    const recKey = record.id || `${record.matricula.trim().toUpperCase()}_${record.dataEvento}`;
+    const idx = records.findIndex(r => (r.id && r.id === record.id) || `${r.matricula.trim().toUpperCase()}_${r.dataEvento}` === recKey);
     if (idx >= 0) {
       records[idx] = record;
     } else {

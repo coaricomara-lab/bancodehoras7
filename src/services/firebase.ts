@@ -14,6 +14,7 @@ import {
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { 
+  initializeFirestore,
   getFirestore, 
   doc, 
   getDocFromServer,
@@ -100,8 +101,39 @@ const firebaseConfig = {
 // Initialize Firebase with environment configuration
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore cleanly using standard SDK initialization
-export const db = cleanDatabaseId ? getFirestore(app, cleanDatabaseId) : getFirestore(app);
+// Initialize Firestore globally with ignoreUndefinedProperties: true
+// This automatically strips or converts undefined values on all writes/batches across the entire SDK.
+export const db = cleanDatabaseId 
+  ? initializeFirestore(app, { ignoreUndefinedProperties: true }, cleanDatabaseId)
+  : initializeFirestore(app, { ignoreUndefinedProperties: true });
+
+/**
+ * Universal deep sanitization helper to strip any `undefined` keys or convert them safely.
+ */
+export function sanitizeFirestorePayload<T>(input: T): T {
+  if (input === null || input === undefined) {
+    return null as unknown as T;
+  }
+  if (Array.isArray(input)) {
+    return input.map(item => sanitizeFirestorePayload(item)) as unknown as T;
+  }
+  if (typeof input === 'object') {
+    if (input instanceof Date) {
+      return input;
+    }
+    if (typeof (input as any).toMillis === 'function' || typeof (input as any).isEqual === 'function') {
+      return input;
+    }
+    const clean: Record<string, any> = {};
+    for (const [key, value] of Object.entries(input as Record<string, any>)) {
+      if (value !== undefined) {
+        clean[key] = sanitizeFirestorePayload(value);
+      }
+    }
+    return clean as T;
+  }
+  return input;
+}
 
 // Initialize Auth with session-only persistence (expires when browser/tab is closed)
 export const auth = getAuth(app);

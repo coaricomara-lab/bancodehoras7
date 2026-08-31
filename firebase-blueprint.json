@@ -191,12 +191,38 @@
         "atualizadoPor": { "type": "string", "maxLength": 150 }
       },
       "required": ["nomeInstituicao", "siglaInstituicao", "endereco", "email"]
+    },
+    "InsalubrityRecord": {
+      "title": "InsalubrityRecord",
+      "description": "Apontamento diário de serviços e exposição a condições insalubres (NR-15)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "matricula": { "type": "string", "maxLength": 64 },
+        "nomeColaborador": { "type": "string", "maxLength": 200 },
+        "sede": { "type": "string", "enum": ["KO", "BE", "MN", "TODAS"] },
+        "funcao": { "type": "string", "maxLength": 150 },
+        "dataEvento": { "type": "string", "maxLength": 20 },
+        "atividadeDesempenhada": { "type": "string", "maxLength": 200 },
+        "grauExposicao": { "type": "string", "enum": ["10%", "20%", "40%"] },
+        "quantidadeHorasDias": { "type": "number" },
+        "unidade": { "type": "string", "enum": ["HORAS", "DIAS"] },
+        "responsavelLancamento": { "type": "string", "maxLength": 150 },
+        "observacoes": { "type": "string", "maxLength": 1000 },
+        "criadoEm": { "type": "string", "maxLength": 50 },
+        "criadoPorEmail": { "type": "string", "maxLength": 150 }
+      },
+      "required": ["id", "matricula", "nomeColaborador", "dataEvento", "atividadeDesempenhada"]
     }
   },
   "firestore": {
     "/institution_settings/{docId}": {
       "schema": "InstitutionSettings",
       "description": "Documento único (current) com as configurações institucionais vigentes"
+    },
+    "/insalubridade_records/{recordId}": {
+      "schema": "InsalubrityRecord",
+      "description": "Coleção de apontamentos e exposições a insalubridade de campo"
     },
     "/colaboradores/{colaboradorId}": {
       "schema": "Colaborador",

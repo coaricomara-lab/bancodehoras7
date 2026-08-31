@@ -44,6 +44,7 @@ interface InsalubrityManagementProps {
   onUpdateEmployeeGrauFixa?: (empId: string, grau: GrauInsalubridade) => Promise<void>;
   onUpdateEmployees?: (employees: Employee[]) => Promise<void> | void;
   onNavigateToReports?: () => void;
+  onFetchPeriod?: (startDate: string, endDate: string, forceRefresh?: boolean) => Promise<InsalubrityRecord[]>;
   systemConfig?: SystemConfig;
   onUpdateSystemConfig?: (cfg: SystemConfig) => Promise<void>;
   constructionSites?: ConstructionSite[];
@@ -72,6 +73,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
   onUpdateEmployeeGrauFixa,
   onUpdateEmployees,
   onNavigateToReports,
+  onFetchPeriod,
   systemConfig,
   onUpdateSystemConfig,
   constructionSites = [],
@@ -363,6 +365,7 @@ export const InsalubrityManagement: React.FC<InsalubrityManagementProps> = ({
           onSaveBatchRecords={onSaveBatchRecords}
           onDeleteRecord={onDeleteRecord}
           onUpdateEmployees={onUpdateEmployees}
+          onFetchPeriod={onFetchPeriod}
           constructionSites={constructionSites}
           currentUserEmail={currentUserEmail}
           userRole={userRole as AdminRole}

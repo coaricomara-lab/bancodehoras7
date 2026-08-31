@@ -796,16 +796,16 @@ export const firestoreService = {
         for (const rec of chunk) {
           const docId = rec.id || `rec-${Date.now()}-${Math.floor(Math.random() * 1000000)}`;
           const ref = doc(db, COLLECTIONS.LANCAMENTOS, docId);
-          batch.set(ref, {
+          const cleanRec = sanitizeFirestoreData({
             id: docId,
             matricula: rec.matricula.trim().toUpperCase(),
-            employeeName: rec.employeeName,
-            employeeSede: rec.employeeSede,
-            employeeFuncao: rec.employeeFuncao,
+            employeeName: rec.employeeName || '',
+            employeeSede: rec.employeeSede || 'KO',
+            employeeFuncao: rec.employeeFuncao || 'Técnico de Manutenção',
             employeeAvatarUrl: rec.employeeAvatarUrl || null,
-            dataRegistro: rec.dataRegistro,
-            data_ocorrencia: rec.data_ocorrencia || rec.dataRegistro,
-            tipoOcorrencia: rec.tipoOcorrencia,
+            dataRegistro: rec.dataRegistro || '',
+            data_ocorrencia: rec.data_ocorrencia || rec.dataRegistro || '',
+            tipoOcorrencia: rec.tipoOcorrencia || 'TRABALHO',
             horasBrutas: Number(rec.horasBrutas) || 0,
             multiplicador: Number(rec.multiplicador) || 1,
             saldoCalculado: Number(rec.saldoCalculado) || 0,
@@ -819,7 +819,8 @@ export const firestoreService = {
             observacao: rec.observacao || null,
             comprovante: rec.comprovante || null,
             criadoEm: rec.criadoEm || new Date().toISOString(),
-          }, { merge: true });
+          });
+          batch.set(ref, cleanRec, { merge: true });
         }
 
         try {
@@ -850,19 +851,57 @@ export const firestoreService = {
 
   // -------------------------------------------------------------
   // MÓDULO DE INSALUBRIDADE (PONTUAL E POR ATIVIDADE)
+  // OTIMIZADO: Filtragem por período/mês vigente e cache inteligente
   // -------------------------------------------------------------
 
   subscribeInsalubrityRecords(
     onSuccess: (records: InsalubrityRecord[]) => void,
     onError?: (error: Error) => void,
-    canteiroId?: string
+    optionsOrCanteiro?: string | {
+      canteiroId?: string;
+      startDate?: string;
+      endDate?: string;
+    }
   ): Unsubscribe {
     const path = COLLECTIONS.INSALUBRIDADE;
     try {
+      let canteiroId: string | undefined;
+      let startDate: string | undefined;
+      let endDate: string | undefined;
+
+      if (typeof optionsOrCanteiro === 'string') {
+        canteiroId = optionsOrCanteiro;
+      } else if (optionsOrCanteiro) {
+        canteiroId = optionsOrCanteiro.canteiroId;
+        startDate = optionsOrCanteiro.startDate;
+        endDate = optionsOrCanteiro.endDate;
+      }
+
       const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
-      const q = normalizedCanteiro
-        ? query(collection(db, path), where('sede', '==', normalizedCanteiro), limit(200))
-        : query(collection(db, path), orderBy('dataEvento', 'desc'), limit(200));
+
+      // Se nenhum intervalo de data for especificado, calcula a janela do mês corrente para proteção de cota
+      if (!startDate || !endDate) {
+        const now = new Date();
+        startDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+        const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+        endDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+      }
+
+      let q;
+      if (normalizedCanteiro) {
+        q = query(
+          collection(db, path),
+          where('sede', '==', normalizedCanteiro),
+          where('dataEvento', '>=', startDate),
+          where('dataEvento', '<=', endDate)
+        );
+      } else {
+        q = query(
+          collection(db, path),
+          where('dataEvento', '>=', startDate),
+          where('dataEvento', '<=', endDate)
+        );
+      }
 
       return onSnapshot(
         q,
@@ -879,15 +918,15 @@ export const firestoreService = {
 
               list.push({
                 id: docSnap.id,
-                matricula: data.matricula || '',
+                matricula: (data.matricula || '').trim().toUpperCase(),
                 nomeColaborador: data.nomeColaborador || '',
                 sede: data.sede || 'KO',
                 funcao: data.funcao || 'Operacional',
                 dataEvento: data.dataEvento || '',
                 atividadeDesempenhada: data.atividadeDesempenhada || '',
                 grauExposicao: data.grauExposicao || '20%',
-                quantidadeHorasDias: typeof data.quantidadeHorasDias === 'number' ? data.quantidadeHorasDias : 8,
-                unidade: data.unidade || 'HORAS',
+                quantidadeHorasDias: typeof data.quantidadeHorasDias === 'number' ? data.quantidadeHorasDias : (Number(data.quantidadeHorasDias) || 1),
+                unidade: data.unidade || 'DIAS',
                 responsavelLancamento: data.responsavelLancamento || 'RH / Encarregado',
                 observacoes: data.observacoes || '',
                 criadoEm: data.criadoEm || new Date().toISOString(),
@@ -897,6 +936,11 @@ export const firestoreService = {
                 editadoEm: data.editadoEm,
               });
             });
+
+            // Atualiza cache em memória para a chave deste período
+            const cacheKey = `insalubridade_${normalizedCanteiro || 'ALL'}_${startDate}_${endDate}`;
+            localCache.setCache(cacheKey, list, CACHE_TTLS.MEDIUM);
+
             onSuccess(list);
           } catch (err: any) {
             console.error('Erro ao processar snapshot de insalubridade:', err);
@@ -915,22 +959,105 @@ export const firestoreService = {
     }
   },
 
+  /**
+   * Busca registros de insalubridade por período específico com estratégia Cache-First
+   * Evita chamadas repetidas ao Firestore quando o usuário navega nos mesmos meses
+   */
+  async fetchInsalubrityRecordsByPeriod(params: {
+    startDate: string;
+    endDate: string;
+    canteiroId?: string;
+    forceRefresh?: boolean;
+  }): Promise<InsalubrityRecord[]> {
+    const { startDate, endDate, canteiroId, forceRefresh = false } = params;
+    const normalizedCanteiro = (canteiroId && canteiroId !== 'TODAS' && canteiroId !== 'TODOS') ? canteiroId.toUpperCase() : null;
+    const cacheKey = `insalubridade_${normalizedCanteiro || 'ALL'}_${startDate}_${endDate}`;
+
+    // 1. Verifica cache rápido primeiro (0 leituras no Firestore)
+    if (!forceRefresh) {
+      const cached = localCache.getCache<InsalubrityRecord[]>(cacheKey);
+      if (cached && Array.isArray(cached)) {
+        return cached;
+      }
+    }
+
+    // 2. Busca sob demanda estritamente no intervalo de datas solicitado
+    const path = COLLECTIONS.INSALUBRIDADE;
+    try {
+      let q;
+      if (normalizedCanteiro) {
+        q = query(
+          collection(db, path),
+          where('sede', '==', normalizedCanteiro),
+          where('dataEvento', '>=', startDate),
+          where('dataEvento', '<=', endDate)
+        );
+      } else {
+        q = query(
+          collection(db, path),
+          where('dataEvento', '>=', startDate),
+          where('dataEvento', '<=', endDate)
+        );
+      }
+
+      const snapshot = await getDocs(q);
+      const list: InsalubrityRecord[] = [];
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const recSede = (data.sede || 'KO').toUpperCase();
+        if (normalizedCanteiro && recSede !== normalizedCanteiro) return;
+
+        list.push({
+          id: docSnap.id,
+          matricula: (data.matricula || '').trim().toUpperCase(),
+          nomeColaborador: data.nomeColaborador || '',
+          sede: data.sede || 'KO',
+          funcao: data.funcao || 'Operacional',
+          dataEvento: data.dataEvento || '',
+          atividadeDesempenhada: data.atividadeDesempenhada || '',
+          grauExposicao: data.grauExposicao || '20%',
+          quantidadeHorasDias: typeof data.quantidadeHorasDias === 'number' ? data.quantidadeHorasDias : (Number(data.quantidadeHorasDias) || 1),
+          unidade: data.unidade || 'DIAS',
+          responsavelLancamento: data.responsavelLancamento || 'RH / Encarregado',
+          observacoes: data.observacoes || '',
+          criadoEm: data.criadoEm || new Date().toISOString(),
+          criadoPorEmail: data.criadoPorEmail,
+          atualizadoEm: data.atualizadoEm,
+          editadoPor: data.editadoPor,
+          editadoEm: data.editadoEm,
+        });
+      });
+
+      // Salva no cache com TTL de 15 minutos
+      localCache.setCache(cacheKey, list, CACHE_TTLS.LONG);
+
+      return list;
+    } catch (error) {
+      logFirestoreError(error, OperationType.GET, path);
+      // Fallback para cache mesmo se expirado ou vazio
+      const fallbackCached = localCache.getCache<InsalubrityRecord[]>(cacheKey);
+      return fallbackCached || [];
+    }
+  },
+
   async saveInsalubrityRecord(record: InsalubrityRecord): Promise<void> {
-    const docId = record.id || `insalubre-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const cleanMat = record.matricula.trim().toUpperCase();
+    const docId = record.id || `insalubre-${cleanMat}-${record.dataEvento}`;
     const path = `${COLLECTIONS.INSALUBRIDADE}/${docId}`;
     try {
       await this.ensureAuthenticatedWriteSession();
       const dataToSave = sanitizeFirestoreData({
         id: docId,
-        matricula: record.matricula.trim().toUpperCase(),
+        matricula: cleanMat,
         nomeColaborador: record.nomeColaborador.trim(),
         sede: record.sede || 'KO',
         funcao: record.funcao || 'Operacional',
         dataEvento: record.dataEvento,
-        atividadeDesempenhada: record.atividadeDesempenhada.trim(),
+        atividadeDesempenhada: record.atividadeDesempenhada.trim().toUpperCase(),
         grauExposicao: record.grauExposicao || '20%',
         quantidadeHorasDias: Number(record.quantidadeHorasDias) || 1,
-        unidade: record.unidade || 'HORAS',
+        unidade: record.unidade || 'DIAS',
         responsavelLancamento: record.responsavelLancamento || 'Encarregado / RH',
         observacoes: record.observacoes?.trim() || '',
         criadoEm: record.criadoEm || new Date().toISOString(),
@@ -957,11 +1084,12 @@ export const firestoreService = {
       const batch = writeBatch(db);
 
       chunk.forEach((rec) => {
-        const docId = rec.id || `insalubre-${rec.matricula.trim().toUpperCase()}-${rec.dataEvento}-${Math.floor(Math.random() * 100000)}`;
+        const cleanMat = rec.matricula.trim().toUpperCase();
+        const docId = rec.id || `insalubre-${cleanMat}-${rec.dataEvento}`;
         const ref = doc(db, COLLECTIONS.INSALUBRIDADE, docId);
         const cleanData = sanitizeFirestoreData({
           id: docId,
-          matricula: rec.matricula.trim().toUpperCase(),
+          matricula: cleanMat,
           nomeColaborador: rec.nomeColaborador.trim(),
           sede: rec.sede || 'KO',
           funcao: rec.funcao || 'Operacional',
