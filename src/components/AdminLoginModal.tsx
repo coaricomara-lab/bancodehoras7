@@ -12,7 +12,6 @@ interface AdminLoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onGoogleSignIn: () => Promise<any>;
-  onEmailSignIn?: (email: string, pass: string) => Promise<void>;
   isDark: boolean;
 }
 
