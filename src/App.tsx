@@ -717,27 +717,33 @@ export default function App() {
     }
   };
 
+  // Limpeza completa de estado de autenticação e armazenamento local.
+  // Compartilhada entre logout manual e auto-logoff por inatividade, garante
+  // que nenhuma sessão fantasma persista (localStorage + sessionStorage + estado React).
+  const resetAuthAndStorage = useCallback(() => {
+    try { localStorage.clear(); } catch (e) { console.warn('Erro ao limpar localStorage:', e); }
+    try { sessionStorage.clear(); } catch (e) { console.warn('Erro ao limpar sessionStorage:', e); }
+    setPendingAccessUser(null);
+    setCurrentUser(null);
+    setUserRole(null);
+    setUserMode('ADMIN');
+    setActiveTab('extrato');
+    setIsAdminLoginModalOpen(false);
+    setIsViewingManualModal(false);
+    setIsDailyEntryModalOpen(false);
+    setIsQuickBatchModalOpen(false);
+    setIsImportRecordsModalOpen(false);
+    setPreviewAttachment(null);
+    setBatchProgress(null);
+  }, []);
+
   const handleSignOut = async () => {
     try {
       await firebaseSignOut(auth);
     } catch (err) {
       console.error('Erro ao desconectar do Firebase:', err);
     } finally {
-      // 1. Limpeza completa dos estados globais e da sessão local
-      authService.clearSession();
-      setPendingAccessUser(null);
-      setCurrentUser(null);
-      setUserRole(null);
-      setUserMode('ADMIN');
-      setActiveTab('extrato');
-      setIsAdminLoginModalOpen(false);
-      setIsDailyEntryModalOpen(false);
-      setIsQuickBatchModalOpen(false);
-      setIsImportRecordsModalOpen(false);
-      setPreviewAttachment(null);
-      setBatchProgress(null);
-
-      // 2. Notificação visual de logout
+      resetAuthAndStorage();
       showToast('Sessão encerrada com sucesso.', 'info');
     }
   };
@@ -749,23 +755,10 @@ export default function App() {
     } catch (err) {
       console.error('Erro ao desconectar do Firebase na inatividade:', err);
     } finally {
-      authService.clearSession();
-      setPendingAccessUser(null);
-      setCurrentUser(null);
-      setUserRole(null);
-      setUserMode('ADMIN');
-      setActiveTab('extrato');
-      setIsAdminLoginModalOpen(false);
-      setIsDailyEntryModalOpen(false);
-      setIsQuickBatchModalOpen(false);
-      setIsImportRecordsModalOpen(false);
-      setPreviewAttachment(null);
-      setBatchProgress(null);
-
-      // Notificação discreta solicitada
+      resetAuthAndStorage();
       showToast('Sessão finalizada por inatividade. Faça login novamente.', 'info');
     }
-  }, [showToast]);
+  }, [showToast, resetAuthAndStorage]);
 
   // Monitor de Inatividade do Usuário Adaptativo (useInactivityTimeout)
   // Perfil AUX_DA (Canteiro): 15 minutos sem interação
@@ -1553,15 +1546,7 @@ export default function App() {
             </div>
             <button
               type="button"
-              onClick={async () => {
-                await firebaseSignOut(auth);
-                authService.clearSession();
-                setPendingAccessUser(null);
-                setCurrentUser(null);
-                setUserRole(null);
-                setIsViewingManualModal(false);
-                showToast('Sessão encerrada com sucesso.', 'info');
-              }}
+              onClick={handleSignOut}
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border transition-all cursor-pointer ${isDark ? 'border-red-500/40 text-red-400 hover:bg-red-500/10' : 'border-red-200 text-red-600 hover:bg-red-50'}`}
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -1609,7 +1594,7 @@ export default function App() {
             </button>
             <button
               type="button"
-              onClick={async () => { await firebaseSignOut(auth); authService.clearSession(); setPendingAccessUser(null); setCurrentUser(null); setUserRole(null); setUserMode('ADMIN'); showToast('Sessão encerrada com sucesso.', 'info'); }}
+              onClick={handleSignOut}
               className={`inline-flex items-center justify-center rounded-xl border px-4 py-2.5 text-sm font-bold transition-all active:scale-[0.98] cursor-pointer ${isDark ? 'border-[#335075] bg-[#243756] text-white hover:bg-[#335075]' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'}`}
             >
               Sair
