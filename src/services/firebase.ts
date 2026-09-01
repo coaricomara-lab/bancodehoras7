@@ -10,8 +10,6 @@ import {
   User as FirebaseUser,
   setPersistence,
   browserSessionPersistence,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
 } from 'firebase/auth';
 import { 
   initializeFirestore,

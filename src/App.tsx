@@ -662,46 +662,6 @@ export default function App() {
     }
   };
 
-  // Auth Handler: Corporate Email & Password Sign-In (Firebase Auth SDK)
-  const handleEmailSignIn = async (email: string, pass: string) => {
-    const result = await authService.verifyAdminLogin(email, pass);
-    if (!result.success) {
-      showToast(result.message, 'error');
-      throw new Error(result.message);
-    }
-
-    if (result.pending) {
-      setPendingAccessUser({
-        email: result.admin?.email || email.toLowerCase().trim(),
-        nome: result.admin?.nome || email.split('@')[0],
-        foto: result.admin?.foto || null,
-      });
-      setCurrentUser(null);
-      setUserRole(null);
-      setUserMode('ADMIN');
-      showToast(result.message, 'info');
-      return;
-    }
-
-    if (result.session) {
-      const appUser: AppUser = {
-        uid: auth.currentUser?.uid,
-        email: result.session.email,
-        nome: result.session.nome,
-        displayName: auth.currentUser?.displayName || result.session.nome,
-        role: result.session.role as AdminRole,
-        cargo: result.session.cargo,
-        loginTime: result.session.loginTime,
-        photoURL: auth.currentUser?.photoURL,
-      };
-      setCurrentUser(appUser);
-      setUserRole(result.session.role);
-      setUserMode(result.session.role === 'AUDITOR' ? 'COLABORADOR' : 'ADMIN');
-      setFirestoreErrorNotice(null);
-      showToast(result.message, 'success');
-    }
-  };
-
   const handleToggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
@@ -1665,7 +1625,6 @@ export default function App() {
           isOpen={isAdminLoginModalOpen}
           onClose={() => setIsAdminLoginModalOpen(false)}
           onGoogleSignIn={handleGoogleSignIn}
-          onEmailSignIn={handleEmailSignIn}
           isDark={isDark}
         />
       </div>
